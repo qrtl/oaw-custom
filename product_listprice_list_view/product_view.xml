@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="product_template_tree_view_z1" model="ir.ui.view">
+            <field name="name">product.template.product.tree.z1</field>
+            <field name="model">product.template</field>
+            <field name="arch" type="xml">
+                <tree string="Product List Price Update" editable="top" create="false" delete="false">
+                    <field name="name" readonly="1"/>
+                    <field name="categ_id" readonly="1"/>
+                    <field name="type" readonly="1"/>
+                    <field name="state" readonly="1"/>
+                    <field name="list_price" string="List Price"/>
+                    <field name="qty_available"/>
+                    <field name="virtual_available"/>
+                 </tree>
+            </field>
+        </record>
+
+        <record id="product_template_action_z1" model="ir.actions.act_window">
+            <field name="name">Product List Price Update</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.template</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="product_template_tree_view_z1"/>
+            <field name="context">{"search_default_filter_to_sell":1}</field>
+        </record>
+
+        <menuitem action="product_template_action_z1"
+            id="menu_product_template_action_z1"
+            parent="base.menu_product" sequence="5" />
+    </data>
+</openerp>
