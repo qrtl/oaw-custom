@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<template id="report_invoice_document_z5" inherit_id="account.report_invoice_document">
+    <xpath expr="//p[@t-if='o.fiscal_position.note']" position="after">
+        <p t-field="o.company_id.invoice_remark"/>
+    </xpath>
+</template>
+</data>
+</openerp>
