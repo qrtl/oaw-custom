@@ -39,7 +39,7 @@ class stock_picking(osv.osv):
                     [('code','=',context['default_picking_type_code'])],
                     order='id')[0]
             else:
-                return false
+                return False
 
     _defaults = {
         'picking_type_id': _default_picking_type_id
