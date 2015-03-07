@@ -49,7 +49,9 @@ class stock_quant(osv.osv):
 #             if q.owner_id:
 #                 #if the quant isn't owned by the company, we don't make any valuation entry
 #                 return False
-            if q.owner_id.name <> q.owner_id.company_id.name:
+#             if q.owner_id.name <> q.owner_id.company_id.name:
+            if q.owner_id and q.owner_id != \
+                self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.partner_id:
                 #if the quant isn't owned by the company, we don't make any valuation entry
                 return False
             if q.qty <= 0:
