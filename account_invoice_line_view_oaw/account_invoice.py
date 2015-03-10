@@ -27,33 +27,34 @@ import openerp.addons.decimal_precision as dp
 
 class account_invoice_line(osv.osv):
     _inherit = 'account.invoice.line'
+
+    def _get_ref_vals(self, cr, uid, ids, inv_ln, context=None):
+        so_id = 0
+        po_id = 0
+        SO = self.pool.get('sale.order')
+        PO = self.pool.get('purchase.order')
+        if inv_ln.invoice_id.reference:
+            if inv_ln.invoice_id.type == 'out_invoice':
+                so_id = SO.search(cr, uid, [('name','=',inv_ln.invoice_id.reference)])[0]
+            if inv_ln.invoice_id.type == 'in_invoice':
+                po_id = PO.search(cr, uid, [('name','=',inv_ln.invoice_id.reference)])[0]
+        res = {
+            'so_id': so_id,
+            'po_id': po_id,
+            }
+        return res
         
-    def _get_inv_vals(self, cr, uid, ids, field_names, args, context=None):
+    def _get_vals(self, cr, uid, ids, field_names, args, context=None):
         res = {}
         for inv_ln in self.browse(cr, uid, ids, context=context):
+            ref_vals = self._get_ref_vals(cr, uid, ids, inv_ln, context=context)
             res[inv_ln.id] = {
                 'partner_id': inv_ln.invoice_id.partner_id.id,
                 'state': inv_ln.invoice_id.state,
                 'date_invoice': inv_ln.invoice_id.date_invoice,
                 'ref': inv_ln.invoice_id.partner_id.ref,
-                }
-        return res
-    
-    def _get_ref_vals(self, cr, uid, ids, field_names, args, context=None):
-        res = {}
-        SO = self.pool.get('sale.order')
-        PO = self.pool.get('purchase.order')
-        for inv_ln in self.browse(cr, uid, ids, context=context):
-            so_id = 0
-            po_id = 0
-            if inv_ln.invoice_id.reference:
-                if inv_ln.invoice_id.type == 'out_invoice':
-                    so_id = SO.search(cr, uid, [('name','=',inv_ln.invoice_id.reference)])[0]
-                if inv_ln.invoice_id.type == 'in_invoice':
-                    po_id = PO.search(cr, uid, [('name','=',inv_ln.invoice_id.reference)])[0]
-            res[inv_ln.id] = {
-                'so_id': so_id,
-                'po_id': po_id,
+                'so_id': ref_vals['so_id'],
+                'po_id': ref_vals['po_id'],
                 }
         return res
     
@@ -63,7 +64,7 @@ class account_invoice_line(osv.osv):
         Rate = self.pool['res.currency.rate']
         for inv_ln in self.browse(cr, uid, ids, context=context):
             curr_amt = inv_ln.price_subtotal
-            # set the rate 1.0 if the transaction currency is the same as the base currency
+            # set rate 1.0 if the transaction currency is the same as the base currency
             if inv_ln.company_id.currency_id == inv_ln.currency_id:
                 rate = 1.0
             else:
@@ -99,29 +100,28 @@ class account_invoice_line(osv.osv):
     _columns ={
         'user_id': fields.related('invoice_id', 'user_id',type='many2one',relation='res.users',string=u'Salesperson'),
         'number': fields.related('invoice_id', 'number',type='char',relation='account.move',string=u'Number'),
-        'partner_id': fields.function(_get_inv_vals, type='many2one', obj='res.partner', string=u'Partner',
+        'partner_id': fields.function(_get_vals, type='many2one', obj='res.partner', string=u'Partner',
             store={
                    'account.invoice.line': (lambda self, cr, uid, ids, c={}: ids, None, 10),
                    'account.invoice': (_get_invoice_lines, ['partner_id'], 10),
                    },
             multi='invoice',
             ),
-        'state': fields.function(_get_inv_vals, type='char', string=u'Status',
+        'state': fields.function(_get_vals, type='char', string=u'Status',
             store={
                    'account.invoice.line': (lambda self, cr, uid, ids, c={}: ids, None, 10),
                    'account.invoice': (_get_invoice_lines, ['state'], 10),
                    },
             multi='invoice',
             ),
-        'date_invoice': fields.function(_get_inv_vals, type='date', string=u'Invoice Date',
+        'date_invoice': fields.function(_get_vals, type='date', string=u'Invoice Date',
             store={
-                   # include 'state' to make sure update is triggered at invoice validation
                    'account.invoice.line': (lambda self, cr, uid, ids, c={}: ids, None, 10),
                    'account.invoice': (_get_invoice_lines, ['date_invoice'], 10), 
                    },
             multi='invoice',
             ),
-        'ref': fields.function(_get_inv_vals, type='char', string=u'Partner Ref',
+        'ref': fields.function(_get_vals, type='char', string=u'Partner Ref',
             store={
                    'account.invoice.line': (lambda self, cr, uid, ids, c={}: ids, None, 10),
                    'account.invoice': (_get_invoice_lines, ['partner_id'], 10),
@@ -135,19 +135,21 @@ class account_invoice_line(osv.osv):
         'currency_id': fields.related('invoice_id','currency_id',relation='res.currency', type='many2one',string=u'Currency'),
         'rate': fields.function(_get_base_amt, type='float', string=u'Rate', multi='base_amt'),
         'base_amt': fields.function(_get_base_amt, type='float', digits_compute=dp.get_precision('Account'), string=u'Base Amount', multi="base_amt"),
-        'so_id': fields.function(_get_ref_vals, type='many2one',
+        'so_id': fields.function(_get_vals, type='many2one',
             obj='sale.order', string='SO',
             store={
+                   'account.invoice.line': (lambda self, cr, uid, ids, c={}: ids, None, 10),
                    'account.invoice': (_get_invoice_lines, ['state'], 10),
                    },
-            multi="reference"
+            multi="invoice"
             ),
-        'po_id': fields.function(_get_ref_vals, type='many2one',
+        'po_id': fields.function(_get_vals, type='many2one',
             obj='purchase.order', string='PO',
             store={
+                   'account.invoice.line': (lambda self, cr, uid, ids, c={}: ids, None, 10),
                    'account.invoice': (_get_invoice_lines, ['state'], 10),
                    },
-            multi="reference"
+            multi="invoice"
             ),
         }
 
