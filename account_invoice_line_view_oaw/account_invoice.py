@@ -48,14 +48,14 @@ class account_invoice_line(osv.osv):
     
     def _get_base_amt(self, cr, uid, ids, field_names, args, context=None):
         res = {}
+        Invoice = self.pool.get('account.invoice')
         for invoice_line in self.browse(cr, uid, ids, context=context):
             curr_amt = invoice_line.price_subtotal
             # set the rate 1.0 if the transaction currency is the same as the base currency
             if invoice_line.company_id.currency_id == invoice_line.currency_id:
                 rate = 1.0
             else:
-                invoice_obj = self.pool.get('account.invoice')
-                invoice_date = invoice_obj.read(cr, uid, invoice_line.invoice_id.id, ['date_invoice'])['date_invoice']
+                invoice_date = Invoice.browse(cr, uid, [invoice_line.invoice_id.id])[0].date_invoice
                 if invoice_date:
                     invoice_date_datetime = datetime.strptime(invoice_date, '%Y-%m-%d')
                 else:
@@ -70,7 +70,6 @@ class account_invoice_line(osv.osv):
                     ('currency_rate_type_id', '=', None)
                     ], order='name desc', limit=1, context=context)
                 if rate_id:
-#                     rate = rate_obj.read(cr, uid, rate_rec[0], ['rate'], context=context)['rate']
                     rate = rate_obj.browse(cr, uid, rate_id, context=context)[0].rate
                 else:
                     rate = 1.0
@@ -83,10 +82,12 @@ class account_invoice_line(osv.osv):
     """ return all the invoice lines for the updated invoice """
     def _get_invoice_lines(self, cr, uid, ids, context=None):
         inv_ln_ids = []
-        for invoice in self.browse(cr, uid, ids, context=context):
+#         for invoice in self.browse(cr, uid, ids, context=context):
+        for invoice in self.pool.get('account.invoice').browse(cr, uid, ids, context=context):
             inv_ln_ids += \
                 self.pool.get('account.invoice.line').search(cr, uid,
-                [('invoice_id.id', '=', invoice.id)], context=context)
+#                 [('invoice_id.id', '=', invoice.id)], context=context)
+                [('invoice_id.id', 'in', ids)], context=context)
         return inv_ln_ids
 
 
@@ -131,20 +132,20 @@ class account_invoice_line(osv.osv):
             ),
         'so_id': fields.function(_get_vals, type='many2one',
             obj='sale.order', string='SO',
-#             store={
-#                    # include 'state' to make sure update is triggered at invoice validation
-# #                    'account.invoice.line': (lambda self, cr, uid, ids, c={}: ids, None, 10),
-#                    'account.invoice': (_get_invoice_lines, ['partner_id','state'], 10),
-#                    },
+            store={
+                   # include 'state' to make sure update is triggered at invoice validation
+#                    'account.invoice.line': (lambda self, cr, uid, ids, c={}: ids, None, 10),
+                   'account.invoice': (_get_invoice_lines, ['partner_id','state'], 10),
+                   },
             multi="reference"
             ),
         'po_id': fields.function(_get_vals, type='many2one',
             obj='purchase.order', string='PO',
-#             store={
-#                    # include 'state' to make sure update is triggered at invoice validation
-# #                    'account.invoice.line': (lambda self, cr, uid, ids, c={}: ids, None, 10),
-#                    'account.invoice': (_get_invoice_lines, ['partner_id','state'], 10),
-#                    },
+            store={
+                   # include 'state' to make sure update is triggered at invoice validation
+#                    'account.invoice.line': (lambda self, cr, uid, ids, c={}: ids, None, 10),
+                   'account.invoice': (_get_invoice_lines, ['partner_id','state'], 10),
+                   },
             multi="reference"
             ),
         }

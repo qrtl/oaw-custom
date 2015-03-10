@@ -21,14 +21,18 @@
                     <field name="product_id" readonly="1"/>
                     <field name="name" readonly="1" invisible="1"/>
                     <field name="reference" readonly="1" invisible="1"/>
+<!-- 
                     <field name="so_id" readonly="1"/>
                     <field name="po_id" readonly="1"/>
+ -->
                     <field name="date_invoice" readonly="1"/>
                     <field name="period_id" readonly="1" invisible='1'/>
                     <field name="date_due" readonly="1" invisible='1'/>
                     <field name="user_id" readonly="1"/>
+<!-- 
                     <field name="partner_id" readonly="1"/>
                     <field name="ref" readonly="1"/>
+ -->
                     <field name="company_id" readonly="1" invisible='1'/>
                     <field name="account_id" readonly="1"/>
                     <field name="account_analytic_id" readonly="1" invisible='1'/>
