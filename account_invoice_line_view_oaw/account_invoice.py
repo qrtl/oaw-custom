@@ -28,19 +28,30 @@ import openerp.addons.decimal_precision as dp
 class account_invoice_line(osv.osv):
     _inherit = 'account.invoice.line'
         
-    def _get_vals(self, cr, uid, ids, field_names, args, context=None):
+    def _get_inv_vals(self, cr, uid, ids, field_names, args, context=None):
+        res = {}
+        for inv_ln in self.browse(cr, uid, ids, context=context):
+            res[inv_ln.id] = {
+                'partner_id': inv_ln.invoice_id.partner_id.id,
+                'state': inv_ln.invoice_id.state,
+                'date_invoice': inv_ln.invoice_id.date_invoice,
+                'ref': inv_ln.invoice_id.partner_id.ref,
+                }
+        return res
+    
+    def _get_ref_vals(self, cr, uid, ids, field_names, args, context=None):
         res = {}
         SO = self.pool.get('sale.order')
         PO = self.pool.get('purchase.order')
-        for invoice_line in self.browse(cr, uid, ids, context=context):
+        for inv_ln in self.browse(cr, uid, ids, context=context):
             so_id = 0
             po_id = 0
-            if invoice_line.invoice_id.reference:
-                if invoice_line.invoice_id.type == 'out_invoice':
-                    so_id = SO.search(cr, uid, [('name','=',invoice_line.invoice_id.reference)])[0]
-                if invoice_line.invoice_id.type == 'in_invoice':
-                    po_id = PO.search(cr, uid, [('name','=',invoice_line.invoice_id.reference)])[0]
-            res[invoice_line.id] = {
+            if inv_ln.invoice_id.reference:
+                if inv_ln.invoice_id.type == 'out_invoice':
+                    so_id = SO.search(cr, uid, [('name','=',inv_ln.invoice_id.reference)])[0]
+                if inv_ln.invoice_id.type == 'in_invoice':
+                    po_id = PO.search(cr, uid, [('name','=',inv_ln.invoice_id.reference)])[0]
+            res[inv_ln.id] = {
                 'so_id': so_id,
                 'po_id': po_id,
                 }
@@ -49,31 +60,25 @@ class account_invoice_line(osv.osv):
     def _get_base_amt(self, cr, uid, ids, field_names, args, context=None):
         res = {}
         Invoice = self.pool.get('account.invoice')
-        for invoice_line in self.browse(cr, uid, ids, context=context):
-            curr_amt = invoice_line.price_subtotal
+        Rate = self.pool['res.currency.rate']
+        for inv_ln in self.browse(cr, uid, ids, context=context):
+            curr_amt = inv_ln.price_subtotal
             # set the rate 1.0 if the transaction currency is the same as the base currency
-            if invoice_line.company_id.currency_id == invoice_line.currency_id:
+            if inv_ln.company_id.currency_id == inv_ln.currency_id:
                 rate = 1.0
             else:
-                invoice_date = Invoice.browse(cr, uid, [invoice_line.invoice_id.id])[0].date_invoice
-                if invoice_date:
-                    invoice_date_datetime = datetime.strptime(invoice_date, '%Y-%m-%d')
-                else:
-                    today = context.get('date', datetime.today().strftime('%Y-%m-%d'))
-                    invoice_date_datetime = datetime.strptime(today, '%Y-%m-%d')
-
-                rate_obj = self.pool['res.currency.rate']
-                rate_id = rate_obj.search(cr, uid, [
-                    ('currency_id', '=', invoice_line.currency_id.id),
-                    ('name', '<=', invoice_date_datetime),
-                    # not sure for what purpose 'currency_rate_type_id' field exists in the table, but keep this line just in case
-                    ('currency_rate_type_id', '=', None)
+                invoice_date = Invoice.browse(cr, uid, [inv_ln.invoice_id.id])[0].date_invoice
+                if not invoice_date:
+                    invoice_date = context.get('date', datetime.today().strftime('%Y-%m-%d'))
+                rate_id = Rate.search(cr, uid, [
+                    ('currency_id', '=', inv_ln.currency_id.id),
+                    ('name', '<=', invoice_date),
                     ], order='name desc', limit=1, context=context)
                 if rate_id:
-                    rate = rate_obj.browse(cr, uid, rate_id, context=context)[0].rate
+                    rate = Rate.browse(cr, uid, rate_id, context=context)[0].rate
                 else:
                     rate = 1.0
-            res[invoice_line.id] = {
+            res[inv_ln.id] = {
                 'rate': rate,
                 'base_amt': curr_amt / rate,
                 }
@@ -82,11 +87,9 @@ class account_invoice_line(osv.osv):
     """ return all the invoice lines for the updated invoice """
     def _get_invoice_lines(self, cr, uid, ids, context=None):
         inv_ln_ids = []
-#         for invoice in self.browse(cr, uid, ids, context=context):
         for invoice in self.pool.get('account.invoice').browse(cr, uid, ids, context=context):
             inv_ln_ids += \
                 self.pool.get('account.invoice.line').search(cr, uid,
-#                 [('invoice_id.id', '=', invoice.id)], context=context)
                 [('invoice_id.id', 'in', ids)], context=context)
         return inv_ln_ids
 
@@ -94,19 +97,35 @@ class account_invoice_line(osv.osv):
     _order = 'id desc'
     """ some fields are defined with 'store' for grouping purpose """
     _columns ={
-        'user_id': fields.related('invoice_id','user_id',type='many2one',relation='res.users',string=u'Salesperson'),
-        'number': fields.related('invoice_id','number',type='char',relation='account.move',string=u'Number'),
-        'state': fields.related('invoice_id', 'state', type='char', relation='account.invoice', string=u'Status',
+        'user_id': fields.related('invoice_id', 'user_id',type='many2one',relation='res.users',string=u'Salesperson'),
+        'number': fields.related('invoice_id', 'number',type='char',relation='account.move',string=u'Number'),
+        'partner_id': fields.function(_get_inv_vals, type='many2one', obj='res.partner', string=u'Partner',
             store={
-                   # update is done when 'state' of 'account.invoice' is updated
+                   'account.invoice.line': (lambda self, cr, uid, ids, c={}: ids, None, 10),
+                   'account.invoice': (_get_invoice_lines, ['partner_id'], 10),
+                   },
+            multi='invoice',
+            ),
+        'state': fields.function(_get_inv_vals, type='char', string=u'Status',
+            store={
+                   'account.invoice.line': (lambda self, cr, uid, ids, c={}: ids, None, 10),
                    'account.invoice': (_get_invoice_lines, ['state'], 10),
                    },
             multi='invoice',
             ),
-        'date_invoice': fields.related('invoice_id', 'date_invoice', type='date', string=u'Invoice Date',
+        'date_invoice': fields.function(_get_inv_vals, type='date', string=u'Invoice Date',
             store={
                    # include 'state' to make sure update is triggered at invoice validation
-                   'account.invoice': (_get_invoice_lines, ['date_invoice','state'], 10), 
+                   'account.invoice.line': (lambda self, cr, uid, ids, c={}: ids, None, 10),
+                   'account.invoice': (_get_invoice_lines, ['date_invoice'], 10), 
+                   },
+            multi='invoice',
+            ),
+        'ref': fields.function(_get_inv_vals, type='char', string=u'Partner Ref',
+            store={
+                   'account.invoice.line': (lambda self, cr, uid, ids, c={}: ids, None, 10),
+                   'account.invoice': (_get_invoice_lines, ['partner_id'], 10),
+                   'res.partner': (_get_invoice_lines, ['ref'], 10),
                    },
             multi='invoice',
             ),
@@ -116,35 +135,17 @@ class account_invoice_line(osv.osv):
         'currency_id': fields.related('invoice_id','currency_id',relation='res.currency', type='many2one',string=u'Currency'),
         'rate': fields.function(_get_base_amt, type='float', string=u'Rate', multi='base_amt'),
         'base_amt': fields.function(_get_base_amt, type='float', digits_compute=dp.get_precision('Account'), string=u'Base Amount', multi="base_amt"),
-        'partner_id': fields.related('invoice_id', 'partner_id', type='many2one', relation='res.partner', string=u'Partner',
-            store={
-                   # include 'state' to make sure update is triggered at invoice validation
-                   'account.invoice': (_get_invoice_lines, ['partner_id','state'], 10),
-                   },
-            multi='invoice',
-            ),
-        'ref': fields.related('invoice_id', 'partner_id', 'ref', type='char', relation='res.partner', string=u'Partner Ref',
-            store={
-                   # include 'state' to make sure update is triggered at invoice validation
-                   'account.invoice': (_get_invoice_lines, ['partner_id','state'], 10),
-                   },
-            multi='invoice',
-            ),
-        'so_id': fields.function(_get_vals, type='many2one',
+        'so_id': fields.function(_get_ref_vals, type='many2one',
             obj='sale.order', string='SO',
             store={
-                   # include 'state' to make sure update is triggered at invoice validation
-#                    'account.invoice.line': (lambda self, cr, uid, ids, c={}: ids, None, 10),
-                   'account.invoice': (_get_invoice_lines, ['partner_id','state'], 10),
+                   'account.invoice': (_get_invoice_lines, ['state'], 10),
                    },
             multi="reference"
             ),
-        'po_id': fields.function(_get_vals, type='many2one',
+        'po_id': fields.function(_get_ref_vals, type='many2one',
             obj='purchase.order', string='PO',
             store={
-                   # include 'state' to make sure update is triggered at invoice validation
-#                    'account.invoice.line': (lambda self, cr, uid, ids, c={}: ids, None, 10),
-                   'account.invoice': (_get_invoice_lines, ['partner_id','state'], 10),
+                   'account.invoice': (_get_invoice_lines, ['state'], 10),
                    },
             multi="reference"
             ),
@@ -152,9 +153,16 @@ class account_invoice_line(osv.osv):
 
     def init(self, cr):
         # to be executed only when installing the module.  update "stored" fields 
-        cr.execute("update account_invoice_line line \
-                    set state = inv.state, date_invoice = inv.date_invoice, partner_id = inv.partner_id \
-                    from account_invoice inv \
-                    where line.invoice_id = inv.id")
+        sql = """
+            update account_invoice_line l
+            set state = inv.state,
+                date_invoice = inv.date_invoice,
+                partner_id = inv.partner_id,
+                ref = p.ref
+            from account_invoice inv
+            left join res_partner p on inv.partner_id = p.id
+            where l.invoice_id = inv.id
+            """
+        cr.execute(sql)
 
 account_invoice_line()

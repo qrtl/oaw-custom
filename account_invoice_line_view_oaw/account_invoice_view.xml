@@ -9,30 +9,21 @@
             <field name="name">account.invoice.line2</field>
             <field name="model">account.invoice.line</field>
             <field name="arch" type="xml">
-<!-- 
                 <tree colors="blue:state == 'draft';black:state in ('proforma','proforma2','open');
                     gray:state == 'cancel'" string="Invoice Lines" create="false" delete="false"
                     editable="top">
- -->
-                <tree string="Invoice Lines" create="false" delete="false"
-                    editable="top">
-
                     <field name="invoice_id" readonly="1"/>
                     <field name="product_id" readonly="1"/>
                     <field name="name" readonly="1" invisible="1"/>
                     <field name="reference" readonly="1" invisible="1"/>
-<!-- 
                     <field name="so_id" readonly="1"/>
                     <field name="po_id" readonly="1"/>
- -->
                     <field name="date_invoice" readonly="1"/>
                     <field name="period_id" readonly="1" invisible='1'/>
                     <field name="date_due" readonly="1" invisible='1'/>
                     <field name="user_id" readonly="1"/>
-<!-- 
                     <field name="partner_id" readonly="1"/>
                     <field name="ref" readonly="1"/>
- -->
                     <field name="company_id" readonly="1" invisible='1'/>
                     <field name="account_id" readonly="1"/>
                     <field name="account_analytic_id" readonly="1" invisible='1'/>
