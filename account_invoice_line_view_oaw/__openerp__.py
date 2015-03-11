@@ -21,7 +21,7 @@
 
 {
     'name': 'Invoice Line View',
-    'version': '1.0',
+    'version': '0.5',
     'category': 'Account',
     'summary': 'Adds Invoice Line menu item',
     'description': """
@@ -37,7 +37,7 @@ Main Features
     'images' : [],
     'depends': ['account', 'sale', 'purchase'],
     'data': [
-        'account_invoice_view.xml',        
+         'account_invoice_view.xml',        
     ],
     'test': [],
     'demo': [],
