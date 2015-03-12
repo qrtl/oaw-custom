@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (c) Rooms For (Hong Kong) Limited T/A OSCG. All Rights Reserved.
+#    Copyright (c) Rooms For (Hong Kong) Limited T/A OSCG. All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,16 +19,17 @@
 #
 ##############################################################################
 {
-    'name': 'Quant/Serial Number On Sales',
+    'name': 'Quant/Serial Number on Sales',
     'category': 'Sale',
-    'version': '1.0',
+    'version': '0.6',
     'author': 'Rooms For (Hong Kong) T/A OSCG',
-    'depends': ['sale','stock', 'sale_margin', 'vendor_consignment_stock','sale_owner_stock_sourcing',],
-    'website': 'www.roomsfor.hk',
+    'website': 'www.openerp-asia.net',
+    'depends': ['sale', 'stock', 'sale_margin', 'vendor_consignment_stock',
+                'sale_owner_stock_sourcing',],
+    'summary':""" Serial Number Quant on Sales Order Line""",
     'description': """ 
 Modification on sales order line by adding quant and serial number selection.
     """,
-    'summary':""" Serial Number Quant on Sales Order Line""",
     'update_xml': ['security/group.xml','view/so_line_quant_view.xml'],
     'installable': True,
 }

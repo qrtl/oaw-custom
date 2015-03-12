@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (c) Rooms For (Hong Kong) Limited T/A OSCG. All Rights Reserved.
+#    Copyright (c) Rooms For (Hong Kong) Limited T/A OSCG. All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -20,16 +20,13 @@
 ##############################################################################
 
 from datetime import datetime
-
 from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
 from openerp.tools import  DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.translate import _
 
+
 class stock_quant(osv.osv):
-    """
-    Quants are the smallest unit of stock physical instances
-    """
     _inherit = "stock.quant"
     
     def _actual_qty(self, cr, uid, ids, name, arg, context=None):
@@ -111,8 +108,8 @@ class sale_order(osv.osv):
                     line.quant_id.write({'sale_reserver_qty': current_qty})
         return res
     
+
 class procurement_order(osv.osv):
-    """  """
     _inherit = "procurement.order"
     _columns = {
         'quant_id': fields.many2one('stock.quant', string="Quant From Sale Line"),
@@ -246,21 +243,20 @@ class procurement_order(osv.osv):
             self.message_post(cr, uid, sum_po_line_ids, body=_("Quantity added in existing Purchase Order Line"), context=context)
         return res
 
-class sale_order_line(osv.osv):
-    """ """
 
+class sale_order_line(osv.osv):
     _inherit = "sale.order.line"
-    _description = " "
+#     _description = " "
 
     _columns = {
-        'quant_id': fields.many2one('stock.quant',string="Stock Quant",),
-        'lot_id': fields.many2one('stock.production.lot',string="Stock Production Lot",),
+        'quant_id': fields.many2one('stock.quant', string="Stock Quant",),
+        'lot_id': fields.many2one('stock.production.lot', string="Case No.",),
         'mto': fields.boolean('Is MTO?'),
     }
     
     def onchange_route(self, cr, uid, ids, route_id, context=None):
-#        Serial number can be left blank in case of ‘Make To Order’. 
-#Otherwise, the field should be mandatory 
+        # Serial number can be left blank in case of ‘Make To Order’. 
+        # Otherwise, the field should be mandatory 
         result = {'mto': False}
         model, res_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'stock', 'route_warehouse0_mto')
         if route_id == res_id:
@@ -295,6 +291,7 @@ class sale_order_line(osv.osv):
         # Pass the lot reference to invoice from SO / PO.
         res.update({'lot_id': line.lot_id.id})
         return res
+
 
 class stock_move(osv.osv):
     _inherit = 'stock.move'
@@ -399,6 +396,7 @@ class stock_move(osv.osv):
         res.update({'lot_id': move.lot_id.id})
         return res
         
+
 class product_category(osv.osv):
     _inherit = 'product.category'
     _columns = {
@@ -411,6 +409,7 @@ class product_category(osv.osv):
 #        enforced for each line 
         'enforce_qty_1': fields.boolean(string='ENFORCE QTY 1'),
     }
+
 
 class stock_production_lot(osv.osv):
     _inherit = 'stock.production.lot'
@@ -643,12 +642,14 @@ class res_partner(osv.osv):
         'order_policy': 'manual',
     }
 
+
 class purchase_order_line(osv.osv):
     _inherit = 'purchase.order.line'
     _columns = {
-        'lot_id': fields.many2one('stock.production.lot', string="Stock Production Lot",),
+        'lot_id': fields.many2one('stock.production.lot', string="Case No.",),
     }
     
+
 class purchase_order(osv.osv):
     _inherit = 'purchase.order'
     _columns ={
@@ -708,17 +709,20 @@ class purchase_order(osv.osv):
         
         return res
 
+
 class account_invoice(osv.osv):
     _inherit = 'account.invoice'
     _columns ={
         'lot_id': fields.related('invoice_line', 'lot_id', type='many2one', relation='stock.production.lot', string='Lot'),#for search purpose
     }
 
+
 class account_invoice_line(osv.osv):
     _inherit = 'account.invoice.line'
     _columns = {
-        'lot_id': fields.many2one('stock.production.lot',string="Stock Production Lot"),
+        'lot_id': fields.many2one('stock.production.lot', string="Case No."),
     }
+
 
 class stock_pack_operation(osv.osv):
     _inherit = 'stock.pack.operation'
