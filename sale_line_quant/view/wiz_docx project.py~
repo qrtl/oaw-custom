@@ -1,0 +1,122 @@
+# -*- coding: utf-8 -*-
+##############################################################################
+#
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2015 Probuse Counsulting services pvt.ltd (<http://www.probuse.com>).
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
+
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+import zipfile
+import base64
+from base64 import *
+import StringIO
+import time
+import cStringIO
+import lxml.etree as ET
+import xmlrpclib
+from docx import Document
+from docx.shared import Inches
+from docx import *
+import re
+import os
+import urllib
+import urllib2
+import requests
+#from docx import Document
+    
+class wiz_docx_file_project(osv.osv_memory):
+    """  """
+
+    _name = "wiz.docx.file.project"
+    _description = "Make DOCX "
+
+
+    def create_docx(self, cr, uid, ids, context=None):
+        """
+            Create Docx file
+        """
+        wizard = self.browse(cr, uid, ids[0], context)
+        active_id = context and context.get('active_id') or []
+        partner = self.pool.get('project.project').browse(cr, uid, active_id, context).partner_id
+        
+        #######################################################
+        document = Document(StringIO.StringIO(base64.b64decode(wizard.docx_file.datas)))
+        for p in document.paragraphs:
+            self.paragraph_replace(p,'#street',str(partner.street))
+            self.paragraph_replace(p,'#street2',str(partner.street2))
+            self.paragraph_replace(p,'#city',str(partner.city))
+            self.paragraph_replace(p,'#zip',str(partner.zip))
+            self.paragraph_replace(p,'#state',str(partner.state_id.name))
+            self.paragraph_replace(p,'#country',str(partner.country_id.name))
+            self.paragraph_replace(p,'#title',str(partner.title.name))
+            self.paragraph_replace(p,'#date',str(time.strftime('%Y-%m-%d')))
+
+
+        path = str(os.path.split(__file__)[0])+'/welcome_project.docx'# wizard dir path
+        path = path.replace('docx_operation/wizard','docx_operation/static/src/img')#replace wizard dir to img dir
+
+        document.save(path)
+        ctx = {'default_docx_char':(str('http://127.0.0.1:8069')+('/docx_operation/static/src/img')+'/welcome_project.docx')}
+        return {
+                'context':ctx,
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'wiz.docx.updated.file.project',
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+                }
+
+    def paragraph_replace(self, paragraph,search, replace):
+        searchre = re.compile(search)
+        paragraph_text = paragraph.text
+#        print "paragraph:..", paragraph.style
+        if paragraph_text:
+            if searchre.search(paragraph_text):
+                if paragraph.style != None:
+                    st = paragraph.style
+#                    print "ST:>>>",st, dir(st)
+#                    pr = paragraph.runs
+#                    print 'pr',pr
+#                    for run in paragraph.runs:
+#                        print "Run:>>>", run
+#                        print paragraph_text,"Run style is", run
+#                    font = paragraph.style.font
+#                    print "Font ", font.name ,"*****", paragraph_text
+#                    bold = paragraph.style.font.bold
+                    self.clear_paragraph(paragraph)
+                    paragraph.add_run(re.sub(search, replace, paragraph_text))
+#                    for run in paragraph.runs:
+#                        print "\nu Run:>>>", run
+#                        print paragraph_text,"Run style is", run
+                    paragraph.style = st
+#                    print 'Paragraph:.@@@',paragraph.runs,
+##                    paragraph.bold = bold
+        return paragraph
+
+    def clear_paragraph(self, paragraph):
+        p_element = paragraph._p
+        p_child_elements = [elm for elm in p_element.iterchildren()]
+        for child_element in p_child_elements:
+            p_element.remove(child_element)
+        
+    _columns = {
+        'docx_file': fields.many2one('ir.attachment',string="Template Attachment",help=""),
+    }
+
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
