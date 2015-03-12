@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+    <record id="view_procurement_form_inherit_enforce" model="ir.ui.view">
+        <field name="name">procurement.order.form.inherit</field>
+        <field name="model">procurement.order</field>
+        <field name="inherit_id" ref="procurement.procurement_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="quant_id" readonly="1"/>
+                <field name="lot_id" readonly="1"/>
+                <field name="is_enforce_qty" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_order_form_inherit_enforce" model="ir.ui.view">
+        <field name="name">sale.order.form.sale.enforce</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <data>
+               <field name='invoiced' position="after">
+                   <field name="is_enforce_qty" readonly="1"/>
+               </field>
+            </data>
+       </field>
+    </record>
+
+        
+    <record id="sale_order_line_quant_view" model="ir.ui.view">
+            <field name="name">sale.order.line.inherit.view</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                 <xpath expr="/form/sheet/notebook/page[@string='Order Lines']/field[@name='order_line']/tree[@string='Sales Order Lines']/field[@name='product_id'] " position="after">
+                    <field name="quant_id" domain="[('product_id','=',product_id)]" on_change="onchange_quant(quant_id)"/>
+                    <field name="mto" invisible="1"/>
+                    <field name="lot_id" attrs="{'required': [('mto','!=',True)]}"/>
+                    <field name="stock_owner_id" invisible="0"/>
+                </xpath>
+                 <xpath expr="/form/sheet/notebook/page[@string='Order Lines']/field[@name='order_line']/tree[@string='Sales Order Lines']/field[@name='tax_id'] " position="replace">
+                 	<field name="tax_id" widget="many2many_tags" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]" invisible="1"/>
+                </xpath>
+            </field>
+    </record>
+    
+    
+    <record id="sale_order_line_quant_search_view" model="ir.ui.view">
+            <field name="name">sale.order.line.inherit.view</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+            <field name="arch" type="xml">
+                 <xpath expr="//field[@name='product_id'] " position="after">
+                    <field name="lot_id"/>
+                </xpath>
+            </field>
+    </record>
+    
+    <record id="view_order_form_inherit_quant" model="ir.ui.view">
+	      <field name="name">sale.order.form</field>
+	      <field name="model">sale.order</field>
+	      <field name="inherit_id" ref="sale_stock.view_order_form_inherit"/>
+	      <field name="arch" type="xml">
+	      		<field name="route_id" position="replace">
+	      			<field name="route_id" groups="sale_stock.group_route_so_lines" attrs="{'required': [('stock_owner_id','=',False)]}" on_change="onchange_route(route_id)"/>
+	      		</field>
+	      </field>
+	</record>
+
+    <record id="sale_order_line_quant_view_form" model="ir.ui.view">
+            <field name="name">sale.order.line.inherit.view.form</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                 <xpath expr="/form/sheet/notebook/page[@string='Order Lines']/field[@name='order_line']/form[@string='Sales Order Lines']/group/group/field[@name='product_id'] " position="after">
+                    <field name="quant_id" domain="[('reservation_id', '=', False), ('product_id','=',product_id), ('qty','>', 0.0), ('actual_qty','>', 0.0), ('usage', '=', 'internal')]" on_change="onchange_quant(quant_id)"/>
+                    <field name="mto" invisible="1"/>
+                    <field name="lot_id" attrs="{'required': [('mto','!=',True)]}"/>
+                </xpath>
+            </field>
+    </record>
+    
+
+    <record id="stock_move_inherit_slq_view" model="ir.ui.view">
+            <field name="name">stock.move.inherit.slq.view</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_picking_form"/>
+            <field name="arch" type="xml">
+                <field name="name" position='after'>
+                    <field name='quant_id' invisible="0"/>
+                    <field name='lot_id' invisible="0"/>
+                </field>
+            </field>
+    </record>
+    <record id="stock_move_inherit_slq_view1" model="ir.ui.view">
+            <field name="name">stock.move.inherit.slq.view1</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_form"/>
+            <field name="arch" type="xml">
+                <field name="name" position='after'>
+                    <field name='quant_id' invisible="0"/>
+                    <field name='lot_id' invisible="0"/>
+                </field>
+            </field>
+    </record>
+    
+    <record id="view_stock_quant_form_inherit" model="ir.ui.view">
+            <field name="name">stock.quant.inherit.slq.view1</field>
+            <field name="model">stock.quant</field>
+            <field name="inherit_id" ref="stock.view_stock_quant_form"/>
+            <field name="arch" type="xml">
+                <field name="qty" position='after'>
+                    <field name='sale_reserver_qty'/>
+                    <field name='actual_qty' />
+                    <field name="usage" />
+                </field>
+            </field>
+    </record>
+    
+    <record id="product_category_form_view_inherit" model="ir.ui.view">
+            <field name="name">product.category.inherit.slq.view1</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="product.product_category_form_view"/>
+            <field name="arch" type="xml">
+                <field name="type" position='after'>
+                    <field name='enforce_qty_1'/>
+                </field>
+            </field>
+    </record>
+    
+    <record model="ir.ui.view" id="partner_view_order_policy">
+            <field name="name">partner.view.order_policy</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='credit_limit']" position="after">
+	                <field name="order_policy" />
+                </xpath>
+            </field>
+        </record>
+        
+       
+   <record model="ir.ui.view" id="purchase_order_lot_id_form_inherit">
+        <field name="name">purchase.order.form.inherit</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="/form/sheet/notebook/page[@string='Products']/field[@name='order_line']/tree/field[@name='price_unit']" position="after">
+                <field name="lot_id" />
+            </xpath>
+        </field>
+    </record>
+    
+    <record model="ir.ui.view" id="purchase_order_lot_id_form_inherit">
+        <field name="name">purchase.order.form.inherit</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.view_request_for_quotation_filter"/>
+        <field name="arch" type="xml">
+        	<field name="product_id" position="after">
+        		<field name="lot_id"/>
+        	</field>
+       	</field>
+    </record>
+    
+    
+     <record model="ir.ui.view" id="purchase_order_line_lot_id_form_inherit">
+        <field name="name">purchase.order.line.form.inherit</field>
+        <field name="model">purchase.order.line</field>
+        <field name="inherit_id" ref="purchase.purchase_order_line_form"/>
+        <field name="arch" type="xml">
+            <field name="price_unit" position="after">
+                <field name="lot_id" />
+            </field>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="purchase_order_line_lot_id_form_inherit_lot">
+	    <field name="name">purchase.order.tree</field>
+	    <field name="model">purchase.order</field>
+	    <field name="inherit_id" ref="purchase.purchase_order_form"/>
+	    <field name="arch" type="xml">
+	        <xpath expr="//field[@name='order_line']/tree/field[@name='price_unit']" position="before">
+	            <field name="lot_id"/>
+	        </xpath>
+	    </field>
+	</record>
+
+    
+    <record model="ir.ui.view" id="invoice_supplier_form_inherit_form">
+	    <field name="name">account.invoice.supplier.form</field>
+	    <field name="model">account.invoice</field>
+	    <field name="inherit_id" ref="account.invoice_supplier_form"/>
+	    <field name="arch" type="xml">
+	        <xpath expr="//field[@name='invoice_line']/tree/field[@name='price_unit']" position="after">
+	            <field name="lot_id"/>
+	        </xpath>
+	    </field>
+	</record>
+	
+	
+	<record model="ir.ui.view" id="invoice_form_inherit_form">
+	    <field name="name">account.invoice.supplier.form</field>
+	    <field name="model">account.invoice</field>
+	    <field name="inherit_id" ref="account.invoice_form"/>
+	    <field name="arch" type="xml">
+	        <xpath expr="//field[@name='invoice_line']/tree/field[@name='price_unit']" position="after">
+	            <field name="lot_id"/>
+	        </xpath>
+	    </field>
+	</record>
+	
+	<record model="ir.ui.view" id="view_account_invoice_filter_lot_id_inherit">
+        <field name="name">account.invoice.search.inherit</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+        <field name="arch" type="xml">
+        	<field name="period_id" position="after">
+        		<field name="lot_id"/>
+        	</field>
+       	</field>
+    </record>
+    
+</data>
+</openerp>

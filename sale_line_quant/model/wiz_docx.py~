@@ -1,0 +1,208 @@
+# -*- coding: utf-8 -*-
+##############################################################################
+#
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2015 Probuse Counsulting services pvt.ltd (<http://www.probuse.com>).
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
+
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+import base64
+from base64 import *
+import StringIO
+import zipfile
+
+from lxml import etree
+
+import time
+from docx import Document
+from docx.shared import Inches
+from docx import *
+import re
+import os
+import tempfile
+import shutil
+
+
+class wiz_docx_file(osv.osv_memory):
+    """  """
+
+    _name = "wiz.docx.file"
+    _description = "Make DOCX "
+
+
+    def get_word_xml(self, docx_filename):
+       with open(docx_filename) as f:       
+            zip = zipfile.ZipFile(f)
+            xml_content = zip.read('word/document.xml')
+       return xml_content
+
+    def get_xml_tree(self, xml_string):
+       return etree.fromstring(xml_string)
+
+    def _itertext(self, my_etree):
+         """Iterator to go through xml tree's text nodes"""
+         for node in my_etree.iter(tag=etree.Element):
+             if self._check_element_is(node, 't'):
+                 yield (node, node.text)
+
+    def _check_element_is(self, element, type_char):
+         word_schema = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
+         return element.tag == '{%s}%s' % (word_schema,type_char)
+
+    def create_docx(self, cr, uid, ids, context=None):
+        """
+            Create Docx file
+        """
+        wizard = self.browse(cr, uid, ids[0], context)
+        active_id = context and context.get('active_id') or []
+        partner = self.pool.get('res.partner').browse(cr, uid, active_id, context)
+        print "Company id :>>>>", 
+        server_url = self.pool.get('res.users').browse(cr,uid,uid).company_id.server_url
+        print "server_url:>>",server_url
+        #######################################################
+        document = Document(StringIO.StringIO(base64.b64decode(wizard.docx_file.datas)))
+        path = str(os.path.split(__file__)[0])+'/aaaaa.docx'# wizard dir path
+        document.save(path)
+        
+        print "\n\n=================Start======================="
+#        xml_from_file = self.get_word_xml(StringIO.StringIO(base64.encodestring(wizard.docx_file.datas)).buf)
+        xml_from_file = self.get_word_xml(path)
+        xml_tree = self.get_xml_tree(xml_from_file)
+        for node, text in self._itertext(xml_tree):
+            print ":>>>", node, text
+            if text == '#name' and partner.name:
+                node.text = partner.name
+            if text == '#name' and partner.name == False:
+                node.text = ' '
+
+            if text == '#street' and partner.street:
+                node.text = partner.street
+            if text == '#street' and partner.street == False:
+                node.text = ' '
+
+            if text == '#street2' and partner.street2:
+                node.text = partner.street2
+            if text == '#street2' and partner.street2 ==False:
+                node.text = ' '
+
+            if text == '#title' and partner.title:
+                node.text = partner.title.name
+            if text == '#title' and partner.title.id == False:
+                node.text = ''
+
+            print "asdasd", text,partner.state_id.name
+            if text == '#state' and partner.state_id.name:
+                print "@@@@@@@", partner.state_id.name
+                node.text = partner.state_id.name
+            if text == '#state' and partner.state_id.id == False:
+                node.text = ''
+
+            if text == '#city' and partner.city:
+                node.text = partner.city
+            if text == '#city' and partner.city == False:
+                node.text = ' '
+          
+            if text == '#country' and partner.country_id:
+                node.text = partner.country_id.name
+            if text == '#country' and partner.country_id.id == False:
+                node.text = ' '
+           
+            if text == '#zip' and partner.zip:
+                node.text = partner.zip
+            if text == '#zip' and partner.zip == False:
+                node.text = ' '
+            
+            if text == '#date':
+                node.text = str(time.strftime('%Y-%m-%d'))
+            
+        print "\n\n=================End======================="
+
+        with open(path) as f:       
+            zip = zipfile.ZipFile(f,'w')
+        zip = zipfile.ZipFile(open(path,"rb"))
+        tmp_dir = tempfile.mkdtemp()
+
+        zip.extractall(tmp_dir)
+        print "TEMP:>>>>", tmp_dir
+
+        with open(os.path.join(tmp_dir,'word/document.xml'), 'w') as f:
+            xmlstr = etree.tostring(xml_tree, pretty_print=True)
+            f.write(xmlstr)
+
+        # Get a list of all the files in the original docx zipfile
+        filenames = zip.namelist()
+        # Now, create the new zip file and add all the filex into the archive
+        zip_copy_filename = os.path.split(__file__)[0]+'/welcome_customer.docx'
+        zip_copy_filename = zip_copy_filename.replace('docx_operation/wizard','docx_operation/static/src/img')#replace wizard dir to img
+        with zipfile.ZipFile(zip_copy_filename, "w") as docx:
+            for filename in filenames:
+                docx.write(os.path.join(tmp_dir, filename), filename)
+
+        shutil.rmtree(tmp_dir)
+
+#        for p in document.paragraphs:
+#            self.paragraph_replace(p,'#name',str(partner.name))
+#            self.paragraph_replace(p,'#street',str(partner.street))
+#            self.paragraph_replace(p,'#street2',str(partner.street2))
+#            self.paragraph_replace(p,'#city',str(partner.city))
+#            self.paragraph_replace(p,'#zip',str(partner.zip))
+#            self.paragraph_replace(p,'#state',str(partner.state_id.name))
+#            self.paragraph_replace(p,'#country',str(partner.country_id.name))
+#            self.paragraph_replace(p,'#title',str(partner.title.name))
+#            self.paragraph_replace(p,'#date',str(time.strftime('%Y-%m-%d')))
+
+#        path = str(os.path.split(__file__)[0])+'/welcome_customer.docx'# wizard dir path
+#        path = path.replace('docx_operation/wizard','docx_operation/static/src/img')#replace wizard dir to img dir
+#        document.save(path)
+        if not server_url:
+            raise osv.except_osv(_('Error!'),_("Please Configure the server path under the company setting."))
+        ctx = {'default_docx_char':(str(server_url)+('/docx_operation/static/src/img')+'/welcome_customer.docx')}
+        return {
+                'context':ctx,
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'wiz.docx.updated.file',
+                'name':'Updated Docx File',
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+                }
+
+#    def paragraph_replace(self, paragraph,search, replace):
+#        searchre = re.compile(search)
+#        paragraph_text = paragraph.text
+#        if paragraph_text:
+#            if searchre.search(paragraph_text):
+#                if paragraph.style != None:
+#                    st = paragraph.style
+#                    self.clear_paragraph(paragraph)
+#                    paragraph.add_run(re.sub(search, replace, paragraph_text))
+#                    paragraph.style = st
+#        return paragraph
+
+#    def clear_paragraph(self, paragraph):
+#        p_element = paragraph._p
+#        p_child_elements = [elm for elm in p_element.iterchildren()]
+#        for child_element in p_child_elements:
+#            p_element.remove(child_element)
+        
+    _columns = {
+        'docx_file': fields.many2one('ir.attachment',string="Template Attachment",help=""),
+    }
+
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
