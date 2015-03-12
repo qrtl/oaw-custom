@@ -35,7 +35,7 @@ Main Features
     'author': 'Rooms For (Hong Kong) Limited T/A OSCG',
     'website': 'http://odoo-asia.com',
     'images' : [],
-    'depends': ['account', 'sale', 'purchase'],
+    'depends': ['account', 'sale', 'purchase', 'sale_line_quant'],
     'data': [
          'account_invoice_view.xml',        
     ],

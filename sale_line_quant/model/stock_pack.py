@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (c) Rooms For (Hong Kong) Limited T/A OSCG. All Rights Reserved.
+#    Copyright (c) Rooms For (Hong Kong) Limited T/A OSCG. All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as

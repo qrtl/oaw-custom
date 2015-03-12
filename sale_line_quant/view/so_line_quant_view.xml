@@ -35,6 +35,7 @@
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
                  <xpath expr="/form/sheet/notebook/page[@string='Order Lines']/field[@name='order_line']/tree[@string='Sales Order Lines']/field[@name='product_id'] " position="after">
+	      			<field name="route_id" groups="sale_stock.group_route_so_lines" attrs="{'required': [('stock_owner_id','=',False)]}" on_change="onchange_route(route_id)"/>
                     <field name="quant_id" domain="[('product_id','=',product_id)]" on_change="onchange_quant(quant_id)"/>
                     <field name="mto" invisible="1"/>
                     <field name="lot_id" attrs="{'required': [('mto','!=',True)]}"/>
@@ -58,16 +59,34 @@
             </field>
     </record>
     
-    <record id="view_order_form_inherit_quant" model="ir.ui.view">
-	      <field name="name">sale.order.form</field>
-	      <field name="model">sale.order</field>
-	      <field name="inherit_id" ref="sale_stock.view_order_form_inherit"/>
-	      <field name="arch" type="xml">
-	      		<field name="route_id" position="replace">
-	      			<field name="route_id" groups="sale_stock.group_route_so_lines" attrs="{'required': [('stock_owner_id','=',False)]}" on_change="onchange_route(route_id)"/>
-	      		</field>
-	      </field>
-	</record>
+    <record id="view_order_form_inherit_quant_form" model="ir.ui.view">
+        <field name="name">sale.order.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale_stock.view_order_form_inherit"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']/form/group/group/field[@name='route_id']" position="replace">
+                <field name="route_id" groups="sale_stock.group_route_so_lines" attrs="{'required': [('stock_owner_id','=',False)]}" on_change="onchange_route(route_id)"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='route_id']" position="replace">
+<!-- 
+                <field name="route_id" groups="sale_stock.group_route_so_lines" attrs="{'required': [('stock_owner_id','=',False)]}" on_change="onchange_route(route_id)"/>
+ -->
+            </xpath>
+        </field>
+    </record>
+
+<!--     
+    <record id="view_order_form_inherit_quant_tree" model="ir.ui.view">
+        <field name="name">sale.order.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale_stock.view_order_form_inherit"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']/tree/field[@name='route_id']" position="replace">
+                <field name="route_id" groups="sale_stock.group_route_so_lines" attrs="{'required': [('stock_owner_id','=',False)]}" on_change="onchange_route(route_id)"/>
+            </xpath>
+        </field>
+    </record>
+ -->
 
     <record id="sale_order_line_quant_view_form" model="ir.ui.view">
             <field name="name">sale.order.line.inherit.view.form</field>
@@ -82,7 +101,6 @@
             </field>
     </record>
     
-
     <record id="stock_move_inherit_slq_view" model="ir.ui.view">
             <field name="name">stock.move.inherit.slq.view</field>
             <field name="model">stock.move</field>
@@ -94,6 +112,7 @@
                 </field>
             </field>
     </record>
+    
     <record id="stock_move_inherit_slq_view1" model="ir.ui.view">
             <field name="name">stock.move.inherit.slq.view1</field>
             <field name="model">stock.move</field>
@@ -165,7 +184,7 @@
     </record>
     
     
-     <record model="ir.ui.view" id="purchase_order_line_lot_id_form_inherit">
+    <record model="ir.ui.view" id="purchase_order_line_lot_id_form_inherit">
         <field name="name">purchase.order.line.form.inherit</field>
         <field name="model">purchase.order.line</field>
         <field name="inherit_id" ref="purchase.purchase_order_line_form"/>
