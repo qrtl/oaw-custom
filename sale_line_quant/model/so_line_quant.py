@@ -53,7 +53,8 @@ class sale_order(osv.osv):
                 ('manual', 'On Demand'),
                 ('picking', 'On Delivery Order'),
                 ('prepaid', 'Before Delivery Order'),
-                ('delivery', 'On Delivery (per SO Line)'),# Added this new option.
+#                 ('delivery', 'On Delivery (per SO Line)'),# Added this new option.
+                ('line_check', 'Check per SO Line'),  # newly added
             ], 'Create Invoice', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
             help="""This field controls how invoice and delivery operations are synchronized."""),
     }
@@ -71,7 +72,8 @@ class sale_order(osv.osv):
             if not o.order_line:
                 raise osv.except_osv(_('Error!'),_('You cannot confirm a sales order which has no line.'))
             noprod = self.test_no_product(cr, uid, o, context)
-            if (o.order_policy in ('delivery', 'manual')) or noprod: #Added one more option delivery here.
+#             if (o.order_policy in ('delivery', 'manual')) or noprod: #Added one more option delivery here.
+            if (o.order_policy in ('line_check', 'manual')) or noprod: #Added one more option delivery here.
                 self.write(cr, uid, [o.id], {'state': 'manual', 'date_confirm': fields.date.context_today(self, cr, uid, context=context)})
             else:
                 self.write(cr, uid, [o.id], {'state': 'progress', 'date_confirm': fields.date.context_today(self, cr, uid, context=context)})
@@ -477,7 +479,7 @@ class stock_picking(osv.osv):
         quant_obj = self.pool.get("stock.quant")
         vals = []
         qtys_grouped = {}
-        #for each quant of the picking, find the suggested location
+        # for each quant of the picking, find the suggested location
         quants_suggested_locations = {}
         product_putaway_strats = {}
         for quant in quants:
@@ -504,15 +506,18 @@ class stock_picking(osv.osv):
             for quant in pack_quants:
                 del quants_suggested_locations[quant]
 
-        # Go through all remaining reserved quants and group by product, package, lot, owner, source location and dest location
+        # Go through all remaining reserved quants and group by product,
+        # package, lot, owner, source location and dest location
         for quant, dest_location_id in quants_suggested_locations.items():
-            key = (quant.product_id.id, quant.package_id.id, quant.lot_id.id, quant.owner_id.id, quant.location_id.id, dest_location_id, quant.reservation_id.lot_id.id)
+            key = (quant.product_id.id, quant.package_id.id, quant.lot_id.id,
+                   quant.owner_id.id, quant.location_id.id, dest_location_id,
+                   quant.reservation_id.lot_id.id)
             if qtys_grouped.get(key):
                 qtys_grouped[key] += quant.qty
             else:
                 qtys_grouped[key] = quant.qty
      
-        # Do the same for the forced quantities (in cases of force_assign or incomming shipment for example)
+        # Do the same for the forced quantities (in cases of force_assign or incoming shipment for example)
         for product, qty in forced_qties.items():
             if qty <= 0:
                 continue
@@ -577,7 +582,8 @@ class stock_picking(osv.osv):
                 
                 
                 
-                if new_value and move.procurement_id.sale_line_id and move.procurement_id.sale_line_id.order_id.order_policy == 'delivery':
+#                 if new_value and move.procurement_id.sale_line_id and move.procurement_id.sale_line_id.order_id.order_policy == 'delivery':
+                if new_value and move.procurement_id.sale_line_id and move.procurement_id.sale_line_id.order_id.order_policy == 'line_check':
 #                    m. Add a new option 'On Delivery (per SO Line)' for 'Create Invoice' field in 
 #SO.  In case this option is selected, user should be able to create an 
 #invoice any time from SO.  However, user should not be able to process 
@@ -585,13 +591,22 @@ class stock_picking(osv.osv):
 #has yet to be done..
                     new_value[0].update({'invoice_state': move.procurement_id.sale_line_id.state}) # If payment not done then raise from transfer wizard on pickings.
                 
-                # If purchase order line has serial number (MTO case) and when we create incoming shipment from PO then that serial number should be pass to the respected transfer (pack operation) on incoming shipments.
-                if new_value and move.procurement_id.purchase_line_id and move.procurement_id.purchase_line_id.lot_id and not new_value[0].get('lot_id', False):
-                    if move.product_id.product_tmpl_id.categ_id.enforce_qty_1 and self.check_mto(cr, uid, move.procurement_id, context=context):
-                        new_value[0].update({'lot_id': move.procurement_id.purchase_line_id.lot_id.id})
+                # If purchase order line has serial number (MTO case) and when
+                # we create incoming shipment from PO then that serial number
+                # should be passed to the respected transfer (pack operation)
+                # on incoming shipments.
+                if new_value and move.procurement_id.purchase_line_id and \
+                    move.procurement_id.purchase_line_id.lot_id and not \
+                    new_value[0].get('lot_id', False):
+                    if move.product_id.product_tmpl_id.categ_id.enforce_qty_1\
+                        and self.check_mto(cr, uid, move.procurement_id,
+                        context=context):
+                        new_value[0].update({'lot_id':
+                            move.procurement_id.purchase_line_id.lot_id.id})
                 
-                
-                # Below two conditions logic will pass the serial number on PO Line and SO Line if it was not given or left empty on time of Sales order creation.
+                # Below two conditions logic will pass the serial number on PO
+                # Line and SO Line if it was not given or left empty on time
+                # of Sales order creation.
                 if new_value and move.procurement_id.purchase_line_id and not move.procurement_id.purchase_line_id.lot_id:
                     if move.product_id.product_tmpl_id.categ_id.enforce_qty_1 and self.check_mto(cr, uid, move.procurement_id, context=context):
 #                     When receipt is done with serial number, it should trigger updating PO line, SO 
@@ -633,7 +648,8 @@ class res_partner(osv.osv):
                 ('manual', 'On Demand'),
                 ('picking', 'On Delivery Order'),
                 ('prepaid', 'Before Delivery Order'),
-                ('delivery', 'On Delivery (per SO Line)'),
+#                 ('delivery', 'On Delivery (per SO Line)'),
+                ('line_check', 'Check per SO Line'),
             ], 'Create Invoice',
             help="""This field controls how invoice and delivery operations are synchronized on sales order."""),
     }
