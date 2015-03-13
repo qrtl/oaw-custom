@@ -426,7 +426,7 @@ class stock_production_lot(osv.osv):
         return True 
     
     def _check_serial_qty(self, cr, uid, ids, context=None):
-#        ii.Qty on hand should not exceed 1 for serial number + product
+        # Qty on hand should not exceed 1 for serial number + product
         for prod in self.browse(cr, uid, ids, context=context):
             if prod.product_id.product_tmpl_id.categ_id.enforce_qty_1:
                 if prod.lot_balance > 1:
@@ -434,9 +434,12 @@ class stock_production_lot(osv.osv):
         return True
         
     _constraints = [
-        (_check_serial_enforce, 'Error ! Serial number must be unique per ENFORCE QTY 1 category product.', ['name', 'product_id']),
-        (_check_serial_qty, 'Error ! Quantity on hand should not exceed 1 for product haveing ENFORCE QTY 1 set.', ['lot_balance'])
+        (_check_serial_enforce, 'Error! Serial number must be unique for \
+            product with "ENFORCE QTY 1" setting.', ['name', 'product_id']),
+        (_check_serial_qty, 'Error! Quantity on hand should not exceed 1 for \
+            product with "ENFORCE QTY 1" setting.', ['lot_balance'])
     ]
+
 
 class stock_picking(osv.osv):
     _inherit = 'stock.picking'
