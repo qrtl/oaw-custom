@@ -30,7 +30,12 @@
     'description': """ 
 Modification on sales order line by adding quant and serial number selection.
     """,
-    'update_xml': ['security/group.xml','view/so_line_quant_view.xml'],
+    'data': [
+             'security/group.xml',
+             'view/sale_view.xml',
+             'view/sale_stock_view.xml',
+             'view/so_line_quant_view.xml',
+             ],
     'installable': True,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
