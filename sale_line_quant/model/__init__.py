@@ -20,5 +20,6 @@
 ##############################################################################
 
 import sale
+import purchase
 import so_line_quant
 import stock_pack
