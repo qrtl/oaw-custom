@@ -63,6 +63,25 @@ class purchase_order(osv.osv):
         fpos = po_line.order_id.fiscal_position or False
         return fiscal_obj.map_account(cr, uid, fpos, acc_id)
     
+    # this method overrides the standard method
+    def wkf_confirm_order(self, cr, uid, ids, context=None):
+        todo = []
+        for po in self.browse(cr, uid, ids, context=context):
+            if not po.order_line:
+                raise osv.except_osv(_('Error!'),_('You cannot confirm a purchase order without any purchase order line.'))
+            for line in po.order_line:
+                # >>> OSCG
+                # check enforce qty 1
+                if line.product_id.product_tmpl_id.categ_id.enforce_qty_1 and line.product_qty > 1.0:
+                    raise osv.except_osv(_('Error!'),_('Quantity of PO line should be 1 (enforce quantity 1).'))
+                # <<< OSCG
+                if line.state=='draft':
+                    todo.append(line.id)        
+        self.pool.get('purchase.order.line').action_confirm(cr, uid, todo, context)
+        for id in ids:
+            self.write(cr, uid, [id], {'state' : 'confirmed', 'validator' : uid})
+        return True
+    
     def _prepare_inv_line(self, cr, uid, account_id, order_line, context=None):
         #GR/IR Clearing account (which is supposed to be an interim receipt account) should not appear in vendor consignment scenario since stock accounting is disabled in this case.  Below is the journal entries we expect for this scenario.
         # 
