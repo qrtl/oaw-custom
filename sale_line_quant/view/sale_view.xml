@@ -33,8 +33,8 @@
                              ('usage', '=', 'internal')]"
                     attrs="{'readonly': [('mto','=',True)]}"
                     on_change="onchange_quant(quant_id)"/>
-                <field name="lot_id" readonly='1'/>
-                <field name="stock_owner_id" readonly='1'/>
+                <field name="lot_id" attrs="{'readonly': [('mto','=',True)]}"/>
+                <field name="stock_owner_id" attrs="{'readonly': [('mto','=',True)]}"/>
    	            <field name="route_id" groups="sale_stock.group_route_so_lines"
    			        attrs="{'required': [('quant_id','=',False)], 'readonly': [('quant_id','!=',False)]}"
    			        on_change="onchange_route(route_id)"/>

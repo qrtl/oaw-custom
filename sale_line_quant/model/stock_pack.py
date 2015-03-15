@@ -19,9 +19,9 @@
 #
 ##############################################################################
 from datetime import datetime
-
 from openerp import models, fields, api, _
 from openerp.exceptions import Warning
+
 
 class stock_transfer_details(models.TransientModel):
     _inherit = 'stock.transfer_details'
@@ -55,10 +55,10 @@ class stock_transfer_details(models.TransientModel):
                 'result_package_id': op.result_package_id.id,
                 'date': op.date, 
                 'owner_id': op.owner_id.id,
-                'invoice_state': op.invoice_state, #probuse
-                'purchase_line_id': op.purchase_line_id.id, #probuse
-                'move_dest_id': op.move_dest_id.id, #probuse
-                'sale_line_id': op.sale_line_id.id, #probuse
+                'invoice_state': op.invoice_state, # oscg
+                'purchase_line_id': op.purchase_line_id.id, # oscg
+                'move_dest_id': op.move_dest_id.id, # oscg
+                'sale_line_id': op.sale_line_id.id, # oscg
             }
             if op.product_id:
                 items.append(item)
@@ -75,18 +75,22 @@ class stock_transfer_details(models.TransientModel):
         for lstits in [self.item_ids, self.packop_ids]:
             for prod in lstits:
                 
-                if prod.invoice_state and prod.invoice_state != 'paid':#probuse
-                    raise Warning(_('Warning'), _('You can not transfer the product since some of the lines payment has not been done.'))#probuse
+                # >>> oscg
+                if prod.invoice_state and prod.invoice_state != 'paid':
+                    raise Warning(_('Error!'), _('You cannot transfer the \
+                        product due to unpaid SO line(s).'))
                 
-                if prod.purchase_line_id:#probuse
-                    prod.purchase_line_id.write({'lot_id':prod.lot_id.id })#probuse
-                    prod.purchase_line_id.invoice_lines.write({'lot_id':prod.lot_id.id}) #probuse # Write on specific invoice line respected to purchase line with same lot number.
+                if prod.purchase_line_id:
+                    prod.purchase_line_id.write({'lot_id':prod.lot_id.id })
+                    # Write on specific invoice line respected to purchase line with same lot number.
+                    prod.purchase_line_id.invoice_lines.write({'lot_id':prod.lot_id.id})
 
-                if prod.sale_line_id:#probuse
-                    prod.sale_line_id.write({'lot_id':prod.lot_id.id })#probuse
+                if prod.sale_line_id:
+                    prod.sale_line_id.write({'lot_id':prod.lot_id.id })
                 
-                if prod.move_dest_id:#probuse
-                    prod.move_dest_id.write({'lot_id':prod.lot_id.id })#probuse
+                if prod.move_dest_id:
+                    prod.move_dest_id.write({'lot_id':prod.lot_id.id })
+                # <<< oscg
                 
                 pack_datas = {
                     'product_id': prod.product_id.id,
@@ -116,6 +120,7 @@ class stock_transfer_details(models.TransientModel):
         self.picking_id.do_transfer()
 
         return True
+
     
 class stock_transfer_details_items(models.TransientModel):
     _inherit = 'stock.transfer_details_items'
