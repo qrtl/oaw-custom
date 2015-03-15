@@ -43,73 +43,6 @@ class stock_quant(osv.osv):
                 'stock.quant': (lambda self, cr, uid, ids, c={}: ids, [], 10),
             },),
     }
-
-    
-# class sale_order(osv.osv):
-#     _inherit = "sale.order"
-#     _columns = {
-#         'is_enforce_qty': fields.boolean('Is Enforce Quantity 1?', help="This field will be ticked if one of sales order line has product which enforce quantity from its category."),
-#         'lot_id': fields.related('order_line', 'lot_id', type='many2one', relation='stock.production.lot', string='Lot'), #For search purpose
-#         'order_policy': fields.selection([
-#                 ('manual', 'On Demand'),
-#                 ('picking', 'On Delivery Order'),
-#                 ('prepaid', 'Before Delivery Order'),
-# #                 ('delivery', 'On Delivery (per SO Line)'),# Added this new option.
-#                 ('line_check', 'Check per SO Line'),  # newly added
-#             ], 'Create Invoice', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
-#             help="""This field controls how invoice and delivery operations are synchronized."""),
-#     }
-#     
-#     def action_wait(self, cr, uid, ids, context=None):
-# #        Add a new option 'On Delivery (per SO Line)' for 'Create Invoice' field in 
-# #        SO.  In case this option is selected, user should be able to create an 
-# #        invoice any time from SO.  However, user should not be able to process 
-# #        'Transfer' in outgoing delivery for lines (stock moves) for which payment 
-# #        has yet to be done. 
-# #This complete override the action_wait method.
-#         
-#         context = context or {}
-#         for o in self.browse(cr, uid, ids):
-#             if not o.order_line:
-#                 raise osv.except_osv(_('Error!'),_('You cannot confirm a sales order which has no line.'))
-#             noprod = self.test_no_product(cr, uid, o, context)
-# #             if (o.order_policy in ('delivery', 'manual')) or noprod: #Added one more option delivery here.
-#             if (o.order_policy in ('line_check', 'manual')) or noprod: #Added one more option delivery here.
-#                 self.write(cr, uid, [o.id], {'state': 'manual', 'date_confirm': fields.date.context_today(self, cr, uid, context=context)})
-#             else:
-#                 self.write(cr, uid, [o.id], {'state': 'progress', 'date_confirm': fields.date.context_today(self, cr, uid, context=context)})
-#             self.pool.get('sale.order.line').button_confirm(cr, uid, [x.id for x in o.order_line])
-#         return True
-#     
-#     def onchange_partner_id(self, cr, uid, ids, part, context=None):
-# #        Add logic to propose Create Invoice (order_policy) in SO from customer 
-# #(add a field in customer) 
-#         res = super(sale_order, self).onchange_partner_id(cr, uid, ids, part, context=context)
-#         if not part:
-#             return res
-#         part = self.pool.get('res.partner').browse(cr, uid, part, context=context)
-#         res['value'].update({'order_policy': part.order_policy})
-#         return res
-#     
-#     def _prepare_order_line_procurement(self, cr, uid, order, line, group_id=False, context=None):
-#         #Send/Pass lot, quant and enforce_qty_1 to the respected procurement using sale order lines. This will be used in pickings/moves.
-#         """ create procurement here we add just two fields add quant_id and lot_id"""
-#         res = super(sale_order,self)._prepare_order_line_procurement(cr, uid, order, line, group_id, context=context)
-#         res.update({'quant_id': line.quant_id.id, 'lot_id':line.lot_id.id, 'is_enforce_qty': line.product_id.product_tmpl_id.categ_id.enforce_qty_1})
-#         return res 
-#     
-#     def action_ship_create(self, cr, uid, ids, context=None):
-#         res = super(sale_order, self).action_ship_create(cr, uid, ids, context=context)
-#         for order in self.browse(cr, uid, ids, context=context):
-#             for line in order.order_line:
-#                 if line.product_id.product_tmpl_id.categ_id.enforce_qty_1:# Just flag SO as enforce qty SO.
-#                     order.write({'is_enforce_qty': True})
-#                 if line.quant_id and line.lot_id:
-# #                    For serial number availability in SO line, selection should be limited to the ones 
-# #that (1) have on­hand qty > 0, and (2) are not reserved by another SO. 
-#                     current_qty = line.quant_id.sale_reserver_qty + line.product_uom_qty
-#                     line.quant_id.write({'sale_reserver_qty': current_qty})
-#         return res
     
 
 class procurement_order(osv.osv):
@@ -245,55 +178,6 @@ class procurement_order(osv.osv):
         if sum_po_line_ids:
             self.message_post(cr, uid, sum_po_line_ids, body=_("Quantity added in existing Purchase Order Line"), context=context)
         return res
-
-
-# class sale_order_line(osv.osv):
-#     _inherit = "sale.order.line"
-# #     _description = " "
-# 
-#     _columns = {
-#         'quant_id': fields.many2one('stock.quant', string="Stock Quant",),
-#         'lot_id': fields.many2one('stock.production.lot', string="Case No.",),
-#         'mto': fields.boolean('Is MTO?'),
-#     }
-#     
-#     def onchange_route(self, cr, uid, ids, route_id, context=None):
-#         # Serial number can be left blank in case of ‘Make To Order’. 
-#         # Otherwise, the field should be mandatory 
-#         result = {'mto': False}
-#         model, res_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'stock', 'route_warehouse0_mto')
-#         if route_id == res_id:
-#             result = {
-#                 'mto': True,
-#             }
-#         return {'value': result}
-# 
-#     def onchange_quant(self, cr, uid, ids, quant_id, context=None):
-#         """ On change of quant_id finds lot_id(serial no)
-#         @param quant_id: Quant id
-#         @return: Dictionary of values
-#         """
-# #        Selecting a serial number (a quant) in SO should automatically propose 
-# #the Stock Owner in SO line 
-# #        Cost Price in SO line (we select ‘Display margins on sales orders’ in sales 
-# #configuration) should be taken from selected quant (serial number) 
-# 
-#         result = {}
-#         if quant_id:
-#             quant = self.pool.get('stock.quant').browse(cr,uid,quant_id)
-#             model, res_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'base', 'main_partner')
-#             result = {
-#                 'lot_id': quant.lot_id.id,
-#                 'stock_owner_id': quant.owner_id.id if not quant.owner_id.id == res_id else False, #Selecting a serial number (a quant) in SO should automatically propose the Stock Owner in SO line
-#                 'purchase_price': quant.inventory_value / quant.qty
-#             }
-#         return {'value': result}
-#     
-#     def _prepare_order_line_invoice_line(self, cr, uid, line, account_id=False, context=None):
-#         res = super(sale_order_line, self)._prepare_order_line_invoice_line(cr, uid, line, account_id=account_id, context=context)
-#         # Pass the lot reference to invoice from SO / PO.
-#         res.update({'lot_id': line.lot_id.id})
-#         return res
 
 
 class stock_move(osv.osv):
@@ -663,71 +547,71 @@ class res_partner(osv.osv):
     }
 
 
-class purchase_order_line(osv.osv):
-    _inherit = 'purchase.order.line'
-    _columns = {
-        'lot_id': fields.many2one('stock.production.lot', string="Case No.",),
-    }
-    
-
-class purchase_order(osv.osv):
-    _inherit = 'purchase.order'
-    _columns ={
-        'lot_id': fields.related('order_line', 'lot_id', type='many2one', relation='stock.production.lot', string='Lot'),# for searching purpose
-    }
-    
-    def _check_invoice_type_vci(self, cr, uid, ids, context=None):# Constraint
-        for prod in self.browse(cr, uid, ids, context=context):
-            if prod.is_vci and prod.invoice_method == 'picking':
-                return False
-        return True
-        
-    _constraints = [
-         (_check_invoice_type_vci, 'Error ! You can not create purchase order with option Vendor Consignment Inventory with invoice policy from incoming shipment.', ['is_vci'])
-    ]
-    
-    def _choose_account_from_po_line_vic(self, cr, uid, po_line, context=None):
-#        Adjustment on supplier invoice ­ in case of vendor consignment, the 
-#system should propose Product COGS instead of GR/IR Clearing 
-
-        fiscal_obj = self.pool.get('account.fiscal.position')
-        property_obj = self.pool.get('ir.property')
-        if po_line.product_id:
-            acc_id = po_line.product_id.property_stock_account_output.id
-            if not acc_id:
-                acc_id = po_line.product_id.categ_id.property_stock_account_output_categ.id
-            if not acc_id:
-                raise osv.except_osv(_('Error!'), _('Define an stock output account for this product: "%s" (id:%d).') % (po_line.product_id.name, po_line.product_id.id,))
-        else:
-            acc_id = property_obj.get(cr, uid, 'property_stock_account_output_categ', 'product.category', context=context).id
-        fpos = po_line.order_id.fiscal_position or False
-        return fiscal_obj.map_account(cr, uid, fpos, acc_id)
-    
-    def _prepare_inv_line(self, cr, uid, account_id, order_line, context=None):
-        #GR/IR Clearing account (which is supposed to be an interim receipt account) should not appear in vendor consignment scenario since stock accounting is disabled in this case.  Below is the journal entries we expect for this scenario.
-        # 
-        #1. Receive consignment goods
-        #-> No accounting entry (because owner = supplier)
-        #2. Customer invoice
-        #-> Dr) Accounts Receivable 120,000
-        #    Cr) Sales 120,000
-        #3. Delivery
-        #-> No accounting entry (because owner = supplier)
-        #4. Supplier invoice
-        #-> Dr) Product COGS 100,000
-        #    Cr) Accounts Payable 100,000
-        #The main point here is the red part (Product COGS 100,000).  Following normal configuration, the system will propose GR/IR Clearing account (which we will set in property_account_expense of product or property_account_expense_categ of product category) in supplier invoice.  However, in case of invoice for vendor consignment, we want to post Cost of Goods Sold (which we will set in property_account_output of product or property_account_output_categ of product category).
-        res = super(purchase_order, self)._prepare_inv_line(cr, uid, account_id, order_line, context=context)
-        if order_line.order_id.is_vci:
-            acc_id = self._choose_account_from_po_line_vic(cr, uid, order_line, context=context)
-            res.update({'account_id': acc_id})
-        res.update({'lot_id':order_line.lot_id.id})
-        
-        if not order_line.lot_id:
-            if order_line.product_id.product_tmpl_id.categ_id.enforce_qty_1:
-                res.update({'lot_id':order_line.procurement_ids[0].lot_id.id})
-        
-        return res
+# class purchase_order_line(osv.osv):
+#     _inherit = 'purchase.order.line'
+#     _columns = {
+#         'lot_id': fields.many2one('stock.production.lot', string="Case No.",),
+#     }
+#     
+# 
+# class purchase_order(osv.osv):
+#     _inherit = 'purchase.order'
+#     _columns ={
+#         'lot_id': fields.related('order_line', 'lot_id', type='many2one', relation='stock.production.lot', string='Lot'),# for searching purpose
+#     }
+#     
+#     def _check_invoice_type_vci(self, cr, uid, ids, context=None):# Constraint
+#         for prod in self.browse(cr, uid, ids, context=context):
+#             if prod.is_vci and prod.invoice_method == 'picking':
+#                 return False
+#         return True
+#         
+#     _constraints = [
+#          (_check_invoice_type_vci, 'Error ! You can not create purchase order with option Vendor Consignment Inventory with invoice policy from incoming shipment.', ['is_vci'])
+#     ]
+#     
+#     def _choose_account_from_po_line_vic(self, cr, uid, po_line, context=None):
+# #        Adjustment on supplier invoice ­ in case of vendor consignment, the 
+# #system should propose Product COGS instead of GR/IR Clearing 
+# 
+#         fiscal_obj = self.pool.get('account.fiscal.position')
+#         property_obj = self.pool.get('ir.property')
+#         if po_line.product_id:
+#             acc_id = po_line.product_id.property_stock_account_output.id
+#             if not acc_id:
+#                 acc_id = po_line.product_id.categ_id.property_stock_account_output_categ.id
+#             if not acc_id:
+#                 raise osv.except_osv(_('Error!'), _('Define an stock output account for this product: "%s" (id:%d).') % (po_line.product_id.name, po_line.product_id.id,))
+#         else:
+#             acc_id = property_obj.get(cr, uid, 'property_stock_account_output_categ', 'product.category', context=context).id
+#         fpos = po_line.order_id.fiscal_position or False
+#         return fiscal_obj.map_account(cr, uid, fpos, acc_id)
+#     
+#     def _prepare_inv_line(self, cr, uid, account_id, order_line, context=None):
+#         #GR/IR Clearing account (which is supposed to be an interim receipt account) should not appear in vendor consignment scenario since stock accounting is disabled in this case.  Below is the journal entries we expect for this scenario.
+#         # 
+#         #1. Receive consignment goods
+#         #-> No accounting entry (because owner = supplier)
+#         #2. Customer invoice
+#         #-> Dr) Accounts Receivable 120,000
+#         #    Cr) Sales 120,000
+#         #3. Delivery
+#         #-> No accounting entry (because owner = supplier)
+#         #4. Supplier invoice
+#         #-> Dr) Product COGS 100,000
+#         #    Cr) Accounts Payable 100,000
+#         #The main point here is the red part (Product COGS 100,000).  Following normal configuration, the system will propose GR/IR Clearing account (which we will set in property_account_expense of product or property_account_expense_categ of product category) in supplier invoice.  However, in case of invoice for vendor consignment, we want to post Cost of Goods Sold (which we will set in property_account_output of product or property_account_output_categ of product category).
+#         res = super(purchase_order, self)._prepare_inv_line(cr, uid, account_id, order_line, context=context)
+#         if order_line.order_id.is_vci:
+#             acc_id = self._choose_account_from_po_line_vic(cr, uid, order_line, context=context)
+#             res.update({'account_id': acc_id})
+#         res.update({'lot_id':order_line.lot_id.id})
+#         
+#         if not order_line.lot_id:
+#             if order_line.product_id.product_tmpl_id.categ_id.enforce_qty_1:
+#                 res.update({'lot_id':order_line.procurement_ids[0].lot_id.id})
+#         
+#         return res
 
 
 class account_invoice(osv.osv):
