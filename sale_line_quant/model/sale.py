@@ -41,19 +41,22 @@ class sale_order(osv.osv):
     }
     
     def action_wait(self, cr, uid, ids, context=None):
-#        Add a new option 'On Delivery (per SO Line)' for 'Create Invoice' field in 
-#        SO.  In case this option is selected, user should be able to create an 
-#        invoice any time from SO.  However, user should not be able to process 
-#        'Transfer' in outgoing delivery for lines (stock moves) for which payment 
-#        has yet to be done. 
-#This complete override the action_wait method.
+    # Add a new option 'On Demand (per SO Line)' for 'Create Invoice' field in 
+    # SO.  In case this option is selected, user should be able to create an 
+    # invoice any time from SO.  However, user should not be able to process 
+    # 'Transfer' in outgoing delivery for lines (stock moves) for which payment 
+    # has yet to be done. 
+    # This completely overrides the action_wait method.
         
         context = context or {}
         for o in self.browse(cr, uid, ids):
             if not o.order_line:
                 raise osv.except_osv(_('Error!'),_('You cannot confirm a sales order which has no line.'))
+            # check enforce qty 1
+            for line in o.order_line:
+                if line.product_id.product_tmpl_id.categ_id.enforce_qty_1 and line.product_uom_qty > 1.0:
+                    raise osv.except_osv(_('Error!'),_('Quantity of SO line should be 1 (enforce quantity 1).'))
             noprod = self.test_no_product(cr, uid, o, context)
-#             if (o.order_policy in ('delivery', 'manual')) or noprod: #Added one more option delivery here.
             if (o.order_policy in ('line_check', 'manual')) or noprod: #Added one more option delivery here.
                 self.write(cr, uid, [o.id], {'state': 'manual', 'date_confirm': fields.date.context_today(self, cr, uid, context=context)})
             else:
@@ -139,5 +142,3 @@ class sale_order_line(osv.osv):
         # Pass the lot reference to invoice from SO / PO.
         res.update({'lot_id': line.lot_id.id})
         return res
-
-
