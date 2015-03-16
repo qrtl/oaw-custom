@@ -19,6 +19,7 @@
 #
 ##############################################################################
 from datetime import datetime
+# from openerp.osv import fields, osv
 from openerp import models, fields, api, _
 from openerp.exceptions import Warning
 
@@ -82,11 +83,13 @@ class stock_transfer_details(models.TransientModel):
                 
                 if prod.purchase_line_id:
                     prod.purchase_line_id.write({'lot_id':prod.lot_id.id })
-                    # Write on specific invoice line respected to purchase line with same lot number.
+                    # Write on specific invoice line respected to PO line with same lot number.
                     prod.purchase_line_id.invoice_lines.write({'lot_id':prod.lot_id.id})
 
                 if prod.sale_line_id:
                     prod.sale_line_id.write({'lot_id':prod.lot_id.id })
+                    # Write on specific invoice line respected to SO line with same lot number.
+                    prod.sale_line_id.invoice_lines.write({'lot_id':prod.lot_id.id})
                 
                 if prod.move_dest_id:
                     prod.move_dest_id.write({'lot_id':prod.lot_id.id })
@@ -129,5 +132,5 @@ class stock_transfer_details_items(models.TransientModel):
     purchase_line_id = fields.Many2one('purchase.order.line',string="PO Line")
     sale_line_id = fields.Many2one('sale.order.line',string="SO Line")
     move_dest_id = fields.Many2one('stock.move',string="Destination Move")
-    
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
