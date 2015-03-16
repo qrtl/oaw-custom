@@ -69,7 +69,6 @@ class account_invoice_line(osv.osv):
         'lot_id': fields.many2one('stock.production.lot', string="Case No."),
     }
 
-
 class stock_pack_operation(osv.osv):
     _inherit = 'stock.pack.operation'
     _columns = {
