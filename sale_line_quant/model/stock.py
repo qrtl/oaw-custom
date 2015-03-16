@@ -27,10 +27,10 @@ from openerp.tools.translate import _
 class stock_quant(osv.osv):
     _inherit = "stock.quant"
 
-    def quants_unreserve(self, cr, uid, move, context=None):
-        for quant in move.reserved_quant_ids:
-            self.write(cr, SUPERUSER_ID, [quant.id], {'sale_reserver_qty': quant.sale_reserver_qty - move.product_uom_qty}, context=context)
-        return super(stock_quant, self).quants_unreserve(cr, uid, move, context=context)
+#     def quants_unreserve(self, cr, uid, move, context=None):
+#         for quant in move.reserved_quant_ids:
+#             self.write(cr, SUPERUSER_ID, [quant.id], {'sale_reserver_qty': quant.sale_reserver_qty - move.product_uom_qty}, context=context)
+#         return super(stock_quant, self).quants_unreserve(cr, uid, move, context=context)
     
     def _actual_qty(self, cr, uid, ids, name, arg, context=None):
         res = {}
@@ -41,7 +41,8 @@ class stock_quant(osv.osv):
     _description = "Stock Quants"
     _columns = {
         'usage': fields.related('location_id', 'usage', type='char', string='Type of Location', readonly=True, store=True),
-        'sale_reserver_qty': fields.float('Sale Reserved Quantity'),#Added this field to track if selected quant on other sale order should not be select again.
+#         'sale_reserver_qty': fields.float('Sale Reserved Quantity'),#Added this field to track if selected quant on other sale order should not be select again.
+        'sale_reserver_qty': fields.related('reservation_id', 'product_uom_qty', type='float', string='Sale Reserved Quantity', readonly=True, store=True),
         'actual_qty': fields.function(_actual_qty, string='Actual Quantity', help="It is: Quantity - Sale Reserved Quantity", type='float', store={
                 'stock.quant': (lambda self, cr, uid, ids, c={}: ids, [], 10),
             },),

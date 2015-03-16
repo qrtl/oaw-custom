@@ -57,15 +57,14 @@ class procurement_order(osv.osv):
             return True
         return False
     
+    # this method checks if given procurement is set with MTO or VCI
     def check_vci_or_mto(self, cr, uid, procurement, context=None):
-        #This method will check if the given procurement is set with MTO and VCI or not.
-#       It will be used in logic of "Prevent multiple procurements getting merged into one PO.  SO and PO 
-#should be one to one relationship for ‘Make To Order’ and ‘Buy VCI’ cases."
-
         if context is None:
             context = {}
-        model, res_id1 = self.pool['ir.model.data'].get_object_reference(cr, uid, 'stock', 'route_warehouse0_mto')
-        model, res_id2 = self.pool['ir.model.data'].get_object_reference(cr, uid, 'vendor_consignment_stock', 'route_warehouse0_buy_vci')
+        model, res_id1 = self.pool['ir.model.data'].get_object_reference(cr,
+            uid, 'stock', 'route_warehouse0_mto')
+        model, res_id2 = self.pool['ir.model.data'].get_object_reference(cr,
+            uid, 'vendor_consignment_stock', 'route_warehouse0_buy_vci')
         vci = False
         mto = False
         for route in procurement.route_ids:
@@ -109,19 +108,29 @@ class procurement_order(osv.osv):
                 line_vals = self._get_po_line_values_from_proc(cr, uid, procurement, partner, company, schedule_date, context=context)
                 #look for any other draft PO for the same supplier, to attach the new line on instead of creating a new draft one
                 available_draft_po_ids = po_obj.search(cr, uid, [
-                    ('partner_id', '=', partner.id), ('state', '=', 'draft'), ('picking_type_id', '=', procurement.rule_id.picking_type_id.id),
-                    ('location_id', '=', procurement.location_id.id), ('company_id', '=', procurement.company_id.id), ('dest_address_id', '=', procurement.partner_dest_id.id)], context=context)
+                    ('partner_id', '=', partner.id),
+                    ('state', '=', 'draft'),
+                    ('picking_type_id', '=', procurement.rule_id.picking_type_id.id),
+                    ('location_id', '=', procurement.location_id.id),
+                    ('company_id', '=', procurement.company_id.id),
+                    ('dest_address_id', '=', procurement.partner_dest_id.id),
+                    ],context=context)
 
-                #"Prevent multiple procurements getting merged into one PO.  SO and PO 
-#should be one to one relationship for ‘Make To Order’ and ‘Buy VCI’ cases."
-                if available_draft_po_ids and not self.check_vci_or_mto(cr, uid, procurement, context=context):#probuse # Do we need to check if product is enforce qty or not ?
+                # oscg.  prevent multiple procurements getting merged into one PO.
+                # SO and PO should be one to one relationship for ‘Make To Order’ and ‘Buy VCI’ cases.
+                if available_draft_po_ids and not self.check_vci_or_mto(cr,
+                    uid, procurement, context=context): # oscg
                     po_id = available_draft_po_ids[0]
                     po_rec = po_obj.browse(cr, uid, po_id, context=context)
                     #if the product has to be ordered earlier those in the existing PO, we replace the purchase date on the order to avoid ordering it too late
                     if datetime.strptime(po_rec.date_order, DEFAULT_SERVER_DATETIME_FORMAT) > purchase_date:
                         po_obj.write(cr, uid, [po_id], {'date_order': purchase_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
                     #look for any other PO line in the selected PO with same product and UoM to sum quantities instead of creating a new po line
-                    available_po_line_ids = po_line_obj.search(cr, uid, [('order_id', '=', po_id), ('product_id', '=', line_vals['product_id']), ('product_uom', '=', line_vals['product_uom'])], context=context)
+                    available_po_line_ids = po_line_obj.search(cr, uid, [
+                        ('order_id', '=', po_id),
+                        ('product_id', '=', line_vals['product_id']),
+                        ('product_uom', '=', line_vals['product_uom'])
+                        ], context=context)
                     if available_po_line_ids:
                         po_line = po_line_obj.browse(cr, uid, available_po_line_ids[0], context=context)
                         po_line_obj.write(cr, SUPERUSER_ID, po_line.id, {'product_qty': po_line.product_qty + line_vals['product_qty']}, context=context)

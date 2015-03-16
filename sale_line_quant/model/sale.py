@@ -87,11 +87,11 @@ class sale_order(osv.osv):
             for line in order.order_line:
                 if line.product_id.product_tmpl_id.categ_id.enforce_qty_1:# Just flag SO as enforce qty SO.
                     order.write({'is_enforce_qty': True})
-                if line.quant_id and line.lot_id:
-#                    For serial number availability in SO line, selection should be limited to the ones 
-#that (1) have on­hand qty > 0, and (2) are not reserved by another SO. 
-                    current_qty = line.quant_id.sale_reserver_qty + line.product_uom_qty
-                    line.quant_id.write({'sale_reserver_qty': current_qty})
+#                 if line.quant_id and line.lot_id:
+# #                    For serial number availability in SO line, selection should be limited to the ones 
+# #that (1) have on­hand qty > 0, and (2) are not reserved by another SO. 
+#                     current_qty = line.quant_id.sale_reserver_qty + line.product_uom_qty
+#                     line.quant_id.write({'sale_reserver_qty': current_qty})
         return res
 
 
