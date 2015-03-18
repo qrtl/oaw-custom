@@ -25,19 +25,46 @@ from openerp.tools.translate import _
 
 class sale_order(osv.osv):
     _inherit = "sale.order"
+
+    def action_button_split_line(self, cr, uid, ids, context=None):
+        context = context or {}
+        for sale in self.browse(cr, uid, ids, context=context):
+            if not sale.order_line:
+                raise osv.except_osv(_('Error!'),_('You cannot split a sales order which has no line.'))
+            for line in sale.order_line:
+                if line.product_id.product_tmpl_id.categ_id.enforce_qty_1 and line.product_uom_qty > 1.0:
+                    for qty in range(0, int(line.product_uom_qty - 1)):
+                        default = {'product_uom_qty': 1.0, 'product_uos_qty': 1.0}
+                        sale_line_id = self.pool.get('sale.order.line').copy(cr, uid, line.id, default=default, context=context)
+                    self.pool.get('sale.order.line').write(cr, uid, [line.id], {'product_uom_qty': 1.0, 'product_uos_qty': 1.0}, context=context)
+                    self.write(cr, uid, [sale.id], {'is_enforce_qty': True}, context=context)
+        return True
+
+    def _need_auto_split(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        for sale in self.browse(cr, uid, ids, context=context):
+            res[sale.id] = False
+            for line in sale.order_line:
+                if line.product_id.product_tmpl_id.categ_id.enforce_qty_1 and line.product_uom_qty > 1.0:
+                    res[sale.id] = True
+        return res
+    
     _columns = {
         'is_enforce_qty': fields.boolean('Enforce Quantity 1', help="This \
             field will be ticked if one of sales order line has product \
             which enforces quantity from its category."),
         'lot_id': fields.related('order_line', 'lot_id', type='many2one', relation='stock.production.lot', string='Lot'), #For search purpose
         'order_policy': fields.selection([
-                ('manual', 'On Demand'),
-                ('picking', 'On Delivery Order'),
-                ('prepaid', 'Before Delivery Order'),
-#                 ('delivery', 'On Delivery (per SO Line)'),# Added this new option.
-                ('line_check', 'Check per SO Line'),  # newly added
+            ('manual', 'On Demand'),
+            ('picking', 'On Delivery Order'),
+            ('prepaid', 'Before Delivery Order'),
+            ('line_check', 'Check per SO Line'),  # newly added
             ], 'Create Invoice', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
             help="""This field controls how invoice and delivery operations are synchronized."""),
+        'need_auto_split': fields.function(_need_auto_split, string='Need Auto Split?', 
+            type='boolean', store={
+            'sale.order': (lambda self, cr, uid, ids, c={}: ids, [], 10),
+            },),    
     }
     
     def action_wait(self, cr, uid, ids, context=None):
