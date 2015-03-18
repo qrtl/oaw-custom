@@ -35,6 +35,7 @@ Modification on sales order line by adding quant and serial number selection.
              'view/sale_view.xml',
              'view/sale_stock_view.xml',
              'view/so_line_quant_view.xml',
+             'view/account_invoice_view.xml',
              ],
     'installable': True,
 }
