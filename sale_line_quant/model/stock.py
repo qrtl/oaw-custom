@@ -530,7 +530,7 @@ class stock_picking(osv.osv):
                     #'Transfer' in outgoing delivery for lines (stock moves) for which payment 
                     #has yet to be done..
                         new_value[product_counter[move.product_id.id]].update({'invoice_state': move.procurement_id.sale_line_id.state}) # If payment not done then raise from transfer wizard on pickings.
-                    
+
                     # If purchase order line has serial number (MTO case) and when we create incoming shipment from PO then that serial number should be pass to the respected transfer (pack operation) on incoming shipments.
                     if new_value and move.procurement_id.purchase_line_id and move.procurement_id.purchase_line_id.lot_id and not new_value[product_counter[move.product_id.id]].get('lot_id', False):
                         if move.product_id.product_tmpl_id.categ_id.enforce_qty_1 and self.check_mto(cr, uid, move.procurement_id, context=context):
