@@ -7,6 +7,12 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
+            
+            <button name="action_button_confirm" states="draft" string="Confirm Sale" type="object" groups="base.group_user" position="before">
+                <button name="action_button_split_line" class="oe_highlight" attrs="{'invisible': [('need_auto_split', '=', False)]}" string="Split Lines" type="object" groups="base.group_user"/>
+                <field name="need_auto_split" invisible="1"/>
+            </button>
+            
             <!-- adjustments to line form view -->
             <xpath expr="/form/sheet/notebook/page[@string='Order Lines']/field[@name='order_line']/form[@string='Sales Order Lines']/group/group/field[@name='product_id'] " position="after">
                 <field name="quant_id"
