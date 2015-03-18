@@ -78,6 +78,7 @@ class stock_transfer_details(models.TransientModel):
                 
                 # >>> oscg
                 if prod.invoice_state and prod.invoice_state != 'paid':
+#                     and not prod.sale_line_id.order_id.invoiced:
                     raise Warning(_('Error!'), _('You cannot transfer the \
                         product due to unpaid SO line(s).'))
                 
@@ -128,7 +129,7 @@ class stock_transfer_details(models.TransientModel):
 class stock_transfer_details_items(models.TransientModel):
     _inherit = 'stock.transfer_details_items'
     
-    invoice_state = fields.Char('Invoice State')#to stop the transfer if that move has not been paid by customer for case "On Delivery (per SO Line)"
+    invoice_state = fields.Char('Invoice State') # to block transfer if move has not been paid by customer in case of "On Demand (per SO Line)"
     purchase_line_id = fields.Many2one('purchase.order.line',string="PO Line")
     sale_line_id = fields.Many2one('sale.order.line',string="SO Line")
     move_dest_id = fields.Many2one('stock.move',string="Destination Move")
