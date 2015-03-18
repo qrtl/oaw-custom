@@ -2,6 +2,7 @@
 <openerp>
 <data>
 
+<!-- 
     <record id="view_order_form_inherit_enforce" model="ir.ui.view">
         <field name="name">sale.order.form.sale.enforce</field>
         <field name="model">sale.order</field>
@@ -14,12 +15,32 @@
             </data>
        </field>
     </record>
-        
+ -->
+         
     <record id="sale_order_line_quant_view" model="ir.ui.view">
         <field name="name">sale.order.line.inherit.view</field>
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
+            <!-- adjustments to line form view -->
+            <xpath expr="/form/sheet/notebook/page[@string='Order Lines']/field[@name='order_line']/form[@string='Sales Order Lines']/group/group/field[@name='product_id'] " position="after">
+                <field name="quant_id"
+                    options="{'no_quick_create':True, 'no_create_edit':True}"
+                    domain="[('reservation_id', '=', False),
+                             ('product_id','=',product_id),
+                             ('qty','>', 0.0),
+                             ('actual_qty','>', 0.0),
+                             ('usage', '=', 'internal')]"
+                    attrs="{'readonly': [('mto','=',True)]}"
+                    on_change="onchange_quant(quant_id)"/>
+                <field name="lot_id" attrs="{'readonly': [('mto','=',True)]}"/>
+   	            <field name="route_id" groups="sale_stock.group_route_so_lines"
+   			        attrs="{'required': [('quant_id','=',False)], 'readonly': [('quant_id','!=',False)]}"
+   			        on_change="onchange_route(route_id)"/>
+                <field name="mto" invisible="1"/>
+            </xpath>
+
+            <!-- adjustments to line tree view -->
             <xpath expr="/form/sheet/notebook/page[@string='Order Lines']/field[@name='order_line']/tree[@string='Sales Order Lines']/field[@name='tax_id'] " position="replace">
                 <field name="tax_id" widget="many2many_tags" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]" invisible="1"/>
             </xpath>
@@ -40,9 +61,14 @@
    			        on_change="onchange_route(route_id)"/>
                 <field name="mto" invisible="1"/>
             </xpath>
+
+            <field name='invoiced' position="after">
+                <field name="is_enforce_qty" readonly="1"/>
+            </field>
         </field>
     </record>
 
+<!-- 
     <record id="sale_order_line_quant_view_form" model="ir.ui.view">
         <field name="name">sale.order.line.inherit.view.form</field>
         <field name="model">sale.order</field>
@@ -55,7 +81,8 @@
             </xpath>
         </field>
     </record>
-
+ -->
+ 
     <record id="sale_order_line_quant_search_view" model="ir.ui.view">
         <field name="name">sale.order.line.inherit.view</field>
         <field name="model">sale.order</field>
@@ -69,4 +96,3 @@
 
 </data>
 </openerp>
-    
