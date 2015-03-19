@@ -153,14 +153,17 @@ class stock_quant(osv.osv):
             },),
     }
 
+    # this is to update 'name' field at installation/upgrade
     def init(self, cr):
+#         quant_ids = self.search(cr, SUPERUSER_ID, [])
+#         for q in self.browse(cr, SUPERUSER_ID, quant_ids):
+#             name = q.product_id.code or ''
+#             if q.lot_id:
+#                 name = q.lot_id.name
+#             name += ': ' + str(q.qty) + q.product_id.uom_id.name
+#             self.write(cr, SUPERUSER_ID, [q.id], {'name': name})
         quant_ids = self.search(cr, SUPERUSER_ID, [])
-        for q in self.browse(cr, SUPERUSER_ID, quant_ids):
-            name = q.product_id.code or ''
-            if q.lot_id:
-                name = q.lot_id.name
-            name += ': ' + str(q.qty) + q.product_id.uom_id.name
-            self.write(cr, SUPERUSER_ID, [q.id], {'name': name})
+        self.write(cr, SUPERUSER_ID, quant_ids, {})
 
 
 class stock_production_lot(osv.osv):
