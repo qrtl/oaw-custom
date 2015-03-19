@@ -24,41 +24,6 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
 
-class stock_quant(osv.osv):
-    _inherit = "stock.quant"
-
-    def _actual_qty(self, cr, uid, ids, name, arg, context=None):
-        res = {}
-        for quant in self.browse(cr, uid, ids, context=context):
-            res[quant.id] = quant.qty - quant.sale_reserver_qty
-        return res
-    
-    def _get_quant_name(self, cr, uid, ids, name, args, context=None):
-        return super(stock_quant, self)._get_quant_name(cr, uid, ids, name, args, context=context)
-    
-    _description = "Stock Quants"
-    _columns = {
-        # make 'name' a stored field for searching purpose in SO line
-        'name': fields.function(_get_quant_name, type='char',
-            store={'stock.quant': (lambda self, cr, uid, ids, c={}: ids, [], 10)},
-            string='Identifier'),
-        'usage': fields.related('location_id', 'usage', type='char', string='Type of Location', readonly=True, store=True),
-        'sale_reserver_qty': fields.related('reservation_id', 'product_uom_qty', type='float', string='Sale Reserved Quantity', readonly=True, store=True),
-        'actual_qty': fields.function(_actual_qty, string='Actual Quantity', help="It is: Quantity - Sale Reserved Quantity", type='float', store={
-                'stock.quant': (lambda self, cr, uid, ids, c={}: ids, [], 10),
-            },),
-    }
-
-    def init(self, cr):
-        quant_ids = self.search(cr, SUPERUSER_ID, [])
-        for q in self.browse(cr, SUPERUSER_ID, quant_ids):
-            name = q.product_id.code or ''
-            if q.lot_id:
-                name = q.lot_id.name
-            name += ': ' + str(q.qty) + q.product_id.uom_id.name
-            self.write(cr, SUPERUSER_ID, [q.id], {'name': name})
-
-
 class stock_move(osv.osv):
     _inherit = 'stock.move'
     _columns = {
@@ -161,6 +126,41 @@ class stock_move(osv.osv):
         # Pass the lot ref, to stock move.
         res.update({'lot_id': move.lot_id.id})
         return res
+
+
+class stock_quant(osv.osv):
+    _inherit = "stock.quant"
+
+    def _actual_qty(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        for quant in self.browse(cr, uid, ids, context=context):
+            res[quant.id] = quant.qty - quant.sale_reserver_qty
+        return res
+    
+    def _get_quant_name(self, cr, uid, ids, name, args, context=None):
+        return super(stock_quant, self)._get_quant_name(cr, uid, ids, name, args, context=context)
+    
+    _description = "Stock Quants"
+    _columns = {
+        # make 'name' a stored field for searching purpose in SO line
+        'name': fields.function(_get_quant_name, type='char',
+            store={'stock.quant': (lambda self, cr, uid, ids, c={}: ids, [], 10)},
+            string='Identifier'),
+        'usage': fields.related('location_id', 'usage', type='char', string='Type of Location', readonly=True, store=True),
+        'sale_reserver_qty': fields.related('reservation_id', 'product_uom_qty', type='float', string='Sale Reserved Quantity', readonly=True, store=True),
+        'actual_qty': fields.function(_actual_qty, string='Actual Quantity', help="It is: Quantity - Sale Reserved Quantity", type='float', store={
+                'stock.quant': (lambda self, cr, uid, ids, c={}: ids, [], 10),
+            },),
+    }
+
+    def init(self, cr):
+        quant_ids = self.search(cr, SUPERUSER_ID, [])
+        for q in self.browse(cr, SUPERUSER_ID, quant_ids):
+            name = q.product_id.code or ''
+            if q.lot_id:
+                name = q.lot_id.name
+            name += ': ' + str(q.qty) + q.product_id.uom_id.name
+            self.write(cr, SUPERUSER_ID, [q.id], {'name': name})
 
 
 class stock_production_lot(osv.osv):
