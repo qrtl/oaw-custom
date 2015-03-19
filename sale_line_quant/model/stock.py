@@ -62,8 +62,8 @@ class stock_quant(osv.osv):
 class stock_move(osv.osv):
     _inherit = 'stock.move'
     _columns = {
-        'quant_id': fields.many2one('stock.quant',string="Stock Quant From Sale"),
-        'lot_id': fields.many2one('stock.production.lot',string="Stock Production Lot From Sale"),
+        'quant_id': fields.many2one('stock.quant',string="Stock Quant from Sale"),
+        'lot_id': fields.many2one('stock.production.lot',string="Stock Production Lot from Sale"),
     }
     
     def _get_invoice_line_vals(self, cr, uid, move, partner, inv_type, context=None):
