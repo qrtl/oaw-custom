@@ -56,7 +56,7 @@ class stock_transfer_details(models.TransientModel):
                 'result_package_id': op.result_package_id.id,
                 'date': op.date, 
                 'owner_id': op.owner_id.id,
-                'invoice_state': op.invoice_state, # oscg
+#                 'invoice_state': op.invoice_state, # oscg
                 'purchase_line_id': op.purchase_line_id.id, # oscg
                 'move_dest_id': op.move_dest_id.id, # oscg
                 'sale_line_id': op.sale_line_id.id, # oscg
@@ -77,11 +77,17 @@ class stock_transfer_details(models.TransientModel):
             for prod in lstits:
                 
                 # >>> oscg
-                if prod.invoice_state and prod.invoice_state != 'paid':
-#                     and not prod.sale_line_id.order_id.invoiced:
-                    raise Warning(_('Error!'), _('You cannot transfer the \
-                        product due to unpaid SO line(s).'))
-                
+#                 if prod.invoice_state and prod.invoice_state != 'paid':
+# #                     and not prod.sale_line_id.order_id.invoiced:
+#                     raise Warning(_('Error!'), _('You cannot transfer the \
+#                         product due to unpaid SO line(s).'))
+                if prod.sale_line_id and prod.sale_line_id.\
+                    order_id.order_policy == 'line_check':
+                    for line in prod.sale_line_id.invoice_lines:
+                        if line.invoice_id.state != 'paid':
+                            raise Warning(_('Error!'), _('You cannot transfer the \
+                                product due to unpaid SO line(s).'))
+
                 if prod.purchase_line_id:
                     prod.purchase_line_id.write({'lot_id':prod.lot_id.id })
                     # Write on specific invoice line respected to PO line with same lot number.
@@ -129,7 +135,7 @@ class stock_transfer_details(models.TransientModel):
 class stock_transfer_details_items(models.TransientModel):
     _inherit = 'stock.transfer_details_items'
     
-    invoice_state = fields.Char('Invoice State') # to block transfer if move has not been paid by customer in case of "On Demand (per SO Line)"
+#     invoice_state = fields.Char('Invoice State') # to block transfer if move has not been paid by customer in case of "On Demand (per SO Line)"
     purchase_line_id = fields.Many2one('purchase.order.line',string="PO Line")
     sale_line_id = fields.Many2one('sale.order.line',string="SO Line")
     move_dest_id = fields.Many2one('stock.move',string="Destination Move")
