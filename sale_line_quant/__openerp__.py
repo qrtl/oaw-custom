@@ -21,8 +21,8 @@
 {
     'name': 'Quant/Serial Number on Sales',
     'category': 'Sale',
-    'version': '0.6',
-    'author': 'Rooms For (Hong Kong) T/A OSCG',
+    'version': '0.7',
+    'author': 'Rooms For (Hong Kong) Ltd. T/A OSCG',
     'website': 'www.openerp-asia.net',
     'depends': ['sale', 'stock', 'sale_margin', 'vendor_consignment_stock',
                 'sale_owner_stock_sourcing',],
@@ -34,6 +34,7 @@ Modification on sales order line by adding quant and serial number selection.
              'security/group.xml',
              'view/sale_view.xml',
              'view/purchase_view.xml',
+             'view/stock_view.xml',
              'view/sale_stock_view.xml',
              'view/so_line_quant_view.xml',
              'view/account_invoice_view.xml',
