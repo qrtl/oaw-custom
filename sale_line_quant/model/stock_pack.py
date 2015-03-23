@@ -77,16 +77,18 @@ class stock_transfer_details(models.TransientModel):
             for prod in lstits:
                 
                 # >>> oscg
-#                 if prod.invoice_state and prod.invoice_state != 'paid':
-# #                     and not prod.sale_line_id.order_id.invoiced:
-#                     raise Warning(_('Error!'), _('You cannot transfer the \
-#                         product due to unpaid SO line(s).'))
                 if prod.sale_line_id and prod.sale_line_id.\
                     order_id.order_policy == 'line_check':
-                    for line in prod.sale_line_id.invoice_lines:
-                        if line.invoice_id.state != 'paid':
-                            raise Warning(_('Error!'), _('You cannot transfer the \
-                                product due to unpaid SO line(s).'))
+                    check_error = False
+                    if not prod.sale_line_id.invoice_lines:
+                        check_error = True
+                    else:
+                        for line in prod.sale_line_id.invoice_lines:
+                            if line.invoice_id.state != 'paid':
+                                check_error = True
+                    if check_error:
+                        raise Warning(_('Error!'), _('You cannot transfer the \
+                            product due to unpaid SO line(s).'))
 
                 if prod.purchase_line_id:
                     prod.purchase_line_id.write({'lot_id':prod.lot_id.id })
