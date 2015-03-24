@@ -121,17 +121,33 @@ class sale_order(osv.osv):
 #                     line.quant_id.write({'sale_reserver_qty': current_qty})
         return res
 
+    def _check_lot_duplicate(self, cr, uid, ids, context=None):
+#         line_ids = self.search(cr, uid, ids, [('order_id','=',self.order_id)], context=context)
+#         for line in self.browse(cr, uid, line_ids, context=context):
+        lot_ids = []
+        for line in self.order_line:
+#             if line.lot_id and line.lot_id.id == self.lot_id.id:
+#                 return False
+#         return True
+            lot_ids.append(line.lot_id)
+        if len(lot_ids) != len(set(lot_ids)):
+            return False
+        return True 
+        
+    _constraints = [
+         (_check_lot_duplicate, 'Error! You cannot select the same quant more than once in an SO.', ['order_line.lot_id'])
+    ]
+
 
 class sale_order_line(osv.osv):
     _inherit = "sale.order.line"
-#     _description = " "
 
     _columns = {
         'quant_id': fields.many2one('stock.quant', string="Stock Quant",),
         'lot_id': fields.many2one('stock.production.lot', string="Case No.",),
         'mto': fields.boolean('Is MTO?'),
     }
-    
+
     def onchange_route(self, cr, uid, ids, route_id, context=None):
         # Serial number can be left blank in case of ‘Make To Order’. 
         # Otherwise, the field should be mandatory 
