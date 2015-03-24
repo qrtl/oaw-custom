@@ -27,8 +27,8 @@ from openerp.tools.translate import _
 class stock_move(osv.osv):
     _inherit = 'stock.move'
     _columns = {
-        'quant_id': fields.many2one('stock.quant',string="Stock Quant from Sale"),
-        'lot_id': fields.many2one('stock.production.lot',string="Stock Production Lot from Sale"),
+        'quant_id': fields.many2one('stock.quant', string="Quant from SO"),
+        'lot_id': fields.many2one('stock.production.lot', string="Case No. from SO"),
     }
     
     def _get_invoice_line_vals(self, cr, uid, move, partner, inv_type, context=None):
