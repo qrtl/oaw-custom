@@ -43,7 +43,7 @@ class purchase_order(osv.osv):
         return True
         
     _constraints = [
-         (_check_invoice_type_vci, 'Error ! You can not create purchase order with option Vendor Consignment Inventory with invoice policy from incoming shipment.', ['is_vci'])
+         (_check_invoice_type_vci, 'Error! You cannot create purchase order with option Vendor Consignment Inventory with invoice policy from incoming shipment.', ['is_vci'])
     ]
     
     def _choose_account_from_po_line_vic(self, cr, uid, po_line, context=None):
