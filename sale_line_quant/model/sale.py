@@ -122,20 +122,15 @@ class sale_order(osv.osv):
         return res
 
     def _check_lot_duplicate(self, cr, uid, ids, context=None):
-#         line_ids = self.search(cr, uid, ids, [('order_id','=',self.order_id)], context=context)
-#         for line in self.browse(cr, uid, line_ids, context=context):
         lot_ids = []
-        for line in self.order_line:
-#             if line.lot_id and line.lot_id.id == self.lot_id.id:
-#                 return False
-#         return True
+        for line in self.browse(cr, uid, ids, context).order_line:
             lot_ids.append(line.lot_id)
         if len(lot_ids) != len(set(lot_ids)):
             return False
-        return True 
+        return True
         
     _constraints = [
-         (_check_lot_duplicate, 'Error! You cannot select the same quant more than once in an SO.', ['order_line.lot_id'])
+         (_check_lot_duplicate, 'Error! You cannot select the same quant more than once in an SO.', ['order_line'])
     ]
 
 
