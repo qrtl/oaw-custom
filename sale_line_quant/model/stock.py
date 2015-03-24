@@ -268,18 +268,23 @@ class stock_picking(osv.osv):
 
         # Go through all remaining reserved quants and group by product, package, lot, owner, source location and dest location
         for quant, dest_location_id in quants_suggested_locations.items():
-            key = (quant.product_id.id, quant.package_id.id, quant.lot_id.id, quant.owner_id.id, quant.location_id.id, dest_location_id, quant.reservation_id.lot_id.id)
+#             key = (quant.product_id.id, quant.package_id.id, quant.lot_id.id, quant.owner_id.id, quant.location_id.id, dest_location_id, quant.reservation_id.lot_id.id)
+            key = (quant.product_id.id, quant.package_id.id, quant.lot_id.id,
+                   quant.owner_id.id, quant.location_id.id, dest_location_id,
+#                    quant.reservation_id.lot_id.id,
+                   quant.reservation_id.procurement_id.sale_line_id.id)  # yoshi
             if qtys_grouped.get(key):
                 qtys_grouped[key] += quant.qty
             else:
                 qtys_grouped[key] = quant.qty
      
-        # Do the same for the forced quantities (in cases of force_assign or incomming shipment for example)
+        # Do the same for the forced quantities (in cases of force_assign or incoming shipment for example)
         for product, qty in forced_qties.items():
             if qty <= 0:
                 continue
             suggested_location_id = _picking_putaway_apply(product)
-            key = (product.id, False, False, picking.owner_id.id, picking.location_id.id, suggested_location_id)
+#             key = (product.id, False, False, picking.owner_id.id, picking.location_id.id, suggested_location_id)
+            key = (product.id, False, False, picking.owner_id.id, picking.location_id.id, suggested_location_id, False)  # yoshi
             if qtys_grouped.get(key):
                 qtys_grouped[key] += qty
             else:
@@ -307,6 +312,7 @@ class stock_picking(osv.osv):
                         'owner_id': key[3], #oscg
                         'location_id': key[4], #oscg
                         'location_dest_id': key[5], #oscg
+                        'sale_line_id': key[6], #oscg yoshi
                         'product_uom_id': uom_id, #oscg
                     }
                     if key[0] in prevals: #oscg
@@ -324,6 +330,7 @@ class stock_picking(osv.osv):
                     'owner_id': key[3],
                     'location_id': key[4],
                     'location_dest_id': key[5],
+                    'sale_line_id': key[6], #oscg yoshi
                     'product_uom_id': uom_id,
                 }
                 if key[0] in prevals:
@@ -343,16 +350,16 @@ class stock_picking(osv.osv):
             if move.product_id.id not in processed_products:
                 new_value = prevals.get(move.product_id.id, [])
                 if move.product_id.product_tmpl_id.categ_id.enforce_qty_1: # Checking year since move lines can have same products and enforced.
-                    if new_value and move.procurement_id.sale_line_id and move.procurement_id.sale_line_id.order_id.order_policy == 'line_check':
-                    # Add a new option 'On Demand (per SO Line)' for 'Create Invoice' field in 
-                    # SO.  In case this option is selected, user should be able to create an 
-                    # invoice any time from SO.  However, user should not be able to process 
-                    # 'Transfer' in outgoing delivery for lines (stock moves) for which payment 
-                    # has yet to be done.
-#                         new_value[product_counter[move.product_id.id]].update({'invoice_state': move.procurement_id.sale_line_id.state}) # If payment not done then raise from transfer wizard on pickings.
-                        new_value[product_counter[move.product_id.id]].update(
-                            {'sale_line_id':
-                                move.procurement_id.sale_line_id.id})
+#                     if new_value and move.procurement_id.sale_line_id and move.procurement_id.sale_line_id.order_id.order_policy == 'line_check':
+#                     # Add a new option 'On Demand (per SO Line)' for 'Create Invoice' field in 
+#                     # SO.  In case this option is selected, user should be able to create an 
+#                     # invoice any time from SO.  However, user should not be able to process 
+#                     # 'Transfer' in outgoing delivery for lines (stock moves) for which payment 
+#                     # has yet to be done.
+# #                         new_value[product_counter[move.product_id.id]].update({'invoice_state': move.procurement_id.sale_line_id.state}) # If payment not done then raise from transfer wizard on pickings.
+#                         new_value[product_counter[move.product_id.id]].update(
+#                             {'sale_line_id':
+#                                 move.procurement_id.sale_line_id.id})
 
                     # If purchase order line has serial number (MTO case) and when we create incoming shipment from PO then that serial number should be pass to the respected transfer (pack operation) on incoming shipments.
                     if new_value and move.procurement_id.purchase_line_id and move.procurement_id.purchase_line_id.lot_id and not new_value[product_counter[move.product_id.id]].get('lot_id', False):
