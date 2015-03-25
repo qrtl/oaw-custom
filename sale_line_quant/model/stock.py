@@ -342,33 +342,29 @@ class stock_picking(osv.osv):
         processed_products = set()
         
         product_counter = {}
+        product_counter_max = {}
+        for pre in prevals:
+            product_counter_max[pre] = len(prevals[pre])
+
+        ''' >>> heavily changed from standard logic (OSCG) '''
         for move in picking.move_lines:
             if not move.id in product_counter:
                 product_counter[move.product_id.id] = 0
         
         for move in picking.move_lines:
             if move.product_id.id not in processed_products:
+                if product_counter[move.product_id.id] >= product_counter_max[pre]:
+                    continue
                 new_value = prevals.get(move.product_id.id, [])
-                if move.product_id.product_tmpl_id.categ_id.enforce_qty_1: # Checking year since move lines can have same products and enforced.
-#                     if new_value and move.procurement_id.sale_line_id and move.procurement_id.sale_line_id.order_id.order_policy == 'line_check':
-#                     # Add a new option 'On Demand (per SO Line)' for 'Create Invoice' field in 
-#                     # SO.  In case this option is selected, user should be able to create an 
-#                     # invoice any time from SO.  However, user should not be able to process 
-#                     # 'Transfer' in outgoing delivery for lines (stock moves) for which payment 
-#                     # has yet to be done.
-# #                         new_value[product_counter[move.product_id.id]].update({'invoice_state': move.procurement_id.sale_line_id.state}) # If payment not done then raise from transfer wizard on pickings.
-#                         new_value[product_counter[move.product_id.id]].update(
-#                             {'sale_line_id':
-#                                 move.procurement_id.sale_line_id.id})
+                if new_value and move.product_id.product_tmpl_id.categ_id.enforce_qty_1: # Checking year since move lines can have same products and enforced.
 
                     # If purchase order line has serial number (MTO case) and when we create incoming shipment from PO then that serial number should be pass to the respected transfer (pack operation) on incoming shipments.
-                    if new_value and move.procurement_id.purchase_line_id and move.procurement_id.purchase_line_id.lot_id and not new_value[product_counter[move.product_id.id]].get('lot_id', False):
+                    if move.procurement_id.purchase_line_id and move.procurement_id.purchase_line_id.lot_id and not new_value[product_counter[move.product_id.id]].get('lot_id', False):
                         if move.product_id.product_tmpl_id.categ_id.enforce_qty_1 and self.check_mto(cr, uid, move.procurement_id, context=context):
                             new_value[product_counter[move.product_id.id]].update({'lot_id': move.procurement_id.purchase_line_id.lot_id.id})
                     
-                    
                     # Below two conditions logic will pass the serial number on PO Line and SO Line if it was not given or left empty on time of Sales order creation.
-                    if new_value and move.procurement_id.purchase_line_id and not move.procurement_id.purchase_line_id.lot_id:
+                    if move.procurement_id.purchase_line_id and not move.procurement_id.purchase_line_id.lot_id:
                         if move.product_id.product_tmpl_id.categ_id.enforce_qty_1 and self.check_mto(cr, uid, move.procurement_id, context=context):
     #                     When receipt is done with serial number, it should trigger updating PO line, SO 
     #                     line and delivery with the received serial number (in case serial number had 
@@ -376,7 +372,7 @@ class stock_picking(osv.osv):
                             new_value[product_counter[move.product_id.id]].update({'purchase_line_id': move.procurement_id.purchase_line_id.id})
                             if not move.procurement_id.move_dest_id.lot_id:
                                 new_value[product_counter[move.product_id.id]].update({'move_dest_id': move.procurement_id.move_dest_id.id})
-                    if new_value and move.procurement_id.sale_line_id and not move.procurement_id.sale_line_id.lot_id:
+                    if move.procurement_id.sale_line_id and not move.procurement_id.sale_line_id.lot_id:
                         if move.product_id.product_tmpl_id.categ_id.enforce_qty_1 and self.check_mto(cr, uid, move.procurement_id, context=context):
     #                     When receipt is done with serial number, it should trigger updating PO line, SO 
     #                     line and delivery with the received serial number (in case serial number had 
@@ -387,6 +383,7 @@ class stock_picking(osv.osv):
                 else:
                     vals += new_value # prevals.get(move.product_id.id, [])
                     processed_products.add(move.product_id.id)
+            ''' <<< heavily changed from standard logic (OSCG) '''
         return vals
 
     def check_mto(self, cr, uid, procurement, context=None):
