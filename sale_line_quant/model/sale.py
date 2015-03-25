@@ -124,7 +124,8 @@ class sale_order(osv.osv):
     def _check_lot_duplicate(self, cr, uid, ids, context=None):
         lot_ids = []
         for line in self.browse(cr, uid, ids, context).order_line:
-            lot_ids.append(line.lot_id)
+            if line.lot_id:
+                lot_ids.append(line.lot_id)
         if len(lot_ids) != len(set(lot_ids)):
             return False
         return True
