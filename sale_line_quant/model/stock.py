@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
 #    OpenERP, Open Source Management Solution
 #    Copyright (c) Rooms For (Hong Kong) Limited T/A OSCG. All Rights Reserved
 #
@@ -16,21 +14,80 @@
 #
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
 
 from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+import openerp.addons.decimal_precision as dp
 
 
 class stock_move(osv.osv):
     _inherit = 'stock.move'
     _columns = {
         'quant_id': fields.many2one('stock.quant', string="Quant from SO"),
-        'lot_id': fields.many2one('stock.production.lot', string="Case No. from SO"),
+        'lot_id': fields.many2one('stock.production.lot', string="Case No. \
+            from SO"),
+        'currency_id' : fields.many2one('res.currency', string='Purchase \
+            Currency', required=False, readonly=False),
+        'purchase_price_unit': fields.float('Purchase Currency Price',
+            required=False, digits_compute= dp.get_precision('Product \
+            Price')),
+        'code': fields.related('picking_type_id', 'code', type='char',
+            string='Type of Operation', readonly=True, store=True),
     }
+
+    def onchange_picking_type(self, cr, uid, ids, picking_type_id, context=None):
+        result = {}
+        picktype_obj = self.pool.get('stock.picking.type')
+        if picking_type_id:
+            picktype_data = picktype_obj.browse(cr, uid, picking_type_id, context)
+            result.update({'code': picktype_data.code})
+        return {'value': result}
+     
+    def onchange_purchase_currency(self, cr, uid, ids, company_id, date,
+        currency_id, purchase_price_unit, context=None):
+        # reset the value of price_unit on stock.move if purchase price
+        # currency of the move is updated
+        result = {}
+        if currency_id and purchase_price_unit:
+            currency_obj = self.pool.get('res.currency')
+            company_obj = self.pool.get('res.company')
+            company_data = company_obj.browse(cr, uid, company_id, context)
+            ctx = context.copy()
+            ctx.update({'date': date})
+            price_unit = currency_obj.compute(cr, uid, currency_id,
+                company_data.currency_id.id, purchase_price_unit, context=ctx)
+            result.update({'price_unit': price_unit})
+        return {'value': result}
     
+    # constraint
+    def _check_purchase_with_poref(self, cr, uid, ids, context=None):
+        # prevent user from changing price/currency in case of receipt with PO
+        # reference
+        for move in self.browse(cr, uid, ids, context=context):
+            if move.picking_type_id.code == 'incoming' and \
+                move.purchase_price_unit > 0.0 and move.purchase_line_id:
+                return False
+        return True
+
+    def _check_purchase_without_poref(self, cr, uid, ids, context=None):# Constraint
+        # raise error if user tries to create stock move without purchase
+        # price and its currency in case of receipt created without PO ref.
+        for move in self.browse(cr, uid, ids, context=context):
+            if move.picking_type_id.code == 'incoming' and \
+                move.purchase_price_unit == 0.0 and not move.purchase_line_id:
+                return False
+        return True
+        
+    _constraints = [
+         (_check_purchase_with_poref, 'Error! You cannot update purchase \
+             currency price or purchase currency if the receipt refers to a \
+             purchase order.', ['currency_id', 'purchase_price_unit']),
+         (_check_purchase_without_poref, 'Error! Please give purchase \
+             currency price and currency.', ['currency_id',
+            'purchase_price_unit'])
+         ]
+
     def _get_invoice_line_vals(self, cr, uid, move, partner, inv_type, context=None):
         res = super(stock_move, self)._get_invoice_line_vals(cr, uid, move, partner, inv_type, context=context)
         # Pass the lot reference if invoice created from pickings.
@@ -162,7 +219,24 @@ class stock_quant(osv.osv):
         'actual_qty': fields.function(_actual_qty, string='Actual Quantity', help="It is: Quantity - Sale Reserved Quantity", type='float', store={
                 'stock.quant': (lambda self, cr, uid, ids, c={}: ids, [], 10),
             },),
+        'currency_id' : fields.many2one('res.currency', string='Purchase \
+            Currency', required=False, readonly=True),
+        'purchase_price_unit': fields.float('Purchase Currency Price',
+            required=False, digits_compute= dp.get_precision('Product Price'),
+            readonly=True),
     }
+    
+    def _quant_create(self, cr, uid, qty, move, lot_id=False, owner_id=False,
+        src_package_id=False, dest_package_id=False,
+        force_location_from=False, force_location_to=False, context=None):
+        quant = super(stock_quant, self)._quant_create(cr, uid, qty, move,
+            lot_id, owner_id, src_package_id, dest_package_id,
+            force_location_from, force_location_to, context)
+        self.write(cr, uid, [quant.id],
+            {'currency_id': move.currency_id.id,
+            'purchase_price_unit': move.purchase_price_unit},
+            context)
+        return quant
 
     # this is to update 'name' field at installation/upgrade
     def init(self, cr):
