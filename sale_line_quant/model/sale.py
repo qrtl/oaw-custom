@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
 #    OpenERP, Open Source Management Solution
 #    Copyright (c) Rooms For (Hong Kong) Limited T/A OSCG. All Rights Reserved
 #
@@ -16,8 +14,6 @@
 #
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
@@ -155,7 +151,8 @@ class sale_order_line(osv.osv):
             }
         return {'value': result}
 
-    def onchange_quant(self, cr, uid, ids, quant_id, context=None):
+#     def onchange_quant(self, cr, uid, ids, quant_id, context=None):
+    def onchange_quant(self, cr, uid, ids, quant_id, date, currency_id, context=None):
         """ On change of quant_id finds lot_id(serial no)
         @param quant_id: Quant id
         @return: Dictionary of values
@@ -165,14 +162,29 @@ class sale_order_line(osv.osv):
 #        Cost Price in SO line (we select ‘Display margins on sales orders’ in sales 
 #configuration) should be taken from selected quant (serial number) 
 
+        currency_obj = self.pool.get('res.currency')
         result = {}
         if quant_id:
             quant = self.pool.get('stock.quant').browse(cr,uid,quant_id)
             model, res_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'base', 'main_partner')
+            if not quant.purchase_price_unit > 0.0:
+                purchase_price = quant.inventory_value / quant.qty
+            else:
+                # In SO line, in case a consignment quant (stock owner =
+                # supplier or purchase currency price exists), cost price
+                # should be calculated by converting the purchase currency
+                # price to SO currency using the exchange rates as of sales
+                # order date
+                ctx = context.copy()
+                ctx.update({'date': date})
+                purchase_price = currency_obj.compute(cr, uid,
+                    quant.currency_id.id, currency_id,
+                    quant.purchase_price_unit, context=ctx)
             result = {
                 'lot_id': quant.lot_id.id,
                 'stock_owner_id': quant.owner_id.id if not quant.owner_id.id == res_id else False, #Selecting a serial number (a quant) in SO should automatically propose the Stock Owner in SO line
-                'purchase_price': quant.inventory_value / quant.qty
+#                 'purchase_price': quant.inventory_value / quant.qty
+                'purchase_price': purchase_price
             }
         return {'value': result}
     

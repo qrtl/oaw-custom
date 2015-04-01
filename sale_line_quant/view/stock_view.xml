@@ -22,6 +22,16 @@
                     <field name='quant_id' invisible="0"/>
                     <field name='lot_id' invisible="0"/>
                     <field name='price_unit' invisible="0"/>
+                    <field name='code' invisible="1"/>
+                    <field name='currency_id'
+                        attrs="{'invisible': [('code','!=','incoming')]}"
+                        on_change="onchange_purchase_currency(parent.company_id, date, currency_id, purchase_price_unit, context)"/>
+                    <field name='purchase_price_unit'
+                        attrs="{'invisible': [('code','!=','incoming')]}"
+                        on_change="onchange_purchase_currency(parent.company_id, date, currency_id, purchase_price_unit, context)"/>
+                </field>
+                <field name="picking_type_id" invisible="1" position="replace">
+                	<field name="picking_type_id" invisible="1" on_change="onchange_picking_type(picking_type_id, context)"/>
                 </field>
             </field>
     </record>
@@ -35,6 +45,16 @@
                     <field name='quant_id' invisible="0"/>
                     <field name='lot_id' invisible="0"/>
                     <field name='price_unit' invisible="0"/>
+                    <field name='code' invisible="1"/>
+                    <field name='currency_id'
+                        attrs="{'invisible': [('code','!=','incoming')]}"
+                        on_change="onchange_purchase_currency(parent.company_id, date, currency_id, purchase_price_unit, context)"/>
+                    <field name='purchase_price_unit'
+                        attrs="{'invisible': [('code','!=','incoming')]}"
+                        on_change="onchange_purchase_currency(parent.company_id, date, currency_id, purchase_price_unit, context)"/>
+                </field>
+                <field name="picking_type_id" invisible="1" position="replace">
+                	<field name="picking_type_id" invisible="1" on_change="onchange_picking_type(picking_type_id, context)"/>
                 </field>
             </field>
     </record>
@@ -48,6 +68,10 @@
                     <field name='sale_reserver_qty'/>
                     <field name='actual_qty' />
                     <field name="usage" />
+                </field>
+                <field name="inventory_value" position='after'>
+                	<field name='currency_id'/>
+                    <field name='purchase_price_unit' />
                 </field>
             </field>
     </record>
