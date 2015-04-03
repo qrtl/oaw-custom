@@ -80,12 +80,11 @@ class stock_move(osv.osv):
         return True
         
     _constraints = [
-         (_check_purchase_with_poref, 'Error! You cannot update purchase \
-             currency price or purchase currency if the receipt refers to a \
-             purchase order.', ['currency_id', 'purchase_price_unit']),
-         (_check_purchase_without_poref, 'Error! Please give purchase \
-             currency price and currency.', ['currency_id',
-            'purchase_price_unit'])
+         (_check_purchase_with_poref, 'Error! You are not allowed to update \
+             purchase price if the receipt refers to a purchase order.',
+             ['currency_id', 'purchase_price_unit']),
+         (_check_purchase_without_poref, 'Error! Purchase price must be \
+             provided.', ['currency_id', 'purchase_price_unit'])
          ]
 
     def _get_invoice_line_vals(self, cr, uid, move, partner, inv_type, context=None):
