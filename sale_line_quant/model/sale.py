@@ -157,11 +157,10 @@ class sale_order_line(osv.osv):
         @param quant_id: Quant id
         @return: Dictionary of values
         """
-#        Selecting a serial number (a quant) in SO should automatically propose 
-#the Stock Owner in SO line 
-#        Cost Price in SO line (we select ‘Display margins on sales orders’ in sales 
-#configuration) should be taken from selected quant (serial number) 
-
+        # selecting a quant in SO line should automatically propose 
+        # the stock owner. 
+        # cost price in SO line (we select ‘Display margins on sales orders’
+        # in sales configuration) should be taken from selected quant 
         currency_obj = self.pool.get('res.currency')
         result = {}
         if quant_id:
@@ -170,7 +169,7 @@ class sale_order_line(osv.osv):
             if not quant.purchase_price_unit > 0.0:
                 purchase_price = quant.inventory_value / quant.qty
             else:
-                # In SO line, in case a consignment quant (stock owner =
+                # in SO line, in case a consignment quant (stock owner =
                 # supplier or purchase currency price exists), cost price
                 # should be calculated by converting the purchase currency
                 # price to SO currency using the exchange rates as of sales
