@@ -51,12 +51,21 @@ class StockMove(models.Model):
         )
 
     @api.multi
-    @api.depends('quant_ids')
+    @api.depends('quant_ids', 'lot_id')
     def _get_quant_info(self):
         for m in self:
             if m.quant_ids:
-                m.quant_lot_id = m.quant_ids[0].lot_id and m.quant_ids[0].lot_id.id
-                m.quant_owner_id = m.quant_ids[0].owner_id and m.quant_ids[0].owner_id.id
+                m.quant_lot_id = m.quant_ids[0].lot_id and \
+                    m.quant_ids[0].lot_id.id
+                m.quant_owner_id = m.quant_ids[0].owner_id and \
+                    m.quant_ids[0].owner_id.id
+            else:
+                m.quant_lot_id = m.lot_id.id
+                # below part does not work since quant is generated after \
+                # this step
+#                 if m.lot_id.quant_ids:
+#                     m.quant_owner_id = m.lot_id.quant_ids[-1].owner_id and \
+#                         m.lot_id.quant_ids[-1].owner_id.owner_id.id
 
     def init(self, cr):
         move_ids = self.search(cr, SUPERUSER_ID, [])
