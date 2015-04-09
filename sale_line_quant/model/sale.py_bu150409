@@ -151,6 +151,7 @@ class sale_order_line(osv.osv):
             }
         return {'value': result}
 
+#     def onchange_quant(self, cr, uid, ids, quant_id, context=None):
     def onchange_quant(self, cr, uid, ids, quant_id, date, currency_id, context=None):
         """ On change of quant_id finds lot_id(serial no)
         @param quant_id: Quant id
@@ -191,17 +192,3 @@ class sale_order_line(osv.osv):
         # Pass the lot reference to invoice from SO / PO.
         res.update({'lot_id': line.lot_id.id})
         return res
-
-    def _check_route(self, cr, uid, ids, context=None):
-        for l in self.browse(cr, uid, ids, context=context):
-            if l.product_id.product_tmpl_id.categ_id.enforce_qty_1 \
-                and not l.quant_id and not l.route_id:
-                return False
-            return True
-
-    _constraints = [
-         (_check_route, 'Error! You must select a quant or a route for \
-             products with "Enforce Qty 1" setting.',
-             ['quant_id', 'route_id'])
-    ]
-

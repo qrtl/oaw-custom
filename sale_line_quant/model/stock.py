@@ -183,7 +183,7 @@ class stock_move(osv.osv):
                         restrict_partner_id=move.restrict_partner_id.id,
                         context=context) #oscg
                 
-                a = self.pool.get('stock.move').read(cr,uid,move.id)
+#                 a = self.pool.get('stock.move').read(cr,uid,move.id)
                 quant_obj.quants_reserve(cr, uid, quants, move, context=context)
 
         #force assignation of consumable products and incoming from supplier/inventory/production
