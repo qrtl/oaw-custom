@@ -49,6 +49,20 @@ class StockMove(models.Model):
         readonly=True,
         string='Owner'
         )
+    so_id = fields.Many2one(
+        'sale.order',
+        compute='_get_vals',
+        store=True,
+        readonly=True,
+        string='SO'
+        )
+    po_id = fields.Many2one(
+        'purchase.order',
+        compute='_get_vals',
+        store=True,
+        readonly=True,
+        string='PO'
+        )
 
     @api.multi
     @api.depends('quant_ids', 'lot_id')
@@ -66,6 +80,18 @@ class StockMove(models.Model):
 #                 if m.lot_id.quant_ids:
 #                     m.quant_owner_id = m.lot_id.quant_ids[-1].owner_id and \
 #                         m.lot_id.quant_ids[-1].owner_id.owner_id.id
+
+    @api.multi
+    @api.depends('origin')
+    def _get_vals(self):
+        SO = self.env['sale.order']
+        PO = self.env['purchase.order']
+        for m in self:
+            m.so_id, m.po_id = 0, 0
+            if m.purchase_line_id:
+                m.po_id = m.purchase_line_id.order_id.id
+            elif m.procurement_id and m.procurement_id.sale_line_id:
+                m.so_id = m.procurement_id.sale_line_id.order_id.id
 
     def init(self, cr):
         move_ids = self.search(cr, SUPERUSER_ID, [])

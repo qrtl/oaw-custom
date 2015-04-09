@@ -11,7 +11,9 @@
                     default_order="id desc" editable="top">
                     <field name="name" invisible="1" readonly="1"/>
                     <field name="picking_id" readonly="1" string="Reference"/>
-                    <field name="origin" readonly="1"/>
+                    <field name="origin" invisible="1" readonly="1"/>
+                    <field name="so_id" readonly="1"/>
+                    <field name="po_id" readonly="1"/>
                     <field name="group_id" readonly="1"/>
                     <field name="pick_partner_id" readonly="1"/>
                     <field name="quant_owner_id" readonly="1"/>
