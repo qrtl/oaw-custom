@@ -26,7 +26,7 @@
                     on_change="onchange_quant(quant_id, parent.date_order, parent.currency_id)"/>
                 <field name="lot_id" attrs="{'readonly': [('mto','=',True)]}"/>
    	            <field name="route_id" groups="sale_stock.group_route_so_lines"
-   			        attrs="{'required': [('quant_id','=',False)], 'readonly': [('quant_id','!=',False)]}"
+   			        attrs="{'readonly': [('quant_id','!=',False)]}"
    			        on_change="onchange_route(route_id)"/>
                 <field name="mto" invisible="1"/>
             </xpath>
@@ -48,7 +48,7 @@
                 <field name="lot_id" attrs="{'readonly': [('mto','=',True)]}"/>
                 <field name="stock_owner_id" attrs="{'readonly': [('mto','=',True)]}"/>
    	            <field name="route_id" groups="sale_stock.group_route_so_lines"
-   			        attrs="{'required': [('quant_id','=',False)], 'readonly': [('quant_id','!=',False)]}"
+   			        attrs="{'readonly': [('quant_id','!=',False)]}"
    			        on_change="onchange_route(route_id)"/>
                 <field name="mto" invisible="1"/>
             </xpath>
