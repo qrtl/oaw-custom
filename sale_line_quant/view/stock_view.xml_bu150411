@@ -1,21 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data>
-<!-- 
-    <record id="view_picking_form_z1" model="ir.ui.view">
-        <field name="name">stock.picking.form.z1</field>
-        <field name="model">stock.picking</field>
-        <field name="inherit_id" ref="stock.view_picking_form"/>
-        <field name="arch" type="xml">
-            <button name="action_confirm" position="replace">
-                <button name="action_button_split_line" class="oe_highlight" attrs="{'invisible': [('need_auto_split','=',False)]}" string="Split Lines" type="object" groups="base.group_user"/>
-                <button name="action_confirm" attrs="{'invisible': [('need_auto_split','=',True),('state','=','draft')]}" string="Mark as Todo" type="object" class="oe_highlight" groups="base.group_user"/>
-                <field name="need_auto_split" invisible="1"/>
-            </button>
-        </field>
-    </record>
- -->
- 
+
     <record id="view_move_picking_tree_z5" model="ir.ui.view">
         <field name="name">stock.move.tree.z5</field>
         <field name="model">stock.move</field>
