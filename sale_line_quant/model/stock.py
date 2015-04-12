@@ -430,7 +430,7 @@ class stock_picking(osv.osv):
         
         for move in picking.move_lines:
             if move.product_id.id not in processed_products:
-                if product_counter[move.product_id.id] >= product_counter_max[pre]:
+                if product_counter[move.product_id.id] >= product_counter_max[move.product_id.id]:
                     continue
                 new_value = prevals.get(move.product_id.id, [])
                 if new_value and move.product_id.product_tmpl_id.categ_id.enforce_qty_1: # Checking year since move lines can have same products and enforced.
