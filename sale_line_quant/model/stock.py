@@ -76,7 +76,7 @@ class stock_move(osv.osv):
         # raise error if user tries to create stock move without purchase
         # price and its currency in case of receipt created without PO ref.
         for move in self.browse(cr, uid, ids, context=context):
-            if move.picking_type_id.code == 'incoming' \
+            if move.picking_id.picking_type_id.code == 'incoming' \
                 and not move.purchase_line_id \
                 and (not move.currency_id \
                      or move.purchase_price_unit < 0):
