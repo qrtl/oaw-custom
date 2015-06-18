@@ -75,8 +75,10 @@ class stock_move(osv.osv):
     def _check_purchase_without_poref(self, cr, uid, ids, context=None):# Constraint
         # raise error if user tries to create stock move without purchase
         # price and its currency in case of receipt created without PO ref.
+        """ exclude the case source location customer (= customer return) """
         for move in self.browse(cr, uid, ids, context=context):
             if move.picking_id.picking_type_id.code == 'incoming' \
+                and move.location_id.usage != 'customer' \
                 and not move.purchase_line_id \
                 and (not move.currency_id \
                      or move.purchase_price_unit < 0):
