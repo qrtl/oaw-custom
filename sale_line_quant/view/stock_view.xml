@@ -33,7 +33,11 @@
             <field name="inherit_id" ref="stock.view_move_picking_form"/>
             <field name="arch" type="xml">
                 <field name="name" position='after'>
-                    <field name='quant_id' invisible="0"/>
+                    <field name='quant_id' invisible="0"
+                            domain="[('reservation_id', '=', False),
+                            ('product_id','=',product_id),
+                            ('actual_qty','>', 0.0),
+                            ('location_id', '=', location_id)]"/>
                     <field name='lot_id' invisible="0"/>
                     <label for="currncy_id" string="Purchase Price"/>
                     <div>
@@ -61,7 +65,11 @@
             <field name="inherit_id" ref="stock.view_move_form"/>
             <field name="arch" type="xml">
                 <field name="name" position='after'>
-                    <field name='quant_id' invisible="0"/>
+                    <field name='quant_id' invisible="0"
+                            domain="[('reservation_id', '=', False),
+                            ('product_id','=',product_id),
+                            ('actual_qty','>', 0.0),
+                            ('location_id', '=', location_id)]"/>
                     <field name='lot_id' invisible="0"/>
                     <label for="currncy_id" string="Purchase Price"/>
                     <div>

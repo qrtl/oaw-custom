@@ -43,6 +43,13 @@ class stock_move(osv.osv):
             picktype_data = picktype_obj.browse(cr, uid, picking_type_id, context)
             result.update({'code': picktype_data.code})
         return {'value': result}
+
+    def onchange_product_id(self, cr, uid, ids, prod_id=False, loc_id=False,
+            loc_dest_id=False, partner_id=False):
+        res = super(stock_move, self).onchange_product_id(cr, uid, ids,
+                prod_id, loc_id, loc_dest_id, partner_id)
+        res['value'].update({'quant_id': False})
+        return res
      
     def onchange_purchase_currency(self, cr, uid, ids, company_id, date,
         currency_id, purchase_price_unit, context=None):
