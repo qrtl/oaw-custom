@@ -48,7 +48,8 @@ class stock_move(osv.osv):
             loc_dest_id=False, partner_id=False):
         res = super(stock_move, self).onchange_product_id(cr, uid, ids,
                 prod_id, loc_id, loc_dest_id, partner_id)
-        res['value'].update({'quant_id': False})
+        if 'value' in res:
+            res['value'].update({'quant_id': False})
         return res
      
     def onchange_purchase_currency(self, cr, uid, ids, company_id, date,
