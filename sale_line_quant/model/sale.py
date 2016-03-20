@@ -22,6 +22,24 @@ from openerp.tools.translate import _
 class sale_order(osv.osv):
     _inherit = "sale.order"
 
+    def action_button_confirm(self, cr, uid, ids, context=None):
+        context = context or {}
+        quant_obj = self.pool.get('stock.quant')
+        for sale in self.browse(cr, uid, ids, context=context):
+            if sale.order_line:
+                for line in sale.order_line:
+                    if line.quant_id:
+                        q_id = quant_obj.search(cr, uid, [
+                            ('id','=',line.quant_id.id),
+                            ('reservation_id', '=', False),
+                            ('product_id','=',line.product_id.id),
+                            ('qty','>', 0.0),
+                            ('actual_qty','>', 0.0),
+                            ('usage', '=', 'internal')], context=context)
+                        if not q_id:
+                            raise osv.except_osv(_('Error!'),_('There is an invalid quant.'))
+        super(sale_order, self).action_button_confirm(cr, uid, ids, context=context)
+
     def action_button_split_line(self, cr, uid, ids, context=None):
         context = context or {}
         for sale in self.browse(cr, uid, ids, context=context):
