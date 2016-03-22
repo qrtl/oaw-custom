@@ -25,6 +25,7 @@ class sale_order(osv.osv):
     def action_button_confirm(self, cr, uid, ids, context=None):
         context = context or {}
         quant_obj = self.pool.get('stock.quant')
+        move_obj = self.pool.get('stock.move')
         for sale in self.browse(cr, uid, ids, context=context):
             if sale.order_line:
                 for line in sale.order_line:
@@ -37,7 +38,14 @@ class sale_order(osv.osv):
                             ('actual_qty','>', 0.0),
                             ('usage', '=', 'internal')], context=context)
                         if not q_id:
-                            raise osv.except_osv(_('Error!'),_('There is an invalid quant.'))
+                            raise osv.except_osv(_('Error!'),_('There is an invalid quant (the quant is not '
+                                                               'available).'))
+                        m_id = move_obj.search(cr, uid, [
+                            ('quant_id','=',line.quant_id.id),
+                            ('state','not in',['done','cancel'])], context=context)
+                        if m_id:
+                            raise osv.except_osv(_('Error!'),_('There is an invalid quant (pending move exists for '
+                                                               'the quant).'))
         super(sale_order, self).action_button_confirm(cr, uid, ids, context=context)
 
     def action_button_split_line(self, cr, uid, ids, context=None):

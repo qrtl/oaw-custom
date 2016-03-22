@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
+#    Odoo, Open Source Management Solution
 #    Copyright (c) Rooms For (Hong Kong) Limited T/A OSCG. All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -16,14 +14,12 @@
 #
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
 {
     'name': 'Quant/Serial Number on Sales',
     'category': 'Sale',
-    'version': '0.7',
+    'version': '8.0.1.0.0',
     'author': 'Rooms For (Hong Kong) Ltd. T/A OSCG',
-    'website': 'www.openerp-asia.net',
+    'website': 'www.odoo-asia.com',
     'depends': ['sale', 'stock', 'sale_margin', 'vendor_consignment_stock',
                 'sale_owner_stock_sourcing',],
     'summary':""" Serial Number Quant on Sales Order Line""",

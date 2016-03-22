@@ -28,6 +28,7 @@ Main functions achieved by this module are as follows:
 * Validation on Stock Owner, Route and Serial Number in SO line
  * In case stock owner is blank, route cannot be left blank (user should select either ‘Buy’ or ‘Make To Order’)
  * Serial number can be left blank in case of ‘Make To Order’.  Otherwise, the field should be mandatory
+ * Serial number validity is checked when SO is being confirmed.
 * Add a new option 'On Demand (per SO Line)' for 'Create Invoice' field in SO.  In case this option is selected, user should be able to create an invoice any time from SO.  However, user should not be able to process 'Transfer' in outgoing delivery for lines (stock moves) for which payment has yet to be done.
 * Disable SO line wizard (which is activated by ‘Vendor Consignment Stock’ module)
  * ‘Stock Owner’ field should show in line tree in SO form view (currently it does not show)
