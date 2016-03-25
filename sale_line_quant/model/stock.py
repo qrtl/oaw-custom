@@ -427,27 +427,27 @@ class stock_picking(osv.osv):
                     
         # prevals var holds the operations in order to create them in the same order than the picking stock moves if possible
         processed_products = set()
-        
-        product_counter = {}
-        product_counter_max = {}
-        for pre in prevals:
-            product_counter_max[pre] = len(prevals[pre])
 
         ''' >>> heavily changed from standard logic (OSCG) '''
-        for move in picking.move_lines:
-            if not move.id in product_counter:
-                product_counter[move.product_id.id] = 0
-        
-        for move in picking.move_lines:
-            if move.product_id.id not in processed_products:
+        product_counter = {}
+        product_counter_max = {}
+        for pre in prevals:  # `pre` is a product id
+            product_counter_max[pre] = len(prevals[pre])
+            product_counter[pre] = 0
+
+        for move in [x for x in picking.move_lines if x.state not in ('done', 'cancel')]:
+            if move.product_id.id in prevals and move.product_id.id not in processed_products:
                 if product_counter[move.product_id.id] >= product_counter_max[move.product_id.id]:
                     continue
                 new_value = prevals.get(move.product_id.id, [])
                 if new_value and move.product_id.product_tmpl_id.categ_id.enforce_qty_1: # Checking year since move lines can have same products and enforced.
-
-                    # If purchase order line has serial number (MTO case) and when we create incoming shipment from PO then that serial number should be pass to the respected transfer (pack operation) on incoming shipments.
-                    if move.procurement_id.purchase_line_id and move.procurement_id.purchase_line_id.lot_id and not new_value[product_counter[move.product_id.id]].get('lot_id', False):
-                        if move.product_id.product_tmpl_id.categ_id.enforce_qty_1 and self.check_mto(cr, uid, move.procurement_id, context=context):
+                    # If purchase order line has serial number (MTO case) and when we create incoming shipment from PO
+                    # then that serial number should be passed to the respective transfer (pack operation) on incoming
+                    # shipments.
+                    if move.procurement_id.purchase_line_id and move.procurement_id.purchase_line_id.lot_id \
+                            and not new_value[product_counter[move.product_id.id]].get('lot_id', False):
+                        if move.product_id.product_tmpl_id.categ_id.enforce_qty_1 \
+                                and self.check_mto(cr, uid, move.procurement_id, context=context):
                             new_value[product_counter[move.product_id.id]].update({'lot_id': move.procurement_id.purchase_line_id.lot_id.id})
                     
                     # Below two conditions logic will pass the serial number on PO Line and SO Line if it was not given or left empty on time of Sales order creation.
