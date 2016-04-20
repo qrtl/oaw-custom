@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) Rooms For (Hong Kong) Limited T/A OSCG
-#    <http://www.openerp-asia.net>
+#    Odoo, Open Source Management Solution
+#    Copyright (C) 2016 Rooms For (Hong Kong) Limited T/A OSCG
+#    <https://www.odoo-asia.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -17,23 +15,23 @@
 #
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
 
 {
-    'name': 'Stock Picking Menu',
-    'version': '0.5',
-    'author': 'Rooms For (Hong Kong) Ltd T/A OSCG',
-    'website': 'http://www.openerp-asia.net',
-    'category': 'Menu',
-    'depends': ["stock"],
+    'name': 'Sale Default Filter',
+    'summary': "",
+    'version': "8.0.0.5.0",
+    'category': 'Sales',
+    'website': 'https://www.odoo-asia.com',
+    'author': 'Rooms For (Hong Kong) Limited T/A OSCG',
+    'license': "AGPL-3",
     'description': """
-* Adds menu items for users to reach picking operation screens quickly.
-* Default proposal of Picking Type is for the first warehouse.
+* Set default filter not to show cancelled SOs for Sales > Quotations.
     """,
+    'application': False,
+    'installable': True,
+    'depends': ["sale"],
     'data': [
         'sale_view.xml',
     ],
-    'installable': True,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
