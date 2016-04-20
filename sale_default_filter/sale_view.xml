@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="sale.action_quotations" model="ir.actions.act_window">
+            <field name="context">{'search_default_my_sale_orders_filter': 1, 'search_default_not_cancelled': 1}</field>
+        </record>
+
+        <record id="view_sales_order_filter_z160420" model="ir.ui.view">
+            <field name="name">sale.order.list.select.z160420</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@string='Quotations']" position="after">
+                	<filter string="Not Cancelled" name="not_cancelled" domain="[('state','!=','cancel')]" help="Sales orders that haven't been cancelled"/>
+				</xpath>
+            </field>
+        </record>
+    </data>
+</openerp>
