@@ -35,7 +35,7 @@ Main Features
     'images' : [],
     'depends': ['stock', 'sale_line_quant'],
     'data': [
-         'sale_view.xml',
+         'stock_view.xml',        
     ],
     'test': [],
     'demo': [],
