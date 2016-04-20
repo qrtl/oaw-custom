@@ -30,7 +30,7 @@ Modification on sales order line by adding quant and serial number selection.
              'security/group.xml',
              'view/sale_view.xml',
              'view/purchase_view.xml',
-             'view/stock_view.xml',
+             'view/sale_view.xml',
              'view/sale_stock_view.xml',
              'view/so_line_quant_view.xml',
              'view/account_invoice_view.xml',
