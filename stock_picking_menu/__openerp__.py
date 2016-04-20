@@ -32,7 +32,7 @@
 * Default proposal of Picking Type is for the first warehouse.
     """,
     'data': [
-        'stock_view.xml',
+        'sale_view.xml',
     ],
     'installable': True,
 }
