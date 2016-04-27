@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (c) Rooms For (Hong Kong) Limited T/A OSCG. All Rights Reserved
+#    Odoo, Open Source Management Solution
+#    Copyright (C) 2015-2016 Rooms For (Hong Kong) Limited T/A OSCG
+#    <https://www.odoo-asia.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -16,22 +15,21 @@
 #
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
 
 {
     'name': 'Stock Move View',
-    'version': '0.5',
-    'category': 'Stock',
     'summary': 'Adds Stock Move (Extended) menu item',
-    'description': """
-Main Features
-==================================================
-* Adds menu item Stock Move (Extended)
-
-    """,
+    'version': '8.0.0.5.0',
+    'category': 'Stock',
     'author': 'Rooms For (Hong Kong) Limited T/A OSCG',
-    'website': 'http://www.openerp-asia.com',
+    'website': 'https://www.odoo-asia.com',
+    'description': """
+* Adds menu item Stock Move (Ext.)
+    """,
+    "license": "AGPL-3",
+    'application': False,
+    'installable': True,
+    'auto_install': False,
     'images' : [],
     'depends': ['stock', 'sale_line_quant'],
     'data': [
@@ -39,9 +37,6 @@ Main Features
     ],
     'test': [],
     'demo': [],
-    'installable': True,
-    'auto_install': False,
-    'application': False,
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
