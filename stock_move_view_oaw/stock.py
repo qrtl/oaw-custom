@@ -32,6 +32,12 @@ class StockMove(models.Model):
         readonly=True,
         string='Pick Partner'
         )
+    picking_type_code = fields.Selection(
+        related='picking_type_id.code',
+        store=True,
+        readonly=True,
+        string='Picking Type Code'
+        )
     quant_lot_id = fields.Many2one(
         'stock.production.lot',
         compute='_get_quant_info',

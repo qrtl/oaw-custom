@@ -17,7 +17,8 @@
                     <field name="group_id" readonly="1"/>
                     <field name="pick_partner_id" readonly="1"/>
                     <field name="quant_owner_id" readonly="1"/>
-                    <field name="picking_type_id" readonly="1"/>
+                    <field name="picking_type_id" invisible="1" readonly="1"/>
+                    <field name="picking_type_code" readonly="1"/>
                     <field name="create_date" invisible="1" readonly="1" groups="base.group_no_one"/>
                     <field name="product_id" readonly="1"/>
                     <field name="quant_lot_id" readonly="1"/>
@@ -43,6 +44,8 @@
                     <field name="origin" filter_domain="['|', '|', ('origin', 'ilike', self), ('name', 'ilike', self), ('picking_id', 'ilike', self)]" string="Reference"/>
                     <field name="date" groups="base.group_no_one"/>
 
+                    <filter icon="terp-stock" string="To Do (Customers)" name="future_customers" domain="[('picking_type_code','=','outgoing'),('state','in',('assigned','confirmed','waiting'))]" help="Unprocessed stock moves related to customers"/>
+                    <filter icon="terp-stock" string="To Do (Suppliers)" name="future_suppliers" domain="[('picking_type_code','=','incoming'),('state','in',('assigned','confirmed','waiting'))]" help="Unprocessed stock moves related to suppliers"/>
                     <filter icon="terp-camera_test" string="Ready" name="ready" domain="[('state','=','assigned')]" help="Stock moves that are Available (Ready to process)"/>
                     <filter icon="terp-stock" string="To Do" name="future" domain="[('state','in',('assigned','confirmed','waiting'))]" help="Stock moves that are Confirmed, Available or Waiting"/>
                     <filter icon="terp-dialog-close" string="Done" name="done" domain="[('state','=','done')]" help="Stock moves that have been processed"/>
@@ -50,6 +53,9 @@
                     <filter icon="terp-go-today" string="Today" domain="[('date','&lt;=',time.strftime('%%Y-%%m-%%d 23:59:59')),('date','&gt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]" help="Orders processed Today or planned for Today"/>
                     <field name="quant_lot_id"/>
                     <field name="product_id"/>
+                    <field name="so_id"/>
+                    <field name="po_id"/>
+                    <field name="group_id"/>
                     <field name="name" string="Location" filter_domain="['|',('location_id','ilike',self),('location_dest_id','ilike',self)]"/>
                     <field name="partner_id" string="Partner"  filter_domain="[('picking_id.partner_id','child_of',self)]"/>
                     <group expand="0" string="Group By">
