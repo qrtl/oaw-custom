@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 #    Odoo, Open Source Management Solution
-#    Copyright (c) Rooms For (Hong Kong) Limited T/A OSCG. All Rights Reserved
+#    Copyright (C) 2015-2016 Rooms For (Hong Kong) Limited T/A OSCG
+#    <https://www.odoo-asia.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -14,6 +15,7 @@
 #
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 {
     'name': 'Quant/Serial Number on Sales',
     'category': 'Sale',
@@ -28,12 +30,12 @@ Modification on sales order line by adding quant and serial number selection.
     """,
     'data': [
              'security/group.xml',
-             'view/sale_view.xml',
-             'view/purchase_view.xml',
-             'view/stock_view.xml',
-             'view/sale_stock_view.xml',
-             'view/so_line_quant_view.xml',
-             'view/account_invoice_view.xml',
+             'views/sale_view.xml',
+             'views/purchase_view.xml',
+             'views/stock_view.xml',
+             'views/sale_stock_view.xml',
+             'views/so_line_quant_view.xml',
+             'views/account_invoice_view.xml',
              ],
     'installable': True,
 }
