@@ -114,16 +114,7 @@ class sale_order(osv.osv):
             self.pool.get('sale.order.line').button_confirm(cr, uid, [x.id for x in o.order_line])
         return True
     
-#     def onchange_partner_id(self, cr, uid, ids, part, context=None):
-# #        Add logic to propose Create Invoice (order_policy) in SO from customer
-# #(add a field in customer)
-#         res = super(sale_order, self).onchange_partner_id(cr, uid, ids, part, context=context)
-#         if not part:
-#             return res
-#         part = self.pool.get('res.partner').browse(cr, uid, part, context=context)
-#         res['value'].update({'order_policy': part.order_policy})
-#         return res
-    
+
     def _prepare_order_line_procurement(self, cr, uid, order, line, group_id=False, context=None):
         #Send/Pass lot, quant and enforce_qty_1 to the respected procurement using sale order lines. This will be used in pickings/moves.
         """ create procurement here we add just two fields add quant_id and lot_id"""
@@ -167,16 +158,6 @@ class sale_order_line(osv.osv):
         'mto': fields.boolean('Is MTO?'),
     }
 
-    def onchange_route(self, cr, uid, ids, route_id, context=None):
-        # Serial number can be left blank in case of ‘Make To Order’. 
-        # Otherwise, the field should be mandatory 
-        result = {'mto': False}
-        model, res_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'stock', 'route_warehouse0_mto')
-        if route_id == res_id:
-            result = {
-                'mto': True,
-            }
-        return {'value': result}
 
     def onchange_quant(self, cr, uid, ids, quant_id, date, currency_id, context=None):
         """ On change of quant_id finds lot_id(serial no)
