@@ -114,15 +114,15 @@ class sale_order(osv.osv):
             self.pool.get('sale.order.line').button_confirm(cr, uid, [x.id for x in o.order_line])
         return True
     
-    def onchange_partner_id(self, cr, uid, ids, part, context=None):
-#        Add logic to propose Create Invoice (order_policy) in SO from customer 
-#(add a field in customer) 
-        res = super(sale_order, self).onchange_partner_id(cr, uid, ids, part, context=context)
-        if not part:
-            return res
-        part = self.pool.get('res.partner').browse(cr, uid, part, context=context)
-        res['value'].update({'order_policy': part.order_policy})
-        return res
+#     def onchange_partner_id(self, cr, uid, ids, part, context=None):
+# #        Add logic to propose Create Invoice (order_policy) in SO from customer
+# #(add a field in customer)
+#         res = super(sale_order, self).onchange_partner_id(cr, uid, ids, part, context=context)
+#         if not part:
+#             return res
+#         part = self.pool.get('res.partner').browse(cr, uid, part, context=context)
+#         res['value'].update({'order_policy': part.order_policy})
+#         return res
     
     def _prepare_order_line_procurement(self, cr, uid, order, line, group_id=False, context=None):
         #Send/Pass lot, quant and enforce_qty_1 to the respected procurement using sale order lines. This will be used in pickings/moves.

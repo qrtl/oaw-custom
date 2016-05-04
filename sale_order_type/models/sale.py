@@ -17,7 +17,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from openerp import models, fields, api
-#from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
 
@@ -26,8 +25,27 @@ class SaleOrder(models.Model):
 
     order_type = fields.Selection(string="Order Type",
             selection=[('mto','Make to Order'),('stock','Stock')],
-            required=True)
+            required=True, readonly=True,
+            states={'draft': [('readonly', False)],
+                    'sent': [('readonly', False)]}
+            )
+    order_policy = fields.Selection(string="Create Invoice",
+            selection=[('manual', 'On Demand'),
+                       ('picking', 'On Delivery Order'),
+                       ('prepaid', 'Before Delivery Order'),
+                       ('line_check', 'Check per SO Line')],  # newly added
+            required=True, readonly=True,
+            states={'draft': [('readonly', False)],
+                    'sent': [('readonly', False)]},
+            compute='_compute_order_policy',
+            help="""This field controls how invoice and delivery operations \
+            are synchronized."""
+            )
 
-
-    def onchange_order_type(self):
-        pass
+    @api.one
+    @api.depends('order_type', 'partner_id')
+    def _compute_order_policy(self):
+        if self.order_type and self.order_type == 'mto':
+            self.order_policy = 'line_check'
+        elif self.partner_id and self.partner_id.order_policy:
+            self.order_policy = self.partner_id.order_policy
