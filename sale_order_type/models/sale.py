@@ -23,6 +23,15 @@ from openerp.tools.translate import _
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
+    @api.one
+    @api.depends('order_type', 'partner_id')
+    def _compute_order_policy(self):
+        if self.order_type and self.order_type == 'mto':
+            self.order_policy = 'line_check'
+        elif self.partner_id and self.partner_id.order_policy:
+            self.order_policy = self.partner_id.order_policy
+
+
     order_type = fields.Selection(string="Order Type",
             selection=[('mto','Make to Order'),('stock','Stock')],
             required=True, readonly=True,
@@ -42,10 +51,25 @@ class SaleOrder(models.Model):
             are synchronized."""
             )
 
-    @api.one
-    @api.depends('order_type', 'partner_id')
-    def _compute_order_policy(self):
-        if self.order_type and self.order_type == 'mto':
-            self.order_policy = 'line_check'
-        elif self.partner_id and self.partner_id.order_policy:
-            self.order_policy = self.partner_id.order_policy
+
+class SaleOrderLine(models.Model):
+    _inherit = "sale.order.line"
+
+    @api.multi
+    @api.depends('order_id.order_type')
+    def _compute_route(self):
+        model, res_id = self.env['ir.model.data'].get_object_reference('stock', 'route_warehouse0_mto')
+        for line in self:
+            if line.order_id.order_type == 'mto':
+                line.route_id = res_id
+                line.mto = True
+            else:
+                line.route_id = False
+                line.mto = False
+
+    route_id = fields.Many2one('stock.location.route',
+            string="Route",
+            domain=[('sale_selectable','=',True)],
+            compute=_compute_route
+            )
+
