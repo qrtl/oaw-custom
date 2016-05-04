@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+    <record id="view_order_form_inherit_z160503" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.z160503</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale_stock.view_order_form_inherit"/>
+        <field name="arch" type="xml">
+            <field name="warehouse_id" position="after">
+                <field name="order_type"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_order_tree_z160504" model="ir.ui.view">
+        <field name="name">sale.order.tree.z160504</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="order_type"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_quotation_tree_z160504" model="ir.ui.view">
+        <field name="name">sale.order.tree.z160504</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_quotation_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="order_type"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_sales_order_filter_z160504" model="ir.ui.view">
+        <field name="name">sale.order.list.select.z160504</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="order_type"/>
+            </xpath>
+            <xpath expr="//filter[@string='My']" position="before">
+                <filter string="Make to Order" domain="[('order_type','=','mto')]"/>
+                <filter string="Stock" domain="[('order_type','=','stock')]"/>
+                <separator/>
+            </xpath>
+            <xpath expr="//filter[@string='Salesperson']" position="before">
+                <filter string="Order Type" domain="[]" context="{'group_by':'order_type'}"/>
+            </xpath>
+        </field>
+    </record>
+
+</data>
+</openerp>
