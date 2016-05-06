@@ -17,24 +17,22 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from openerp import models, fields, api
-from openerp.tools.translate import _
 
 
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
     @api.one
-    @api.depends('order_type', 'partner_id')
+    @api.depends('is_mto', 'partner_id')
     def _compute_order_policy(self):
-        if self.order_type and self.order_type == 'mto':
+        if self.is_mto:
             self.order_policy = 'line_check'
         elif self.partner_id and self.partner_id.order_policy:
             self.order_policy = self.partner_id.order_policy
 
 
-    order_type = fields.Selection(string="Order Type",
-            selection=[('mto','Make to Order'),('stock','Stock')],
-            required=True, readonly=True,
+    is_mto = fields.Boolean(string="Make to Order",
+            readonly=True,
             states={'draft': [('readonly', False)],
                     'sent': [('readonly', False)]}
             )
@@ -50,26 +48,72 @@ class SaleOrder(models.Model):
             help="""This field controls how invoice and delivery operations \
             are synchronized."""
             )
+    is_walkin = fields.Boolean('Walk-in')
+
 
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
     @api.multi
-    @api.depends('order_id.order_type')
+    @api.depends('order_id.is_mto')
     def _compute_route(self):
         model, res_id = self.env['ir.model.data'].get_object_reference('stock', 'route_warehouse0_mto')
         for line in self:
-            if line.order_id.order_type == 'mto':
+            if line.order_id.is_mto:
                 line.route_id = res_id
                 line.mto = True
+                line.quant_id = False
+                line.lot_id = False
+                line.stock_owner_id = False
             else:
                 line.route_id = False
                 line.mto = False
 
+
+    @api.model
+    def _default_mto(self):
+        res = self.env.context.get('is_mto',False)
+        return res
+
+
+    @api.model
+    def _default_route(self):
+        res = False
+        mto = self.env.context.get('is_mto',False)
+        if mto:
+            model, res_id = self.env['ir.model.data'].get_object_reference('stock', 'route_warehouse0_mto')
+            res = res_id
+        return res
+
+
+
     route_id = fields.Many2one('stock.location.route',
             string="Route",
             domain=[('sale_selectable','=',True)],
-            compute=_compute_route
+            compute=_compute_route,
+            default=_default_route
+            )
+    mto = fields.Boolean('Is MTO?',
+            default=_default_mto
+            )
+    purchase_line_id = fields.Many2one('purchase.order.line',
+            string="PO Line",
+            )
+    purchase_order_id = fields.Many2one('purchase.order',
+            string="Purchase Order",
+            related='purchase_line_id.order_id'
             )
 
+
+    @api.multi
+    def action_view_purchase_open(self):
+        res = {}
+        purchase_id = self.purchase_order_id.id
+        ref = self.env['ir.model.data'].get_object_reference('sale_order_type', 'purchase_action_form_open')
+        ref_id = ref and ref[1] or False
+        if ref_id:
+            action = self.env['ir.actions.act_window'].browse([ref_id])[0]
+            res = action.read()[0]
+            res['res_id'] = purchase_id
+        return res

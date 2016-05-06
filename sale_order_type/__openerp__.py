@@ -19,10 +19,10 @@
 {
     'name': 'Sale Order Type',
     'category': 'Sales',
-    'version': '8.0.0.5.0',
+    'version': '8.0.0.6.0',
     'author': 'Rooms For (Hong Kong) Limited T/A OSCG',
     'website': 'https://www.odoo-asia.com',
-    'depends': ['sale_stock',
+    'depends': ['sale_line_quant',
                 ],
     'summary':"""""",
     'description': """ 
@@ -30,6 +30,7 @@ Adds Sales Order Type in sales order to control certain business scenarios.
     """,
     'data': [
              'views/sale_view.xml',
+             'views/purchase_view.xml'
              ],
     'installable': True,
 }
