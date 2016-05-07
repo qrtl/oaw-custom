@@ -19,7 +19,7 @@
 {
     'name': 'Stock Move View',
     'summary': 'Adds Stock Move (Extended) menu item',
-    'version': '8.0.0.5.0',
+    'version': '8.0.0.6.0',
     'category': 'Stock',
     'author': 'Rooms For (Hong Kong) Limited T/A OSCG',
     'website': 'https://www.odoo-asia.com',
@@ -31,7 +31,8 @@
     'installable': True,
     'auto_install': False,
     'images' : [],
-    'depends': ['stock', 'sale_line_quant'],
+    'depends': ['sale_order_type',
+                ],
     'data': [
          'stock_view.xml',        
     ],

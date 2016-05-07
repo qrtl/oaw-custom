@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #    Odoo, Open Source Management Solution
-#    Copyright (C) 2015-2016 Rooms For (Hong Kong) Limited T/A OSCG
+#    Copyright (C) 2016 Rooms For (Hong Kong) Limited T/A OSCG
 #    <https://www.odoo-asia.com>
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -99,6 +99,7 @@ class SaleOrderLine(models.Model):
             )
     purchase_line_id = fields.Many2one('purchase.order.line',
             string="PO Line",
+            copy=False
             )
     purchase_order_id = fields.Many2one('purchase.order',
             string="Purchase Order",

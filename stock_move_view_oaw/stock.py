@@ -66,6 +66,13 @@ class StockMove(models.Model):
         readonly=True,
         string='PO'
         )
+    is_mto = fields.Boolean('Make to Order',
+        related='so_id.is_mto',
+        )
+    is_walkin = fields.Boolean('Walk-in',
+        related='so_id.is_walkin',
+        )
+
 
     @api.multi
     @api.depends('quant_ids', 'lot_id')
