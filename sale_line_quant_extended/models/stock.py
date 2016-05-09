@@ -112,10 +112,25 @@ class StockMove(models.Model):
             self.is_mto = self.purchase_line_id.mto
 
 
-    def init(self, cr):
-        move_ids = self.search(cr, SUPERUSER_ID, [])
-        for m in self.browse(cr, SUPERUSER_ID, move_ids):
-            m.pick_partner_id = m.picking_id.partner_id and m.picking_id.partner_id.id
-            if m.quant_ids:
-                m.quant_lot_id = m.quant_ids[0].lot_id and m.quant_ids[0].lot_id.id
-                m.quant_owner_id = m.quant_ids[0].owner_id and m.quant_ids[0].owner_id.id
+    # def init(self, cr):
+    #     move_ids = self.search(cr, SUPERUSER_ID, [])
+    #     for m in self.browse(cr, SUPERUSER_ID, move_ids):
+    #         m.pick_partner_id = m.picking_id.partner_id and m.picking_id.partner_id.id
+    #         if m.quant_ids:
+    #             m.quant_lot_id = m.quant_ids[0].lot_id and m.quant_ids[0].lot_id.id
+    #             m.quant_owner_id = m.quant_ids[0].owner_id and m.quant_ids[0].owner_id.id
+
+    @api.model
+    def _prepare_picking_assign(self, move):
+        res = super(StockMove, self)._prepare_picking_assign(move)
+        res['is_mto'] = move.is_mto
+        return res
+
+
+
+class StockPicking(models.Model):
+    _inherit = "stock.picking"
+
+
+    is_mto = fields.Boolean('Make to Order',
+            )

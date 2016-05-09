@@ -110,7 +110,7 @@ class SaleOrderLine(models.Model):
     def action_view_purchase_open(self):
         res = {}
         purchase_id = self.purchase_order_id.id
-        ref = self.env['ir.model.data'].get_object_reference('sale_order_type', 'purchase_action_form_open')
+        ref = self.env['ir.model.data'].get_object_reference('sale_line_quant_extended', 'purchase_action_form_open')
         ref_id = ref and ref[1] or False
         if ref_id:
             action = self.env['ir.actions.act_window'].browse([ref_id])[0]

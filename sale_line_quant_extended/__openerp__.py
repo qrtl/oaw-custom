@@ -16,6 +16,22 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from . import sale
-from . import procurement
-from . import stock
+{
+    'name': 'Sale Line Quant Extended',
+    'category': 'Sales',
+    'version': '8.0.0.6.0',
+    'author': 'Rooms For (Hong Kong) Limited T/A OSCG',
+    'website': 'https://www.odoo-asia.com',
+    'depends': ['sale_line_quant',
+                ],
+    'summary':"""""",
+    'description': """ 
+Adds Sales Order Type in sales order to control certain business scenarios.
+    """,
+    'data': [
+             'views/sale_view.xml',
+             'views/purchase_view.xml'
+             ],
+    'installable': True,
+}
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

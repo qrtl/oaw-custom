@@ -16,28 +16,7 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-{
-    'name': 'Stock Move View',
-    'summary': 'Adds Stock Move (Extended) menu item',
-    'version': '8.0.0.6.0',
-    'category': 'Stock',
-    'author': 'Rooms For (Hong Kong) Limited T/A OSCG',
-    'website': 'https://www.odoo-asia.com',
-    'description': """
-* Adds menu item Stock Move (Ext.)
-    """,
-    "license": "AGPL-3",
-    'application': False,
-    'installable': True,
-    'auto_install': False,
-    'images' : [],
-    'depends': ['sale_line_quant_extended',
-                ],
-    'data': [
-         'stock_view.xml',        
-    ],
-    'test': [],
-    'demo': [],
-}
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+from . import sale
+from . import procurement
+from . import stock
+from . import purchase

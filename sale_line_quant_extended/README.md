@@ -1,5 +1,5 @@
-Sales Order Type
-================
+Sale Line Quant Extended
+========================
 
 This module does xxxx.
 
