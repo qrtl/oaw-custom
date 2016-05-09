@@ -11,6 +11,8 @@
                     default_order="id desc" editable="top">
                     <field name="name" invisible="1" readonly="1"/>
                     <field name="picking_id" readonly="1" string="Reference"/>
+                    <field name="is_mto" readonly="1" string="MTO"/>
+                    <field name="is_walkin" readonly="1"/>
                     <field name="origin" invisible="1" readonly="1"/>
                     <field name="so_id" readonly="1"/>
                     <field name="po_id" readonly="1"/>
@@ -32,7 +34,6 @@
                     <field name="date" readonly="1"/>
                     <field name="date_expected" invisible="1" readonly="1"/>
                     <field name="state" readonly="1"/>
-                    <field name="is_walkin" readonly="1"/>
                 </tree>
             </field>
         </record>

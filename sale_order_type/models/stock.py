@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #    Odoo, Open Source Management Solution
-#    Copyright (C) 2015-2016 Rooms For (Hong Kong) Limited T/A OSCG
+#    Copyright (C) 2016 Rooms For (Hong Kong) Limited T/A OSCG
 #    <https://www.odoo-asia.com>
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -17,14 +17,11 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from openerp import models, fields, api, _
-from datetime import datetime
-from openerp.tools.translate import _
-import openerp.addons.decimal_precision as dp
 from openerp import SUPERUSER_ID
- 
+
 
 class StockMove(models.Model):
-    _inherit = 'stock.move'
+    _inherit = "stock.move"
 
     pick_partner_id = fields.Many2one(
         related='picking_id.partner_id',
@@ -67,7 +64,8 @@ class StockMove(models.Model):
         string='PO'
         )
     is_mto = fields.Boolean('Make to Order',
-        related='so_id.is_mto',
+        compute='_compute_mto',
+        store=True,
         )
     is_walkin = fields.Boolean('Walk-in',
         related='so_id.is_walkin',
@@ -102,6 +100,17 @@ class StockMove(models.Model):
                 m.po_id = m.purchase_line_id.order_id.id
             elif m.procurement_id and m.procurement_id.sale_line_id:
                 m.so_id = m.procurement_id.sale_line_id.order_id.id
+
+
+    @api.one
+    @api.depends('procurement_id', 'purchase_line_id')
+    def _compute_mto(self):
+        if self.code == 'outgoing' and self.procurement_id and \
+                self.procurement_id.sale_line_id:
+            self.is_mto = self.procurement_id.sale_line_id.mto
+        elif self.code == 'incoming' and self.purchase_line_id:
+            self.is_mto = self.purchase_line_id.mto
+
 
     def init(self, cr):
         move_ids = self.search(cr, SUPERUSER_ID, [])
