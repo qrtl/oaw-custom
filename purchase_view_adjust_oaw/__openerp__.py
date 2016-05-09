@@ -31,7 +31,7 @@
     'installable': True,
     'depends': [
         "purchase",
-        "sale_line_quant",
+        "sale_line_quant_extended",
     ],
     'data': [
         'purchase_view.xml',
