@@ -87,7 +87,6 @@ class SaleOrderLine(models.Model):
         return res
 
 
-
     route_id = fields.Many2one('stock.location.route',
             string="Route",
             domain=[('sale_selectable','=',True)],
