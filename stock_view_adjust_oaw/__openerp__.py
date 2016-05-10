@@ -32,6 +32,7 @@
     'auto_install': False,
     'images' : [],
     'depends': ['sale_line_quant_extended',
+                'stock_picking_menu',
                 ],
     'data': [
          'stock_view.xml',        

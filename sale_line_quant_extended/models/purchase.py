@@ -35,5 +35,4 @@ class PurchaseOrder(models.Model):
             }
             picking_id = self.env['stock.picking'].create(picking_vals).id
             self._create_stock_moves(order, order.order_line, picking_id)
-            # self.env['purchase.order']._create_stock_moves(order, order.order_line, picking_id)
         return picking_id

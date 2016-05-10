@@ -124,6 +124,7 @@ class StockMove(models.Model):
     def _prepare_picking_assign(self, move):
         res = super(StockMove, self)._prepare_picking_assign(move)
         res['is_mto'] = move.is_mto
+        res['is_walkin'] = move.so_id.is_walkin
         return res
 
 
@@ -133,4 +134,6 @@ class StockPicking(models.Model):
 
 
     is_mto = fields.Boolean('Make to Order',
+            )
+    is_walkin = fields.Boolean('Walk-in',
             )

@@ -37,7 +37,8 @@
         <field name="inherit_id" ref="sale.view_order_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='name']" position="after">
-                <field name="is_mto"/>
+                <field name="is_mto" string="MTO"/>
+                <field name="is_walkin"/>
             </xpath>
         </field>
     </record>
@@ -48,7 +49,8 @@
         <field name="inherit_id" ref="sale.view_quotation_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='name']" position="after">
-                <field name="is_mto"/>
+                <field name="is_mto" string="MTO"/>
+                <field name="is_walkin"/>
             </xpath>
         </field>
     </record>
@@ -63,7 +65,7 @@
                 <field name="is_mto"/>
             </xpath>
             <xpath expr="//filter[@string='My']" position="before">
-                <filter string="Make to Order" domain="[('is_mto','=',True)]"/>
+                <filter string="MTO" domain="[('is_mto','=',True)]"/>
                 <filter string="Stock" domain="[('is_mto','=','False)]"/>
                 <separator/>
             </xpath>
