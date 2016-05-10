@@ -90,6 +90,18 @@
 
 
 
+        <record id="view_picking_form_z160510" model="ir.ui.view">
+            <field name="name">stock.picking.form.z160510</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="is_mto"/>
+                    <field name="is_walkin"/>
+                </xpath>
+            </field>
+        </record>
+
         <record id="vpicktree_z160509" model="ir.ui.view">
             <field name="name">vpicktree_160509</field>
             <field name="model">stock.picking</field>
@@ -97,6 +109,19 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='name']" position="after">
                     <field name="is_mto" string="MTO"/>
+                    <field name="is_walkin" invisible="context.get('default_picking_type_code') != 'outgoing'"/>
+                </xpath>
+            </field>
+        </record>
+
+
+        <record id="view_picking_internal_search_z160510" model="ir.ui.view">
+            <field name="name">stock.picking.internal.search.z160510</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_internal_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='draft']" position="before">
+                    <filter icon="terp-check" name="mto" string="MTO" domain="[('is_mto','=','true')]"/>
                 </xpath>
             </field>
         </record>
