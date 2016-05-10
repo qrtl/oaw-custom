@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #    Odoo, Open Source Management Solution
-#    Copyright (C) 2015-2016 Rooms For (Hong Kong) Limited T/A OSCG
+#    Copyright (C) 2016 Rooms For (Hong Kong) Limited T/A OSCG
 #    <https://www.odoo-asia.com>
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -17,14 +17,11 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from openerp import models, fields, api, _
-from datetime import datetime
-from openerp.tools.translate import _
-import openerp.addons.decimal_precision as dp
 from openerp import SUPERUSER_ID
- 
+
 
 class StockMove(models.Model):
-    _inherit = 'stock.move'
+    _inherit = "stock.move"
 
     pick_partner_id = fields.Many2one(
         related='picking_id.partner_id',
@@ -66,6 +63,14 @@ class StockMove(models.Model):
         readonly=True,
         string='PO'
         )
+    is_mto = fields.Boolean('Make to Order',
+        compute='_compute_mto',
+        store=True,
+        )
+    is_walkin = fields.Boolean('Walk-in',
+        related='so_id.is_walkin',
+        )
+
 
     @api.multi
     @api.depends('quant_ids', 'lot_id')
@@ -96,10 +101,39 @@ class StockMove(models.Model):
             elif m.procurement_id and m.procurement_id.sale_line_id:
                 m.so_id = m.procurement_id.sale_line_id.order_id.id
 
-    def init(self, cr):
-        move_ids = self.search(cr, SUPERUSER_ID, [])
-        for m in self.browse(cr, SUPERUSER_ID, move_ids):
-            m.pick_partner_id = m.picking_id.partner_id and m.picking_id.partner_id.id
-            if m.quant_ids:
-                m.quant_lot_id = m.quant_ids[0].lot_id and m.quant_ids[0].lot_id.id
-                m.quant_owner_id = m.quant_ids[0].owner_id and m.quant_ids[0].owner_id.id
+
+    @api.one
+    @api.depends('procurement_id', 'purchase_line_id')
+    def _compute_mto(self):
+        if self.code == 'outgoing' and self.procurement_id and \
+                self.procurement_id.sale_line_id:
+            self.is_mto = self.procurement_id.sale_line_id.mto
+        elif self.code == 'incoming' and self.purchase_line_id:
+            self.is_mto = self.purchase_line_id.mto
+
+
+    # def init(self, cr):
+    #     move_ids = self.search(cr, SUPERUSER_ID, [])
+    #     for m in self.browse(cr, SUPERUSER_ID, move_ids):
+    #         m.pick_partner_id = m.picking_id.partner_id and m.picking_id.partner_id.id
+    #         if m.quant_ids:
+    #             m.quant_lot_id = m.quant_ids[0].lot_id and m.quant_ids[0].lot_id.id
+    #             m.quant_owner_id = m.quant_ids[0].owner_id and m.quant_ids[0].owner_id.id
+
+    @api.model
+    def _prepare_picking_assign(self, move):
+        res = super(StockMove, self)._prepare_picking_assign(move)
+        res['is_mto'] = move.is_mto
+        res['is_walkin'] = move.so_id.is_walkin
+        return res
+
+
+
+class StockPicking(models.Model):
+    _inherit = "stock.picking"
+
+
+    is_mto = fields.Boolean('Make to Order',
+            )
+    is_walkin = fields.Boolean('Walk-in',
+            )

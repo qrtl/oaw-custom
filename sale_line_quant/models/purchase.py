@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (c) Rooms For (Hong Kong) Limited T/A OSCG. All Rights Reserved
+#    Odoo, Open Source Management Solution
+#    Copyright (C) 2015-2016 Rooms For (Hong Kong) Limited T/A OSCG
+#    <https://www.odoo-asia.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -16,8 +15,6 @@
 #
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
@@ -26,14 +23,18 @@ from openerp.tools.translate import _
 class purchase_order_line(osv.osv):
     _inherit = 'purchase.order.line'
     _columns = {
-        'lot_id': fields.many2one('stock.production.lot', string="Case No.",),
+        'lot_id': fields.many2one('stock.production.lot', string="Case No.", copy=False),
+        'mto': fields.boolean('Is MTO?', readonly=True, copy=False),
+        'vci': fields.boolean('Is VCI?', readonly=True, copy=False),
     }
-    
+
 
 class purchase_order(osv.osv):
     _inherit = 'purchase.order'
     _columns ={
-        'lot_id': fields.related('order_line', 'lot_id', type='many2one', relation='stock.production.lot', string='Lot'),# for searching purpose
+        'lot_id': fields.related('order_line', 'lot_id', type='many2one',
+                relation='stock.production.lot', string='Lot'),  # for search purpose
+        'is_mto': fields.boolean('Make to Order', readonly=True, copy=False),
     }
     
     def _check_invoice_type_vci(self, cr, uid, ids, context=None):# Constraint
@@ -47,9 +48,8 @@ class purchase_order(osv.osv):
     ]
     
     def _choose_account_from_po_line_vic(self, cr, uid, po_line, context=None):
-#        Adjustment on supplier invoice ­ in case of vendor consignment, the 
-#system should propose Product COGS instead of GR/IR Clearing 
-
+        # Adjustment on supplier invoice ­ in case of vendor consignment, the
+        # system should propose Product COGS instead of GR/IR Clearing
         fiscal_obj = self.pool.get('account.fiscal.position')
         property_obj = self.pool.get('ir.property')
         if po_line.product_id:

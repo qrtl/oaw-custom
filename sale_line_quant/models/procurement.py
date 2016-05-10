@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (c) Rooms For (Hong Kong) Limited T/A OSCG. All Rights Reserved
+#    Odoo, Open Source Management Solution
+#    Copyright (C) 2015-2016 Rooms For (Hong Kong) Limited T/A OSCG
+#    <https://www.odoo-asia.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -16,8 +15,6 @@
 #
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
 
 from datetime import datetime
 from openerp import SUPERUSER_ID
@@ -40,47 +37,28 @@ class procurement_order(osv.osv):
         res.update({'quant_id': procurement.quant_id.id, 'lot_id': procurement.lot_id.id}) #Add lot and quant ref on related stock move of procurement order.
         return res
     
-    def check_both_vci_mto(self, cr, uid, procurement, context=None):
-        #TODO: Can be remove since not used anywhere.
-        if context is None:
-            context = {}
-        model, res_id1 = self.pool['ir.model.data'].get_object_reference(cr, uid, 'stock', 'route_warehouse0_mto')
-        model, res_id2 = self.pool['ir.model.data'].get_object_reference(cr, uid, 'vendor_consignment_stock', 'route_warehouse0_buy_vci')
-        vci = False
-        mto = False
-        for route in procurement.route_ids:
-            if route.id == res_id1:
-                mto = True
-            if route.id == res_id2:
-                vci = True
-        if vci and mto:
-            return True
-        return False
-    
-    # this method checks if given procurement is set with MTO or VCI
+
     def check_vci_or_mto(self, cr, uid, procurement, context=None):
-        if context is None:
-            context = {}
         model, res_id1 = self.pool['ir.model.data'].get_object_reference(cr,
             uid, 'stock', 'route_warehouse0_mto')
         model, res_id2 = self.pool['ir.model.data'].get_object_reference(cr,
             uid, 'vendor_consignment_stock', 'route_warehouse0_buy_vci')
-        vci = False
-        mto = False
+        res = ''
         for route in procurement.route_ids:
-            if route.id == res_id1:
-                mto = True
             if route.id == res_id2:
-                vci = True
-        if vci or mto:
-            return True
-        return False
-    
+                res = 'vci'
+                break  # vci procurement has both vci and mto routes
+            elif route.id == res_id1:
+                res = 'mto'
+        return res
+
     def _get_po_line_values_from_proc(self, cr, uid, procurement, partner, company, schedule_date, context=None):
         res = super(procurement_order, self)._get_po_line_values_from_proc(cr, uid, procurement, partner, company, schedule_date, context=context)
-        if self.check_vci_or_mto(cr, uid, procurement, context=context):
-            # Pass the lot_id reference on PO Line from procurement object.
-            res.update({'lot_id': procurement.lot_id.id})
+        type = self.check_vci_or_mto(cr, uid, procurement, context=context)
+        if type == 'vci':
+            res.update({'lot_id': procurement.lot_id.id, 'vci': True})
+        elif type == 'mto':
+            res.update({'lot_id': procurement.lot_id.id, 'mto': True})
         return res
     
     def make_po(self, cr, uid, ids, context=None):
@@ -118,8 +96,10 @@ class procurement_order(osv.osv):
 
                 # oscg.  prevent multiple procurements getting merged into one PO.
                 # SO and PO should be one to one relationship for ‘Make To Order’ and ‘Buy VCI’ cases.
-                if available_draft_po_ids and not self.check_vci_or_mto(cr,
-                    uid, procurement, context=context): # oscg
+                type = self.check_vci_or_mto(cr, uid, procurement, context=context)  # add 160507
+                # if available_draft_po_ids and not self.check_vci_or_mto(cr,
+                #     uid, procurement, context=context): # oscg
+                if available_draft_po_ids and not type:  # mod 160507
                     po_id = available_draft_po_ids[0]
                     po_rec = po_obj.browse(cr, uid, po_id, context=context)
                     #if the product has to be ordered earlier those in the existing PO, we replace the purchase date on the order to avoid ordering it too late
@@ -144,6 +124,7 @@ class procurement_order(osv.osv):
                     name = seq_obj.get(cr, uid, 'purchase.order') or _('PO: %s') % procurement.name
                     po_vals = {
                         'name': name,
+                        'is_mto': True if type == 'mto' else False,
                         'origin': procurement.origin,
                         'partner_id': partner.id,
                         'location_id': procurement.location_id.id,

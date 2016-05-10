@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="purchase_action_form_open" model="ir.actions.act_window">
+            <field name="name">Purchase Order</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">purchase.order</field>
+            <field name="view_mode">form</field>
+            <field name="context">{}</field>
+        </record>
+    </data>
+</openerp>

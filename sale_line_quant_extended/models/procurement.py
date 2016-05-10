@@ -16,28 +16,23 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-{
-    'name': 'Stock Move View',
-    'summary': 'Adds Stock Move (Extended) menu item',
-    'version': '8.0.0.6.0',
-    'category': 'Stock',
-    'author': 'Rooms For (Hong Kong) Limited T/A OSCG',
-    'website': 'https://www.odoo-asia.com',
-    'description': """
-* Adds menu item Stock Move (Ext.)
-    """,
-    "license": "AGPL-3",
-    'application': False,
-    'installable': True,
-    'auto_install': False,
-    'images' : [],
-    'depends': ['sale_line_quant_extended',
-                ],
-    'data': [
-         'stock_view.xml',        
-    ],
-    'test': [],
-    'demo': [],
-}
+from openerp import models, fields, api
+from openerp import SUPERUSER_ID
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
+class ProcurementOrder(models.Model):
+    _inherit = "procurement.order"
+
+
+    @api.model
+    def _update_so_line(self, res):
+        purchase_line_id = res[self.ids[0]]
+        sale_line_id = self.move_dest_id.procurement_id.sale_line_id.id
+        self.env['sale.order.line'].browse([sale_line_id])[0].sudo(SUPERUSER_ID).write({'purchase_line_id': purchase_line_id})
+
+
+    @api.multi
+    def make_po(self):
+        res = super(ProcurementOrder, self).make_po()
+        self._update_so_line(res)
+        return res

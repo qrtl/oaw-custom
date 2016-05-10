@@ -17,27 +17,20 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 {
-    'name': 'Stock Move View',
-    'summary': 'Adds Stock Move (Extended) menu item',
-    'version': '8.0.0.6.0',
-    'category': 'Stock',
+    'name': 'Sale Line Quant Extended',
+    'category': 'Sales',
+    'version': '8.0.0.7.0',
     'author': 'Rooms For (Hong Kong) Limited T/A OSCG',
     'website': 'https://www.odoo-asia.com',
-    'description': """
-* Adds menu item Stock Move (Ext.)
-    """,
-    "license": "AGPL-3",
-    'application': False,
-    'installable': True,
-    'auto_install': False,
-    'images' : [],
-    'depends': ['sale_line_quant_extended',
+    'depends': ['sale_line_quant',
                 ],
+    'summary':"""""",
+    'description': """
+    """,
     'data': [
-         'stock_view.xml',        
-    ],
-    'test': [],
-    'demo': [],
+             'views/sale_view.xml',
+             'views/purchase_view.xml'
+             ],
+    'installable': True,
 }
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
