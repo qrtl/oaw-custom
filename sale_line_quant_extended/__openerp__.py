@@ -19,14 +19,13 @@
 {
     'name': 'Sale Line Quant Extended',
     'category': 'Sales',
-    'version': '8.0.0.6.0',
+    'version': '8.0.0.7.0',
     'author': 'Rooms For (Hong Kong) Limited T/A OSCG',
     'website': 'https://www.odoo-asia.com',
     'depends': ['sale_line_quant',
                 ],
     'summary':"""""",
-    'description': """ 
-Adds Sales Order Type in sales order to control certain business scenarios.
+    'description': """
     """,
     'data': [
              'views/sale_view.xml',

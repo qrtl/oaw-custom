@@ -24,7 +24,6 @@
     'author': 'Rooms For (Hong Kong) Limited T/A OSCG',
     'website': 'https://www.odoo-asia.com',
     'description': """
-* Adds menu item Stock Move (Ext.)
     """,
     "license": "AGPL-3",
     'application': False,
