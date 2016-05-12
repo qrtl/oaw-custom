@@ -31,16 +31,24 @@ class sale_order(osv.osv):
             if sale.order_line:
                 for line in sale.order_line:
                     if line.quant_id:
-                        q_id = quant_obj.search(cr, uid, [
-                            ('id','=',line.quant_id.id),
-                            ('reservation_id', '=', False),
-                            ('product_id','=',line.product_id.id),
-                            ('qty','>', 0.0),
-                            ('actual_qty','>', 0.0),
-                            ('usage', '=', 'internal')], context=context)
-                        if not q_id:
-                            raise osv.except_osv(_('Error!'),_('There is an invalid quant (the quant is not '
-                                                               'available).'))
+                        """ following lines are commented as the definition of
+                            actual_qty has been changed to consider quotation/
+                            sale order
+                        """
+                        # q_id = quant_obj.search(cr, uid, [
+                        #     ('id','=',line.quant_id.id),
+                        #     ('reservation_id', '=', False),
+                        #     ('product_id','=',line.product_id.id),
+                        #     ('qty','>', 0.0),
+                        #     ('actual_qty','>', 0.0),
+                        #     ('usage', '=', 'internal')], context=context)
+                        # if not q_id:
+                        #     raise osv.except_osv(_('Error!'),_('There is an invalid quant (the quant is not '
+                        #                                        'available).'))
+
+                        # check if there is pending move (this happens when
+                        # VCI PO is left unconfirmed or availability check has
+                        # not been done for own stock)
                         m_id = move_obj.search(cr, uid, [
                             ('quant_id','=',line.quant_id.id),
                             ('state','not in',['done','cancel'])], context=context)

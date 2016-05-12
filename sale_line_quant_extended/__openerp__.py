@@ -19,7 +19,7 @@
 {
     'name': 'Sale Line Quant Extended',
     'category': 'Sales',
-    'version': '8.0.0.7.0',
+    'version': '8.0.0.8.0',
     'author': 'Rooms For (Hong Kong) Limited T/A OSCG',
     'website': 'https://www.odoo-asia.com',
     'depends': ['sale_line_quant',
@@ -28,8 +28,9 @@
     'description': """
     """,
     'data': [
+             'data/ir_actions.xml',
+             'data/base_action_rule_data.xml',
              'views/sale_view.xml',
-             'views/purchase_view.xml'
              ],
     'installable': True,
 }
