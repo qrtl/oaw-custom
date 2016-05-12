@@ -55,4 +55,3 @@ The module should achieve following operation scenarios:
 * Consignment
 * Make to Order
 * Normal stock
-

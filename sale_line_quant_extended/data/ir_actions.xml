@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- ir.actions.act_window -->
+
+        <record id="purchase_action_form_open" model="ir.actions.act_window">
+            <field name="name">Purchase Order</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">purchase.order</field>
+            <field name="view_mode">form</field>
+            <field name="context">{}</field>
+        </record>
+
+
+        <!-- ir.actions.server -->
+
+        <record id="action_run_ir_action_update_quants_sale_order" model="ir.actions.server">
+            <field name="name">Update quants based on sales order</field>
+            <field name="condition">True</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="state">code</field>
+            <field name="code">
+quant_obj = env['stock.quant']
+quants = quant_obj.search([('sale_id','=',object.id)])
+for quant in quants:
+    order_line = object.order_line.browse([quant.sale_line_id.id])[0]
+    if not (order_line.product_id.id == quant.product_id.id and order_line.quant_id.id == quant.id):
+        quant.write({'sale_id': False, 'sale_line_id': False})
+if object.state in ['draft','sent'] and object.order_line:
+    for line in object.order_line:
+        quant_obj.browse([line.quant_id.id]).write({'sale_line_id': line.id})
+elif object.state == 'cancel' and object.order_line:
+    for line in object.order_line:
+        quant_obj.browse([line.quant_id.id]).write({'sale_id': False, 'sale_line_id': False})
+            </field>
+        </record>
+
+        <record id="action_run_ir_action_update_quants_stock_move" model="ir.actions.server">
+            <field name="name">Update quants based on stock move</field>
+            <field name="condition">True</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="stock.model_stock_move"/>
+            <field name="state">code</field>
+            <field name="code">
+# reservation should be removed when when stock move is cancelled (even though SO line is still alive)
+if object.state in ['done', 'cancel']:
+    object.quant_id.write({'sale_id': False, 'sale_line_id': False})
+            </field>
+        </record>
+
+    </data>
+</openerp>
