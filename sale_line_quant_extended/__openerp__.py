@@ -23,6 +23,7 @@
     'author': 'Rooms For (Hong Kong) Limited T/A OSCG',
     'website': 'https://www.odoo-asia.com',
     'depends': ['sale_line_quant',
+                'base_action_rule',
                 ],
     'summary':"""""",
     'description': """
