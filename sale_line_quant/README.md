@@ -17,6 +17,7 @@ Main functions achieved by this module are as follows:
  * In case incoming picking is created without reference to a PO, 'unit price' should be auto-calculated by converting the 'purchase currency price' into base currency by applying the exchange rate as of the time of receipt. In other words, user should input 'purchase currency' and 'purchase currency price' instead of inputting 'unit price'. 'Purchase currency' and 'purchase currency price' fields do not have to be updated in case receipt is done with PO reference (non-consignment).
  * In SO line, in case a consignment quant ('stock owner' = supplier or 'purchase currency price' exists) is selected, cost price should be calculated by converting the 'purchase currency price' to SO currency using the exchange rates as of sales order date.
 * Prevent multiple procurements getting merged into one PO.  SO and PO should be one to one relationship for ‘Make To Order’ and ‘Buy VCI’ cases.
+* VCI PO currency and price should be proposed based on sold quant.
 * Add logic to propose Create Invoice (order_policy) in SO from customer (add a field in customer)
 * Adjustment on supplier invoice - in case of vendor consignment, the system should propose Product COGS instead of GR/IR Clearing
 * Add a boolean field ‘Enforce Qty 1’ in product category.  Apply following rules to products under this category
@@ -33,6 +34,7 @@ Main functions achieved by this module are as follows:
 * Disable SO line wizard (which is activated by ‘Vendor Consignment Stock’ module)
  * ‘Stock Owner’ field should show in line tree in SO form view (currently it does not show)
  * ‘Tax’ field should be made invisible.
+
 
 Installation
 ============

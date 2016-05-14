@@ -56,11 +56,29 @@ class procurement_order(osv.osv):
         res = super(procurement_order, self)._get_po_line_values_from_proc(cr, uid, procurement, partner, company, schedule_date, context=context)
         type = self.check_vci_or_mto(cr, uid, procurement, context=context)
         if type == 'vci':
-            res.update({'lot_id': procurement.lot_id.id, 'vci': True})
+            res.update({'lot_id': procurement.lot_id.id,
+                        'vci': True,
+                        'price_unit': procurement.move_dest_id.quant_id and
+                                procurement.move_dest_id.quant_id.\
+                                purchase_price_unit
+                        })
         elif type == 'mto':
-            res.update({'lot_id': procurement.lot_id.id, 'mto': True})
+            res.update({'lot_id': procurement.lot_id.id,
+                        'mto': True
+                        })
         return res
     
+
+    def _get_currency_id(self, cr, uid, type, procurement, partner, context=None):
+        if type == 'vci' and procurement.move_dest_id.quant_id:
+            res =  procurement.move_dest_id.quant_id.currency_id.id
+        elif partner.property_product_pricelist_purchase:
+            res = partner.property_product_pricelist_purchase.currency_id.id
+        else:
+            res = procurement.company_id.currency_id.id
+        return res
+
+
     def make_po(self, cr, uid, ids, context=None):
         """ Resolve the purchase from procurement, which may result in a new PO creation, a new PO line creation or a quantity change on existing PO line.
         Note that some operations (as the PO creation) are made as SUPERUSER because the current user may not have rights to do it (mto product launched by a sale for example)
@@ -95,10 +113,9 @@ class procurement_order(osv.osv):
                     ],context=context)
 
                 # oscg.  prevent multiple procurements getting merged into one PO.
-                # SO and PO should be one to one relationship for ‘Make To Order’ and ‘Buy VCI’ cases.
+                # SO line and PO should be one to one relationship for
+                # ‘Make To Order’ and ‘Buy VCI’ cases.
                 type = self.check_vci_or_mto(cr, uid, procurement, context=context)  # add 160507
-                # if available_draft_po_ids and not self.check_vci_or_mto(cr,
-                #     uid, procurement, context=context): # oscg
                 if available_draft_po_ids and not type:  # mod 160507
                     po_id = available_draft_po_ids[0]
                     po_rec = po_obj.browse(cr, uid, po_id, context=context)
@@ -120,8 +137,9 @@ class procurement_order(osv.osv):
                         line_vals.update(order_id=po_id)
                         po_line_id = po_line_obj.create(cr, SUPERUSER_ID, line_vals, context=context)
                         linked_po_ids.append(procurement.id)
-                else:
+                else:  # in case type is vci or mto
                     name = seq_obj.get(cr, uid, 'purchase.order') or _('PO: %s') % procurement.name
+                    currency_id = self._get_currency_id(cr, uid, type, procurement, partner, context=context)  # oscg
                     po_vals = {
                         'name': name,
                         'is_mto': True if type == 'mto' else False,
@@ -130,7 +148,8 @@ class procurement_order(osv.osv):
                         'location_id': procurement.location_id.id,
                         'picking_type_id': procurement.rule_id.picking_type_id.id,
                         'pricelist_id': partner.property_product_pricelist_purchase.id,
-                        'currency_id': partner.property_product_pricelist_purchase and partner.property_product_pricelist_purchase.currency_id.id or procurement.company_id.currency_id.id,
+                        # 'currency_id': partner.property_product_pricelist_purchase and partner.property_product_pricelist_purchase.currency_id.id or procurement.company_id.currency_id.id,
+                        'currency_id': currency_id,  # oscg
                         'date_order': purchase_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                         'company_id': procurement.company_id.id,
                         'fiscal_position': partner.property_account_position and partner.property_account_position.id or False,
