@@ -356,7 +356,6 @@ class stock_picking(osv.osv):
 
         # Go through all remaining reserved quants and group by product, package, lot, owner, source location and dest location
         for quant, dest_location_id in quants_suggested_locations.items():
-#             key = (quant.product_id.id, quant.package_id.id, quant.lot_id.id, quant.owner_id.id, quant.location_id.id, dest_location_id, quant.reservation_id.lot_id.id)
             key = (quant.product_id.id, quant.package_id.id, quant.lot_id.id,
                    quant.owner_id.id, quant.location_id.id, dest_location_id,
 #                    quant.reservation_id.lot_id.id,
@@ -445,27 +444,26 @@ class stock_picking(osv.osv):
                     # If purchase order line has serial number (MTO case) and when we create incoming shipment from PO
                     # then that serial number should be passed to the respective transfer (pack operation) on incoming
                     # shipments.
-                    if move.procurement_id.purchase_line_id and move.procurement_id.purchase_line_id.lot_id \
-                            and not new_value[product_counter[move.product_id.id]].get('lot_id', False):
-                        if move.product_id.product_tmpl_id.categ_id.enforce_qty_1 \
-                                and self.check_mto(cr, uid, move.procurement_id, context=context):
-                            new_value[product_counter[move.product_id.id]].update({'lot_id': move.procurement_id.purchase_line_id.lot_id.id})
-                    
-                    # Below two conditions logic will pass the serial number on PO Line and SO Line if it was not given or left empty on time of Sales order creation.
-                    if move.procurement_id.purchase_line_id and not move.procurement_id.purchase_line_id.lot_id:
-                        if move.product_id.product_tmpl_id.categ_id.enforce_qty_1 and self.check_mto(cr, uid, move.procurement_id, context=context):
-    #                     When receipt is done with serial number, it should trigger updating PO line, SO 
-    #                     line and delivery with the received serial number (in case serial number had 
-    #                     been left blank in SO for ‘Make To Order’ case) 
-                            new_value[product_counter[move.product_id.id]].update({'purchase_line_id': move.procurement_id.purchase_line_id.id})
-                            if not move.procurement_id.move_dest_id.lot_id:
-                                new_value[product_counter[move.product_id.id]].update({'move_dest_id': move.procurement_id.move_dest_id.id})
-                    if move.procurement_id.sale_line_id and not move.procurement_id.sale_line_id.lot_id:
-                        if move.product_id.product_tmpl_id.categ_id.enforce_qty_1 and self.check_mto(cr, uid, move.procurement_id, context=context):
-    #                     When receipt is done with serial number, it should trigger updating PO line, SO 
-    #                     line and delivery with the received serial number (in case serial number had 
-    #                     been left blank in SO for ‘Make To Order’ case) 
-                            new_value[product_counter[move.product_id.id]].update({'sale_line_id': move.procurement_id.sale_line_id.id})
+                    proc = move.procurement_id
+                    # MTO/VCI
+                    if proc and self.check_mto(cr, uid, proc, context=context):
+                        if proc.purchase_line_id and proc.purchase_line_id.lot_id \
+                                and not new_value[product_counter[move.product_id.id]].get('lot_id', False):
+                            new_value[product_counter[move.product_id.id]].update({'lot_id': proc.purchase_line_id.lot_id.id})
+                        """ pass case number to PO line/SO line in MTO case
+                        """
+                        # MTO receipt transfer
+                        if proc.purchase_line_id and not proc.purchase_line_id.lot_id:
+                            new_value[product_counter[move.product_id.id]].update({'purchase_line_id': proc.purchase_line_id.id})
+                            if not proc.move_dest_id.lot_id:
+                                new_value[product_counter[move.product_id.id]].update({'move_dest_id': proc.move_dest_id.id})
+                        # MTO delivery transfer
+                        if proc.sale_line_id and not proc.sale_line_id.lot_id:
+                            new_value[product_counter[move.product_id.id]].update({'sale_line_id': proc.sale_line_id.id})
+                    # normal stock purchase
+                    elif move.purchase_line_id:
+                        new_value[product_counter[move.product_id.id]].update({'purchase_line_id': move.purchase_line_id.id})
+
                     vals += [new_value[product_counter[move.product_id.id]]]
                     product_counter[move.product_id.id] += 1
                 else:
