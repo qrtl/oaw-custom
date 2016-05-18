@@ -66,7 +66,18 @@ class stock_transfer_details(models.TransientModel):
         res.update(item_ids=items)
         res.update(packop_ids=packs)
         return res
-    
+
+
+    @api.model
+    def _update_related_records(self, object, lot_id):
+        object.write({'lot_id': lot_id.id})
+        for line in object.invoice_lines:
+            line.write({'lot_id': lot_id.id})
+            rel_lines = self.env['account.invoice.line'].search([('origin_invoice_line_id','=',line.id)])
+            for rel_line in rel_lines:
+                rel_line.write({'lot_id': lot_id.id})
+
+
     @api.one
     def do_detailed_transfer(self):
         processed_ids = []
@@ -89,15 +100,14 @@ class stock_transfer_details(models.TransientModel):
                             product due to unpaid SO line(s).'))
 
                 if prod.purchase_line_id:
-                    prod.purchase_line_id.write({'lot_id':prod.lot_id.id })
-                    # Write on specific invoice line respected to PO line with same lot number.
-                    prod.purchase_line_id.invoice_lines.write({'lot_id':prod.lot_id.id})
+                    self._update_related_records(prod.purchase_line_id, prod.lot_id)
 
                 if prod.sale_line_id:
-                    prod.sale_line_id.write({'lot_id':prod.lot_id.id })
-                    # Write on specific invoice line respected to SO line with same lot number.
-                    prod.sale_line_id.invoice_lines.write({'lot_id':prod.lot_id.id})
-                
+                    # prod.sale_line_id.write({'lot_id': prod.lot_id.id})
+                    # # Write on specific invoice line respected to SO line with same lot number.
+                    # prod.sale_line_id.invoice_lines.write({'lot_id':prod.lot_id.id})
+                    self._update_related_records(prod.sale_line_id, prod.lot_id)
+
                 if prod.move_dest_id:
                     prod.move_dest_id.write({'lot_id':prod.lot_id.id })
                 # <<< oscg
