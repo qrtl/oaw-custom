@@ -19,11 +19,13 @@
 {
     'name': 'Quant/Serial Number on Sales',
     'category': 'Sale',
-    'version': '8.0.1.3.0',
+    'version': '8.0.1.4.0',
     'author': 'Rooms For (Hong Kong) Ltd. T/A OSCG',
     'website': 'www.odoo-asia.com',
-    'depends': ['sale', 'stock', 'sale_margin', 'vendor_consignment_stock',
-                'sale_owner_stock_sourcing',],
+    'depends': ['stock', 'sale_margin', 'vendor_consignment_stock',
+                'sale_owner_stock_sourcing',
+                'account_invoice_refund_link',
+                ],
     'summary':""" Serial Number Quant on Sales Order Line""",
     'description': """ 
 Modification on sales order line by adding quant and serial number selection.
@@ -39,4 +41,5 @@ Modification on sales order line by adding quant and serial number selection.
              ],
     'installable': True,
 }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
