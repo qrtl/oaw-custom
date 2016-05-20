@@ -36,3 +36,41 @@ class PurchaseOrder(models.Model):
             picking_id = self.env['stock.picking'].create(picking_vals).id
             self._create_stock_moves(order, order.order_line, picking_id)
         return picking_id
+
+
+
+class PurchaseOrderLine(models.Model):
+    _inherit = "purchase.order.line"
+
+
+    @api.one
+    @api.depends('move_ids.state')
+    def _get_move_state(self):
+        if all(m.state == 'cancel' for m in self.move_ids):
+            self.move_state = 'cancel'
+        else:
+            state = ''
+            for m in self.move_ids:
+                if m.state == 'cancel':
+                    pass
+                elif state == '':
+                    state = m.state
+                elif state != m.state:
+                    state = 'multi'
+            self.move_state = state
+
+
+    move_state = fields.Selection(
+        [('draft', 'New'),
+         ('cancel', 'Cancelled'),
+         ('confirmed', 'Waiting Availability'),
+         ('assigned', 'Available'),
+         ('done', 'Done'),
+         ('multi', '(Multiple Statuses)'),
+        ],
+        compute=_get_move_state,
+        store=True,
+        readonly=True,
+        copy=False,
+        string="Move State"
+    )
