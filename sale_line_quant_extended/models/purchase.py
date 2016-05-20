@@ -16,7 +16,7 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from openerp import models, fields, api, _
+from openerp import models, fields, api, _, SUPERUSER_ID
 
 
 class PurchaseOrder(models.Model):
@@ -74,3 +74,21 @@ class PurchaseOrderLine(models.Model):
         copy=False,
         string="Move State"
     )
+
+
+    def init(self, cr):
+        line_ids = self.search(cr, SUPERUSER_ID, [('move_state','=',False)])
+        lines = self.browse(cr, SUPERUSER_ID, line_ids)
+        for line in lines:
+            if all(m.state == 'cancel' for m in line.move_ids):
+                line.move_state = 'cancel'
+            else:
+                state = ''
+                for m in line.move_ids:
+                    if m.state == 'cancel':
+                        pass
+                    elif state == '':
+                        state = m.state
+                    elif state != m.state:
+                        state = 'multi'
+                line.move_state = state
