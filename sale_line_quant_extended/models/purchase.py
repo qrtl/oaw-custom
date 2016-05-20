@@ -46,18 +46,21 @@ class PurchaseOrderLine(models.Model):
     @api.one
     @api.depends('move_ids.state')
     def _get_move_state(self):
-        if all(m.state == 'cancel' for m in self.move_ids):
-            self.move_state = 'cancel'
+        if self.move_ids:
+            if all(m.state == 'cancel' for m in self.move_ids):
+                self.move_state = 'cancel'
+            else:
+                state = ''
+                for m in self.move_ids:
+                    if m.state == 'cancel':
+                        pass
+                    elif state == '':
+                        state = m.state
+                    elif state != m.state:
+                        state = 'multi'
+                self.move_state = state
         else:
-            state = ''
-            for m in self.move_ids:
-                if m.state == 'cancel':
-                    pass
-                elif state == '':
-                    state = m.state
-                elif state != m.state:
-                    state = 'multi'
-            self.move_state = state
+            self.move_state = 'na'
 
 
     move_state = fields.Selection(
@@ -66,6 +69,7 @@ class PurchaseOrderLine(models.Model):
          ('confirmed', 'Waiting Availability'),
          ('assigned', 'Available'),
          ('done', 'Done'),
+         ('na', '(N/A)'),
          ('multi', '(Multiple Statuses)'),
         ],
         compute=_get_move_state,
@@ -80,15 +84,18 @@ class PurchaseOrderLine(models.Model):
         line_ids = self.search(cr, SUPERUSER_ID, [('move_state','=',False)])
         lines = self.browse(cr, SUPERUSER_ID, line_ids)
         for line in lines:
-            if all(m.state == 'cancel' for m in line.move_ids):
-                line.move_state = 'cancel'
+            if line.move_ids:
+                if all(m.state == 'cancel' for m in line.move_ids):
+                    line.move_state = 'cancel'
+                else:
+                    state = ''
+                    for m in line.move_ids:
+                        if m.state == 'cancel':
+                            pass
+                        elif state == '':
+                            state = m.state
+                        elif state != m.state:
+                            state = 'multi'
+                    line.move_state = state
             else:
-                state = ''
-                for m in line.move_ids:
-                    if m.state == 'cancel':
-                        pass
-                    elif state == '':
-                        state = m.state
-                    elif state != m.state:
-                        state = 'multi'
-                line.move_state = state
+                line.move_state = 'na'
