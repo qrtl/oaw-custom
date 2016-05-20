@@ -41,18 +41,6 @@
     </record>
 
 
-    <record id="view_purchase_order_filter_160507" model="ir.ui.view">
-        <field name="name">view_purchase_order_filter_160507</field>
-        <field name="model">purchase.order</field>
-        <field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
-        <field name="arch" type="xml">
-            <filter name="draft" position="after">
-                <filter name="is_mto" string="MTO" domain="[('is_mto', '=', True)]"/>
-            </filter>
-        </field>
-    </record>
-
-
     <record model="ir.ui.view" id="purchase_order_line_lot_id_form_inherit">
         <field name="name">purchase.order.line.form.inherit</field>
         <field name="model">purchase.order.line</field>
