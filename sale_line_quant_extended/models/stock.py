@@ -72,7 +72,25 @@ class StockMove(models.Model):
 
 
     @api.multi
-    @api.depends('quant_ids', 'lot_id')
+    def name_get(self):
+        res = []
+        for line in self:
+            name = line.location_id.name + ' > ' + line.location_dest_id.name
+            if line.product_id.code:
+                name = line.product_id.code + ': ' + name
+            if line.picking_id.origin:
+                pick_rec = self.env['stock.picking'].search(
+                        [('name','=',line.picking_id.origin)])
+                if pick_rec.picking_type_id.code == 'incoming':
+                    name = line.picking_id.name + '/ ' + name
+                else:
+                    name = line.picking_id.origin + '/ ' + name
+            res.append((line.id, name))
+        return res
+
+
+    @api.multi
+    @api.depends('quant_ids', 'reserved_quant_ids', 'lot_id')
     def _get_quant_info(self):
         for m in self:
             if m.quant_ids:
@@ -80,6 +98,11 @@ class StockMove(models.Model):
                     m.quant_ids[0].lot_id.id
                 m.quant_owner_id = m.quant_ids[0].owner_id and \
                     m.quant_ids[0].owner_id.id
+            elif m.reserved_quant_ids:
+                m.quant_lot_id = m.reserved_quant_ids[0].lot_id and \
+                    m.reserved_quant_ids[0].lot_id.id
+                m.quant_owner_id = m.reserved_quant_ids[0].owner_id and \
+                    m.reserved_quant_ids[0].owner_id.id
             else:
                 m.quant_lot_id = m.lot_id.id
                 # below part does not work since quant is generated after \
@@ -87,6 +110,19 @@ class StockMove(models.Model):
 #                 if m.lot_id.quant_ids:
 #                     m.quant_owner_id = m.lot_id.quant_ids[-1].owner_id and \
 #                         m.lot_id.quant_ids[-1].owner_id.owner_id.id
+
+    def _get_quant_info_init(self, cr, uid):
+        # update quant info when installing/upgrading
+        cr.execute("""
+            update stock_move m1
+            set quant_lot_id = lot, quant_owner_id = owner
+            from (select q.lot_id as lot, q.owner_id as owner, m2.id as id
+                  from stock_quant q
+                  join stock_move m2 on q.reservation_id = m2.id) as subq
+            where m1.id = subq.id
+            and quant_lot_id is null
+        """)
+
 
     @api.multi
     @api.depends('origin')
