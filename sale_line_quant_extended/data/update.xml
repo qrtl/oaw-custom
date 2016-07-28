@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <function model="stock.move" name="_get_quant_info_init"/>
+    </data>
+</openerp>
