@@ -16,24 +16,4 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-{
-    'name': 'Sale Line Quant Extended',
-    'category': 'Sales',
-    'version': '8.0.1.0.0',
-    'author': 'Rooms For (Hong Kong) Limited T/A OSCG',
-    'website': 'https://www.odoo-asia.com',
-    'depends': ['sale_line_quant',
-                'base_action_rule',
-                ],
-    'summary':"""""",
-    'description': """
-    """,
-    'data': [
-             'data/ir_actions.xml',
-             'data/base_action_rule_data.xml',
-             'data/update.xml',
-             'views/sale_view.xml',
-             ],
-    'installable': True,
-}
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+from . import stock_return_picking
