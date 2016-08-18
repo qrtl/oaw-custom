@@ -25,12 +25,13 @@ class StockReturnPicking(models.TransientModel):
     @api.model
     def default_get(self, fields):
         return_pick = super(StockReturnPicking, self).default_get(fields)
-        return_moves = return_pick['product_return_moves']
-        for move in return_moves:
-            if self.env['product.product'].browse(move['product_id']).\
-                    product_tmpl_id.categ_id.enforce_qty_1:
-                quant = self.env['stock.quant'].search(
-                    [('history_ids', 'in', move['move_id'])])
-                if quant and quant.lot_id:
-                    move['lot_id'] = quant.lot_id.id
+        if 'product_return_moves' in return_pick:
+            return_moves = return_pick['product_return_moves']
+            for move in return_moves:
+                if self.env['product.product'].browse(move['product_id']).\
+                        product_tmpl_id.categ_id.enforce_qty_1:
+                    quant = self.env['stock.quant'].search(
+                        [('history_ids', 'in', move['move_id'])])
+                    if quant and quant.lot_id:
+                        move['lot_id'] = quant.lot_id.id
         return return_pick
