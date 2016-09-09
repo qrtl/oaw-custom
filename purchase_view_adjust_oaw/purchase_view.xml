@@ -67,7 +67,7 @@
 				</xpath>
                 <xpath expr="//filter[@name='hide_cancelled']" position="before">
                     <filter name="mto" string="MTO" domain="[('mto', '=', True)]"/>
-                    <filter name="vci" string="VCI" domain="[('mto', '=', True)]"/>
+                    <filter name="vci" string="VCI" domain="[('vci', '=', True)]"/>
                     <filter name="receipt_done" string="Receipt Done" domain="[('move_state', '=', 'done')]"/>
                 </xpath>
                 <xpath expr="//filter[@string='Status']" position="after">

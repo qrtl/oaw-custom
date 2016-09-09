@@ -19,7 +19,7 @@
 {
     'name': 'Purchase View Adjust',
     'summary': "",
-    'version': "8.0.0.5.0",
+    'version': "8.0.0.5.1",
     'category': 'Purchases',
     'website': 'https://www.odoo-asia.com',
     'author': 'Rooms For (Hong Kong) Limited T/A OSCG',
