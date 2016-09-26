@@ -11,7 +11,7 @@ class ConsignmentReportWizard(models.TransientModel):
 
     partner_id = fields.Many2one(
         comodel_name='res.partner',
-        string='Partners',
+        string='Partner',
     )
     threshold_date = fields.Date(
         required=True,

@@ -16,7 +16,7 @@
         "bin": [],
     },
     "depends": [
-        "stock",
+        "sale_line_quant_extended",
         "report_xlsx",
     ],
     "data": [

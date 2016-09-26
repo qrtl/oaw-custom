@@ -53,7 +53,7 @@ class ConsignmentReportSection(models.TransientModel):
     )
 
     # Data fields, used for report display
-    category = fields.Char()
+    code = fields.Integer()
 
 
 class ConsignmentReportQuant(models.TransientModel):
@@ -77,11 +77,26 @@ class ConsignmentReportQuant(models.TransientModel):
         'stock.quant',
         index=True
     )
+    reservation_id = fields.Many2one(
+        'stock.move',
+        index=True
+    )
+    sale_id = fields.Many2one(
+        'sale.order'
+    )
 
     # Data fields, used for report display
     product_code = fields.Char()
     product_name = fields.Char()
-    lot_name = fields.Char()
+    lot = fields.Char()
+    currency = fields.Char()
+    purchase_price = fields.Float(digits=(16, 2))
+    reservation = fields.Char()
+    invoice = fields.Char()
+    remark = fields.Char()
+    incoming_date = fields.Datetime()
+    age = fields.Integer()
+    quant_last_updated = fields.Datetime()
 
 
 class ConsignmentReportCompute(models.TransientModel):
@@ -113,19 +128,77 @@ class ConsignmentReportCompute(models.TransientModel):
         sections = self.env['consignment_report_section'].search(
             [('report_id', '=', self.id)])
         for section in sections:
-            self._inject_quant_values(section.id)
+            self._inject_quant_values(section)
+            if section.code in [1, 2]:
+                self._update_invoice(section.id, section.code)
+            elif section.code == 3:
+                self._update_reservation(section.id)
+        self._delete_supplier_loc_quant()
         self.refresh()
 
     def _create_section_records(self):
         model = self.env['consignment_report_section']
-        vals = {
-            'report_id': self.id,
-            'category': 'Part 1'
-        }
-        model.create(vals)
+        for i in [1, 2, 3, 4]:
+            vals = {
+                'report_id': self.id,
+                'code': i
+            }
+            model.create(vals)
 
-    def _inject_quant_values(self, section_id):
-        query_inject_quant = """
+    def _inject_quant_values(self, section):
+        loc_usage = {
+            1: 'customer',
+            2: 'customer',
+            3: 'internal',
+            4: 'supplier'
+        }
+        query_inject_quant = ""
+        if section.code in [1, 2]:
+            query_inject_quant += """
+WITH
+    paid_lot AS (
+        SELECT
+            lot_id, COALESCE(inv_qty, 0.0) - COALESCE(ref_qty, 0.0) AS qty
+        FROM (
+            SELECT DISTINCT
+                l.lot_id, normal.inv_qty, refund.ref_qty
+            FROM
+                account_invoice_line l
+            INNER JOIN
+                account_invoice i ON l.invoice_id = i.id
+            LEFT JOIN (
+                SELECT
+                    lot_id, sum(quantity) AS inv_qty
+                FROM
+                    account_invoice_line l1
+                INNER JOIN
+                    account_invoice i1 ON l1.invoice_id = i1.id
+                WHERE
+                    i1.type = 'in_invoice'
+                    AND l1.state = 'paid'
+                GROUP BY
+                    l1.lot_id
+            ) normal ON l.lot_id = normal.lot_id
+            LEFT JOIN (
+                SELECT
+                    lot_id, sum(quantity) AS ref_qty
+                FROM
+                    account_invoice_line l2
+                INNER JOIN
+                    account_invoice i2 ON l2.invoice_id = i2.id
+                WHERE
+                    i2.type = 'in_refund'
+                    AND l2.state = 'paid'
+                GROUP BY
+                    l2.lot_id
+            ) refund ON l.lot_id = refund.lot_id
+            WHERE i.type = 'in_invoice'
+        ) normref
+        WHERE
+            COALESCE(inv_qty, 0.0) - COALESCE(ref_qty, 0.0) > 0.0
+    )
+            """
+        query_inject_quant += """
 INSERT INTO
     consignment_report_quant
     (
@@ -134,9 +207,15 @@ INSERT INTO
     create_uid,
     create_date,
     quant_id,
+    reservation_id,
+    sale_id,
     product_code,
     product_name,
-    lot_name
+    lot,
+    currency,
+    purchase_price,
+    incoming_date,
+    quant_last_updated
     )
 SELECT
     %s AS report_id,
@@ -144,24 +223,81 @@ SELECT
     %s AS create_uid,
     NOW() AS create_date,
     q.id,
+    q.reservation_id,
+    q.sale_id,
     p.default_code,
     p.name_template,
-    l.name
+    l.name,
+    c.name,
+    q.purchase_price_unit,
+    q.in_date,
+    q.write_date
 FROM
     stock_quant q
 INNER JOIN
-    product_product p
-        on q.product_id = p.id
+    product_product p ON q.product_id = p.id
 INNER JOIN
-    stock_production_lot l
-        on q.lot_id = l.id
+    stock_production_lot l ON q.lot_id = l.id
+INNER JOIN
+    stock_location loc ON q.location_id = loc.id
+INNER JOIN
+    res_currency c ON q.currency_id = c.id
         """
+        if section.code in [1, 2]:
+            query_inject_quant += """
+LEFT JOIN
+    paid_lot pl ON q.lot_id = pl.lot_id
+            """
+        query_inject_quant += """
+WHERE loc.usage = %s
+    AND q.owner_id = %s
+        """
+        if section.code == 1:
+            query_inject_quant += """
+    AND pl.lot_id IS NOT null
+            """
+        if section.code == 2:
+            query_inject_quant += """
+    AND pl.lot_id IS null
+            """
         query_inject_quant_params = (
             self.id,
-            section_id,
+            section.id,
             self.env.uid,
+            loc_usage[section.code],
+            section.report_id.filter_partner_id.id
         )
         self.env.cr.execute(query_inject_quant, query_inject_quant_params)
+
+    def _update_invoice(self, section_id, code):
+        # model = self.env['consignment_report_quant']
+        # quants = model.search([('section_id', '=', section_id)])
+        # code_vals = {
+        #     1: 'paid',
+        #     2: 'open'
+        # }
+        # for quant in quants:
+        #     line_model = self.env['account.invoice.line']
+        #     lines = line_model.search([
+        #         ('lot_id', '=', quant.lot_id),
+        #         ('state', '=', code_vals[code]),
+        #     ])
+        #     for line in lines:
+        #         pass
+        pass
+
+    def _update_reservation(self, section_id):
+        model = self.env['consignment_report_quant']
+        quants = model.search([('section_id', '=', section_id)])
+        for quant in quants:
+            if quant.reservation_id:
+                quant.write({
+                    'reservation': quant.reservation_id.name_get()[0][1]})
+            elif quant.sale_id:
+                quant.write({'reservation': quant.sale_id.name})
+
+    def _delete_supplier_loc_quant(self):
+        pass
 
 
 class PartnerXslx(abstract_report_xlsx.AbstractReportXslx):
@@ -176,33 +312,53 @@ class PartnerXslx(abstract_report_xlsx.AbstractReportXslx):
 
     def _get_report_columns(self, report):
         return {
-            0: {'header': _('Code'), 'field': 'product_code', 'width': 15},
+            0: {'header': _('Code'), 'field': 'product_code', 'width': 10},
             1: {'header': _('Reference Name'), 'field': 'product_name',
                 'width': 30},
-            2: {'header': _('Case No.'), 'field': 'lot_name', 'width': 15},
+            2: {'header': _('Case No.'), 'field': 'lot', 'width': 15},
+            3: {'header': _('Purch Curr'), 'field': 'currency', 'width': 8},
+            4: {'header': _('Curr Price'), 'field': 'purchase_price',
+                'type': 'amount', 'width': 15},
+            5: {'header': _('Reservation'), 'field': 'reservation',
+                'width': 20},
+            6: {'header': _('Invoice No.'), 'field': 'invoice', 'width': 15},
+            7: {'header': _('Remark'), 'field': 'remark', 'width': 30},
+            8: {'header': _('Incoming Date'), 'field': 'incoming_date',
+                'width': 20},
+            9: {'header': _('Age'), 'field': 'age', 'width': 8},
+            10: {'header': _('Last Updated'), 'field': 'quant_last_updated',
+                'width': 20},
         }
 
     def _get_report_filters(self, report):
         return [
+            # [_('Partner'), report.filter_partner_id.name if
+            #     report.filter_partner_id else ''],
+           [_('Partner'),
+               _('[%s] %s') % (
+                   report.filter_partner_id.ref,
+                   report.filter_partner_id.name)],
+            [_('Threshold Date'), report.threshold_date],
         ]
 
     def _get_col_count_filter_name(self):
         return 2
 
     def _get_col_count_filter_value(self):
-        return 3
+        return 2
 
     def _generate_report_content(self, workbook, report):
-
+        title_vals = {
+            1: 'Part 1. Consignment Sold and Paid',
+            2: 'Part 2. Consignment Sold and Not Yet Paid',
+            3: 'Part 3. Consignment Available Stock',
+            4: 'Part 4. Consignment Back to Supplier'
+        }
         for section in report.section_ids:
-            self.write_array_title(section.category)
+            self.write_array_title(title_vals[section.code])
 
             self.write_array_header()
 
-            # self.write_line()
-            # model = self.env['report_partner_xlsx_partner']
-            # for p in model.search([('partner_id','=',partner.id)]):
-            #     self.write_line(p)
             for quant in section.quant_ids:
                 self.write_line(quant)
 

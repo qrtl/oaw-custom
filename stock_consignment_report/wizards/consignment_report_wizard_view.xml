@@ -8,7 +8,7 @@
     <field name="arch" type="xml">
         <form>
             <group>
-                <field name="partner_id"/>
+                <field name="partner_id" domain="[('supplier', '=', True)]"/>
                 <field name="threshold_date"/>
             </group>
             <footer>
