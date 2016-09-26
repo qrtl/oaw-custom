@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-# Copyright 2016 Rooms For (Hong Kong) Limited T/A OSCG
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+# Author: Julien Coux
+# Copyright 2016 Camptocamp SA
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from cStringIO import StringIO
 import xlsxwriter
