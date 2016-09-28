@@ -419,7 +419,7 @@ class PartnerXslx(abstract_report_xlsx.AbstractReportXslx):
             7: {'header': _('Incoming Date'), 'field': 'incoming_date',
                 'width': 20},
             8: {'header': _('Age'), 'field': 'stock_days',
-                'type': 'amount', 'width': 8},
+                'type': 'number', 'width': 8},
             9: {'header': _('Last Updated'), 'field': 'quant_last_updated',
                 'width': 20},
         }
