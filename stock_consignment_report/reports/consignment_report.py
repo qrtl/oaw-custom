@@ -2,12 +2,10 @@
 # Copyright 2016 Rooms For (Hong Kong) Limited T/A OSCG
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from openerp import api, models, fields
-
-
+from openerp import api, models, fields, _
 from . import abstract_report_xlsx
 from openerp.report import report_sxw
-from openerp import _
+from datetime import datetime
 
 
 class ConsignmentReport(models.TransientModel):
@@ -25,6 +23,9 @@ class ConsignmentReport(models.TransientModel):
     # Filters fields, used for data computation
     filter_partner_id = fields.Many2one(comodel_name='res.partner')
     threshold_date= fields.Date()
+    current_date = fields.Date(
+        default=fields.Datetime.to_string(datetime.today())
+    )
 
     # Data fields, used to browse report data
     section_ids = fields.One2many(
@@ -59,7 +60,6 @@ class ConsignmentReportSection(models.TransientModel):
 class ConsignmentReportQuant(models.TransientModel):
 
     _name = 'consignment_report_quant'
-    # _order = 'name ASC'
 
     report_id = fields.Many2one(
         comodel_name='consignment_report',
@@ -95,10 +95,10 @@ class ConsignmentReportQuant(models.TransientModel):
     lot = fields.Char()
     currency = fields.Char()
     purchase_price = fields.Float(digits=(16, 2))
-    inv_res = fields.Char()
+    status = fields.Char()
     remark = fields.Char()
     incoming_date = fields.Datetime()
-    age = fields.Integer()
+    stock_days = fields.Integer()
     quant_last_updated = fields.Datetime()
 
 
@@ -127,6 +127,7 @@ class ConsignmentReportCompute(models.TransientModel):
     @api.multi
     def compute_data_for_report(self):
         self.ensure_one()
+        model = self.env['consignment_report_quant']
         self._create_section_records()
         sections = self.env['consignment_report_section'].search(
             [('report_id', '=', self.id)])
@@ -135,8 +136,10 @@ class ConsignmentReportCompute(models.TransientModel):
             if section.code in [1, 2]:
                 self._update_invoice_info(section.id, section.code)
             elif section.code == 3:
-                self._update_reservation(section.id)
-        self._delete_supplier_loc_quant()
+                self._update_reservation(model, section.id)
+            elif section.code == 4:
+                self._delete_supplier_loc_quant(model, section.id)
+                self._update_remark(model, section.id)
         self.refresh()
 
     def _create_section_records(self):
@@ -212,6 +215,7 @@ INSERT INTO
     lot,
     currency,
     purchase_price,
+    status,
     incoming_date,
     quant_last_updated
     )
@@ -229,6 +233,7 @@ SELECT
     l.name,
     c.name,
     q.purchase_price_unit,
+    %s AS status,
     q.in_date,
     q.write_date
 FROM
@@ -251,6 +256,10 @@ LEFT JOIN
 WHERE loc.usage = %s
     AND q.owner_id = %s
         """
+        if section.code in [1, 2, 4]:
+            query_inject_quant += """
+    AND q.write_date >= %s
+            """
         if section.code == 1:
             query_inject_quant += """
     AND pl.lot_id IS NOT null
@@ -259,19 +268,37 @@ WHERE loc.usage = %s
             query_inject_quant += """
     AND pl.lot_id IS null
             """
+        status_desc = {
+            1: 'Sold & Paid',
+            2: 'Sold & NOT Paid',
+            3: 'In Stock',
+            4: 'Returned'
+        }
         loc_usage = {
             1: 'customer',
             2: 'customer',
             3: 'internal',
             4: 'supplier'
         }
-        query_inject_quant_params = (
-            self.id,
-            section.id,
-            self.env.uid,
-            loc_usage[section.code],
-            section.report_id.filter_partner_id.id
-        )
+        if section.code in [1, 2, 4]:
+            query_inject_quant_params = (
+                self.id,
+                section.id,
+                self.env.uid,
+                status_desc[section.code],
+                loc_usage[section.code],
+                section.report_id.filter_partner_id.id,
+                section.report_id.threshold_date
+            )
+        else:
+            query_inject_quant_params = (
+                self.id,
+                section.id,
+                self.env.uid,
+                status_desc[section.code],
+                loc_usage[section.code],
+                section.report_id.filter_partner_id.id
+            )
         self.env.cr.execute(query_inject_quant, query_inject_quant_params)
 
     def _update_invoice_info(self, section_id, code):
@@ -281,7 +308,7 @@ UPDATE
 SET
     currency = inv_info.curr,
     purchase_price = inv_info.price,
-    inv_res = inv_info.supp_invoice
+    remark = inv_info.supp_invoice
 FROM (
     SELECT
         inv.currency AS curr,
@@ -329,18 +356,43 @@ WHERE
         )
         self.env.cr.execute(query_update_quant, query_update_quant_params)
 
-    def _update_reservation(self, section_id):
-        model = self.env['consignment_report_quant']
+    def _update_reservation(self, model, section_id):
         quants = model.search([('section_id', '=', section_id)])
         for quant in quants:
+            stock_days = (
+                datetime.today() - \
+                fields.Datetime.from_string(quant.incoming_date)
+            ).days
+            quant.write({'stock_days': stock_days})
             if quant.reservation_id:
                 quant.write({
-                    'inv_res': quant.reservation_id.name_get()[0][1]})
+                    'remark': quant.reservation_id.name_get()[0][1]})
             elif quant.sale_id:
-                quant.write({'inv_res': quant.sale_id.name})
+                quant.write({'remark': quant.sale_id.name})
 
-    def _delete_supplier_loc_quant(self):
-        pass
+    def _delete_supplier_loc_quant(self, model, section_id):
+        quants = model.search([('section_id', '=', section_id)])
+        for quant in quants:
+            find_duplicate = model.search([
+                ('section_id', 'in', range(section_id - 3, section_id)),
+                ('lot_id', '=', quant.lot_id.id)
+            ])
+            if find_duplicate:
+                quant.unlink()
+
+    def _update_remark(self, model, section_id):
+        quants = model.search([('section_id', '=', section_id)])
+        move_obj = self.env['stock.move']
+        supp_loc_ids = self.env['stock.location'].search([
+            ('usage', '=', 'supplier')]).ids
+        for quant in quants:
+            move = move_obj.search([
+                ('quant_lot_id', '=', quant.lot_id.id),
+                ('location_dest_id', 'in', supp_loc_ids),
+                ('state', '=', 'done'),
+            ], order='date desc', limit=1)
+            if move and move.picking_id:
+                quant.write({'remark': move.picking_id.note})
 
 
 class PartnerXslx(abstract_report_xlsx.AbstractReportXslx):
@@ -362,22 +414,23 @@ class PartnerXslx(abstract_report_xlsx.AbstractReportXslx):
             3: {'header': _('Purch Curr'), 'field': 'currency', 'width': 8},
             4: {'header': _('Curr Price'), 'field': 'purchase_price',
                 'type': 'amount', 'width': 15},
-            5: {'header': _('Invoice/Reservation'), 'field': 'inv_res',
-                'width': 22},
-            6: {'header': _('Remark'), 'field': 'remark', 'width': 30},
+            5: {'header': _('Status'), 'field': 'status', 'width': 18},
+            6: {'header': _('Remark'), 'field': 'remark', 'width': 25},
             7: {'header': _('Incoming Date'), 'field': 'incoming_date',
                 'width': 20},
-            8: {'header': _('Age'), 'field': 'age', 'width': 8},
+            8: {'header': _('Age'), 'field': 'stock_days',
+                'type': 'amount', 'width': 8},
             9: {'header': _('Last Updated'), 'field': 'quant_last_updated',
                 'width': 20},
         }
 
     def _get_report_filters(self, report):
         return [
-           [_('Partner'),
-               _('[%s] %s') % (
-                   report.filter_partner_id.ref,
-                   report.filter_partner_id.name)],
+            [_('Report Date'), report.current_date],
+            [_('Partner'),
+                _('[%s] %s') % (
+                    report.filter_partner_id.ref,
+                    report.filter_partner_id.name)],
             [_('Threshold Date'), report.threshold_date],
         ]
 
