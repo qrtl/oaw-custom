@@ -2,6 +2,8 @@
 # Copyright 2016 Rooms For (Hong Kong) Limited T/A OSCG
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 from openerp import api, models, fields
 
 
@@ -17,8 +19,9 @@ class ConsignmentReportWizard(models.TransientModel):
     threshold_date = fields.Date(
         required=True,
         string='Threshold Date',
+        default=fields.Date.to_string(
+            datetime.today() - relativedelta(days=180)),
     )
-
 
     @api.multi
     def action_export_xlsx(self):
@@ -27,7 +30,6 @@ class ConsignmentReportWizard(models.TransientModel):
 
     def _prepare_report_xlsx(self):
         self.ensure_one()
-        # self.partner_ids = self.env['res.partner'].search([])
         return {
             'filter_partner_id': self.partner_id.id,
             'threshold_date': self.threshold_date
