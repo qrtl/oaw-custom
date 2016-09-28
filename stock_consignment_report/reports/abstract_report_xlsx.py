@@ -33,6 +33,7 @@ class AbstractReportXslx(ReportXlsx):
         self.format_header_right = None
         self.format_header_amount = None
         self.format_amount = None
+        self.format_number = None  # added by OSCG
         self.format_percent_bold_italic = None
 
     def create_xlsx_report(self, ids, data, report):
@@ -84,6 +85,7 @@ class AbstractReportXslx(ReportXlsx):
          * format_header_right
          * format_header_amount
          * format_amount
+         * format_number  # added by OSCG
          * format_percent_bold_italic
         """
         self.format_bold = workbook.add_format({'bold': True})
@@ -112,6 +114,8 @@ class AbstractReportXslx(ReportXlsx):
         self.format_header_amount.set_num_format('#,##0.00')
         self.format_amount = workbook.add_format()
         self.format_amount.set_num_format('#,##0.00')
+        self.format_number = workbook.add_format()  # added by OSCG
+        self.format_number.set_num_format('#,##0')  # added by OSCG
         self.format_percent_bold_italic = workbook.add_format(
             {'bold': True, 'italic': True}
         )
@@ -189,6 +193,12 @@ class AbstractReportXslx(ReportXlsx):
                 self.sheet.write_number(
                     self.row_pos, col_pos, float(value), self.format_amount
                 )
+            # >>> added by OSCG
+            elif cell_type == 'number':
+                self.sheet.write_number(
+                    self.row_pos, col_pos, value, self.format_number
+                )
+            # <<< added by OSCG
         self.row_pos += 1
 
     def write_initial_balance(self, my_object, label):
