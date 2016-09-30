@@ -8,7 +8,7 @@ from openerp import models, fields, api
 class stock_location(models.Model):
     _inherit = 'stock.location'
     
-    is_repaired_location = fields.Boolean(
+    is_repair_location = fields.Boolean(
         string='Repair Location',
     )
 
