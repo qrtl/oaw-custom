@@ -18,6 +18,7 @@
     """,
     'data': [
         'data/stock_data.xml',
+        'data/update.xml',
         'views/stock_location.xml',
         'views/stock_picking.xml',
         'wizard/stock_return_picking_view.xml',
