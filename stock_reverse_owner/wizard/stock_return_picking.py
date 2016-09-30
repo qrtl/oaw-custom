@@ -24,8 +24,8 @@ class stock_return_picking(models.TransientModel):
         ('return_vci', 'Return (VCI)'),
         ('return_no_ownership_change', 'Return (No Ownership Change)')],
         string='Return Category',
-        default='return_no_ownership_change',
-        required=True,
+        # default='return_no_ownership_change',
+        # required=True,
     )
     supplier_id = fields.Many2one(
         'res.partner',
@@ -60,23 +60,22 @@ class stock_return_picking(models.TransientModel):
         for data in self:
             for move in data.product_return_moves:
                 if not move.lot_id and data.return_category == 'return_vci':
-                    raise Warning (_('You can not return picking with return category option Return VCI in case serial number on return lines are empty. Please select serial number and then try to process.'))
-        new_picking, picking_type_id = super(stock_return_picking, self)._create_returns()
+                    raise Warning (_('You cannot process return with return \
+                        category Return VCI when Case Number of a return line \
+                        is empty. Please select Case Number.'))
+        new_picking, picking_type_id = super(stock_return_picking, self).\
+            _create_returns()
         picking = self.env['stock.picking'].browse(new_picking)
         for rec in self:
             picking.return_category = rec.return_category
             if rec.return_category == 'repair':
                 picking.owner_id = picking.partner_id.id
-            #    repair_loc_id = self.env['stock.location'].search([('is_repaired_location', '=', True)])#Fixed using hook
-            #    if repair_loc_id:
-            #        for move in picking.move_lines:
-            #            move.location_dest_id = repair_loc_id.id
             elif rec.return_category == 'return_company':
                 picking.owner_id = picking.company_id.partner_id.id
             elif rec.return_category == 'return_vci':
                 picking.owner_id = rec.supplier_id.id
             else:
-                pass # odoo standard case
+                pass  # odoo standard case
         return new_picking, picking_type_id
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
