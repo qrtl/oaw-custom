@@ -8,19 +8,38 @@ from openerp.exceptions import except_orm, Warning, RedirectWarning
 
 class stock_return_picking(models.TransientModel):
     _inherit = 'stock.return.picking'
-    
+
+    @api.model
+    def _get_picking_default(self):
+        return self._context and self._context.get('active_id', False) or False
+
+    @api.one
+    @api.depends('picking_id')
+    def _get_type(self):
+        self.picking_type_id = self.picking_id.picking_type_id.code
+
     return_category = fields.Selection(
         [('repair', 'Repair'),
         ('return_company', 'Return (Company)'),
         ('return_vci', 'Return (VCI)'),
         ('return_no_ownership_change', 'Return (No Ownership Change)')],
         string='Return Category',
+        default='return_no_ownership_change',
         required=True,
     )
     supplier_id = fields.Many2one(
         'res.partner',
         string='Supplier',
         domain="[('supplier', '=', 1)]",
+    )
+    picking_id = fields.Many2one(
+        'stock.picking',
+        string='Picking',
+        default=_get_picking_default,
+    )
+    picking_type_id = fields.Char(
+        'Picking Type',
+        compute=_get_type,
     )
 
     @api.one
