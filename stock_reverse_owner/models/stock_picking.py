@@ -19,7 +19,7 @@ class stock_picking(models.Model):
     )
 
     @api.model
-    def _validate_owner(self):
+    def _validate_owner(self, type):
         if self.picking_type_id.code != 'incoming':
             return True
         if not self.owner_id:
@@ -29,20 +29,30 @@ class stock_picking(models.Model):
         if self.owner_id.customer:
             if self.owner_id == self.partner_id:
                 return True
-        if self.owner_id.supplier:
+        # loose checking when owner is changed in picking
+        if self.owner_id.supplier and type == 'picking':
+            res = False
             for move in self.move_lines:
                 if move.reserved_quant_ids:
                     for quant in move.reserved_quant_ids:
-                        if quant.owner_id:
-                            if self.owner_id != quant.owner_id:
-                                return False
-        return True
+                        if quant.owner_id == self.owner_id:
+                            res = True
+            return res
+        # strict checking for transfer
+        if self.owner_id.supplier and type == 'transfer':
+            for move in self.move_lines:
+                if move.reserved_quant_ids:
+                    for quant in move.reserved_quant_ids:
+                        if quant.owner_id != self.owner_id:
+                            return False
+            return True
+
 
     @api.one
     @api.onchange('owner_id')
     def onchange_owner(self):
-        if not self._validate_owner():
-            raise Warning(_('You can not set owner other than customer on \
-                return shipment or supplier on reserved quants of moves.'))
+        if not self._validate_owner('picking'):
+            raise Warning(_('You can not set owner other than the customer on \
+                return picking or the owner of the reserved quants of moves.'))
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
