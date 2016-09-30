@@ -6,7 +6,7 @@
             <field name="name">Repair Location</field>
             <field name="usage">internal</field>
             <field name="company_id"></field>
-            <field name="is_repaired_location">True</field>
+            <field name="is_repair_location">True</field>
         </record>
 
     </data>

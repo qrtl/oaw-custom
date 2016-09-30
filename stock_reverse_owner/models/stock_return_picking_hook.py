@@ -36,7 +36,7 @@ class stock_return_picking(osv.osv_memory):
         return_pick_type_id = pick.picking_type_id.return_picking_type_id
         if data['return_category'] == 'repair':
             repair_loc_id = self.pool.get('stock.location').search(
-                cr, uid, [('is_repaired_location', '=', True)],
+                cr, uid, [('is_repair_location', '=', True)],
                 context=context)
             if repair_loc_id:
                 vals.update(location_dest_id = repair_loc_id[0])
