@@ -74,12 +74,19 @@ class stock_return_picking(osv.osv_memory):
 
         #Create new picking for returned products
         pick_type_id = pick.picking_type_id.return_picking_type_id and pick.picking_type_id.return_picking_type_id.id or pick.picking_type_id.id
-        new_picking = pick_obj.copy(cr, uid, pick.id, {
+        # >>> OSCG adjust
+        # picking owner should be blank for outgoing picking
+        vals = {
             'move_lines': [],
             'picking_type_id': pick_type_id,
             'state': 'draft',
             'origin': pick.name,
-        }, context=context)
+        }
+        if self.pool.get('stock.picking.type').browse(
+                cr, uid, [pick_type_id], context=context).code == 'outgoing':
+            vals['owner_id'] = False
+        new_picking = pick_obj.copy(cr, uid, pick.id, vals, context=context)
+        # <<< OSCG adjust
 
         for data_get in data_obj.browse(cr, uid, data['product_return_moves'], context=context):
             move = data_get.move_id
