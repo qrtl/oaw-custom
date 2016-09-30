@@ -4,39 +4,39 @@
 
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
-import openerp.addons.decimal_precision as dp
 
 class stock_return_picking(osv.osv_memory):
     _inherit = 'stock.return.picking'
 
     # below is hook method
-    def _get_move_hook(self, cr, uid, ids, data_get, new_qty, new_picking, pick_type_id, move_dest_id, context=None):
+    def _get_move_hook(self, cr, uid, ids, data_get, new_qty, new_picking,
+                       pick_type_id, move_dest_id, context=None):
         record_id = context and context.get('active_id', False) or False
         move_obj = self.pool.get('stock.move')
         pick_obj = self.pool.get('stock.picking')
-        # uom_obj = self.pool.get('product.uom')
-        # data_obj = self.pool.get('stock.return.picking.line')
         pick = pick_obj.browse(cr, uid, record_id, context=context)
         data = self.read(cr, uid, ids[0], context=context)
-
-        move = data_get.move_id #oscg
+        move = data_get.move_id
         vals = {
-                    'product_id': data_get.product_id.id,
-                    'product_uom_qty': new_qty,
-                    'product_uos_qty': new_qty * move.product_uos_qty / move.product_uom_qty,
-                    'picking_id': new_picking,
-                    'state': 'draft',
-                    'location_id': move.location_dest_id.id,
-                    'location_dest_id': move.location_id.id,
-                    'picking_type_id': pick_type_id,
-                    'warehouse_id': pick.picking_type_id.warehouse_id.id,
-                    'origin_returned_move_id': move.id,
-                    'procure_method': 'make_to_stock',
-                    'restrict_lot_id': data_get.lot_id.id,
-                    'move_dest_id': move_dest_id,
-                }
+            'product_id': data_get.product_id.id,
+            'product_uom_qty': new_qty,
+            'product_uos_qty': new_qty * move.product_uos_qty /
+                               move.product_uom_qty,
+            'picking_id': new_picking,
+            'state': 'draft',
+            'location_id': move.location_dest_id.id,
+            'location_dest_id': move.location_id.id,
+            'picking_type_id': pick_type_id,
+            'warehouse_id': pick.picking_type_id.warehouse_id.id,
+            'origin_returned_move_id': move.id,
+            'procure_method': 'make_to_stock',
+            'restrict_lot_id': data_get.lot_id.id,
+            'move_dest_id': move_dest_id,
+        }
         if data['return_category'] == 'repair':
-            repair_loc_id = self.pool.get('stock.location').search(cr, uid, [('is_repaired_location', '=', True)], context=context)
+            repair_loc_id = self.pool.get('stock.location').search(
+                cr, uid, [('is_repaired_location', '=', True)],
+                context=context)
             if repair_loc_id:
                 vals.update(location_dest_id = repair_loc_id[0])
         if move.picking_id.owner_id:
