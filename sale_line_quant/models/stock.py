@@ -238,6 +238,11 @@ class stock_quant(osv.osv):
         'purchase_price_unit': fields.float('Purchase Currency Price',
             required=False, digits_compute= dp.get_precision('Product Price'),
             readonly=True),
+        'original_owner_id': fields.many2one(
+            'res.partner',
+            string='Original Owner',
+            readonly=True,
+        )
     }
     
     def _quant_create(self, cr, uid, qty, move, lot_id=False, owner_id=False,
@@ -246,10 +251,11 @@ class stock_quant(osv.osv):
         quant = super(stock_quant, self)._quant_create(cr, uid, qty, move,
             lot_id, owner_id, src_package_id, dest_package_id,
             force_location_from, force_location_to, context)
-        self.write(cr, uid, [quant.id],
-            {'currency_id': move.currency_id.id,
-            'purchase_price_unit': move.purchase_price_unit},
-            context)
+        self.write(cr, uid, [quant.id], {
+            'currency_id': move.currency_id.id,
+            'purchase_price_unit': move.purchase_price_unit,
+            'original_owner_id': quant.owner_id.id
+        }, context)
         return quant
 
     # this is to update 'name' field at installation/upgrade
