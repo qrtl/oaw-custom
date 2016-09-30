@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_stock_return_picking_form_inherit_return_category" model="ir.ui.view">
+            <field name="name">stock.return.picking</field>
+            <field name="model">stock.return.picking</field>
+            <field name="inherit_id" ref="stock.view_stock_return_picking_form"/>
+            <field name="arch" type="xml">
+                <field name="invoice_state" position="after">
+                    <field name="return_category"/>
+                    <field name="supplier_id" attrs="{'invisible':[('return_category','!=','return_vci')],'required':[('return_category', '=', 'return_vci')]}"/>
+                </field>
+            </field>
+        </record>
+
+  </data>
+</openerp>
