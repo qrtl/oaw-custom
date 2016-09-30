@@ -254,7 +254,7 @@ LEFT JOIN
             """
         query_inject_quant += """
 WHERE loc.usage = %s
-    AND q.owner_id = %s
+    AND q.original_owner_id = %s
         """
         if section.code in [1, 2, 4]:
             query_inject_quant += """
@@ -415,7 +415,7 @@ class PartnerXslx(abstract_report_xlsx.AbstractReportXslx):
             4: {'header': _('Curr Price'), 'field': 'purchase_price',
                 'type': 'amount', 'width': 15},
             5: {'header': _('Status'), 'field': 'status', 'width': 18},
-            6: {'header': _('Remark'), 'field': 'remark', 'width': 25},
+            6: {'header': _('Remark'), 'field': 'remark', 'width': 30},
             7: {'header': _('Incoming Date'), 'field': 'incoming_date',
                 'width': 20},
             8: {'header': _('Age'), 'field': 'stock_days',
