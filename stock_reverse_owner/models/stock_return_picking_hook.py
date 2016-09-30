@@ -9,13 +9,13 @@ import openerp.addons.decimal_precision as dp
 class stock_return_picking(osv.osv_memory):
     _inherit = 'stock.return.picking'
 
-    #below is hook method
+    # below is hook method
     def _get_move_hook(self, cr, uid, ids, data_get, new_qty, new_picking, pick_type_id, move_dest_id, context=None):
         record_id = context and context.get('active_id', False) or False
         move_obj = self.pool.get('stock.move')
         pick_obj = self.pool.get('stock.picking')
-        uom_obj = self.pool.get('product.uom')
-        data_obj = self.pool.get('stock.return.picking.line')
+        # uom_obj = self.pool.get('product.uom')
+        # data_obj = self.pool.get('stock.return.picking.line')
         pick = pick_obj.browse(cr, uid, record_id, context=context)
         data = self.read(cr, uid, ids[0], context=context)
 
@@ -39,6 +39,8 @@ class stock_return_picking(osv.osv_memory):
             repair_loc_id = self.pool.get('stock.location').search(cr, uid, [('is_repaired_location', '=', True)], context=context)
             if repair_loc_id:
                 vals.update(location_dest_id = repair_loc_id[0])
+        if move.picking_id.owner_id:
+            vals['restrict_partner_id'] = move.picking_id.owner_id.id
         return move_obj.copy(cr, uid, move.id, vals)
 
     def _create_returns(self, cr, uid, ids, context=None):
