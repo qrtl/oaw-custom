@@ -21,7 +21,10 @@ class stock_picking(models.Model):
     @api.model
     def _validate_owner(self, type):
         if self.picking_type_id.code != 'incoming':
-            return True
+            if type == 'picking' and self.owner_id:
+                raise Warning(_('Please keep the owner of the picking blank.'))
+            else:
+                return True
         if not self.owner_id:
             return True
         if self.owner_id == self.company_id.partner_id:
