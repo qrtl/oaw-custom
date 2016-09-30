@@ -17,6 +17,7 @@
     },
     "depends": [
         "sale_line_quant_extended",
+        "stock_reverse_owner",
         "report_xlsx",
     ],
     "data": [
