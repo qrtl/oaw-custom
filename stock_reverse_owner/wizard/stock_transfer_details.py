@@ -14,6 +14,7 @@ class stock_transfer_details(models.TransientModel):
         active_ids = self.env.context.get('active_ids', [])
         picking_ids = self.env['stock.picking'].browse(active_ids)
         for picking in picking_ids:
-            if not picking._validate_owner():
-                raise Warning(_('Please set valid owner!'))
+            if not picking._validate_owner('transfer'):
+                raise Warning(_('Owners are inconsistent between the picking \
+                    and quant(s).'))
         return super(stock_transfer_details, self).do_detailed_transfer()
