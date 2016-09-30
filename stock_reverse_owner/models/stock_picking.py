@@ -36,7 +36,7 @@ class stock_picking(models.Model):
                         if quant.owner_id:
                             if self.owner_id != quant.owner_id:
                                 return False
-        return False
+        return True
 
     @api.one
     @api.onchange('owner_id')
