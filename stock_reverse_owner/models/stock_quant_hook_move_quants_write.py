@@ -16,17 +16,8 @@ def move_quants_write(self, cr, uid, quants, move, location_dest_id,
     if location_dest_id.usage == 'internal':
         picking = move.picking_id
         owner_id = picking.owner_id and picking.owner_id.id or False
-        if not owner_id:
-            Company = self.env['res.company']
-            location = self.env['stock.location'].browse(vals['location_id'])
-            owner_id = (
-                location.partner_id.id or
-                location.company_id.partner_id.id or
-                Company.browse(
-                    Company._company_default_get('stock.quant')
-                ).partner_id.id
-            )
-        vals['owner_id'] = owner_id
+        if owner_id:
+            vals['owner_id'] = owner_id
     # <<< OSCG
 
     if not context.get('entire_pack'):
