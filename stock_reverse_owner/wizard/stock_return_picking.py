@@ -58,11 +58,19 @@ class stock_return_picking(models.TransientModel):
     @api.multi
     def _create_returns(self):
         for data in self:
-            for move in data.product_return_moves:
-                if not move.lot_id and data.return_category == 'return_vci':
-                    raise Warning (_('You cannot process return with return \
-                        category Return VCI when Case Number of a return line \
-                        is empty. Please select Case Number.'))
+            warning = True
+            if data.return_category == 'return_vci':
+                for move in data.product_return_moves:
+                    if move.move_id and \
+                            move.move_id.quant_owner_id == self.supplier_id:
+                        warning = False
+                        break
+            else:
+                warning = False
+            if warning:
+                raise Warning (_('You cannot process return with \
+                    return category Return (VCI) when no Case Number \
+                    is owned by the selected Supplier.'))
         new_picking, picking_type_id = super(stock_return_picking, self).\
             _create_returns()
         picking = self.env['stock.picking'].browse(new_picking)
