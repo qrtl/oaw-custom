@@ -13,6 +13,7 @@ def move_quants_write(self, cr, uid, quants, move, location_dest_id,
             'history_ids': [(4, move.id)],
             'reservation_id': False}
     # >>> OSCG
+    owner_id = False
     if location_dest_id.usage == 'internal':
         picking = move.picking_id
         owner_id = picking.owner_id and picking.owner_id.id or False
@@ -23,7 +24,6 @@ def move_quants_write(self, cr, uid, quants, move, location_dest_id,
     if not context.get('entire_pack'):
         vals.update({'package_id': dest_package_id})
     self.write(cr, SUPERUSER_ID, [q.id for q in quants], vals, context=context)
-
 
 class StockQuantHookMoveQuantsWrite(models.AbstractModel):
     _name = 'stock.quant.hook.move.quants.write'

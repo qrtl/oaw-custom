@@ -33,12 +33,18 @@ class stock_return_picking(osv.osv_memory):
             'restrict_lot_id': data_get.lot_id.id,
             'move_dest_id': move_dest_id,
         }
+        return_pick_type_id = pick.picking_type_id.return_picking_type_id
         if data['return_category'] == 'repair':
             repair_loc_id = self.pool.get('stock.location').search(
                 cr, uid, [('is_repaired_location', '=', True)],
                 context=context)
             if repair_loc_id:
                 vals.update(location_dest_id = repair_loc_id[0])
+        # to avoid receiving at repair location in case repaired piece sent
+        # back to customer is returned to the company's ownership
+        elif return_pick_type_id.code == 'incoming':
+            vals.update(location_dest_id =
+                        return_pick_type_id.default_location_dest_id.id)
         if move.picking_id.owner_id:
             vals['restrict_partner_id'] = move.picking_id.owner_id.id
         return move_obj.copy(cr, uid, move.id, vals)
@@ -82,8 +88,8 @@ class stock_return_picking(osv.osv_memory):
             'state': 'draft',
             'origin': pick.name,
         }
-        if self.pool.get('stock.picking.type').browse(
-                cr, uid, [pick_type_id], context=context).code == 'outgoing':
+        if pick.picking_type_id.return_picking_type_id.code == 'outgoing'\
+                and not pick.partner_id.supplier:
             vals['owner_id'] = False
         new_picking = pick_obj.copy(cr, uid, pick.id, vals, context=context)
         # <<< OSCG adjust

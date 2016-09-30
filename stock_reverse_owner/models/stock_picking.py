@@ -40,6 +40,8 @@ class stock_picking(models.Model):
                     for quant in move.reserved_quant_ids:
                         if quant.owner_id == self.owner_id:
                             res = True
+                else:
+                    res = True
             return res
         # strict checking for transfer
         if self.owner_id.supplier and type == 'transfer':
