@@ -2,5 +2,6 @@
 <openerp>
 <data>
     <function model="stock.quant" name="_update_original_owner_id"/>
+    <function model="stock.quant" name="_update_repair"/>
 </data>
 </openerp>
