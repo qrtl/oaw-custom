@@ -4,7 +4,7 @@
 {
     'name': 'Return Shipment Process',
     'summary': 'Ownership Change Return Shipment Process',
-    'version': '8.0.1.0.0',
+    'version': '8.0.1.1.0',
     'category': 'Warehouse',
     'website': 'https://www.odoo-asia.net',
     'author': 'Rooms For (Hong Kong) Limited T/A OSCG',
@@ -19,8 +19,9 @@
     'data': [
         'data/stock_data.xml',
         'data/update.xml',
-        'views/stock_location.xml',
-        'views/stock_picking.xml',
+        'views/stock_location_view.xml',
+        'views/stock_picking_view.xml',
+        'views/sale_order_view.xml',
         'wizard/stock_return_picking_view.xml',
     ],
     'auto_install': False,
