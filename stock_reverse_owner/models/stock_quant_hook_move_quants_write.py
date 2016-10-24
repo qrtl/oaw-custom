@@ -27,7 +27,7 @@ def move_quants_write(self, cr, uid, quants, move, location_dest_id,
 
 class StockQuantHookMoveQuantsWrite(models.AbstractModel):
     _name = 'stock.quant.hook.move.quants.write'
-    _desctription = 'Provide hook point for move_quants_write mmethod'
+    _desctription = 'Provide hook point for move_quants_write method'
 
     def _register_hook(self, cr):
         stock_quant.move_quants_write = move_quants_write
