@@ -4,12 +4,13 @@
 {
     'name': 'Return Shipment Process',
     'summary': 'Ownership Change Return Shipment Process',
-    'version': '8.0.1.1.0',
+    'version': '8.0.1.2.0',
     'category': 'Warehouse',
     'website': 'https://www.odoo-asia.net',
     'author': 'Rooms For (Hong Kong) Limited T/A OSCG',
     'license': 'AGPL-3',
     'depends': [
+        'stock_account',
         'sale_line_quant_extended',
     ],
     'description': """
