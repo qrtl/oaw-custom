@@ -10,7 +10,7 @@
                 <field name="return_category" attrs="{'invisible':[('picking_type_id','!=','outgoing')],'required':[('picking_type_id','=','outgoing')]}"/>
                 <field name="picking_id" invisible="1"/>
                 <field name="picking_type_id" invisible="1"/>
-                <field name="supplier_id" attrs="{'invisible':[('return_category','!=','return_vci')],'required':[('return_category','=','return_vci')]}"/>
+                <!-- field name="supplier_id" attrs="{'invisible':[('return_category','!=','return_vci')],'required':[('return_category','=','return_vci')]}"/ -->
             </field>
         </field>
     </record>

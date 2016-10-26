@@ -12,7 +12,7 @@ class stock_picking(models.Model):
     return_category = fields.Selection(
         [('repair', 'Repair'),
         ('return_company', 'Return ­ Company'),
-        ('return_vci', 'Return - VCI'),
+        # ('return_vci', 'Return - VCI'),
         ('return_no_ownership_change', 'Return ­ No Ownership Change')],
         string='Return Category',
         default='return_no_ownership_change',
