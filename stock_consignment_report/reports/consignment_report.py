@@ -133,6 +133,7 @@ class ConsignmentReportCompute(models.TransientModel):
             [('report_id', '=', self.id)])
         for section in sections:
             self._inject_quant_values(section)
+            self._update_age(model, section)
             if section.code in [1, 2]:
                 self._update_invoice_info(section.id, section.code)
             elif section.code == 3:
@@ -356,14 +357,31 @@ WHERE
         )
         self.env.cr.execute(query_update_quant, query_update_quant_params)
 
+    def _update_age(self, model, section):
+        quants = model.search([('section_id', '=', section.id)])
+        for quant in quants:
+            if section.code == 3:
+                stock_days = (
+                    datetime.today() - \
+                    fields.Datetime.from_string(quant.incoming_date)
+                ).days
+            else:
+                stock_days = 0
+                move = self.env['stock.move'].search([
+                    ('quant_lot_id', '=', quant.lot_id.id),
+                    ('picking_type_code', '=', 'outgoing'),
+                    ('state', '=', 'done'),
+                ], order='date desc', limit=1)
+                if move:
+                    stock_days = (
+                        fields.Datetime.from_string(move.date) - \
+                        fields.Datetime.from_string(quant.incoming_date)
+                    ).days
+            quant.write({'stock_days': stock_days})
+
     def _update_reservation(self, model, section_id):
         quants = model.search([('section_id', '=', section_id)])
         for quant in quants:
-            stock_days = (
-                datetime.today() - \
-                fields.Datetime.from_string(quant.incoming_date)
-            ).days
-            quant.write({'stock_days': stock_days})
             if quant.reservation_id:
                 quant.write({
                     'remark': quant.reservation_id.name_get()[0][1]})
