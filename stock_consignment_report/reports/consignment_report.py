@@ -269,6 +269,9 @@ WHERE loc.usage = %s
             query_inject_quant += """
     AND pl.lot_id IS null
             """
+        query_inject_quant += """
+ORDER BY p.name_template, l.name
+        """
         status_desc = {
             1: 'Sold & Paid',
             2: 'Sold & NOT Paid',
