@@ -100,6 +100,7 @@ class ConsignmentReportQuant(models.TransientModel):
     incoming_date = fields.Datetime()
     stock_days = fields.Integer()
     quant_last_updated = fields.Datetime()
+    outgoing_date = fields.Datetime()
 
 
 class ConsignmentReportCompute(models.TransientModel):
@@ -364,23 +365,28 @@ WHERE
         quants = model.search([('section_id', '=', section.id)])
         for quant in quants:
             if section.code == 3:
-                stock_days = (
-                    datetime.today() - \
-                    fields.Datetime.from_string(quant.incoming_date)
-                ).days
+                out_date = fields.Datetime.to_string(datetime.today())
             else:
-                stock_days = 0
+                out_date = False
+                cust_locs = self.env['stock.location'].search([
+                    ('usage', '=', 'customer'),
+                    ('active', '=', True),
+                ])
                 move = self.env['stock.move'].search([
                     ('quant_lot_id', '=', quant.lot_id.id),
                     ('picking_type_code', '=', 'outgoing'),
+                    ('location_dest_id', 'in', [loc.id for loc in cust_locs]),
                     ('state', '=', 'done'),
-                ], order='date desc', limit=1)
+                ], order='date asc', limit=1)
                 if move:
-                    stock_days = (
-                        fields.Datetime.from_string(move.date) - \
-                        fields.Datetime.from_string(quant.incoming_date)
-                    ).days
-            quant.write({'stock_days': stock_days})
+                    out_date = move.date
+            quant.write({'outgoing_date': out_date})
+            if out_date:
+                stock_days = (
+                    fields.Datetime.from_string(out_date) - \
+                    fields.Datetime.from_string(quant.incoming_date)
+                ).days
+                quant.write({'stock_days': stock_days})
 
     def _update_reservation(self, model, section_id):
         quants = model.search([('section_id', '=', section_id)])
@@ -441,7 +447,7 @@ class PartnerXslx(abstract_report_xlsx.AbstractReportXslx):
                 'width': 20},
             8: {'header': _('Age'), 'field': 'stock_days',
                 'type': 'number', 'width': 8},
-            9: {'header': _('Last Updated'), 'field': 'quant_last_updated',
+            9: {'header': _('Outgoing Date'), 'field': 'outgoing_date',
                 'width': 20},
         }
 
