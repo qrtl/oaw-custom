@@ -270,9 +270,6 @@ WHERE loc.usage = %s
             query_inject_quant += """
     AND pl.lot_id IS null
             """
-        query_inject_quant += """
-ORDER BY p.name_template, l.name
-        """
         status_desc = {
             1: 'Sold & Paid',
             2: 'Sold & NOT Paid',
@@ -447,7 +444,7 @@ class PartnerXslx(abstract_report_xlsx.AbstractReportXslx):
                 'width': 20},
             8: {'header': _('Age'), 'field': 'stock_days',
                 'type': 'number', 'width': 8},
-            9: {'header': _('Outgoing Date'), 'field': 'outgoing_date',
+            9: {'header': _('Sold/Current Date'), 'field': 'outgoing_date',
                 'width': 20},
         }
 
@@ -479,7 +476,19 @@ class PartnerXslx(abstract_report_xlsx.AbstractReportXslx):
 
             self.write_array_header()
 
-            for quant in section.quant_ids:
+            # for section 1, sort by remark, product_name and lot
+            if section.code == 1:
+                sorted_quants = sorted(
+                    section.quant_ids,
+                    key=lambda x: (x.remark, x.product_name, x.lot)
+                )
+            # otherwise, sort by product_name and lot
+            else:
+                sorted_quants = sorted(
+                    section.quant_ids,
+                    key=lambda x: (x.product_name, x.lot)
+                )
+            for quant in sorted_quants:
                 self.write_line(quant)
 
             # Line break
