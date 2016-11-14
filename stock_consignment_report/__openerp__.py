@@ -4,7 +4,7 @@
 {
     "name": "Consignment Report",
     "summary": "",
-    "version": "8.0.1.2.0",
+    "version": "8.0.1.3.0",
     "category": "Reporting",
     "website": "https://www.odoo-asia.com/",
     "author": "Rooms For (Hong Kong) Limited T/A OSCG",

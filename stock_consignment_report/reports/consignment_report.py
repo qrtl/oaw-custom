@@ -365,14 +365,18 @@ WHERE
                 out_date = fields.Datetime.to_string(datetime.today())
             else:
                 out_date = False
-                cust_locs = self.env['stock.location'].search([
-                    ('usage', '=', 'customer'),
+                if section.code in [1, 2]:
+                    usage = 'customer'
+                elif section.code == 4:
+                    usage = 'supplier'
+                locs = self.env['stock.location'].search([
+                    ('usage', '=', usage),
                     ('active', '=', True),
                 ])
                 move = self.env['stock.move'].search([
                     ('quant_lot_id', '=', quant.lot_id.id),
                     ('picking_type_code', '=', 'outgoing'),
-                    ('location_dest_id', 'in', [loc.id for loc in cust_locs]),
+                    ('location_dest_id', 'in', [loc.id for loc in locs]),
                     ('state', '=', 'done'),
                 ], order='date asc', limit=1)
                 if move:
@@ -444,7 +448,7 @@ class PartnerXslx(abstract_report_xlsx.AbstractReportXslx):
                 'width': 20},
             8: {'header': _('Age'), 'field': 'stock_days',
                 'type': 'number', 'width': 8},
-            9: {'header': _('Sold/Current Date'), 'field': 'outgoing_date',
+            9: {'header': _('Outgoing/Current Date'), 'field': 'outgoing_date',
                 'width': 20},
         }
 
