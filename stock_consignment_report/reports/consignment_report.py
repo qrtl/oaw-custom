@@ -3,7 +3,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from openerp import api, models, fields, _
-from . import abstract_report_xlsx
+from openerp.addons.abstract_report_xlsx.reports import stock_abstract_report_xlsx
 from openerp.report import report_sxw
 from datetime import datetime
 
@@ -423,7 +423,7 @@ WHERE
                 quant.write({'remark': move.picking_id.note})
 
 
-class PartnerXslx(abstract_report_xlsx.AbstractReportXslx):
+class PartnerXslx(stock_abstract_report_xlsx.AbstractReportXslx):
 
     def __init__(self, name, table, rml=False, parser=False, header=True,
                  store=False):

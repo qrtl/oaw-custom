@@ -4,7 +4,7 @@
 {
     "name": "Consignment Report",
     "summary": "",
-    "version": "8.0.1.3.0",
+    "version": "8.0.1.4.0",
     "category": "Reporting",
     "website": "https://www.odoo-asia.com/",
     "author": "Rooms For (Hong Kong) Limited T/A OSCG",
@@ -18,7 +18,7 @@
     "depends": [
         "sale_line_quant_extended",
         "stock_reverse_owner",
-        "report_xlsx",
+        "abstract_report_xlsx",
     ],
     "data": [
         "wizards/consignment_report_wizard_view.xml",
