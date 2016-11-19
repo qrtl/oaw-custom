@@ -6,6 +6,8 @@
 from cStringIO import StringIO
 import xlsxwriter
 from openerp.addons.report_xlsx.report.report_xlsx import ReportXlsx
+from io import BytesIO
+import base64
 
 
 class AbstractReportXslx(ReportXlsx):
@@ -180,11 +182,16 @@ class AbstractReportXslx(ReportXlsx):
                              self.format_header_center)
         self.row_pos += 1
 
-    def write_line(self, line_object):
+    # def write_line(self, line_object):
+    def write_line(self, line_object, height=False):  # OSCG
         """Write a line on current line using all defined columns field name.
         Columns are defined with `_get_report_columns` method.
         """
         for col_pos, column in self.columns.iteritems():
+            # >>> added by OSCG
+            if height:
+                self.sheet.set_row(self.row_pos, height)
+            # <<< added by OSCG
             value = getattr(line_object, column['field'])
             cell_type = column.get('type', 'string')
             if cell_type == 'string':
@@ -197,6 +204,17 @@ class AbstractReportXslx(ReportXlsx):
             elif cell_type == 'number':
                 self.sheet.write_number(
                     self.row_pos, col_pos, value, self.format_number
+                )
+            elif cell_type == 'image':
+                if line_object.image_small:
+                    image = BytesIO(base64.b64decode(line_object.image_small))
+                    self.sheet.insert_image(
+                        self.row_pos, col_pos, 'image', {'image_data': image}
+                    )
+            elif cell_type == 'percent':
+                self.sheet.write_number(
+                    self.row_pos, col_pos, value,
+                    self.format_percent_bold_italic
                 )
             # <<< added by OSCG
         self.row_pos += 1
