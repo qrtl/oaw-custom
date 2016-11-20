@@ -1,18 +1,22 @@
 # -*- coding: utf-8 -*-
 # Author: Julien Coux
 # Copyright 2016 Camptocamp SA
+# Copyright 2016 Rooms For (Hong Kong) Limited T/A OSCG
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from cStringIO import StringIO
 import xlsxwriter
+from xlsxwriter.utility import xl_col_to_name  # OSCG
 from openerp.addons.report_xlsx.report.report_xlsx import ReportXlsx
+from io import BytesIO
+import base64
 
 
-class AbstractReportXslx(ReportXlsx):
+class StockAbstractReportXslx(ReportXlsx):
 
     def __init__(self, name, table, rml=False, parser=False, header=True,
                  store=False):
-        super(AbstractReportXslx, self).__init__(
+        super(StockAbstractReportXslx, self).__init__(
             name, table, rml, parser, header, store)
 
         # main sheet which will contains report
@@ -34,7 +38,10 @@ class AbstractReportXslx(ReportXlsx):
         self.format_header_amount = None
         self.format_amount = None
         self.format_number = None  # added by OSCG
+        self.format_percent = None  # added by OSCG
         self.format_percent_bold_italic = None
+        self.format_wrap = None  # added by OSCG
+        self.format_emphasis = None  # added by OSCG
 
     def create_xlsx_report(self, ids, data, report):
         """ Overrides method to add constant_memory option used for large files
@@ -86,7 +93,10 @@ class AbstractReportXslx(ReportXlsx):
          * format_header_amount
          * format_amount
          * format_number  # added by OSCG
+         * format_percent  # added by OSCG
          * format_percent_bold_italic
+         * format_wrap  # added by OSCG
+         * format_emphasis  # added by OSCG
         """
         self.format_bold = workbook.add_format({'bold': True})
         self.format_right = workbook.add_format({'align': 'right'})
@@ -97,16 +107,19 @@ class AbstractReportXslx(ReportXlsx):
             {'bold': True,
              'border': True,
              'bg_color': '#FFFFCC'})
+        self.format_header_left.set_text_wrap()  # added by OSCG
         self.format_header_center = workbook.add_format(
             {'bold': True,
              'align': 'center',
              'border': True,
              'bg_color': '#FFFFCC'})
+        self.format_header_center.set_text_wrap()  # added by OSCG
         self.format_header_right = workbook.add_format(
             {'bold': True,
              'align': 'right',
              'border': True,
              'bg_color': '#FFFFCC'})
+        self.format_header_right.set_text_wrap()  # added by OSCG
         self.format_header_amount = workbook.add_format(
             {'bold': True,
              'border': True,
@@ -116,10 +129,16 @@ class AbstractReportXslx(ReportXlsx):
         self.format_amount.set_num_format('#,##0.00')
         self.format_number = workbook.add_format()  # added by OSCG
         self.format_number.set_num_format('#,##0')  # added by OSCG
+        self.format_percent = workbook.add_format()  # added by OSCG
+        self.format_percent.set_num_format('#,##0.00%')  # added by OSCG
         self.format_percent_bold_italic = workbook.add_format(
             {'bold': True, 'italic': True}
         )
         self.format_percent_bold_italic.set_num_format('#,##0.00%')
+        self.format_wrap = workbook.add_format()  # added by OSCG
+        self.format_wrap.set_text_wrap()  # added by OSCG
+        self.format_emphasis = workbook.add_format({'bold': True})  # OSCG
+        self.format_emphasis.set_font_color('red')  # OSCG
 
     def _set_column_width(self):
         """Set width for all defined columns.
@@ -171,24 +190,36 @@ class AbstractReportXslx(ReportXlsx):
         )
         self.row_pos += 1
 
-    def write_array_header(self):
+    # def write_array_header(self):
+    def write_array_header(self, adj_col=False):  # OSCG
         """Write array header on current line using all defined columns name.
         Columns are defined with `_get_report_columns` method.
         """
         for col_pos, column in self.columns.iteritems():
-            self.sheet.write(self.row_pos, col_pos, column['header'],
-                             self.format_header_center)
+            if adj_col and col_pos in adj_col:
+                self.sheet.write(self.row_pos, col_pos, adj_col[col_pos],
+                                     self.format_header_center)
+            else:
+                self.sheet.write(self.row_pos, col_pos, column['header'],
+                                     self.format_header_center)
         self.row_pos += 1
 
-    def write_line(self, line_object):
+    # def write_line(self, line_object):
+    def write_line(self, line_object, height=False):  # OSCG
         """Write a line on current line using all defined columns field name.
         Columns are defined with `_get_report_columns` method.
         """
         for col_pos, column in self.columns.iteritems():
+            # >>> added by OSCG
+            if height:
+                self.sheet.set_row(self.row_pos, height)
+            # <<< added by OSCG
             value = getattr(line_object, column['field'])
             cell_type = column.get('type', 'string')
             if cell_type == 'string':
-                self.sheet.write_string(self.row_pos, col_pos, value or '')
+                self.sheet.write_string(  # OSCG
+                    self.row_pos, col_pos, value or '', self.format_wrap
+                )
             elif cell_type == 'amount':
                 self.sheet.write_number(
                     self.row_pos, col_pos, float(value), self.format_amount
@@ -198,11 +229,35 @@ class AbstractReportXslx(ReportXlsx):
                 self.sheet.write_number(
                     self.row_pos, col_pos, value, self.format_number
                 )
+            elif cell_type == 'image':
+                if line_object.image_small:
+                    image = BytesIO(base64.b64decode(line_object.image_small))
+                    self.sheet.insert_image(
+                        self.row_pos, col_pos, 'image', {'image_data': image}
+                    )
+            elif cell_type == 'percent':
+                self.sheet.write_number(
+                    self.row_pos, col_pos, value, self.format_percent
+                )
             # <<< added by OSCG
         self.row_pos += 1
 
     def _generate_report_content(self, workbook, report):
         pass
+
+    def _apply_conditional_format(self, params):
+        for param in params:
+            # has to convert the column to 'A1:A999' notation
+            column = xl_col_to_name(param['col'])
+            column += '1:' + column + str(self.row_pos)
+            for val in param['vals']:
+                self.sheet.conditional_format(
+                    column, {
+                        'type': 'text',
+                        'criteria': 'containing',
+                        'value': val,
+                        'format': self.format_emphasis
+                    })
 
     def _get_report_name(self):
         """

@@ -26,7 +26,9 @@ class ConsignmentReportWizard(models.TransientModel):
     @api.multi
     def action_export_xlsx(self):
         self.ensure_one()
-        return self._export(xlsx_report=True)
+        model = self.env['consignment_report']
+        report = model.create(self._prepare_report_xlsx())
+        return report.print_report()
 
     def _prepare_report_xlsx(self):
         self.ensure_one()
@@ -34,8 +36,3 @@ class ConsignmentReportWizard(models.TransientModel):
             'filter_partner_id': self.partner_id.id,
             'threshold_date': self.threshold_date
         }
-
-    def _export(self, xlsx_report=False):
-        model = self.env['consignment_report']
-        report = model.create(self._prepare_report_xlsx())
-        return report.print_report(xlsx_report)
