@@ -9,33 +9,37 @@ from openerp import api, models, fields
 
 class OfferReportWizard(models.TransientModel):
     _name = "offer.report.wizard"
-    _description = 'Offer Report Wizard'
+    _description = 'Stock Offer Report Wizard'
 
-    partner_id = fields.Many2one(
-        comodel_name='res.partner',
+    new_stock_days = fields.Integer(
         required=True,
-        string='Partner',
+        string='New Stock Days',
+        default=1,
     )
-    threshold_date = fields.Date(
+    stock_threshold_date = fields.Date(
         required=True,
-        string='Threshold Date',
+        string='Stock Threshold Date',
         default=fields.Date.to_string(
-            datetime.today() - relativedelta(days=180)),
+            datetime.today() - relativedelta(days=90)),
+    )
+    sales_threshold_date = fields.Date(
+        required=True,
+        string='Sales Threshold Date',
+        default=fields.Date.to_string(
+            datetime.today() - relativedelta(days=10)),
     )
 
     @api.multi
     def action_export_xlsx(self):
         self.ensure_one()
-        return self._export(xlsx_report=True)
+        model = self.env['offer.report']
+        report = model.create(self._prepare_report_xlsx())
+        return report.print_report()
 
     def _prepare_report_xlsx(self):
         self.ensure_one()
         return {
-            'filter_partner_id': self.partner_id.id,
-            'threshold_date': self.threshold_date
+            'new_stock_days': self.new_stock_days,
+            'stock_threshold_date': self.stock_threshold_date,
+            'sales_threshold_date': self.sales_threshold_date,
         }
-
-    def _export(self, xlsx_report=False):
-        model = self.env['offer.report']
-        report = model.create(self._prepare_report_xlsx())
-        return report.print_report(xlsx_report)

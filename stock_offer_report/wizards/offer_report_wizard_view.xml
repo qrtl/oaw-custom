@@ -8,8 +8,9 @@
     <field name="arch" type="xml">
         <form>
             <group>
-                <field name="partner_id" domain="[('supplier', '=', True)]"/>
-                <field name="threshold_date"/>
+                <field name="new_stock_days"/>
+                <field name="stock_threshold_date"/>
+                <field name="sales_threshold_date"/>
             </group>
             <footer>
                 <button name="action_export_xlsx"

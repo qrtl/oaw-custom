@@ -423,7 +423,7 @@ WHERE
                 quant.write({'remark': move.picking_id.note})
 
 
-class PartnerXslx(stock_abstract_report_xlsx.AbstractReportXslx):
+class PartnerXslx(stock_abstract_report_xlsx.StockAbstractReportXslx):
 
     def __init__(self, name, table, rml=False, parser=False, header=True,
                  store=False):

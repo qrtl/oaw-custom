@@ -21,9 +21,9 @@ class OfferReport(models.TransientModel):
 
     _name = 'offer.report'
 
-    # Filters fields, used for data computation
-    filter_partner_id = fields.Many2one(comodel_name='res.partner')
-    threshold_date= fields.Date()
+    new_stock_days = fields.Integer()
+    stock_threshold_date = fields.Date()
+    sales_threshold_date = fields.Date()
     current_date = fields.Date(
         default=fields.Datetime.to_string(datetime.today())
     )
@@ -103,8 +103,6 @@ class OfferReportLine(models.TransientModel):
     list_price = fields.Float()
     margin_percent = fields.Float()
     owner_name = fields.Char()
-    # currency = fields.Char()
-    # purchase_price = fields.Float(digits=(16, 2))
     unit_cost = fields.Float(digits=(16, 2))
     status = fields.Char()
     lot = fields.Char()
@@ -113,7 +111,6 @@ class OfferReportLine(models.TransientModel):
     outgoing_date = fields.Datetime()
     move_date = fields.Datetime()  # for report presentation
     stock_days = fields.Integer()
-    quant_last_updated = fields.Datetime()
 
 
 class StockOfferReportCompute(models.TransientModel):
@@ -124,7 +121,8 @@ class StockOfferReportCompute(models.TransientModel):
     _inherit = 'offer.report'
 
     @api.multi
-    def print_report(self, xlsx_report=False):
+    # def print_report(self, xlsx_report=False):
+    def print_report(self):
         self.ensure_one()
         self.compute_data_for_report()
         report_name = 'stock_offer_report.offer_report'
@@ -134,8 +132,9 @@ class StockOfferReportCompute(models.TransientModel):
     def _prepare_report_xlsx(self):
         self.ensure_one()
         return {
-            'filter_partner_id': [(6, 0, self.filter_partner_id.id)],
-            'threshold_date': self.threshold_date,
+            'new_stock_days': self.new_stock_days,
+            'stock_threshold_date': self.stock_threshold_date,
+            'sales_threshold_date': self.sales_threshold_date,
         }
 
     @api.multi
@@ -151,10 +150,6 @@ class StockOfferReportCompute(models.TransientModel):
             self._update_owner(model, section)
             self._update_age(model, section)
             self._update_remark(model, section)
-            if section.code == 1:
-                self._update_reservation(model, section.id)
-            elif section.code == 2:
-                self._update_invoice_info(section.id, section.code)
         self.refresh()
 
     def _create_section_records(self):
@@ -167,7 +162,27 @@ class StockOfferReportCompute(models.TransientModel):
             model.create(vals)
 
     def _inject_quant_values(self, section):
-        query_inject_quant = """
+        query_inject_quant = ""
+        if section.code == 2:
+            query_inject_quant += """
+WITH
+    out_move AS (
+        SELECT DISTINCT ON (m.quant_lot_id)
+            m.quant_lot_id, m.date
+        FROM
+            stock_move m
+        INNER JOIN
+            stock_location loc ON m.location_dest_id = loc.id
+        WHERE
+            m.picking_type_code = 'outgoing'
+            AND loc.usage = 'customer'
+            AND active = true
+            AND state = 'done'
+        ORDER BY
+            m.quant_lot_id, m.date DESC
+    )
+            """
+        query_inject_quant += """
 INSERT INTO
     offer_report_line
     (
@@ -188,8 +203,7 @@ INSERT INTO
     lot_id,
     lot,
     unit_cost,
-    incoming_date,
-    quant_last_updated
+    incoming_date
     )
         """
         if section.code == 1:
@@ -218,8 +232,7 @@ SELECT
     l.id,
     l.name,
     q.cost,
-    q.in_date,
-    q.write_date
+    q.in_date
 FROM
     stock_quant q
 INNER JOIN
@@ -233,27 +246,18 @@ INNER JOIN
 INNER JOIN
     stock_location loc ON q.location_id = loc.id
             """
-#         query_inject_quant += """
-# WHERE loc.usage in %s
-#     AND q.original_owner_id = %s
-#         """
-#         if section.code == 2:
-#             query_inject_quant += """
-#     AND q.write_date >= %s
-#             """
-#         loc_usage = {
-#             1: ('internal',),
-#             2: ('customer',),
-#         }
         if section.code == 1:
             query_inject_quant += """
 WHERE
     loc.usage = 'internal'
-    AND reservation_id is null
-    AND sale_id is null
+    AND q.reservation_id is null
+    AND q.sale_id is null
+    AND q.in_date >= %s
             """
         if section.code == 2:
             query_inject_quant += """
+LEFT OUTER JOIN
+    out_move ON l.id = out_move.quant_lot_id
 WHERE
     (
     loc.usage = 'internal'
@@ -263,10 +267,10 @@ WHERE
         )
     )
     OR loc.usage = 'customer'
-            """
-        if section.code == 2:
-            query_inject_quant += """
-    AND q.write_date >= %s
+    AND (
+        out_move.date >= %s
+        OR out_move.date is null
+        )
             """
         if section.code == 1:
             query_inject_quant += """
@@ -274,76 +278,17 @@ ORDER BY
     p.name_template, cost ASC
             """
         if section.code == 1:
-            query_inject_quant_params = (
-                self.id,
-                section.id,
-                self.env.uid,
-                # loc_usage[section.code],
-                # section.report_id.filter_partner_id.id
-            )
+            threshold_date = section.report_id.stock_threshold_date
         elif section.code == 2:
-            query_inject_quant_params = (
-                self.id,
-                section.id,
-                self.env.uid,
-                # loc_usage[section.code],
-                # section.report_id.filter_partner_id.id,
-                section.report_id.threshold_date
-            )
-        self.env.cr.execute(query_inject_quant, query_inject_quant_params)
-
-    def _update_invoice_info(self, section_id, code):
-        query_update_quant = """
-UPDATE
-    offer_report_line line1
-SET
-    currency = inv_info.curr,
-    purchase_price = inv_info.price
-FROM (
-    SELECT
-        inv.currency AS curr,
-        inv.price_unit AS price,
-        inv.supp_invoice,
-        line2.section_id,
-        inv.lot_id
-    FROM
-        offer_report_line line2
-    INNER JOIN (
-        SELECT DISTINCT ON (l.lot_id)
-            c.name AS currency,
-            l.price_unit,
-            i.supplier_invoice_number AS supp_invoice,
-            l.lot_id
-        FROM
-            account_invoice_line l
-        INNER JOIN
-            account_invoice i ON l.invoice_id = i.id
-        INNER JOIN
-            res_currency c ON i.currency_id = c.id
-        WHERE
-            i.type = 'in_invoice'
-            AND l.state in %s
-        ORDER BY
-            l.lot_id,
-            i.date_invoice DESC,
-            l.write_date DESC
-    ) inv
-        ON line2.lot_id = inv.lot_id
-    WHERE
-        line2.section_id = %s
-) inv_info
-WHERE
-    line1.section_id = inv_info.section_id
-    AND line1.lot_id = inv_info.lot_id
-        """
-        state_vals = {
-            2: ('paid', 'draft', 'open'),
-        }
-        query_update_quant_params = (
-            state_vals[code],
-            section_id,
+            threshold_date = section.report_id.sales_threshold_date
+        query_inject_quant_params = (
+            self.id,
+            section.id,
+            self.env.uid,
+            threshold_date,
         )
-        self.env.cr.execute(query_update_quant, query_update_quant_params)
+
+        self.env.cr.execute(query_inject_quant, query_inject_quant_params)
 
     def _update_qty(self, model, section):
         quant_obj = self.env['stock.quant']
@@ -390,7 +335,7 @@ WHERE
                     ('picking_type_code', '=', 'outgoing'),
                     ('location_dest_id', 'in', [loc.id for loc in locs]),
                     ('state', '=', 'done'),
-                ], order='date asc', limit=1)
+                ], order='date desc', limit=1)
                 if move:
                     out_date = move.date
                 move_date = out_date
@@ -408,26 +353,24 @@ WHERE
         lines = model.search([('section_id', '=', section.id)])
         for line in lines:
             if section.code == 1:
-                line.write({'remark': line.status})
+                if line.stock_days <= self.new_stock_days:
+                    status = 'New Stock!'
+                else:
+                    status = 'In Stock'
+                line.write({'remark': status})
             elif section.code == 2:
                 remark = line.lot
                 if line.reservation_id:
-                    remark += "\n(" + line.reservation_id.name_get()[0][1] + ")"
+                    remark += "\nSold!: " + \
+                              line.reservation_id.name_get()[0][1]
                 elif line.sale_id:
-                    remark += "\n(" + line.sale_id.name + ")"
+                    remark += "\nReserved: " + line.sale_id.name
+                else:
+                    remark += "\nSold & Delivered!"
                 line.write({'remark': remark})
 
-    def _update_reservation(self, model, section_id):
-        quants = model.search([('section_id', '=', section_id)])
-        for quant in quants:
-            if quant.reservation_id:
-                quant.write({
-                    'remark': quant.reservation_id.name_get()[0][1]})
-            elif quant.sale_id:
-                quant.write({'remark': quant.sale_id.name})
 
-
-class StockOfferXslx(stock_abstract_report_xlsx.AbstractReportXslx):
+class StockOfferXslx(stock_abstract_report_xlsx.StockAbstractReportXslx):
 
     def __init__(self, name, table, rml=False, parser=False, header=True,
                  store=False):
@@ -457,7 +400,7 @@ class StockOfferXslx(stock_abstract_report_xlsx.AbstractReportXslx):
                 'width': 18},
             9: {'header': _('Incoming Date'), 'field': 'move_date',
                 'width': 20},
-            10: {'header': _('Stock Days'), 'field': 'stock_days',
+            10: {'header': _('Days in Stock'), 'field': 'stock_days',
                 'type': 'number', 'width': 10},
             11: {'header': _('Status'), 'field': 'remark', 'width': 20},
         }
@@ -465,11 +408,9 @@ class StockOfferXslx(stock_abstract_report_xlsx.AbstractReportXslx):
     def _get_report_filters(self, report):
         return [
             [_('Report Date'), report.current_date],
-            [_('Partner'),
-                _('[%s] %s') % (
-                    report.filter_partner_id.ref,
-                    report.filter_partner_id.name)],
-            [_('Threshold Date'), report.threshold_date],
+            [_('New Stock Days'), report.new_stock_days],
+            [_('Stock Threshold Date'), report.stock_threshold_date],
+            [_('Sales Threshold Date'), report.sales_threshold_date],
         ]
 
     def _get_col_count_filter_name(self):
@@ -490,15 +431,22 @@ class StockOfferXslx(stock_abstract_report_xlsx.AbstractReportXslx):
                 self.write_array_header()
             # adjust array header
             elif section.code == 2:
-                adj_col = {9: _('Outgoing Date'), 11: _('Case No.')}
-                # self.write_array_header(adj_col=9, header=_('Outgoing Date'))
+                adj_col = {
+                    9: _('Outgoing/Current Date'),
+                    11: _('Case No. & Status')
+                }
                 self.write_array_header(adj_col)
 
             for quant in section.quant_ids:
-                self.write_line(quant, 50)  # 50 being row height
+                self.write_line(quant, height=50)
 
             # Line break
             self.row_pos += 2
+
+        params = [
+            {'col': 11, 'vals': ['New Stock!', 'Sold']},
+        ]
+        self._apply_conditional_format(params)
 
 
 StockOfferXslx(
