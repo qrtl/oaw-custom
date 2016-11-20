@@ -111,7 +111,7 @@ class ConsignmentReportCompute(models.TransientModel):
     _inherit = 'consignment_report'
 
     @api.multi
-    def print_report(self, xlsx_report=False):
+    def print_report(self):
         self.ensure_one()
         self.compute_data_for_report()
         report_name = 'stock_consignment_report.consignment_report'
@@ -448,7 +448,7 @@ class PartnerXslx(stock_abstract_report_xlsx.StockAbstractReportXslx):
                 'width': 20},
             8: {'header': _('Age'), 'field': 'stock_days',
                 'type': 'number', 'width': 8},
-            9: {'header': _('Outgoing/Current Date'), 'field': 'outgoing_date',
+            9: {'header': _('Outgoing Date'), 'field': 'outgoing_date',
                 'width': 20},
         }
 
@@ -478,7 +478,14 @@ class PartnerXslx(stock_abstract_report_xlsx.StockAbstractReportXslx):
         for section in report.section_ids:
             self.write_array_title(title_vals[section.code])
 
-            self.write_array_header()
+            if section.code in [1, 2, 4]:
+                self.write_array_header()
+            # adjust array header
+            elif section.code == 3:
+                adj_col = {
+                    9: _('Current Date'),
+                }
+                self.write_array_header(adj_col)
 
             # for section 1, sort by remark, product_name and lot
             if section.code == 1:
