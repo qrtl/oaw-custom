@@ -437,10 +437,10 @@ class StockOfferXslx(stock_abstract_report_xlsx.StockAbstractReportXslx):
                 }
                 self.write_array_header(adj_col)
 
-            # sort output by product_name and lot
+            # sort output by category_name and product_name
             sorted_quants = sorted(
                 section.quant_ids,
-                key=lambda x: (x.product_name, x.lot)
+                key=lambda x: (x.category_name, x.product_name)
             )
             for quant in sorted_quants:
                 self.write_line(quant, height=50)

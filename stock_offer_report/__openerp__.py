@@ -4,7 +4,7 @@
 {
     "name": "Stock Offer Report",
     "summary": "",
-    "version": "8.0.1.0.0",
+    "version": "8.0.1.0.1",
     "category": "Reporting",
     "website": "https://www.odoo-asia.com/",
     "author": "Rooms For (Hong Kong) Limited T/A OSCG",
