@@ -20,7 +20,7 @@ class ConsignmentReportWizard(models.TransientModel):
         required=True,
         string='Threshold Date',
         default=fields.Date.to_string(
-            datetime.today() - relativedelta(days=180)),
+            datetime.now() - relativedelta(days=180)),
     )
 
     @api.multi
