@@ -5,7 +5,6 @@
 from openerp import api, models, fields, _
 from openerp.addons.abstract_report_xlsx.reports import stock_abstract_report_xlsx
 from openerp.report import report_sxw
-from datetime import datetime
 
 
 class ConsignmentReport(models.TransientModel):
@@ -24,7 +23,7 @@ class ConsignmentReport(models.TransientModel):
     filter_partner_id = fields.Many2one(comodel_name='res.partner')
     threshold_date= fields.Date()
     current_date = fields.Date(
-        default=fields.Datetime.to_string(datetime.today())
+        default=fields.Date.context_today
     )
 
     # Data fields, used to browse report data
@@ -362,7 +361,7 @@ WHERE
         quants = model.search([('section_id', '=', section.id)])
         for quant in quants:
             if section.code == 3:
-                out_date = fields.Datetime.to_string(datetime.today())
+                out_date = fields.Datetime.now()
             else:
                 out_date = False
                 if section.code in [1, 2]:

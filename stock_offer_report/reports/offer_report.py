@@ -6,7 +6,6 @@ from openerp import api, models, fields, _
 from openerp.addons.abstract_report_xlsx.reports \
     import stock_abstract_report_xlsx
 from openerp.report import report_sxw
-from datetime import datetime
 
 
 class OfferReport(models.TransientModel):
@@ -25,7 +24,7 @@ class OfferReport(models.TransientModel):
     stock_threshold_date = fields.Date()
     sales_threshold_date = fields.Date()
     current_date = fields.Date(
-        default=fields.Datetime.to_string(datetime.today())
+        default=fields.Date.context_today
     )
 
     # Data fields, used to browse report data
@@ -322,7 +321,7 @@ ORDER BY
     def _update_age(self, model, section):
         lines = model.search([('section_id', '=', section.id)])
         for line in lines:
-            out_date = fields.Datetime.to_string(datetime.today())
+            out_date = fields.Datetime.now()
             if section.code == 1:
                 move_date = line.incoming_date
             elif section.code == 2:
