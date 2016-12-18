@@ -20,13 +20,13 @@ class OfferReportWizard(models.TransientModel):
         required=True,
         string='Stock Threshold Date',
         default=fields.Date.to_string(
-            datetime.today() - relativedelta(days=90)),
+            datetime.now() - relativedelta(days=90)),
     )
     sales_threshold_date = fields.Date(
         required=True,
         string='Sales Threshold Date',
         default=fields.Date.to_string(
-            datetime.today() - relativedelta(days=10)),
+            datetime.now() - relativedelta(days=10)),
     )
 
     @api.multi
