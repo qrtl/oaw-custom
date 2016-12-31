@@ -48,7 +48,8 @@ class SaleOrder(models.Model):
             help="""This field controls how invoice and delivery operations \
             are synchronized."""
             )
-    is_walkin = fields.Boolean('Walk-in')
+    # is_walkin = fields.Boolean('Walk-in')
+    to_check = fields.Boolean('To Be Checked')
 
 
 
