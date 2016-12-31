@@ -9,7 +9,7 @@
         <field name="arch" type="xml">
             <field name="partner_id" position="after">
                 <field name="is_mto"/>
-                <field name="is_walkin" attrs="{'invisible': [('is_mto','=',True)]}"/>
+                <field name="to_check"/>
             </field>
             <xpath expr="/form/sheet/notebook/page[1]/field[@name='order_line']" position="attributes">
                 <attribute name="context">
@@ -38,7 +38,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='name']" position="after">
                 <field name="is_mto" string="MTO"/>
-                <field name="is_walkin"/>
+                <field name="to_check"/>
             </xpath>
         </field>
     </record>
@@ -50,7 +50,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='name']" position="after">
                 <field name="is_mto" string="MTO"/>
-                <field name="is_walkin"/>
+                <field name="to_check"/>
             </xpath>
         </field>
     </record>

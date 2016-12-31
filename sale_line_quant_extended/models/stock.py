@@ -66,9 +66,6 @@ class StockMove(models.Model):
         compute='_compute_mto',
         store=True,
         )
-    is_walkin = fields.Boolean('Walk-in',
-        related='so_id.is_walkin',
-        )
 
 
     @api.multi
@@ -159,25 +156,22 @@ class StockMove(models.Model):
     def _prepare_picking_assign(self, move):
         res = super(StockMove, self)._prepare_picking_assign(move)
         res['is_mto'] = move.is_mto
-        res['is_walkin'] = move.so_id.is_walkin
         return res
-
 
 
 class StockPicking(models.Model):
     _inherit = "stock.picking"
 
-
-    is_mto = fields.Boolean('Make to Order',
-            )
-    is_walkin = fields.Boolean('Walk-in',
-            )
-
+    is_mto = fields.Boolean(
+        'Make to Order',
+        )
+    to_check = fields.Boolean(
+        'To Be Checked',
+        )
 
 
 class StockQuant(models.Model):
     _inherit = "stock.quant"
-
 
     @api.one
     @api.depends('sale_reserver_qty', 'sale_line_reserver_qty')
