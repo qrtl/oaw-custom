@@ -19,7 +19,7 @@
 {
     'name': 'Quant/Serial Number on Sales',
     'category': 'Sale',
-    'version': '8.0.1.4.1',
+    'version': '8.0.1.4.2',
     'author': 'Rooms For (Hong Kong) Ltd. T/A OSCG',
     'website': 'www.odoo-asia.com',
     'depends': ['stock', 'sale_margin', 'vendor_consignment_stock',
