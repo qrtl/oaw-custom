@@ -42,6 +42,7 @@ class SaleOrder(models.Model):
     )
     # for search purpose
     seller_ids = fields.One2many(
-        'Supplier',
+        comodel_name='product.supplierinfo',
         related='order_line.product_tmpl_id.seller_ids',
+        string='Supplier',
     )
