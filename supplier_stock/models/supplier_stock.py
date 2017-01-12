@@ -17,7 +17,7 @@ class SupplierStock(models.Model):
         required=True,
     )
     partner_loc_id = fields.Many2one(
-        comodel_name='res.country',
+        comodel_name='supplier.location',
         string='Supplier Location',
         required=True,
     )

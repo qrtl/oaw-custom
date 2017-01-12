@@ -5,12 +5,18 @@
 from openerp import models, fields, api, _
 
 
-class ResCountry(models.Model):
-    _inherit = "res.country"
+class SupplierLocation(models.Model):
+    _name = "supplier.location"
+    _description = "Supplier Location"
+    _order = "name"
 
-    supplier_stock = fields.Boolean(
-        string='Keeps Supplier Stock',
-        help='Select if this country is used for "Supplier Stock" records.'
+    name = fields.Char(
+        string="Name",
+        required=True,
+    )
+    active = fields.Boolean(
+        string="Active",
+        default=True,
     )
     supplier_lead_time = fields.Integer(
         string='Supplier Lead Time (Days)',

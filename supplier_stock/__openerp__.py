@@ -16,7 +16,8 @@
     """,
     'data': [
         'security/ir.model.access.csv',
-        'views/res_country_views.xml',
+        # 'views/res_country_views.xml',
+        'views/supplier_location_views.xml',
         'views/supplier_stock_views.xml',
     ],
     'installable': True,
