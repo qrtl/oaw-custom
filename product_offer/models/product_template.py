@@ -10,12 +10,24 @@ class ProductTemplate(models.Model):
     _inherit = "product.template"
 
 
+    list_price_integer = fields.Integer(
+        string='Sale Price',
+        compute='_get_list_price_integer',
+        store=True,
+    )
+
     qty_local_atp = fields.Float(
         string="Quantity Local ATP",
         compute="_product_local_atp",
         # search="_search_product_quantity",
         digits=dp.get_precision('Product Unit of Measure'),
     )
+
+    @api.multi
+    @api.depends('list_price')
+    def _get_list_price_integer(self):
+        for prod in self:
+            prod.list_price_integer = int(prod.list_price)
 
     def _get_qty_in(self, p_id):
         qty_in = 0
