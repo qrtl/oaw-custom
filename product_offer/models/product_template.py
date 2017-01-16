@@ -10,18 +10,26 @@ class ProductTemplate(models.Model):
     _inherit = "product.template"
 
 
+    # this field is added due to kanban view limitation
     list_price_integer = fields.Integer(
         string='Sale Price',
         compute='_get_list_price_integer',
         store=True,
     )
-
-    qty_local_atp = fields.Float(
+    qty_local_atp = fields.Integer(
         string="Quantity Local ATP",
-        compute="_product_local_atp",
+        compute="_get_qty_info",
         # search="_search_product_quantity",
-        digits=dp.get_precision('Product Unit of Measure'),
     )
+    qty_reserved = fields.Integer(
+        string="Quantity Reserved",
+        compute="_get_qty_info",
+    )
+    qty_overseas = fields.Integer(
+        string="Quantity Overseas",
+        compute="_get_qty_info",
+    )
+
 
     @api.multi
     @api.depends('list_price')
@@ -30,7 +38,7 @@ class ProductTemplate(models.Model):
             prod.list_price_integer = int(prod.list_price)
 
     def _get_qty_in(self, p_id):
-        qty_in = 0
+        res = 0.0
         move_obj = self.env['stock.move']
         moves = move_obj.search([
             ('product_id', '=', p_id),
@@ -38,15 +46,45 @@ class ProductTemplate(models.Model):
             ('state', '=', 'assigned'),
         ])
         for m in moves:
-            qty_in += m.product_uom_qty
-        return qty_in
+            res += m.product_uom_qty
+        return res
+
+    def _get_qty_reserved(self, p_id):
+        res = 0.0
+        quant_obj = self.env['stock.quant']
+        quants = quant_obj.search([
+            '|',
+            ('reservation_id', '!=', False),
+            ('sale_id', '!=', False),
+            ('product_id', '=', p_id),
+            ('usage', '=', 'internal')
+        ])
+        for q in quants:
+            res += q.qty
+        return res
+
+    def _get_qty_overseas(self, p_id):
+        res = 0.0
+        supp_stock_obj = self.env['supplier.stock']
+        records = supp_stock_obj.search([
+            ('product_id', '=', p_id),
+        ])
+        for rec in records:
+            res += rec.quantity
+        return res
 
     @api.multi
-    def _product_local_atp(self):
+    def _get_qty_info(self):
         for prod in self:
-            qty_available = 0
-            qty_in = 0
+            qty_available = 0.0
+            qty_in = 0.0
+            qty_reserved = 0.0
+            qty_overseas = 0.0
             for p in prod.product_variant_ids:
                 qty_available += p.qty_available
                 qty_in += self._get_qty_in(p.id)
-            prod.qty_local_atp = qty_available + qty_in
+                qty_reserved += self._get_qty_reserved(p.id)
+                qty_overseas += self._get_qty_overseas(p.id)
+            prod.qty_local_atp = int(qty_available + qty_in)
+            prod.qty_reserved = int(qty_reserved)
+            prod.qty_overseas = int(qty_overseas)

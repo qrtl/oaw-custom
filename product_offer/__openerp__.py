@@ -10,6 +10,7 @@
     'depends': [
         'product',
         'sale_stock',
+        'sale_line_quant',
         'supplier_stock',
     ],
     'description': """
