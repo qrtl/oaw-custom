@@ -5,7 +5,7 @@
 {
     'name': 'Supplier Stock',
     'category': 'Stock',
-    'version': '8.0.1.0.0',
+    'version': '8.0.1.1.0',
     'author': 'Rooms For (Hong Kong) Limited T/A OSCG',
     'website': 'https://www.odoo-asia.com',
     'depends': [
@@ -16,7 +16,6 @@
     """,
     'data': [
         'security/ir.model.access.csv',
-        # 'views/res_country_views.xml',
         'views/supplier_location_views.xml',
         'views/supplier_stock_views.xml',
     ],
