@@ -507,38 +507,3 @@ class stock_picking(osv.osv):
                         context=context)
         return super(stock_picking, self).action_confirm(cr, uid, ids,
             context=context)
-
-#     def action_button_split_line(self, cr, uid, ids, context=None):
-#         context = context or {}
-#         for pick in self.browse(cr, uid, ids, context=context):
-#             if not pick.move_lines:
-#                 raise osv.except_osv(_('Error!'),_('You cannot split a picking which has no move line.'))
-#             for m in pick.move_lines:
-#                 if m.product_id.product_tmpl_id.categ_id.enforce_qty_1 and m.product_uom_qty > 1.0:
-#                     for qty in range(0, int(m.product_uom_qty - 1)):
-#                         default = {'product_uom_qty': 1.0, 'product_uos_qty': 1.0}
-#                         move_line = self.pool.get('stock.move').copy(cr, uid, m.id, default=default, context=context)
-#                     self.pool.get('stock.move').write(cr, uid, [m.id], {'product_uom_qty': 1.0, 'product_uos_qty': 1.0}, context=context)
-#             self.write(cr, uid, [pick.id], {'need_auto_split': False}, context=context)
-#         return True
-
-#     def _need_auto_split(self, cr, uid, ids, name, arg, context=None):
-#         res = {}
-#         for pick in self.browse(cr, uid, ids, context=context):
-#             res[pick.id] = False
-#             for m in pick.move_lines:
-#                 if m.product_id.product_tmpl_id.categ_id.enforce_qty_1 and m.product_uom_qty > 1.0:
-#                     res[pick.id] = True
-#         return res
-# 
-#     _columns = {
-#         'need_auto_split': fields.function(_need_auto_split, string='Need Auto Split?', 
-#             type='boolean',
-#             store={
-#                 'stock.picking': (lambda self, cr, uid, ids, c={}: ids, [], 10),
-#                 },
-#             ),    
-#     }
-#     _defaults = {
-#         'need_auto_split': True,
-#     }

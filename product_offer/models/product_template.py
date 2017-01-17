@@ -3,7 +3,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from openerp import models, fields, api
-from openerp.addons.decimal_precision import decimal_precision as dp
+# from openerp.addons.decimal_precision import decimal_precision as dp
 
 
 class ProductTemplate(models.Model):
@@ -28,6 +28,9 @@ class ProductTemplate(models.Model):
     qty_overseas = fields.Integer(
         string="Quantity Overseas",
         compute="_get_qty_info",
+    )
+    last_in_date = fields.Datetime(
+        string="Last Incoming Date",
     )
 
 
