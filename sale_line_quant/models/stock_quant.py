@@ -72,6 +72,7 @@ class stock_quant(osv.osv):
         )
     }
 
+
     def _quant_create(self, cr, uid, qty, move, lot_id=False, owner_id=False,
                       src_package_id=False, dest_package_id=False,
                       force_location_from=False, force_location_to=False,
