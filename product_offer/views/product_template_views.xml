@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data>
+
+    <!-- Products: Internal -->
     <record id="product_template_internal_kanban_view" model="ir.ui.view">
         <field name="name">Product.template.product.kanban</field>
         <field name="model">product.template</field>
         <field name="arch" type="xml">
             <kanban>
-                <field name="image_small"/>
-                <field name="lst_price"/>
                 <field name="type"/>
-                <field name="is_product_variant"/>
-                <field name="product_variant_count"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_vignette oe_semantic_html_override">
@@ -39,6 +37,18 @@
         </field>
     </record>
 
+    <record id="product_template_search_view" model="ir.ui.view">
+        <field name="name">product.template.search</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_search_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_variant_ids']" position="before">
+                <separator/>
+                <filter name="received_two_weeks" string="Received in the Last Two Weeks" domain="[('last_in_date','&lt;=',((context_today() - relativedelta(weeks=-1)).strftime('%%Y-%%m-%%d')))]"/>
+            </xpath>
+        </field>
+    </record>
+
     <record id="product_template_internal_action" model="ir.actions.act_window">
         <field name="name">Products: Internal</field>
         <field name="type">ir.actions.act_window</field>
@@ -52,6 +62,56 @@
     <menuitem action="product_template_internal_action"
         id="menu_product_template__internal_action"
         parent="base.menu_product" sequence="2" />
+
+
+    <!-- Product Offer (EN): Availability -->
+    <record id="product_template_en_availability_kanban_view" model="ir.ui.view">
+        <field name="name">Product.template.product.kanban</field>
+        <field name="model">product.template</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="type"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_vignette oe_semantic_html_override">
+                            <a type="open"><img t-att-src="kanban_image('product.template', 'image_small', record.id.value)" class="oe_kanban_image"/></a>
+                            <div class="oe_kanban_details">
+                                <h4>
+                                    <a type="open">
+                                         <span t-if="record.default_code.value">
+                                             [<field name="default_code"/>]
+                                          </span>
+                                         <field name="name"/>
+                                    </a>
+                                </h4>
+                                <div name="tags"/>
+                                <ul>
+                                    <li>HK Retail: <field name="list_price_integer"></field></li>
+                                    <li t-if="record.type.raw_value != 'service'">HK Stock: <field name="qty_local_atp"/> <field name="uom_id"/></li>
+                                    <li t-if="record.type.raw_value != 'service'">Reserved: <field name="qty_reserved"/> <field name="uom_id"/></li>
+                                    <li t-if="record.type.raw_value != 'service'">Overseas Stock: <field name="qty_overseas"/> <field name="uom_id"/></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="product_template_en_availability_action" model="ir.actions.act_window">
+        <field name="name">Product Offer (EN): Availability</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="product_template_en_availability_kanban_view"/>
+        <field name="context">{"search_default_filter_to_sell":1}</field>
+    </record>
+
+    <menuitem action="product_template_en_availability_action"
+        id="menu_product_template_en_availability_action"
+        parent="base.menu_product" sequence="3" />
 
 </data>
 </openerp>
