@@ -11,10 +11,8 @@ class StockQuant(models.Model):
 
     @api.model
     def _update_product_template(self, quant):
-        pt_obj = self.env['product.template']
-        pt_obj.browse([quant.product_id.product_tmpl_id.id]).write(
-            {'last_in_date': quant.in_date}
-        )
+        quant.product_id.product_tmpl_id.last_in_date = quant.in_date
+        return
 
     @api.v7
     def _quant_create(self, cr, uid, qty, move, lot_id=False, owner_id=False,
