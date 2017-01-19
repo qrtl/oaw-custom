@@ -10,7 +10,7 @@
     'depends': [
         'product',
         'sale_stock',
-        'sale_line_quant',
+        'sale_line_quant_extended',
         'supplier_stock',
     ],
     'description': """
@@ -18,5 +18,6 @@
     'data': [
         'views/product_template_views.xml',
     ],
+    'post_init_hook': '_update_prod_tmpl_fields',
     'installable': True,
 }
