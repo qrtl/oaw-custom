@@ -27,8 +27,8 @@ class StockMove(models.Model):
             prod_tmpl.qty_local_atp = int(prod_tmpl.qty_available + qty_in)
         return
 
-    @api.v7
-    def write(self, cr, uid, ids, vals, context=None):
-        res = super(StockMove, self).write(cr, uid, ids, vals, context=None)
-        self._update_prod_tmpl_local_atp(cr, uid, ids)
+    @api.multi
+    def write(self, vals):
+        res = super(StockMove, self).write(vals)
+        self._update_prod_tmpl_local_atp()
         return res
