@@ -46,6 +46,7 @@
                 <separator/>
                 <filter name="stock_available_oaw" string="Available (Local/Overseas)" domain="['|',('local_stock','=','Yes'),('overseas_stock','=','Yes')]"/>
                 <filter name="received_two_weeks" string="Received in the Last Two Weeks" domain="[('last_in_date','&lt;=',((context_today() - relativedelta(weeks=-1)).strftime('%%Y-%%m-%%d')))]"/>
+                <field name="supplier_id"/>
             </xpath>
         </field>
     </record>

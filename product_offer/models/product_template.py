@@ -37,6 +37,12 @@ class ProductTemplate(models.Model):
         compute="_get_overseas_stock",
         store=True,
     )
+    supplier_id = fields.Many2one(  # for search purpose
+        comodel_name="res.partner",
+        string='Supplier',
+        related='seller_ids.name',
+        store=True,
+    )
 
 
     @api.multi
