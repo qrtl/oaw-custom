@@ -17,7 +17,7 @@ class SupplierStock(models.Model):
         required=True,
     )
     partner_loc_id = fields.Many2one(
-        comodel_name='res.country',
+        comodel_name='supplier.location',
         string='Supplier Location',
         required=True,
     )
@@ -61,3 +61,11 @@ class SupplierStock(models.Model):
         self.price_subtotal = self.price_unit * self.quantity
         if self.currency_id:
             self.price_subtotal = self.currency_id.round(self.price_subtotal)
+
+    @api.one
+    @api.onchange('partner_loc_id')
+    def _onchange_partner_loc_id(self):
+        if not self.partner_loc_id:
+            self.currency_id = False
+        else:
+            self.currency_id = self.partner_loc_id.currency_id
