@@ -53,7 +53,22 @@ class SupplierStock(models.Model):
         readonly=True,
         compute='_compute_price'
     )
+    price_unit_base = fields.Float(
+        string='Unit Price (Base)',
+        digits=dp.get_precision('Account'),
+        compute='_compute_price_base'
+    )
 
+
+    @api.multi
+    def _compute_price_base(self):
+        curr_obj = self.env['res.currency']
+        company_obj = self.env['res.company']
+        company_id = self._context.get('company_id', False)
+        company_curr_id = company_obj.browse([company_id])[0].currency_id.id
+        for rec in self:
+            rec.price_unit_base = curr_obj.compute(rec.currency_id.id, company_curr_id, rec.price_unit)
+        return
 
     @api.one
     @api.depends('price_unit', 'quantity', 'currency_id')
