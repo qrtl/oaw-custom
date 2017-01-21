@@ -7,9 +7,7 @@
             <field name="arch" type="xml">
                 <tree string="Product List Price Update" editable="top" create="false" delete="false">
                     <field name="name" readonly="1"/>
-                    <field name="categ_id" readonly="1"/>
-                    <field name="type" readonly="1"/>
-                    <field name="state" readonly="1"/>
+                    <field name="default_code" readonly="1"/>
                     <field name="list_price" string="List Price"/>
                     <field name="qty_available"/>
                     <field name="virtual_available"/>
