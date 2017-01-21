@@ -3,6 +3,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from openerp import models, fields, api
+import openerp.addons.decimal_precision as dp
 
 
 class ProductTemplate(models.Model):
@@ -43,13 +44,44 @@ class ProductTemplate(models.Model):
         related='seller_ids.name',
         store=True,
     )
+    net_price = fields.Float(
+        string="Net Price",
+        digits=dp.get_precision('Product Price'),
+    )
+    net_price_integer = fields.Integer(  # for kanban presentation
+        string="Net Price",
+        compute="_get_net_price_integer",
+        store=True,
+    )
+    discount = fields.Float(
+        string="Discount (%)",
+        digits=dp.get_precision('Discount'),
+        compute='_get_discount',
+        readonly=True,
+    )
 
+
+    @api.multi
+    @api.depends('list_price', 'net_price')
+    def _get_discount(self):
+        for pt in self:
+            if not pt.list_price:
+                pt.discount = 0.0
+            else:
+                pt.discount = (1 - pt.net_price / pt.list_price) * 100
+        return
 
     @api.multi
     @api.depends('list_price')
     def _get_list_price_integer(self):
         for pt in self:
             pt.list_price_integer = int(pt.list_price)
+
+    @api.multi
+    @api.depends('net_price')
+    def _get_net_price_integer(self):
+        for pt in self:
+            pt.net_price_integer = int(pt.net_price)
 
     @api.multi
     @api.depends('qty_local_atp', 'qty_reserved')
