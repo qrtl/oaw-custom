@@ -95,3 +95,26 @@ def _update_prod_tmpl_fields(cr, registry):
     WHERE pt.id = subquery.pt_id
     '''
     cr.execute(sql)
+
+    # update last_in_date
+    sql = '''
+    UPDATE
+        product_template pt
+    SET
+        last_in_date = subquery.date
+    FROM (
+        SELECT DISTINCT ON (pp.product_tmpl_id)
+            pp.product_tmpl_id AS pt_id,
+            sm.date
+        FROM
+            stock_move sm
+            JOIN product_product pp ON sm.product_id = pp.id
+        WHERE
+            sm.state = 'done'
+            AND sm.code = 'incoming'
+        ORDER BY
+            pp.product_tmpl_id, sm.date DESC
+    ) AS subquery
+    WHERE pt.id = subquery.pt_id
+    '''
+    cr.execute(sql)
