@@ -8,6 +8,7 @@
     <field name="arch" type="xml">
         <form>
             <group>
+                <field name="cny_rate"/>
                 <field name="new_stock_days"/>
                 <field name="stock_threshold_date"/>
                 <field name="sales_threshold_date"/>

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2016 Rooms For (Hong Kong) Limited T/A OSCG
+# Copyright 2016-2017 Rooms For (Hong Kong) Limited T/A OSCG
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from datetime import datetime
@@ -14,7 +14,7 @@ class OfferReportWizard(models.TransientModel):
     new_stock_days = fields.Integer(
         required=True,
         string='New Stock Days',
-        default=1,
+        default=3,
     )
     stock_threshold_date = fields.Date(
         required=True,
@@ -28,6 +28,18 @@ class OfferReportWizard(models.TransientModel):
         default=fields.Date.to_string(
             datetime.now() - relativedelta(days=10)),
     )
+    cny_rate = fields.Float(
+        required=True,
+        digits=(12, 6),
+        string='CNY Rate',
+        default=lambda self: self._get_cny_rate(),
+    )
+
+
+    def _get_cny_rate(self):
+        curr_obj = self.env['res.currency']
+        cny_curr = curr_obj.search([('name', '=', 'CNY')])
+        return cny_curr.rate_silent
 
     @api.multi
     def action_export_xlsx(self):
@@ -42,4 +54,5 @@ class OfferReportWizard(models.TransientModel):
             'new_stock_days': self.new_stock_days,
             'stock_threshold_date': self.stock_threshold_date,
             'sales_threshold_date': self.sales_threshold_date,
+            'cny_rate': self.cny_rate,
         }

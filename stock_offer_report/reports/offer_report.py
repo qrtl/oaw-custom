@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2016 Rooms For (Hong Kong) Limited T/A OSCG
+# Copyright 2016-2017 Rooms For (Hong Kong) Limited T/A OSCG
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from openerp import api, models, fields, _
@@ -26,6 +26,7 @@ class OfferReport(models.TransientModel):
     current_date = fields.Date(
         default=fields.Date.context_today
     )
+    cny_rate = fields.Float()
 
     # Data fields, used to browse report data
     section_ids = fields.One2many(
@@ -100,10 +101,15 @@ class OfferReportLine(models.TransientModel):
     qty = fields.Integer()
     image_small = fields.Binary()
     list_price = fields.Float()
-    margin_percent = fields.Float()
     owner_name = fields.Char()
     unit_cost = fields.Float(digits=(16, 2))
+    cost_discount = fields.Float()
     status = fields.Char()
+    net_price = fields.Float()
+    net_price_cny = fields.Float()
+    net_profit = fields.Float()
+    profit_percent = fields.Float()
+    sale_discount = fields.Float()
     lot = fields.Char()
     remark = fields.Char()  # status for part 1, lot for part 2
     incoming_date = fields.Datetime()
@@ -120,7 +126,6 @@ class StockOfferReportCompute(models.TransientModel):
     _inherit = 'offer.report'
 
     @api.multi
-    # def print_report(self, xlsx_report=False):
     def print_report(self):
         self.ensure_one()
         self.compute_data_for_report()
@@ -202,6 +207,8 @@ INSERT INTO
     lot_id,
     lot,
     unit_cost,
+    net_price,
+    net_profit,
     incoming_date
     )
         """
@@ -231,6 +238,8 @@ SELECT
     l.id,
     l.name,
     q.cost,
+    pt.net_price,
+    pt.net_price - q.cost,
     q.in_date
 FROM
     stock_quant q
@@ -261,7 +270,7 @@ WHERE
     (
     loc.usage = 'internal'
     AND (
-        reservation_id is not null
+        reservation_id IS NOT NULL
         OR sale_id is not null
         )
     )
@@ -294,6 +303,7 @@ ORDER BY
         locs = self.env['stock.location'].search([
             ('usage', '=', 'internal'),
             ('active', '=', True),
+            ('is_repair_location', '=', False),
         ])
         lines = model.search([('section_id', '=', section.id)])
         for line in lines:
@@ -304,10 +314,23 @@ ORDER BY
                     ('location_id', 'in', [loc.id for loc in locs]),
                 ])
             if line.list_price:
-                margin_percent = 1 - (line.unit_cost / line.list_price)
+                cost_discount = 1 - (line.unit_cost / line.list_price)
+                sale_discount = 1 - (line.net_price / line.list_price)
             else:
-                margin_percent = 0
-            line.write({'qty': qty, 'margin_percent': margin_percent})
+                cost_discount = 0.0
+                sale_discount = 0.0
+            if line.unit_cost:
+                profit_percent = line.net_profit / line.unit_cost
+            else:
+                profit_percent = 9.9999
+            net_price_cny = line.net_price * line.report_id.cny_rate
+            line.write({
+                'qty': qty,
+                'cost_discount': cost_discount,
+                'sale_discount': sale_discount,
+                'profit_percent': profit_percent,
+                'net_price_cny': net_price_cny,
+            })
 
     def _update_owner(self, model, section):
         lines = model.search([('section_id', '=', section.id)])
@@ -393,15 +416,25 @@ class StockOfferXslx(stock_abstract_report_xlsx.StockAbstractReportXslx):
                 'type': 'amount', 'width': 12},
             6: {'header': _('Unit Cost'), 'field': 'unit_cost',
                 'type': 'amount', 'width': 12},
-            7: {'header': _('Margin %'), 'field': 'margin_percent',
-                'type': 'percent', 'width': 8},
-            8: {'header': _('Owner/Contact Ref.'), 'field': 'owner_name',
-                'width': 18},
-            9: {'header': _('Incoming Date'), 'field': 'move_date',
-                'width': 20},
-            10: {'header': _('Days in Stock'), 'field': 'stock_days',
-                'type': 'number', 'width': 10},
-            11: {'header': _('Status'), 'field': 'remark', 'width': 20},
+            7: {'header': _('Cost Discount'), 'field': 'cost_discount',
+                'type': 'percent', 'width': 9},
+            8: {'header': _('Net Profit'), 'field': 'net_profit',
+                'type': 'amount', 'width': 12},
+            9: {'header': _('Profit %'), 'field': 'profit_percent',
+                'type': 'percent', 'width': 9},
+            10: {'header': _('Owner/Contact Ref.'), 'field': 'owner_name',
+                 'width': 18},
+            11: {'header': _('Incoming Date'), 'field': 'move_date',
+                 'width': 20},
+            12: {'header': _('Days in Stock'), 'field': 'stock_days',
+                 'type': 'number', 'width': 10},
+            13: {'header': _('Status'), 'field': 'remark', 'width': 20},
+            14: {'header': _('Sales Discount'), 'field': 'sale_discount',
+                 'type': 'percent', 'width': 9},
+            15: {'header': _('Sales Price'), 'field': 'net_price',
+                 'type': 'amount', 'width': 12},
+            16: {'header': _('Sales Price (CNY)'), 'field': 'net_price_cny',
+                 'type': 'amount', 'width': 12},
         }
 
     def _get_report_filters(self, report):
@@ -410,6 +443,7 @@ class StockOfferXslx(stock_abstract_report_xlsx.StockAbstractReportXslx):
             [_('New Stock Days'), report.new_stock_days],
             [_('Stock Threshold Date'), report.stock_threshold_date],
             [_('Sales Threshold Date'), report.sales_threshold_date],
+            [_('CNY Rate'), report.cny_rate],
         ]
 
     def _get_col_count_filter_name(self):
@@ -420,7 +454,7 @@ class StockOfferXslx(stock_abstract_report_xlsx.StockAbstractReportXslx):
 
     def _generate_report_content(self, workbook, report):
         title_vals = {
-            1: 'Part 1. In Stock',
+            1: 'Part 1. HK Stock',
             2: 'Part 2. Sold/Reserved',
         }
         for section in report.section_ids:
