@@ -22,12 +22,6 @@ class OfferReportWizard(models.TransientModel):
         default=fields.Date.to_string(
             datetime.now() - relativedelta(days=90)),
     )
-    sales_threshold_date = fields.Date(
-        required=True,
-        string='Sales Threshold Date',
-        default=fields.Date.to_string(
-            datetime.now() - relativedelta(days=10)),
-    )
     cny_rate = fields.Float(
         required=True,
         digits=(12, 6),
@@ -53,6 +47,5 @@ class OfferReportWizard(models.TransientModel):
         return {
             'new_stock_days': self.new_stock_days,
             'stock_threshold_date': self.stock_threshold_date,
-            'sales_threshold_date': self.sales_threshold_date,
             'cny_rate': self.cny_rate,
         }
