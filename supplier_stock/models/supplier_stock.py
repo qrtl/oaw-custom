@@ -60,16 +60,6 @@ class SupplierStock(models.Model):
     )
 
 
-    @api.multi
-    def _compute_price_base(self):
-        curr_obj = self.env['res.currency']
-        company_obj = self.env['res.company']
-        company_id = self._context.get('company_id', False)
-        company_curr_id = company_obj.browse([company_id])[0].currency_id.id
-        for rec in self:
-            rec.price_unit_base = curr_obj.compute(rec.currency_id.id, company_curr_id, rec.price_unit)
-        return
-
     @api.one
     @api.depends('price_unit', 'quantity', 'currency_id')
     def _compute_price(self):
@@ -84,3 +74,12 @@ class SupplierStock(models.Model):
             self.currency_id = False
         else:
             self.currency_id = self.partner_loc_id.currency_id
+
+    @api.multi
+    def _compute_price_base(self):
+        curr_obj = self.env['res.currency']
+        company_curr = self.env.user.company_id.currency_id
+        for rec in self:
+            rec.price_unit_base = curr_obj.browse(rec.currency_id.id).compute(
+                rec.price_unit, company_curr)
+        return
