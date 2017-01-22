@@ -6,12 +6,12 @@
 
 
 def _update_prod_tmpl_fields(cr, registry):
-    # update qty_local_qtp with QOH first
+    # update qty_local_stock with QOH first
     sql = '''
     UPDATE
         product_template pt
     SET
-        qty_local_atp = subquery.qoh
+        qty_local_stock = subquery.qoh
     FROM (
         SELECT
             pp.product_tmpl_id AS pt_id,
@@ -29,12 +29,12 @@ def _update_prod_tmpl_fields(cr, registry):
     '''
     cr.execute(sql)
 
-    # qty_local_atp = QOH + incoming qty
+    # qty_local_stock = QOH + incoming qty
     sql = '''
     UPDATE
         product_template pt
     SET
-        qty_local_atp = qty_local_atp + subquery.in_qty
+        qty_local_stock = qty_local_stock + subquery.in_qty
     FROM (
         SELECT
             pp.product_tmpl_id AS pt_id,
@@ -52,12 +52,13 @@ def _update_prod_tmpl_fields(cr, registry):
     '''
     cr.execute(sql)
 
-    # update qty_reserved
+    # update qty_reserved and qty_local_atp
     sql = '''
     UPDATE
         product_template pt
     SET
-        qty_reserved = subquery.qty_rsvd
+        qty_reserved = subquery.qty_rsvd,
+        qty_local_atp = pt.qty_local_stock - subquery.qty_rsvd
     FROM (
         SELECT
             pp.product_tmpl_id AS pt_id,
@@ -91,6 +92,29 @@ def _update_prod_tmpl_fields(cr, registry):
             JOIN product_product pp ON ss.product_id = pp.id
         GROUP BY
             pp.product_tmpl_id
+    ) AS subquery
+    WHERE pt.id = subquery.pt_id
+    '''
+    cr.execute(sql)
+
+    # update last_in_date
+    sql = '''
+    UPDATE
+        product_template pt
+    SET
+        last_in_date = subquery.date
+    FROM (
+        SELECT DISTINCT ON (pp.product_tmpl_id)
+            pp.product_tmpl_id AS pt_id,
+            sm.date
+        FROM
+            stock_move sm
+            JOIN product_product pp ON sm.product_id = pp.id
+        WHERE
+            sm.state = 'done'
+            AND sm.code = 'incoming'
+        ORDER BY
+            pp.product_tmpl_id, sm.date DESC
     ) AS subquery
     WHERE pt.id = subquery.pt_id
     '''

@@ -15,28 +15,41 @@ class ProductTemplate(models.Model):
         string="Sale Price",
         compute="_get_list_price_integer",
         store=True,
+        readonly=True,
     )
-    qty_local_atp = fields.Integer(
-        string="Quantity Local ATP",
+    qty_local_stock = fields.Integer(
+        string="Quantity Local Stock",
+        readonly=True,
     )
     qty_reserved = fields.Integer(
         string="Quantity Reserved",
+        readonly=True,
     )
     qty_overseas = fields.Integer(
         string="Quantity Overseas",
+        readonly=True,
     )
     last_in_date = fields.Datetime(
         string="Last Incoming Date",
+        readonly=True,
     )
     local_stock = fields.Char(
         string="Local Stock",
         compute="_get_local_stock",
         store=True,
+        readonly=True,
+    )
+    qty_local_atp = fields.Integer(
+        string="Quantity Local ATP",
+        compute="_get_local_stock",
+        store=True,
+        readonly=True,
     )
     overseas_stock = fields.Char(
         string="Overseas Stock",
         compute="_get_overseas_stock",
         store=True,
+        readonly=True,
     )
     supplier_id = fields.Many2one(  # for search purpose
         comodel_name="res.partner",
@@ -52,6 +65,7 @@ class ProductTemplate(models.Model):
         string="Net Price",
         compute="_get_net_price_integer",
         store=True,
+        readonly=True,
     )
     discount = fields.Float(
         string="Discount (%)",
@@ -84,14 +98,15 @@ class ProductTemplate(models.Model):
             pt.net_price_integer = int(pt.net_price)
 
     @api.multi
-    @api.depends('qty_local_atp', 'qty_reserved')
+    @api.depends('qty_local_stock', 'qty_reserved')
     def _get_local_stock(self):
         for pt in self:
-            local_stock_qty = pt.qty_local_atp - pt.qty_reserved
-            if local_stock_qty > 0:
+            local_atp_qty = pt.qty_local_stock - pt.qty_reserved
+            if local_atp_qty > 0:
                 pt.local_stock = 'Yes'
             else:
                 pt.local_stock = '/'
+            pt.qty_local_atp = local_atp_qty
 
     @api.multi
     @api.depends('qty_overseas')
