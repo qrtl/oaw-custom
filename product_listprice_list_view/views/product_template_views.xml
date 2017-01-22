@@ -7,12 +7,15 @@
             <field name="arch" type="xml">
                 <tree string="Product List Price Update" editable="top" create="false" delete="false">
                     <field name="name" readonly="1"/>
-                    <field name="categ_id" readonly="1"/>
-                    <field name="type" readonly="1"/>
-                    <field name="state" readonly="1"/>
+                    <field name="default_code" readonly="1"/>
+                    <field name="stock_cost"/>
+                    <field name="net_price"/>
+                    <field name="stock_location"/>
+                    <field name="last_in_date"/>
                     <field name="list_price" string="List Price"/>
-                    <field name="qty_available"/>
-                    <field name="virtual_available"/>
+                    <field name="qty_reserved"/>
+                    <field name="qty_local_atp"/>
+                    <field name="qty_overseas"/>
                  </tree>
             </field>
         </record>
