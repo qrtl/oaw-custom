@@ -11,9 +11,11 @@
                     <field name="stock_cost"/>
                     <field name="net_price"/>
                     <field name="stock_location"/>
+                    <field name="last_in_date"/>
                     <field name="list_price" string="List Price"/>
-                    <field name="qty_available"/>
-                    <field name="virtual_available"/>
+                    <field name="qty_reserved"/>
+                    <field name="qty_local_atp"/>
+                    <field name="qty_overseas"/>
                  </tree>
             </field>
         </record>
