@@ -3,16 +3,20 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 {
     'name': 'Product List Price Update List View',
-    'version': '8.0.1.0.1',
+    'version': '8.0.1.1.0',
     'author': 'Rooms For (Hong Kong) Ltd T/A OSCG',
-    'website': 'http://www.openerp-asia.net',
+    'website': 'https://www.odoo-asia.com',
     'category': 'Product',
-    'depends': ["product", "sale", "stock"],
+    'depends': [
+        "sale",
+        "stock",
+        "product_offer",
+    ],
     'description': """
 * Adds a menu item 'Product List Price' to facilitate list price update
     """,
     'data': [
-        'product_view.xml',
+        'views/product_template_views.xml',
     ],
     'installable': True,
 }
