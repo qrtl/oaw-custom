@@ -8,6 +8,9 @@
                 <tree string="Product List Price Update" editable="top" create="false" delete="false">
                     <field name="name" readonly="1"/>
                     <field name="default_code" readonly="1"/>
+                    <field name="stock_cost"/>
+                    <field name="net_price"/>
+                    <field name="stock_location"/>
                     <field name="list_price" string="List Price"/>
                     <field name="qty_available"/>
                     <field name="virtual_available"/>
