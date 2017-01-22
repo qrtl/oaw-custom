@@ -39,7 +39,7 @@
                                 <div name="tags"/>
                                 <ul>
                                     <li>HK Retail: <field name="list_price_integer"></field></li>
-                                    <li t-if="record.type.raw_value != 'service'">HK Stock: <field name="qty_local_atp"/> <field name="uom_id"/></li>
+                                    <li t-if="record.type.raw_value != 'service'">HK Stock: <field name="qty_local_stock"/> <field name="uom_id"/></li>
                                     <li t-if="record.type.raw_value != 'service'">Reserved: <field name="qty_reserved"/> <field name="uom_id"/></li>
                                     <li t-if="record.type.raw_value != 'service'">Overseas Stock: <field name="qty_overseas"/> <field name="uom_id"/></li>
                                 </ul>
