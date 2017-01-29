@@ -148,7 +148,8 @@ class StockOfferReportCompute(models.TransientModel):
                 self._update_overseas_stock_fields(model, section)
             self._update_qty(model, section)
             self._update_owner(model, section)
-            self._update_age(model, section)
+            if section.code == 1:
+                self._update_age(model, section)
             self._update_remark(model, section)
         self.refresh()
 
@@ -286,6 +287,7 @@ class StockOfferReportCompute(models.TransientModel):
                 'unit_cost': rec.price_unit_base,
                 'placeholder1': rec.partner_loc_id.name,
                 'owner_id': rec.partner_id.id,
+                'stock_days': rec.supplier_lead_time,
             })
 
     def _update_qty(self, model, section):
@@ -336,26 +338,13 @@ class StockOfferReportCompute(models.TransientModel):
                 owner_name = line.owner_id.name
             line.owner_name = owner_name
 
+    # this method is for section code 1
     def _update_age(self, model, section):
         lines = model.search([('section_id', '=', section.id)])
         for line in lines:
             out_date = fields.Datetime.now()
             if section.code == 1:
                 move_date = line.placeholder1
-            # elif section.code == 2:
-            #     locs = self.env['stock.location'].search([
-            #         ('usage', '=', 'customer'),
-            #         ('active', '=', True),
-            #     ])
-            #     move = self.env['stock.move'].search([
-            #         ('quant_lot_id', '=', line.lot_id.id),
-            #         ('picking_type_code', '=', 'outgoing'),
-            #         ('location_dest_id', 'in', [loc.id for loc in locs]),
-            #         ('state', '=', 'done'),
-            #     ], order='date desc', limit=1)
-            #     if move:
-            #         out_date = move.date
-            #     move_date = out_date
                 stock_days = (
                     fields.Datetime.from_string(out_date) - \
                     fields.Datetime.from_string(line.placeholder1)
@@ -374,7 +363,9 @@ class StockOfferReportCompute(models.TransientModel):
                     status = 'New Stock!'
                 else:
                     status = 'In Stock'
-                line.write({'remark': status})
+            if section.code == 2:
+                status = 'Overseas Stock'
+            line.remark = status
 
 
 class StockOfferXslx(stock_abstract_report_xlsx.StockAbstractReportXslx):
@@ -399,23 +390,21 @@ class StockOfferXslx(stock_abstract_report_xlsx.StockAbstractReportXslx):
                 'width': 5},
             5: {'header': _('HK Retail'), 'field': 'list_price',
                 'type': 'amount', 'width': 12},
-            6: {'header': _('Unit Cost'), 'field': 'unit_cost',
-                'type': 'amount', 'width': 12},
-            7: {'header': _('Cost Discount'), 'field': 'cost_discount',
-                'type': 'percent', 'width': 9},
-            8: {'header': _('Net Profit'), 'field': 'net_profit',
-                'type': 'amount', 'width': 12},
-            9: {'header': _('Profit %'), 'field': 'profit_percent',
-                'type': 'percent', 'width': 9},
-            10: {'header': _('Owner/Contact Ref.'), 'field': 'owner_name',
+            6: {'header': _('Owner/Contact Ref.'), 'field': 'owner_name',
                  'width': 18},
-            # 11: {'header': _('Incoming Date'), 'field': 'move_date',
-            #      'width': 20},
+            7: {'header': _('Unit Cost'), 'field': 'unit_cost',
+                'type': 'amount', 'width': 12},
+            8: {'header': _('Cost Discount'), 'field': 'cost_discount',
+                'type': 'percent', 'width': 9},
+            9: {'header': _('Net Profit'), 'field': 'net_profit',
+                'type': 'amount', 'width': 12},
+            10: {'header': _('Profit %'), 'field': 'profit_percent',
+                'type': 'percent', 'width': 9},
             11: {'header': _('Incoming Date'), 'field': 'placeholder1',
-                 'width': 20},
+                 'width': 18},
             12: {'header': _('Days in Stock'), 'field': 'stock_days',
                  'type': 'number', 'width': 10},
-            13: {'header': _('Status'), 'field': 'remark', 'width': 20},
+            13: {'header': _('Status'), 'field': 'remark', 'width': 15},
             14: {'header': _('Sales Discount'), 'field': 'sale_discount',
                  'type': 'percent', 'width': 9},
             15: {'header': _('Sales Price'), 'field': 'net_price',
@@ -451,8 +440,8 @@ class StockOfferXslx(stock_abstract_report_xlsx.StockAbstractReportXslx):
             # adjust array header
             elif section.code == 2:
                 adj_col = {
-                    9: _('Outgoing/Current Date'),
-                    11: _('Case No. & Status')
+                    11: _('Location'),
+                    12: _('Delivery Days'),
                 }
                 self.write_array_header(adj_col)
 
