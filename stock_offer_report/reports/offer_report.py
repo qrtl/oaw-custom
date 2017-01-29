@@ -100,7 +100,7 @@ class OfferReportLine(models.TransientModel):
     status = fields.Char()
     net_price = fields.Float()
     net_price_cny = fields.Float()
-    net_profit = fields.Float()
+    net_profit = fields.Float()  # net_price - unit_cost
     profit_percent = fields.Float()
     sale_discount = fields.Float()
     remark = fields.Char()  # status for part 1, lot for part 2
@@ -110,7 +110,7 @@ class OfferReportLine(models.TransientModel):
     outgoing_date = fields.Datetime()
     move_date = fields.Datetime()  # for report presentation
     stock_days = fields.Integer()
-    supp_loc_name = fields.Char()
+    # supp_loc_name = fields.Char()
 
 
 class StockOfferReportCompute(models.TransientModel):
@@ -144,6 +144,8 @@ class StockOfferReportCompute(models.TransientModel):
             [('report_id', '=', self.id)])
         for section in sections:
             self._inject_quant_values(section)
+            if section.code == 2:
+                self._update_overseas_stock_fields(model, section)
             self._update_qty(model, section)
             self._update_owner(model, section)
             self._update_age(model, section)
@@ -179,7 +181,6 @@ class StockOfferReportCompute(models.TransientModel):
                 list_price,
                 unit_cost,
                 net_price,
-                net_profit,
                 placeholder1
                 )
             SELECT DISTINCT ON (p.name_template)
@@ -197,7 +198,6 @@ class StockOfferReportCompute(models.TransientModel):
                 pt.list_price,
                 q.cost,
                 pt.net_price,
-                pt.net_price - q.cost,
                 q.in_date
             FROM
                 stock_quant q
@@ -238,8 +238,7 @@ class StockOfferReportCompute(models.TransientModel):
                 product_name,
                 image_small,
                 list_price,
-                net_price,
-                placeholder1
+                net_price
                 )
             SELECT DISTINCT ON (p.name_template)
                 %s AS report_id,
@@ -254,8 +253,7 @@ class StockOfferReportCompute(models.TransientModel):
                 p.name_template,
                 pt.image_small,
                 pt.list_price,
-                pt.net_price,
-                sl.name
+                pt.net_price
             FROM
                 supplier_stock ss
             INNER JOIN
@@ -264,8 +262,6 @@ class StockOfferReportCompute(models.TransientModel):
                 product_template pt ON p.product_tmpl_id = pt.id
             INNER JOIN
                 product_category pc ON pt.categ_id = pc.id
-            INNER JOIN
-                supplier_location sl ON ss.partner_loc_id = sl.id
             """
             query_params = (
                 self.id,
@@ -274,8 +270,25 @@ class StockOfferReportCompute(models.TransientModel):
             )
         self.env.cr.execute(query, query_params)
 
+    # this method is for sction code 2
+    def _update_overseas_stock_fields(self, model, section):
+        lines = model.search([('section_id', '=', section.id)])
+        ss_obj = self.env['supplier.stock']
+        for line in lines:
+            lowest_cost = 0.0
+            ss_recs = ss_obj.search([('product_id', '=', line.product_id.id)])
+            for r in ss_recs:
+                if not lowest_cost or r.price_unit_base < lowest_cost:
+                    lowest_cost = r.price_unit_base
+                    r_id = r.id
+            rec = ss_obj.browse(r_id)
+            line.write({
+                'unit_cost': rec.price_unit_base,
+                'placeholder1': rec.partner_loc_id.name,
+                'owner_id': rec.partner_id.id,
+            })
+
     def _update_qty(self, model, section):
-        quant_obj = self.env['stock.quant']
         locs = self.env['stock.location'].search([
             ('usage', '=', 'internal'),
             ('active', '=', True),
@@ -285,9 +298,13 @@ class StockOfferReportCompute(models.TransientModel):
         for line in lines:
             qty = 1
             if section.code == 1:
-                qty = quant_obj.search_count([
+                qty = self.env['stock.quant'].search_count([
                     ('product_id', '=', line.product_id.id),
                     ('location_id', 'in', [loc.id for loc in locs]),
+                ])
+            elif section.code == 2:
+                qty = self.env['supplier.stock'].search_count([
+                    ('product_id', '=', line.product_id.id),
                 ])
             if line.list_price:
                 cost_discount = 1 - (line.unit_cost / line.list_price)
@@ -295,8 +312,9 @@ class StockOfferReportCompute(models.TransientModel):
             else:
                 cost_discount = 0.0
                 sale_discount = 0.0
+            net_profit = line.net_price - line.unit_cost
             if line.unit_cost:
-                profit_percent = line.net_profit / line.unit_cost
+                profit_percent = net_profit / line.unit_cost
             else:
                 profit_percent = 9.9999
             net_price_cny = line.net_price * line.report_id.cny_rate
@@ -304,6 +322,7 @@ class StockOfferReportCompute(models.TransientModel):
                 'qty': qty,
                 'cost_discount': cost_discount,
                 'sale_discount': sale_discount,
+                'net_profit': net_profit,
                 'profit_percent': profit_percent,
                 'net_price_cny': net_price_cny,
             })
@@ -315,7 +334,7 @@ class StockOfferReportCompute(models.TransientModel):
                 owner_name = line.owner_id.ref
             else:
                 owner_name = line.owner_id.name
-            line.write({'owner_name': owner_name})
+            line.owner_name = owner_name
 
     def _update_age(self, model, section):
         lines = model.search([('section_id', '=', section.id)])
