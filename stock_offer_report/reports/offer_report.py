@@ -103,14 +103,11 @@ class OfferReportLine(models.TransientModel):
     net_profit = fields.Float()  # net_price - unit_cost
     profit_percent = fields.Float()
     sale_discount = fields.Float()
-    remark = fields.Char()  # status for part 1, lot for part 2
-    # incoming_date = fields.Datetime()
-    # incoming_date = fields.Char()
+    remark = fields.Char()  # to show status
     placeholder1 = fields.Char()
     outgoing_date = fields.Datetime()
     move_date = fields.Datetime()  # for report presentation
     stock_days = fields.Integer()
-    # supp_loc_name = fields.Char()
 
 
 class StockOfferReportCompute(models.TransientModel):
@@ -220,7 +217,7 @@ class StockOfferReportCompute(models.TransientModel):
                 self.id,
                 section.id,
                 self.env.uid,
-                section.report_id.stock_threshold_date,
+                section.report_id.stock_threshold_date or '1900-01-01',
             )
         if section.code == 2:
             query = """

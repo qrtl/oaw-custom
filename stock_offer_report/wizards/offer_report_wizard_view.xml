@@ -10,7 +10,8 @@
             <group>
                 <field name="cny_rate"/>
                 <field name="new_stock_days"/>
-                <field name="stock_threshold_date"/>
+                <field name="show_entire_stock"/>
+                <field name="stock_threshold_date" attrs="{'invisible':[('show_entire_stock','=',True)]}"/>
             </group>
             <footer>
                 <button name="action_export_xlsx"

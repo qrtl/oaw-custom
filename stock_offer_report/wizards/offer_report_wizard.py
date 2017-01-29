@@ -16,6 +16,10 @@ class OfferReportWizard(models.TransientModel):
         string='New Stock Days',
         default=3,
     )
+    show_entire_stock = fields.Boolean(
+        string='Show Entire Stock',
+        default=True,
+    )
     stock_threshold_date = fields.Date(
         required=True,
         string='Stock Threshold Date',
@@ -44,8 +48,12 @@ class OfferReportWizard(models.TransientModel):
 
     def _prepare_report_xlsx(self):
         self.ensure_one()
+        if self.show_entire_stock:
+            threshold_date = False
+        else:
+            threshold_date = self.stock_threshold_date
         return {
             'new_stock_days': self.new_stock_days,
-            'stock_threshold_date': self.stock_threshold_date,
+            'stock_threshold_date': threshold_date,
             'cny_rate': self.cny_rate,
         }
