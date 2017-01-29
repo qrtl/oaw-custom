@@ -380,37 +380,40 @@ class StockOfferXslx(stock_abstract_report_xlsx.StockAbstractReportXslx):
 
     def _get_report_columns(self, report):
         return {
-            0: {'header': _('Brand'), 'field': 'category_name', 'width': 20},
-            1: {'header': _('Image'), 'field': 'image_small',
+            0: {'header': _('Brand\n品牌'), 'field': 'category_name',
+                'width': 20},
+            1: {'header': _('Image\n图片'), 'field': 'image_small',
                 'type': 'image', 'width': 10},
-            2: {'header': _('Code'), 'field': 'product_code', 'width': 10},
-            3: {'header': _('Reference Name'), 'field': 'product_name',
+            2: {'header': _('Code\n代码'), 'field': 'product_code',
+                'width': 10},
+            3: {'header': _('Reference Name\n型号'), 'field': 'product_name',
                 'width': 30},
-            4: {'header': _('Qty'), 'field': 'qty', 'type': 'number',
+            4: {'header': _('Qty\n数量'), 'field': 'qty', 'type': 'number',
                 'width': 5},
-            5: {'header': _('HK Retail'), 'field': 'list_price',
+            5: {'header': _('HK Retail\n港币公价'), 'field': 'list_price',
                 'type': 'amount', 'width': 12},
-            6: {'header': _('Owner/Contact Ref.'), 'field': 'owner_name',
+            6: {'header': _('Owner/Contact Ref.\n货主'), 'field': 'owner_name',
                  'width': 18},
-            7: {'header': _('Unit Cost'), 'field': 'unit_cost',
+            7: {'header': _('Unit Cost\n港币来价'), 'field': 'unit_cost',
                 'type': 'amount', 'width': 12},
-            8: {'header': _('Cost Discount'), 'field': 'cost_discount',
-                'type': 'percent', 'width': 9},
-            9: {'header': _('Net Profit'), 'field': 'net_profit',
+            8: {'header': _('Cost Discount\n港币来价%'),
+                'field': 'cost_discount', 'type': 'percent', 'width': 9},
+            9: {'header': _('Net Profit\n利润'), 'field': 'net_profit',
                 'type': 'amount', 'width': 12},
-            10: {'header': _('Profit %'), 'field': 'profit_percent',
+            10: {'header': _('Profit %\n利润%'), 'field': 'profit_percent',
                 'type': 'percent', 'width': 9},
-            11: {'header': _('Incoming Date'), 'field': 'placeholder1',
-                 'width': 18},
-            12: {'header': _('Days in Stock'), 'field': 'stock_days',
+            11: {'header': _('Incoming Date\n入库时间'),
+                 'field': 'placeholder1', 'width': 18},
+            12: {'header': _('Days in Stock\n库存天数'), 'field': 'stock_days',
                  'type': 'number', 'width': 10},
-            13: {'header': _('Status'), 'field': 'remark', 'width': 15},
-            14: {'header': _('Sales Discount'), 'field': 'sale_discount',
-                 'type': 'percent', 'width': 9},
-            15: {'header': _('Sales Price'), 'field': 'net_price',
+            13: {'header': _('Status\n库存状态'), 'field': 'remark',
+                 'width': 15},
+            14: {'header': _('Sales Discount\n港币扣点'),
+                 'field': 'sale_discount', 'type': 'percent', 'width': 9},
+            15: {'header': _('Sales Price\n港币卖价'), 'field': 'net_price',
                  'type': 'amount', 'width': 12},
-            16: {'header': _('Sales Price (CNY)'), 'field': 'net_price_cny',
-                 'type': 'amount', 'width': 12},
+            16: {'header': _('Sales Price (CNY)\n当日人民币卖价'),
+                 'field': 'net_price_cny', 'type': 'amount', 'width': 12},
         }
 
     def _get_report_filters(self, report):
@@ -440,8 +443,8 @@ class StockOfferXslx(stock_abstract_report_xlsx.StockAbstractReportXslx):
             # adjust array header
             elif section.code == 2:
                 adj_col = {
-                    11: _('Location'),
-                    12: _('Delivery Days'),
+                    11: _('Location\n地区'),
+                    12: _('Delivery Days\n预计到港天数'),
                 }
                 self.write_array_header(adj_col)
 
