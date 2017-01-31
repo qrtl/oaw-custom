@@ -3,7 +3,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 {
     'name': 'Product List Price Update List View',
-    'version': '8.0.1.1.1',
+    'version': '8.0.1.2.0',
     'author': 'Rooms For (Hong Kong) Ltd T/A OSCG',
     'website': 'https://www.odoo-asia.com',
     'category': 'Product',
