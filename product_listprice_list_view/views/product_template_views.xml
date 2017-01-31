@@ -11,6 +11,7 @@
                     <field name="stock_cost"/>
                     <field name="net_price"/>
                     <field name="stock_location"/>
+                    <field name="stock_leadtime"/>
                     <field name="last_in_date"/>
                     <field name="list_price" string="List Price"/>
                     <field name="qty_reserved"/>
