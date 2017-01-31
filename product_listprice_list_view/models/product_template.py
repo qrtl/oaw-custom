@@ -46,8 +46,14 @@ class ProductTemplate(models.Model):
         for pt in self:
             prod_ids = [p.id for p in pt.product_variant_ids]
             quant_cost = self._get_quant_cost(prod_ids)
+            if quant_cost:
+                pt.stock_cost = quant_cost
+                continue
             supp_stock_cost = self._get_supp_stock_cost(prod_ids)
-            pt.stock_cost = min([quant_cost, supp_stock_cost])
+            if supp_stock_cost:
+                pt.stock_cost = supp_stock_cost
+                continue
+            pt.stock_cost = pt.standard_price
 
     def _get_local_location_name(self, prod_ids):
         quant_obj = self.env['stock.quant']
