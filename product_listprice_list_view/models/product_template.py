@@ -18,6 +18,10 @@ class ProductTemplate(models.Model):
         string="Stock Location",
         compute='_get_stock_location'
     )
+    stock_leadtime = fields.Char(
+        string='Stock Lead Time',
+        compute='_get_stock_location',
+    )
 
 
     def _get_quant_cost(self, prod_ids):
@@ -30,7 +34,7 @@ class ProductTemplate(models.Model):
         )
         if quant:
             return quant.cost
-        return 0.0
+        return False
 
     def _get_supp_stock_cost(self, prod_ids):
         st_obj = self.env['supplier.stock']
@@ -39,7 +43,7 @@ class ProductTemplate(models.Model):
         )
         if records:
             return min(r.price_unit_base for r in records)
-        return 0.0
+        return False
 
     @api.multi
     def _get_stock_cost(self):
@@ -71,11 +75,17 @@ class ProductTemplate(models.Model):
             [('product_id', 'in', prod_ids)]
         )
         lowest_cost = 0.0
+        lowest_cost_ss_rec = False
         for ss_rec in ss_recs:
             if not lowest_cost or ss_rec.price_unit_base < lowest_cost:
                 lowest_cost = ss_rec.price_unit_base
                 lowest_cost_ss_rec = ss_rec
-        return lowest_cost_ss_rec.partner_loc_id.name
+        if lowest_cost_ss_rec:
+            loc = lowest_cost_ss_rec.partner_loc_id.name
+            supp_lt = lowest_cost_ss_rec.supplier_lead_time
+            return loc, supp_lt
+        else:
+            return False, False
 
     @api.multi
     def _get_stock_location(self):
@@ -83,5 +93,10 @@ class ProductTemplate(models.Model):
             prod_ids = [p.id for p in pt.product_variant_ids]
             if pt.local_stock == 'Yes':
                 pt.stock_location = self._get_local_location_name(prod_ids)
+                pt.stock_leadtime = '0 day(s)'
             elif pt.overseas_stock == 'Yes':
-                pt.stock_location = self._get_overseas_location_name(prod_ids)
+                pt.stock_location, supp_lt = \
+                    self._get_overseas_location_name(prod_ids)
+                pt.stock_leadtime = str(supp_lt) + ' day(s)'
+            else:
+                pt.stock_leadtime = '/'
