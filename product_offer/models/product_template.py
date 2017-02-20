@@ -105,7 +105,7 @@ class ProductTemplate(models.Model):
             if local_atp_qty > 0:
                 pt.local_stock = 'Yes'
             else:
-                pt.local_stock = '/'
+                pt.local_stock = 'No'
             pt.qty_local_atp = local_atp_qty
 
     @api.multi
@@ -115,4 +115,4 @@ class ProductTemplate(models.Model):
             if pt.qty_overseas > 0:
                 pt.overseas_stock = 'Yes'
             else:
-                pt.overseas_stock = '/'
+                pt.overseas_stock = 'No'

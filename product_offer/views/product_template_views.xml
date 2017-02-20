@@ -151,11 +151,11 @@
                                 </h4>
                                 <div name="tags"/>
                                 <ul>
-                                    <li>HK Retail: <field name="list_price_integer"></field></li>
                                     <li t-if="record.type.raw_value != 'service'">HK Stock: <field name="local_stock"/></li>
                                     <li t-if="record.type.raw_value != 'service'">Overseas Stock: <field name="overseas_stock"/></li>
+                                    <li>HK Retail: <field name="list_price_integer"></field></li>
                                     <li>HKD Net: <field name="net_price_integer"/></li>
-                                    <li>Discount: <field name="discount"/> %</li>
+                                    <li>Discount: <field name="discount"/>%</li>
                                 </ul>
                             </div>
                         </div>
@@ -251,11 +251,11 @@
                                 </h4>
                                 <div name="tags"/>
                                 <ul>
-                                    <li>港币公价: <field name="list_price_integer"></field></li>
                                     <li t-if="record.type.raw_value != 'service'">香港现货: <field name="local_stock"/></li>
                                     <li t-if="record.type.raw_value != 'service'">欧洲期货: <field name="overseas_stock"/></li>
+                                    <li>港币公价: <field name="list_price_integer"></field></li>
                                     <li>港币卖价: <field name="net_price_integer"/></li>
-                                    <li>折扣率: <field name="discount"/> %</li>
+                                    <li>折扣率: <field name="discount"/>%</li>
                                 </ul>
                             </div>
                         </div>
