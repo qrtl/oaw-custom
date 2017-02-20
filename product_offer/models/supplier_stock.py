@@ -37,7 +37,7 @@ class SupplierStock(models.Model):
     @api.multi
     def write(self, vals):
         res = super(SupplierStock, self).write(vals)
-        if vals.get('product_id', False) or vals.get('quantity', False):
+        if 'product_id' in vals or 'quantity' in vals:
             self._update_prod_tmpl_qty_overseas()
         return res
 
