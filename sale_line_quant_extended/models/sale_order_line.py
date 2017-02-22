@@ -8,6 +8,15 @@ from openerp import models, fields, api
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
+    # to avoid "not enough stock" warning in case of MTO
+    @api.multi
+    def _check_routing(self, product, warehouse_id):
+        if self._context.get('mto'):
+            return True
+        else:
+            return super(SaleOrderLine, self)._check_routing(product,
+                                                             warehouse_id)
+
     @api.multi
     @api.depends('order_id.is_mto')
     def _compute_route(self):
