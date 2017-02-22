@@ -32,6 +32,10 @@ class StockQuant(models.Model):
     def _update_prod_tmpl_reserved_qty(self):
         prod_tmpls = set()
         for quant in self:
+            # escape when quant == stock.quant(False,)
+            # there was issue saving MTO SO
+            if not quant.id:
+                return
             prod_tmpls.add(quant.product_id.product_tmpl_id)
         for prod_tmpl in prod_tmpls:
             rsvd_qty = 0.0
