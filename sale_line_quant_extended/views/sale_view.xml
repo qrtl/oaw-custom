@@ -13,7 +13,7 @@
             </field>
             <xpath expr="/form/sheet/notebook/page[1]/field[@name='order_line']" position="attributes">
                 <attribute name="context">
-                    {'is_mto': is_mto}
+                    {'mto': is_mto}
                 </attribute>
             </xpath>
         </field>
