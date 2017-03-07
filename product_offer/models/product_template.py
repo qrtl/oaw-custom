@@ -29,7 +29,7 @@ class ProductTemplate(models.Model):
         string="Quantity Overseas",
         readonly=True,
     )
-    last_in_date = fields.Datetime(
+    last_in_date = fields.Date(
         string="Last Incoming Date",
         readonly=True,
     )
