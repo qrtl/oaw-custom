@@ -29,7 +29,7 @@ class ProductTemplate(models.Model):
         string="Quantity Overseas",
         readonly=True,
     )
-    last_in_date = fields.Date(
+    last_in_date = fields.Datetime(
         string="Last Incoming Date",
         readonly=True,
     )
@@ -79,9 +79,7 @@ class ProductTemplate(models.Model):
     @api.depends('list_price', 'net_price')
     def _get_discount(self):
         for pt in self:
-            if not pt.list_price:
-                pt.discount = 0.0
-            elif pt.net_price == 0.0:
+            if not pt.list_price or not pt.net_price:
                 pt.discount = 0.0
             else:
                 pt.discount = (1 - pt.net_price / pt.list_price) * 100
