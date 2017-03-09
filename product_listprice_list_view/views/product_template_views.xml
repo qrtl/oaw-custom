@@ -6,18 +6,23 @@
             <field name="model">product.template</field>
             <field name="arch" type="xml">
                 <tree string="Product List Price Update" editable="top" create="false" delete="false">
-                    <field name="name" readonly="1"/>
-                    <field name="default_code" readonly="1"/>
-                    <field name="stock_cost"/>
-                    <field name="net_price"/>
-                    <field name="stock_location"/>
-                    <field name="stock_leadtime"/>
-                    <field name="last_in_date"/>
-                    <field name="list_price" string="List Price"/>
-                    <field name="qty_reserved"/>
-                    <field name="qty_available" widget="integer"/>
-                    <field name="qty_local_atp" invisible="1"/>
-                    <field name="qty_overseas"/>
+                        <field name="default_code" string="Code" readonly="1"/>
+                        <field name="name" string="Product Ref" readonly="1"/>
+                        <field name="image" widget="image" height="64px" />
+                        <field name="stock_cost" string="Cost HKD"/>
+                        <field name="list_price" string="Retail HKD"/>
+                        <field name="discount" string="Discount %"/>
+                        <field name="net_price" string="Sale HKD"/>
+                        <field name="net_profit" string="Net Profit" fg_color="red:net_profit &lt; 0.00;"/>
+                        <field name="net_profit_pct" string="Net Profit %" />
+                        <field name="advertise" string="Ads"/>
+                        <field name="stock_location"/>
+                        <field name="stock_leadtime"/>
+                        <field name="last_in_date" string="Incoming Date"/>
+                        <field name="qty_reserved" string="Qty reserved"/>
+                        <field name="qty_local_atp" string="Qty internal"/>
+                        <field name="qty_overseas" string="Qty overseas"/>
+                        <field name="additional_info" string="Note"/>
                  </tree>
             </field>
         </record>
