@@ -81,6 +81,8 @@ class ProductTemplate(models.Model):
         for pt in self:
             if not pt.list_price:
                 pt.discount = 0.0
+            elif pt.net_price == 0.0:
+                pt.discount = 0.0
             else:
                 pt.discount = (1 - pt.net_price / pt.list_price) * 100
         return
