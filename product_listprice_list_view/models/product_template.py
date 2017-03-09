@@ -9,6 +9,23 @@ import openerp.addons.decimal_precision as dp
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
+    advertise = fields.Boolean(default=False)
+
+    net_profit = fields.Float(
+        string="Net Profit",
+        digits=dp.get_precision('Product Price'),
+        compute='_compute_net_profit',
+        readonly=True,
+        store=True
+    )
+
+    net_profit_pct = fields.Float(
+        string="Net Profit Percental",
+        digits=dp.get_precision('Discount'),
+        compute='_compute_net_profit_pct',
+        readonly=True
+    )
+
     stock_cost = fields.Float(
         string="Stock Cost",
         compute='_get_stock_cost',
@@ -100,3 +117,24 @@ class ProductTemplate(models.Model):
                 pt.stock_leadtime = str(supp_lt) + ' day(s)'
             else:
                 pt.stock_leadtime = '/'
+
+
+    @api.multi
+    @api.depends('net_price', 'stock_cost')
+    def _compute_net_profit(self):
+        for entry in self:
+            if entry.net_price == 0.0 or entry.stock_cost == 0.0:
+                entry.net_profit = 0.00
+            else:
+                entry.net_profit = entry.net_price - entry.stock_cost
+        return
+
+    @api.multi
+    @api.depends('net_price', 'stock_cost')
+    def _compute_net_profit_pct(self):
+        for entry in self:
+            if entry.net_price == 0.0 or entry.stock_cost == 0.0:
+                entry.net_profit = 0.0
+            else:
+                entry.net_profit_pct = (entry.net_price/entry.stock_cost)*100-100
+        return
