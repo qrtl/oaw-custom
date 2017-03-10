@@ -9,8 +9,9 @@ import openerp.addons.decimal_precision as dp
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
-    advertise = fields.Boolean(default=False)
-
+    advertise = fields.Boolean(
+        default=False
+    )
     net_profit = fields.Float(
         string="Net Profit",
         digits=dp.get_precision('Product Price'),
@@ -18,14 +19,12 @@ class ProductTemplate(models.Model):
         readonly=True,
         store=True
     )
-
     net_profit_pct = fields.Float(
-        string="Net Profit Percental",
+        string="Net Profit Percent",
         digits=dp.get_precision('Discount'),
-        compute='_compute_net_profit_pct',
+        compute='_compute_net_profit',
         readonly=True
     )
-
     stock_cost = fields.Float(
         string="Stock Cost",
         compute='_get_stock_cost',
@@ -118,23 +117,14 @@ class ProductTemplate(models.Model):
             else:
                 pt.stock_leadtime = '/'
 
-
     @api.multi
     @api.depends('net_price', 'stock_cost')
     def _compute_net_profit(self):
-        for entry in self:
-            if entry.net_price == 0.0 or entry.stock_cost == 0.0:
-                entry.net_profit = 0.00
+        for pt in self:
+            if pt.net_price == 0.0 or pt.stock_cost == 0.0:
+                pt.net_profit = 0.00
+                pt.net_profit_pct = 0.00
             else:
-                entry.net_profit = entry.net_price - entry.stock_cost
-        return
-
-    @api.multi
-    @api.depends('net_price', 'stock_cost')
-    def _compute_net_profit_pct(self):
-        for entry in self:
-            if entry.net_price == 0.0 or entry.stock_cost == 0.0:
-                entry.net_profit = 0.0
-            else:
-                entry.net_profit_pct = (entry.net_price/entry.stock_cost)*100-100
+                pt.net_profit = pt.net_price - pt.stock_cost
+                pt.net_profit_pct = (pt.net_price / pt.stock_cost) * 100 - 100
         return
