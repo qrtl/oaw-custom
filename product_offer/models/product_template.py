@@ -79,7 +79,7 @@ class ProductTemplate(models.Model):
     @api.depends('list_price', 'net_price')
     def _get_discount(self):
         for pt in self:
-            if not pt.list_price:
+            if not pt.list_price or not pt.net_price:
                 pt.discount = 0.0
             else:
                 pt.discount = (1 - pt.net_price / pt.list_price) * 100
