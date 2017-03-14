@@ -15,6 +15,7 @@
                     <field name="net_price" string="Sale HKD"/>
                     <field name="net_profit" string="Net Profit" fg_color="red:net_profit &lt; 0.00;"/>
                     <field name="net_profit_pct" string="Net Profit %" />
+                    <field name="cny_rate"/>
                     <field name="advertise" string="Ads"/>
                     <field name="stock_location"/>
                     <field name="stock_leadtime"/>
