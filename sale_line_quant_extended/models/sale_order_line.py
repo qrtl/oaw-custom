@@ -58,6 +58,8 @@ class SaleOrderLine(models.Model):
     )
     mto = fields.Boolean(
         'Is MTO?',
+        compute=_compute_route,
+        store=True,
         default=_default_mto
     )
     purchase_line_id = fields.Many2one(
