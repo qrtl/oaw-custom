@@ -20,15 +20,15 @@ class StockMove(models.Model):
         return res
 
     @api.multi
-    def _update_prod_tmpl_local_atp(self):
+    def _update_prod_tmpl_qty_local_stock(self):
         for move in self:
             prod_tmpl = move.product_tmpl_id
             qty_in = self._get_qty_in(prod_tmpl.id)
-            prod_tmpl.qty_local_atp = int(prod_tmpl.qty_available + qty_in)
+            prod_tmpl.qty_local_stock = int(prod_tmpl.qty_available + qty_in)
         return
 
     @api.multi
     def write(self, vals):
         res = super(StockMove, self).write(vals)
-        self._update_prod_tmpl_local_atp()
+        self._update_prod_tmpl_qty_local_stock()
         return res

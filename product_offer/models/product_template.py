@@ -20,6 +20,8 @@ class ProductTemplate(models.Model):
     qty_local_stock = fields.Integer(
         string="Quantity Local Stock",
         readonly=True,
+        help="Quantity on hand plus incoming quantity from stock moves that"
+             "are 'Available' ('assigned') state.",
     )
     qty_reserved = fields.Integer(
         string="Quantity Reserved",
