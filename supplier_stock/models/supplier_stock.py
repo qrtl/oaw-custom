@@ -36,6 +36,11 @@ class SupplierStock(models.Model):
         string='Product',
         required=True,
     )
+    product_name = fields.Char(
+        string='Product Name',
+        related='product_id.product_tmpl_id.name',
+        store=True,
+    )
     quantity = fields.Float(
         string='Quantity',
         digits=dp.get_precision('Product Unit of Measure'),

@@ -11,6 +11,7 @@
                 <field name="partner_loc_id"/>
                 <field name="supplier_lead_time"/>
                 <field name="product_id" options="{'no_create_edit':True}"/>
+                <field name="product_name"/>
                 <field name="quantity"/>
                 <field name="currency_id" options="{'no_create_edit':True}"/>
                 <field name="price_unit"/>
@@ -27,6 +28,7 @@
                 <field name="partner_id" domain="[('supplier','=',True)]"/>
                 <field name="partner_loc_id"/>
                 <field name="product_id"/>
+                <field name="product_name"/>
                 <field name="currency_id"/>
                 <group expand="0" string="Group By">
                     <filter string="Supplier" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
