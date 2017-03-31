@@ -9,19 +9,20 @@
                     <field name="default_code" string="Code" readonly="1"/>
                     <field name="name" string="Product Ref" readonly="1"/>
                     <field name="image_small" string="Image" widget="image" height="64px"/>
-                    <field name="stock_cost" string="Cost HKD"/>
                     <field name="list_price" string="Retail HKD"/>
                     <field name="discount" string="Discount %"/>
                     <field name="net_price" string="Sale HKD"/>
-                    <field name="net_profit" string="Net Profit" fg_color="red:net_profit &lt; 0.00;"/>
-                    <field name="net_profit_pct" string="Net Profit %" />
+                    <field name="net_price_cny"/>
                     <field name="advertise" string="Ads"/>
                     <field name="stock_location"/>
                     <field name="stock_leadtime"/>
-                    <field name="last_in_date" string="Incoming Date" widget="date"/>
+                    <field name="stock_cost" string="Cost HKD"/>
+                    <field name="net_profit" string="Net Profit" fg_color="red:net_profit &lt; 0.00;"/>
+                    <field name="net_profit_pct" string="Net Profit %" />
                     <field name="qty_reserved" string="Qty reserved"/>
                     <field name="qty_local_atp" string="Qty internal"/>
                     <field name="qty_overseas" string="Qty overseas"/>
+                    <field name="last_in_date" string="Incoming Date" widget="date"/>
                     <field name="additional_info" string="Note"/>
                  </tree>
             </field>
