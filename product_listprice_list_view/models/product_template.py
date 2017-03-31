@@ -38,10 +38,10 @@ class ProductTemplate(models.Model):
         string='Stock Lead Time',
         compute='_get_stock_location',
     )
-    cny_rate = fields.Float(
-        string='RMB Rate',
-        compute='_get_cny_rate',
-        digits=(12, 6),
+    net_price_cny = fields.Float(
+        string='Sale RMB',
+        compute='_get_net_price_cny',
+        digits=dp.get_precision('Product Price'),
     )
 
 
@@ -135,8 +135,8 @@ class ProductTemplate(models.Model):
         return
 
     @api.multi
-    def _get_cny_rate(self):
+    def _get_net_price_cny(self):
         cny_rec = self.env['res.currency'].search([('name', '=', 'CNY')])[0]
         if cny_rec:
             for pt in self:
-                pt.cny_rate = cny_rec.rate_silent
+                pt.net_price_cny = pt.net_price * cny_rec.rate_silent
