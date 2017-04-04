@@ -41,6 +41,7 @@ class SupplierStock(models.Model):
         related='product_id.product_tmpl_id.name',
         store=True,
         readonly=True,
+
     )
     quantity = fields.Float(
         string='Quantity',
