@@ -11,6 +11,7 @@
                 <field name="partner_loc_id"/>
                 <field name="supplier_lead_time"/>
                 <field name="product_id" options="{'no_create_edit':True}"/>
+                <field name="image_small" string="Image" widget="image" height="64px"/>
                 <field name="quantity"/>
                 <field name="currency_id" options="{'no_create_edit':True}"/>
                 <field name="price_unit"/>
