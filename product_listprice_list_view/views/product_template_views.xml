@@ -19,9 +19,9 @@
                     <field name="stock_cost" string="Cost HKD"/>
                     <field name="net_profit" string="Net Profit" fg_color="red:net_profit &lt; 0.00;"/>
                     <field name="net_profit_pct" string="Net Profit %" />
-                    <field name="qty_reserved" string="Qty reserved"/>
-                    <field name="qty_available" widget="integer" string="Qty internal"/>
-                    <field name="qty_overseas" string="Qty overseas"/>
+                    <field name="qty_reserved" string="Qty Reserved"/>
+                    <field name="qty_available" widget="integer" string="Qty Internal"/>
+                    <field name="qty_overseas" string="Qty Overseas"/>
                     <field name="last_in_date" string="Incoming Date" widget="date"/>
                     <field name="additional_info" string="Note"/>
                  </tree>
