@@ -65,6 +65,11 @@ class SupplierStock(models.Model):
         compute='_compute_price_base'
     )
 
+    image_small = fields.Binary(
+        'Image',
+        related='product_id.product_tmpl_id.image_small',
+    )
+
 
     @api.one
     @api.depends('price_unit', 'quantity', 'currency_id')
