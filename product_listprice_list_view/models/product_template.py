@@ -9,6 +9,12 @@ import openerp.addons.decimal_precision as dp
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
+    default_code=fields.Char(
+        'Internal Reference',
+        related='product_variant_ids.default_code',
+        store=True,
+    )
+
     advertise = fields.Boolean(
         default=False
     )
