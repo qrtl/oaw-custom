@@ -64,6 +64,10 @@ class SupplierStock(models.Model):
         digits=dp.get_precision('Account'),
         compute='_compute_price_base'
     )
+    image_small = fields.Binary(
+        'Image',
+        related='product_id.product_tmpl_id.image_small',
+    )
 
 
     @api.one

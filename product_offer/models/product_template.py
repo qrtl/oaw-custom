@@ -41,12 +41,6 @@ class ProductTemplate(models.Model):
         store=True,
         readonly=True,
     )
-    qty_local_atp = fields.Integer(
-        string="Quantity Local ATP",
-        compute="_get_local_stock",
-        store=True,
-        readonly=True,
-    )
     overseas_stock = fields.Char(
         string="Overseas Stock",
         compute="_get_overseas_stock",
@@ -100,15 +94,13 @@ class ProductTemplate(models.Model):
             pt.net_price_integer = int(pt.net_price)
 
     @api.multi
-    @api.depends('qty_local_stock', 'qty_reserved')
+    @api.depends('qty_local_stock')
     def _get_local_stock(self):
         for pt in self:
-            local_atp_qty = pt.qty_local_stock - pt.qty_reserved
-            if local_atp_qty > 0:
+            if pt.qty_local_stock > 0:
                 pt.local_stock = 'Yes'
             else:
                 pt.local_stock = 'No'
-            pt.qty_local_atp = local_atp_qty
 
     @api.multi
     @api.depends('qty_overseas')

@@ -15,6 +15,7 @@
                     <field name="id" readonly="1" invisible="1"/>
                     <field name="invoice_id" readonly="1"/>
                     <field name="product_id" readonly="1"/>
+                    <field name="image_small" string="Image" widget="image" height="64px"/>
                     <field name="lot_id" readonly="1"/>
                     <field name="name" invisible="1"/>
                     <field name="reference" invisible="1"/>
