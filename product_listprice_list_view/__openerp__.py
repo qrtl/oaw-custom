@@ -16,7 +16,7 @@
 * Adds a menu item 'Product List Price' to facilitate list price update
     """,
     'data': [
-        'views/product_template_views.xml',
+        'views/product_product_views.xml',
     ],
     'installable': True,
 }
