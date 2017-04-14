@@ -72,6 +72,7 @@
                      <filter name="local_overseas_w_res" string="Local&amp;overseas w R" domain="['|',('qty_local_stock','&gt;',0),('overseas_stock','=','Yes')]"/>
 
                     <filter name="local_overseas_wo_res" string="Local&amp;overseas w/o R" domain="['|',('local_stock_not_reserved','&gt;',0),('overseas_stock','=','Yes')]"/>
+
                 </group>
 
             </xpath>
