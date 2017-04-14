@@ -65,13 +65,13 @@
 
                     <filter name="local_w_res" string="Local w R" domain="[('qty_local_stock','&gt;',0)]"/>
 
-                    <filter name="local_wo_res" string="Local w/o R" domain="[('local_stock','=','Yes')]"/>
+                    <filter name="local_wo_res" string="Local w/o R" domain="[('local_stock_not_reserved','&gt;',0)]"/>
 
                      <filter name="overseas" string="Overseas" domain="[('overseas_stock','=','Yes')]"/>
 
                      <filter name="local_overseas_w_res" string="Local&amp;overseas w R" domain="['|',('qty_local_stock','&gt;',0),('overseas_stock','=','Yes')]"/>
 
-                    <filter name="local_overseas_wo_res" string="Local&amp;overseas w/o R" domain="['|',('local_stock','=','Yes'),('overseas_stock','=','Yes')]"/>
+                    <filter name="local_overseas_wo_res" string="Local&amp;overseas w/o R" domain="['|',('local_stock_not_reserved','&gt;',0),('overseas_stock','=','Yes')]"/>
                 </group>
 
             </xpath>
@@ -85,7 +85,6 @@
         <field name="view_mode">kanban,tree,form</field>
         <field name="view_type">form</field>
         <field name="view_id" ref="product_template_internal_kanban_view"/>
-        <field name="context">{"search_default_filter_to_sell":1}</field>
     </record>
 
     <menuitem action="product_template_internal_action"
@@ -134,7 +133,7 @@
         <field name="view_mode">kanban,tree,form</field>
         <field name="view_type">form</field>
         <field name="view_id" ref="product_template_en_availability_kanban_view"/>
-        <field name="context">{"search_default_filter_to_sell":1}</field>
+
     </record>
 
     <menuitem action="product_template_en_availability_action"
@@ -186,7 +185,7 @@
         <field name="view_mode">kanban,tree,form</field>
         <field name="view_type">form</field>
         <field name="view_id" ref="product_template_en_sales_price_kanban_view"/>
-        <field name="context">{"search_default_filter_to_sell":1}</field>
+
     </record>
 
     <menuitem action="product_template_en_sales_price_action"
@@ -235,7 +234,7 @@
         <field name="view_mode">kanban,tree,form</field>
         <field name="view_type">form</field>
         <field name="view_id" ref="product_template_zh_availability_kanban_view"/>
-        <field name="context">{"search_default_filter_to_sell":1}</field>
+
     </record>
 
     <menuitem action="product_template_zh_availability_action"
