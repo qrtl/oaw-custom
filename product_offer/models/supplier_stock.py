@@ -43,5 +43,6 @@ class SupplierStock(models.Model):
 
     @api.multi
     def unlink(self):
-        self.product_id.product_tmpl_id.qty_overseas -= int(self.quantity)
+        for st in self:
+            st.product_id.product_tmpl_id.qty_overseas -= int(st.quantity)
         return super(SupplierStock, self).unlink()
