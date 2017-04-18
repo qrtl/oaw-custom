@@ -58,9 +58,11 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='product_variant_ids']" position="before">
                 <separator/>
+
                 <filter name="received_two_weeks" string="Received in the Last Two Weeks" domain="[('last_in_date','&gt;=',(context_today()+datetime.timedelta(weeks=-2)).strftime('%Y-%m-%d'))]"/><br/>
                 <field name="supplier_id"/>
                 <group expand="0" string="Available">
+
 
                     <filter name="warehouse_internal_location" string="Local: internal" domain="[('qty_available','&gt;',0)]"/>
 
@@ -73,6 +75,7 @@
                      <filter name="local_overseas_w_res" string="Local&amp;overseas w R" domain="['|',('qty_local_stock','&gt;',0),('overseas_stock','=','Yes')]"/>
 
                     <filter name="local_overseas_wo_res" string="Local&amp;overseas w/o R" domain="['|',('local_stock_not_reserved','&gt;',0),('overseas_stock','=','Yes')]"/>
+
                 </group>
            </xpath>
 
@@ -86,6 +89,7 @@
            <xpath expr="//filter[@string='Consumable']" position="replace">
                 <filter name="consumable" invisible="True"/>
            </xpath>
+
         </field>
     </record>
 
@@ -96,7 +100,9 @@
         <field name="view_mode">kanban,tree,form</field>
         <field name="view_type">form</field>
         <field name="view_id" ref="product_template_internal_kanban_view"/>
+
         <field name="context">{"search_default_local_overseas_w_res":1}</field>
+
     </record>
 
     <menuitem action="product_template_internal_action"
@@ -145,7 +151,9 @@
         <field name="view_mode">kanban,tree,form</field>
         <field name="view_type">form</field>
         <field name="view_id" ref="product_template_en_availability_kanban_view"/>
+
         <field name="context">{"search_default_local_overseas_w_res":1}</field>
+
     </record>
 
     <menuitem action="product_template_en_availability_action"
@@ -197,7 +205,9 @@
         <field name="view_mode">kanban,tree,form</field>
         <field name="view_type">form</field>
         <field name="view_id" ref="product_template_en_sales_price_kanban_view"/>
+
         <field name="context">{"search_default_local_overseas_w_res":1}</field>
+
     </record>
 
     <menuitem action="product_template_en_sales_price_action"
@@ -246,7 +256,9 @@
         <field name="view_mode">kanban,tree,form</field>
         <field name="view_type">form</field>
         <field name="view_id" ref="product_template_zh_availability_kanban_view"/>
+
         <field name="context">{"search_default_local_overseas_w_res":1}</field>
+
     </record>
 
     <menuitem action="product_template_zh_availability_action"
@@ -306,7 +318,6 @@
         parent="base.menu_product" sequence="6" />
 
 
-
      <record id="product_template_search_view_m4" model="ir.ui.view">
         <field name="name">product.template.search.m4</field>
         <field name="model">product.template</field>
@@ -324,10 +335,9 @@
             </xpath>
             <xpath expr="//filter[@string='Forecast Available Products']" position="replace">
             </xpath>
+
         </field>
     </record>
-
-
 
      <record id="product_template_search_view_m7" model="ir.ui.view">
         <field name="name">product.template.search.m7</field>
@@ -348,6 +358,7 @@
           </xpath>
         </field>
      </record>
+
 
 
 
