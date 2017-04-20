@@ -80,6 +80,7 @@
            </xpath>
 
            <xpath expr="//filter[@string='Services']" position="replace">
+               <filter string="Services" invisible="True"/>
            </xpath>
 
            <xpath expr="//filter[@string='Can be Sold']" position="replace">
@@ -187,7 +188,7 @@
                                     <li t-if="record.type.raw_value != 'service'">Overseas Stock: <field name="overseas_stock"/></li>
                                     <li>HK Retail: <field name="list_price_integer"></field></li>
                                     <li>Discount: <field name="discount"/>%</li>
-                                    <li>HKD Net: <field name="net_price_integer"/></li>
+                                    <li>Sale HKD: <field name="net_price_integer"/></li>
                                     <li><i>Sale RMB: <field name="net_price_cny"/></i></li>
                                 </ul>
                             </div>
@@ -323,19 +324,24 @@
         <field name="model">product.template</field>
         <field name="inherit_id" ref="stock.product_template_search_form_view_stock"/>
         <field name="arch" type="xml">
-            <xpath expr="//filter[@string='Exhausted Stock']" position="replace">
+            <xpath expr="//filter[@name='real_stock_exhausted']" position="replace">
+                <filter name="real_stock_exhausted" invisible="True"/>
             </xpath>
-            <xpath expr="//filter[@string='Forecast Exhausted Stock']" position="replace">
+            <xpath expr="//filter[@name='virtual_stock_exhausted']" position="replace">
+                <filter name="virtual_stock_exhausted" invisible="True"/>
             </xpath>
-             <xpath expr="//filter[@string='Forecast Negative Stock']" position="replace">
+             <xpath expr="//filter[@name='virtual_stock_negative']" position="replace">
+                 <filter name="virtual_stock_negative" invisible="True"/>
             </xpath>
             <xpath expr="//filter[@string='Products']" position="replace">
+                <filter string="Products" invisible="True"/>
             </xpath>
-            <xpath expr="//filter[@string='Available Products']" position="replace">
+            <xpath expr="//filter[@name='real_stock_available']" position="replace">
+                <filter name="real_stock_available" invisible="True"/>
             </xpath>
-            <xpath expr="//filter[@string='Forecast Available Products']" position="replace">
+            <xpath expr="//filter[@name='virtual_stock_available']" position="replace">
+                 <filter name="virtual_stock_available" invisible="True"/>
             </xpath>
-
         </field>
     </record>
 
@@ -344,7 +350,8 @@
         <field name="model">product.product</field>
         <field name="inherit_id" ref="product.product_search_form_view"/>
         <field name="arch" type="xml">
-         <xpath expr="//filter[@string='Product Template']" position="replace">
+         <xpath expr="//filter[@name='template_id']" position="replace">
+             <filter name="template_id" invisible="True"/>
           </xpath>
         </field>
      </record>
@@ -354,7 +361,8 @@
         <field name="model">product.template</field>
         <field name="inherit_id" ref="purchase.product_template_search_view_purchase"/>
         <field name="arch" type="xml">
-         <xpath expr="//filter[@string='Can be Purchased']" position="replace">
+         <xpath expr="//filter[@name='filter_to_purchase']" position="replace">
+             <filter name="filter_to_purchase" invisible="True"/>
           </xpath>
         </field>
      </record>
