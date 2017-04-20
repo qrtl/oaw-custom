@@ -70,6 +70,19 @@ class ProductTemplate(models.Model):
         readonly=True,
     )
 
+    net_price_cny = fields.Float(
+        string='Sale RMB',
+        compute='_get_net_price_cny',
+        digits=dp.get_precision('Product Price')
+
+    )
+    @api.multi
+    def _get_net_price_cny(self):
+        cny_rec = self.env['res.currency'].search([('name','=','CNY')])[0]
+        if cny_rec:
+            for pt in self:
+                pt.net_price_cny = pt.net_price * cny_rec.rate_silent
+
 
     @api.multi
     @api.depends('list_price', 'net_price')
