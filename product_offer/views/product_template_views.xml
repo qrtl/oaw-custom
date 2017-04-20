@@ -58,10 +58,39 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='product_variant_ids']" position="before">
                 <separator/>
-                <filter name="stock_available_oaw" string="Available (Local/Overseas)" domain="['|',('local_stock','=','Yes'),('overseas_stock','=','Yes')]"/>
-                <filter name="received_two_weeks" string="Received in the Last Two Weeks" domain="[('last_in_date','&gt;=',(context_today()+datetime.timedelta(weeks=-2)).strftime('%Y-%m-%d'))]"/>
+
+                <filter name="received_two_weeks" string="Received in the Last Two Weeks" domain="[('last_in_date','&gt;=',(context_today()+datetime.timedelta(weeks=-2)).strftime('%Y-%m-%d'))]"/><br/>
                 <field name="supplier_id"/>
-            </xpath>
+                <group expand="0" string="Available">
+
+
+                    <filter name="warehouse_internal_location" string="Local: internal" domain="[('qty_available','&gt;',0)]"/>
+
+                    <filter name="local_w_res" string="Local w R" domain="[('qty_local_stock','&gt;',0)]"/>
+
+                    <filter name="local_wo_res" string="Local w/o R" domain="[('local_stock_not_reserved','&gt;',0)]"/>
+
+                     <filter name="overseas" string="Overseas" domain="[('overseas_stock','=','Yes')]"/>
+
+                     <filter name="local_overseas_w_res" string="Local&amp;overseas w R" domain="['|',('qty_local_stock','&gt;',0),('overseas_stock','=','Yes')]"/>
+
+                    <filter name="local_overseas_wo_res" string="Local&amp;overseas w/o R" domain="['|',('local_stock_not_reserved','&gt;',0),('overseas_stock','=','Yes')]"/>
+
+                </group>
+           </xpath>
+
+           <xpath expr="//filter[@string='Services']" position="replace">
+               <filter string="Services" invisible="True"/>
+           </xpath>
+
+           <xpath expr="//filter[@string='Can be Sold']" position="replace">
+               <filter name="filter_to_sell" invisible="True"/>
+           </xpath>
+
+           <xpath expr="//filter[@string='Consumable']" position="replace">
+                <filter name="consumable" invisible="True"/>
+           </xpath>
+
         </field>
     </record>
 
@@ -72,7 +101,9 @@
         <field name="view_mode">kanban,tree,form</field>
         <field name="view_type">form</field>
         <field name="view_id" ref="product_template_internal_kanban_view"/>
-        <field name="context">{"search_default_filter_to_sell":1}</field>
+
+        <field name="context">{"search_default_local_overseas_w_res":1}</field>
+
     </record>
 
     <menuitem action="product_template_internal_action"
@@ -121,7 +152,9 @@
         <field name="view_mode">kanban,tree,form</field>
         <field name="view_type">form</field>
         <field name="view_id" ref="product_template_en_availability_kanban_view"/>
-        <field name="context">{"search_default_filter_to_sell":1}</field>
+
+        <field name="context">{"search_default_local_overseas_w_res":1}</field>
+
     </record>
 
     <menuitem action="product_template_en_availability_action"
@@ -154,8 +187,9 @@
                                     <li t-if="record.type.raw_value != 'service'">HK Stock: <field name="local_stock"/></li>
                                     <li t-if="record.type.raw_value != 'service'">Overseas Stock: <field name="overseas_stock"/></li>
                                     <li>HK Retail: <field name="list_price_integer"></field></li>
-                                    <li>HKD Net: <field name="net_price_integer"/></li>
                                     <li>Discount: <field name="discount"/>%</li>
+                                    <li>Sale HKD: <field name="net_price_integer"/></li>
+                                    <li><i>Sale RMB: <field name="net_price_cny"/></i></li>
                                 </ul>
                             </div>
                         </div>
@@ -172,7 +206,9 @@
         <field name="view_mode">kanban,tree,form</field>
         <field name="view_type">form</field>
         <field name="view_id" ref="product_template_en_sales_price_kanban_view"/>
-        <field name="context">{"search_default_filter_to_sell":1}</field>
+
+        <field name="context">{"search_default_local_overseas_w_res":1}</field>
+
     </record>
 
     <menuitem action="product_template_en_sales_price_action"
@@ -221,7 +257,9 @@
         <field name="view_mode">kanban,tree,form</field>
         <field name="view_type">form</field>
         <field name="view_id" ref="product_template_zh_availability_kanban_view"/>
-        <field name="context">{"search_default_filter_to_sell":1}</field>
+
+        <field name="context">{"search_default_local_overseas_w_res":1}</field>
+
     </record>
 
     <menuitem action="product_template_zh_availability_action"
@@ -254,8 +292,9 @@
                                     <li t-if="record.type.raw_value != 'service'">香港现货: <field name="local_stock"/></li>
                                     <li t-if="record.type.raw_value != 'service'">欧洲期货: <field name="overseas_stock"/></li>
                                     <li>港币公价: <field name="list_price_integer"></field></li>
-                                    <li>港币卖价: <field name="net_price_integer"/></li>
                                     <li>折扣率: <field name="discount"/>%</li>
+                                    <li>港币卖价: <field name="net_price_integer"/></li>
+                                    <li><i>今日RMB卖价: <field name="net_price_cny"/></i></li>
                                 </ul>
                             </div>
                         </div>
@@ -272,12 +311,64 @@
         <field name="view_mode">kanban,tree,form</field>
         <field name="view_type">form</field>
         <field name="view_id" ref="product_template_zh_sales_price_kanban_view"/>
-        <field name="context">{"search_default_filter_to_sell":1}</field>
+        <field name="context">{"search_default_local_overseas_w_res":1}</field>
     </record>
 
     <menuitem action="product_template_zh_sales_price_action"
         id="menu_product_template_zh_sales_price_action"
         parent="base.menu_product" sequence="6" />
+
+
+     <record id="product_template_search_view_m4" model="ir.ui.view">
+        <field name="name">product.template.search.m4</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="stock.product_template_search_form_view_stock"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='real_stock_exhausted']" position="replace">
+                <filter name="real_stock_exhausted" invisible="True"/>
+            </xpath>
+            <xpath expr="//filter[@name='virtual_stock_exhausted']" position="replace">
+                <filter name="virtual_stock_exhausted" invisible="True"/>
+            </xpath>
+             <xpath expr="//filter[@name='virtual_stock_negative']" position="replace">
+                 <filter name="virtual_stock_negative" invisible="True"/>
+            </xpath>
+            <xpath expr="//filter[@string='Products']" position="replace">
+                <filter string="Products" invisible="True"/>
+            </xpath>
+            <xpath expr="//filter[@name='real_stock_available']" position="replace">
+                <filter name="real_stock_available" invisible="True"/>
+            </xpath>
+            <xpath expr="//filter[@name='virtual_stock_available']" position="replace">
+                 <filter name="virtual_stock_available" invisible="True"/>
+            </xpath>
+        </field>
+    </record>
+
+     <record id="product_template_search_view_m7" model="ir.ui.view">
+        <field name="name">product.template.search.m7</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_search_form_view"/>
+        <field name="arch" type="xml">
+         <xpath expr="//filter[@name='template_id']" position="replace">
+             <filter name="template_id" invisible="True"/>
+          </xpath>
+        </field>
+     </record>
+
+    <record id="product_template_search_view_m8" model="ir.ui.view">
+        <field name="name">product.template.search.m8</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="purchase.product_template_search_view_purchase"/>
+        <field name="arch" type="xml">
+         <xpath expr="//filter[@name='filter_to_purchase']" position="replace">
+             <filter name="filter_to_purchase" invisible="True"/>
+          </xpath>
+        </field>
+     </record>
+
+
+
 
 </data>
 </openerp>

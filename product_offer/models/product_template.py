@@ -41,6 +41,12 @@ class ProductTemplate(models.Model):
         store=True,
         readonly=True,
     )
+    local_stock_not_reserved = fields.Integer(
+        string="Local Stock",
+        compute="_get_local_stock_not_reserved",
+        store=True,
+        readonly=True,
+    )
     overseas_stock = fields.Char(
         string="Overseas Stock",
         compute="_get_overseas_stock",
@@ -69,6 +75,19 @@ class ProductTemplate(models.Model):
         compute='_get_discount',
         readonly=True,
     )
+
+    net_price_cny = fields.Float(
+        string='Sale RMB',
+        compute='_get_net_price_cny',
+        digits=dp.get_precision('Product Price'),
+    )
+
+    @api.multi
+    def _get_net_price_cny(self):
+        cny_rec = self.env['res.currency'].search([('name', '=', 'CNY')])[0]
+        if cny_rec:
+            for pt in self:
+                pt.net_price_cny = pt.net_price * cny_rec.rate_silent
 
 
     @api.multi
@@ -101,6 +120,12 @@ class ProductTemplate(models.Model):
                 pt.local_stock = 'Yes'
             else:
                 pt.local_stock = 'No'
+
+    @api.multi
+    @api.depends('qty_local_stock', 'qty_reserved')
+    def _get_local_stock_not_reserved(self):
+        for pt in self:
+            pt.local_stock_not_reserved = pt.qty_local_stock - pt.qty_reserved
 
     @api.multi
     @api.depends('qty_overseas')
