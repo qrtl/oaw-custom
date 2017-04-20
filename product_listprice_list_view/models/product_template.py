@@ -38,11 +38,6 @@ class ProductTemplate(models.Model):
         string='Stock Lead Time',
         compute='_get_stock_location',
     )
-    net_price_cny = fields.Float(
-        string='Sale RMB',
-        compute='_get_net_price_cny',
-        digits=dp.get_precision('Product Price'),
-    )
 
 
     def _get_quant_cost(self, prod_ids):
@@ -134,9 +129,3 @@ class ProductTemplate(models.Model):
                 pt.net_profit_pct = (pt.net_price / pt.stock_cost) * 100 - 100
         return
 
-    @api.multi
-    def _get_net_price_cny(self):
-        cny_rec = self.env['res.currency'].search([('name', '=', 'CNY')])[0]
-        if cny_rec:
-            for pt in self:
-                pt.net_price_cny = pt.net_price * cny_rec.rate_silent
