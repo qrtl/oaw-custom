@@ -128,4 +128,3 @@ class ProductTemplate(models.Model):
                 pt.net_profit = pt.net_price - pt.stock_cost
                 pt.net_profit_pct = (pt.net_price / pt.stock_cost) * 100 - 100
         return
-
