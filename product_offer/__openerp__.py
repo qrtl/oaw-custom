@@ -4,7 +4,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 {
     'name': 'Product Offer',
-    'version': '8.0.1.2.3',
+    'version': '8.0.1.3.0',
     'author': 'Rooms For (Hong Kong) Limited T/A OSCG, eHanse',
     'website': 'https://www.odoo-asia.com',
     'category': 'Product',
