@@ -174,7 +174,6 @@
                                     <li>HK Retail: <field name="list_price_integer"></field></li>
                                     <li>Discount: <field name="discount"/>%</li>
                                     <li>Sale HKD: <field name="net_price_integer"/></li>
-                                    <li><i>Sale RMB: <field name="net_price_cny"/></i></li>
                                 </ul>
                             </div>
                         </div>
