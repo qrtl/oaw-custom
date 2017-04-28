@@ -6,6 +6,7 @@
 
 
 def _update_prod_tmpl_fields(cr, registry):
+
     # update qty_local_stock with QOH first
     sql = '''
     UPDATE
@@ -52,13 +53,39 @@ def _update_prod_tmpl_fields(cr, registry):
     '''
     cr.execute(sql)
 
-    # update qty_reserved and qty_local_atp
+    # update local_stock
+    cr.execute('''
+        UPDATE
+            product_template
+        SET
+            local_stock = 'Yes'
+        WHERE
+            qty_local_stock > 0
+    ''')
+    cr.execute('''
+        UPDATE
+            product_template
+        SET
+            local_stock = 'No'
+        WHERE
+            qty_local_stock <= 0
+    ''')
+
+    # temporarily update local_stock_not_reserved
+    cr.execute('''
+    UPDATE
+        product_template
+    SET
+        local_stock_not_reserved = qty_local_stock
+    ''')
+
+    # update qty_reserved and local_stock_not_reserved
     sql = '''
     UPDATE
         product_template pt
     SET
         qty_reserved = subquery.qty_rsvd,
-        qty_local_atp = pt.qty_local_stock - subquery.qty_rsvd
+        local_stock_not_reserved = pt.qty_local_stock - subquery.qty_rsvd
     FROM (
         SELECT
             pp.product_tmpl_id AS pt_id,
@@ -96,6 +123,16 @@ def _update_prod_tmpl_fields(cr, registry):
     WHERE pt.id = subquery.pt_id
     '''
     cr.execute(sql)
+
+    # update overseas_stock
+    cr.execute('''
+        UPDATE
+            product_template
+        SET
+            overseas_stock = 'Yes'
+        WHERE
+            qty_overseas > 0
+    ''')
 
     # update last_in_date
     sql = '''
