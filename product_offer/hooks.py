@@ -124,6 +124,16 @@ def _update_prod_tmpl_fields(cr, registry):
     '''
     cr.execute(sql)
 
+    # update overseas_stock
+    cr.execute('''
+        UPDATE
+            product_template
+        SET
+            overseas_stock = 'Yes'
+        WHERE
+            qty_overseas > 0
+    ''')
+
     # update last_in_date
     sql = '''
     UPDATE
