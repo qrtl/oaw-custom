@@ -42,6 +42,7 @@
                                     <li t-if="record.type.raw_value != 'service'">HK Stock: <field name="qty_local_stock"/> <field name="uom_id"/></li>
                                     <li t-if="record.type.raw_value != 'service'">Reserved: <field name="qty_reserved"/> <field name="uom_id"/></li>
                                     <li t-if="record.type.raw_value != 'service'">Overseas Stock: <field name="qty_overseas"/> <field name="uom_id"/></li>
+                                    <li>Sale HKD: <field name="net_price_integer"/></li>
                                 </ul>
                             </div>
                         </div>
@@ -88,7 +89,7 @@
         <field name="view_mode">kanban,tree,form</field>
         <field name="view_type">form</field>
         <field name="view_id" ref="product_template_internal_kanban_view"/>
-        <field name="context">{"search_default_local_overseas_w_res":1}</field>
+        <field name="context">{"search_default_warehouse_internal_location":1}</field>
     </record>
 
     <menuitem action="product_template_internal_action"
@@ -138,7 +139,7 @@
         <field name="view_type">form</field>
         <field name="view_id" ref="product_template_en_availability_kanban_view"/>
 
-        <field name="context">{"search_default_local_overseas_w_res":1}</field>
+        <field name="context">{"search_default_warehouse_internal_location":1}</field>
 
     </record>
 
@@ -190,7 +191,7 @@
         <field name="view_mode">kanban,tree,form</field>
         <field name="view_type">form</field>
         <field name="view_id" ref="product_template_en_sales_price_kanban_view"/>
-        <field name="context">{"search_default_local_overseas_w_res":1}</field>
+        <field name="context">{"search_default_warehouse_internal_location":1}</field>
     </record>
 
     <menuitem action="product_template_en_sales_price_action"
@@ -239,7 +240,7 @@
         <field name="view_mode">kanban,tree,form</field>
         <field name="view_type">form</field>
         <field name="view_id" ref="product_template_zh_availability_kanban_view"/>
-        <field name="context">{"search_default_local_overseas_w_res":1}</field>
+        <field name="context">{"search_default_warehouse_internal_location":1}</field>
     </record>
 
     <menuitem action="product_template_zh_availability_action"
@@ -291,7 +292,7 @@
         <field name="view_mode">kanban,tree,form</field>
         <field name="view_type">form</field>
         <field name="view_id" ref="product_template_zh_sales_price_kanban_view"/>
-        <field name="context">{"search_default_local_overseas_w_res":1}</field>
+        <field name="context">{"search_default_warehouse_internal_location":1}</field>
     </record>
 
     <menuitem action="product_template_zh_sales_price_action"
