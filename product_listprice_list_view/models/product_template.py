@@ -15,7 +15,6 @@ class ProductTemplate(models.Model):
     chronoNote = fields.Char(
         string = "C24-Note"
     )
-
     advertise = fields.Boolean(
         default=False
     )
