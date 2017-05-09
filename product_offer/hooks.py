@@ -2,8 +2,6 @@
 # Copyright 2017 Rooms For (Hong Kong) Limted T/A OSCG
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-# from openerp import api, SUPERUSER_ID
-
 
 def _update_prod_tmpl_fields(cr, registry):
 
@@ -23,6 +21,7 @@ def _update_prod_tmpl_fields(cr, registry):
             JOIN stock_location sl ON sq.location_id = sl.id
         WHERE
             sl.usage = 'internal'
+            AND sl.is_repair_location IS NOT True
         GROUP BY
             pp.product_tmpl_id
     ) AS subquery
