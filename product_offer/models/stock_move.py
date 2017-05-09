@@ -16,7 +16,8 @@ class StockMove(models.Model):
             ('state', '=', 'assigned'),
         ])
         for m in moves:
-            res += m.product_uom_qty
+            if not m.location_dest_id.is_repair_location:
+                res += m.product_uom_qty
         return res
 
     @api.multi
