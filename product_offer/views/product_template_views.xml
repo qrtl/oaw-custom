@@ -38,10 +38,11 @@
                                 </h4>
                                 <div name="tags"/>
                                 <ul>
-                                    <li>HK Retail: <field name="list_price_integer"></field></li>
                                     <li t-if="record.type.raw_value != 'service'">HK Stock: <field name="qty_local_stock"/> <field name="uom_id"/></li>
-                                    <li t-if="record.type.raw_value != 'service'">Reserved: <field name="qty_reserved"/> <field name="uom_id"/></li>
                                     <li t-if="record.type.raw_value != 'service'">Overseas Stock: <field name="qty_overseas"/> <field name="uom_id"/></li>
+                                    <li t-if="record.type.raw_value != 'service'">Reserved: <field name="qty_reserved"/> <field name="uom_id"/></li>
+                                    <li>HK Retail: <field name="list_price_integer"></field></li>
+                                    <li>Discount: <field name="discount"/>%</li>
                                     <li>Sale HKD: <field name="net_price_integer"/></li>
                                 </ul>
                             </div>
@@ -52,6 +53,78 @@
         </field>
     </record>
 
+     <record id="product_template_internal_action" model="ir.actions.act_window">
+        <field name="name">Products: Internal</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="product_template_internal_kanban_view"/>
+        <field name="context">{"search_default_warehouse_internal_location":1}</field>
+    </record>
+
+    <menuitem action="product_template_internal_action"
+        id="menu_product_template__internal_action"
+        parent="base.menu_product" sequence="2" />
+
+
+        <!-- Products: Internal CN -->
+    <record id="product_template_internal_CN_kanban_view" model="ir.ui.view">
+        <field name="name">Product.template.product.kanban.CN</field>
+        <field name="model">product.template</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="type"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_vignette oe_semantic_html_override">
+                            <a type="open"><img t-att-src="kanban_image('product.template', 'image_small', record.id.value)" class="oe_kanban_image"/></a>
+                            <div class="oe_kanban_details">
+                                <h4>
+                                    <a type="open">
+                                         <span t-if="record.default_code.value">
+                                             [<field name="default_code"/>]
+                                          </span>
+                                         <field name="name"/>
+                                    </a>
+                                </h4>
+                                <div name="tags"/>
+                                <ul>
+                                    <li t-if="record.type.raw_value != 'service'">香港现货: <field name="qty_local_stock"/> <field name="uom_id"/></li>
+                                    <li t-if="record.type.raw_value != 'service'">欧洲期货: <field name="qty_overseas"/> <field name="uom_id"/></li>
+                                    <li t-if="record.type.raw_value != 'service'">已預留: <field name="qty_reserved"/> <field name="uom_id"/></li>
+                                    <li>港币公价: <field name="list_price_integer"></field></li>
+                                    <li>折扣率: <field name="discount"/>%</li>
+                                    <li>港币卖价: <field name="net_price_integer"/></li>
+                                    <li><i>今日RMB卖价: <field name="net_price_cny"/></i></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+     <record id="product_template_internal_CN_action" model="ir.actions.act_window">
+        <field name="name">Products: Internal CN</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="product_template_internal_CN_kanban_view"/>
+        <field name="context">{"search_default_warehouse_internal_location":1}</field>
+    </record>
+
+    <menuitem action="product_template_internal_CN_action"
+        id="menu_product_template__internal_CN_action"
+        parent="base.menu_product" sequence="2" />
+
+
+
+
+
+
     <record id="product_template_search_view" model="ir.ui.view">
         <field name="name">product.template.search</field>
         <field name="model">product.template</field>
@@ -60,6 +133,7 @@
             <xpath expr="//field[@name='product_variant_ids']" position="before">
                 <separator/>
                 <filter name="received_two_weeks" string="Received in the Last Two Weeks" domain="[('last_in_date','&gt;=',(context_today()+datetime.timedelta(weeks=-2)).strftime('%Y-%m-%d'))]"/>
+                <filter name="received_today" string="Received Today" domain="[('last_in_date','&gt;=',(context_today()+datetime.timedelta(days=-1)).strftime('%Y-%m-%d'))]"/>
                 <field name="supplier_id"/>
                 <group expand="0" name='available' string="Available">
                     <filter name="warehouse_internal_location" string="Local: internal" domain="[('qty_available','&gt;',0)]"/>
@@ -82,19 +156,7 @@
         </field>
     </record>
 
-    <record id="product_template_internal_action" model="ir.actions.act_window">
-        <field name="name">Products: Internal</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">product.template</field>
-        <field name="view_mode">kanban,tree,form</field>
-        <field name="view_type">form</field>
-        <field name="view_id" ref="product_template_internal_kanban_view"/>
-        <field name="context">{"search_default_warehouse_internal_location":1}</field>
-    </record>
 
-    <menuitem action="product_template_internal_action"
-        id="menu_product_template__internal_action"
-        parent="base.menu_product" sequence="2" />
 
 
     <!-- Product Offer (EN): Availability -->
