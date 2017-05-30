@@ -5,7 +5,7 @@
             <field name="name">product.product.tree.view.z1</field>
             <field name="model">product.product</field>
             <field name="arch" type="xml">
-                <tree string="Product List Price Update" editable="top" create="false" delete="false">
+                <tree string="Product List Price Update" editable="top" delete="false">
                     <field name="default_code" string="Code" readonly="1"/>
                     <field name="name" string="Product Ref" readonly="1"/>
                     <field name="image_small" string="Image" widget="image" height="64px"/>
@@ -34,7 +34,7 @@
             <field name="name">Product List Price Update</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.product</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="product_product_tree_view_z1"/>
             <field name="context">{"search_default_warehouse_internal_location":1}</field>
