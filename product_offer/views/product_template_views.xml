@@ -53,7 +53,7 @@
         </field>
     </record>
 
-     <record id="product_template_internal_action" model="ir.actions.act_window">
+    <record id="product_template_internal_action" model="ir.actions.act_window">
         <field name="name">Products: Internal</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">product.template</field>
@@ -68,7 +68,7 @@
         parent="base.menu_product" sequence="2" />
 
 
-        <!-- Products: Internal CN -->
+    <!-- Products: Internal CN -->
     <record id="product_template_internal_CN_kanban_view" model="ir.ui.view">
         <field name="name">Product.template.product.kanban.CN</field>
         <field name="model">product.template</field>
@@ -106,7 +106,7 @@
         </field>
     </record>
 
-     <record id="product_template_internal_CN_action" model="ir.actions.act_window">
+    <record id="product_template_internal_CN_action" model="ir.actions.act_window">
         <field name="name">Products: Internal CN</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">product.template</field>
@@ -119,10 +119,6 @@
     <menuitem action="product_template_internal_CN_action"
         id="menu_product_template__internal_CN_action"
         parent="base.menu_product" sequence="2" />
-
-
-
-
 
 
     <record id="product_template_search_view" model="ir.ui.view">
@@ -155,8 +151,6 @@
            </xpath>
         </field>
     </record>
-
-
 
 
     <!-- Product Offer (EN): Availability -->
