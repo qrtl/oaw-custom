@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-# Copyright 2015-2017 Rooms For (Hong Kong) Limted T/A OSCG
+# Copyright 2015-2017 Quartile Limted
 # Copyright 2017 eHanse
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
-
 {
     'name': 'Stock View Adjust OAW',
     'summary': '',
@@ -26,8 +25,4 @@
         'views/stock_picking_views.xml',
         'views/stock_quant_views.xml',
     ],
-    'test': [],
-    'demo': [],
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
