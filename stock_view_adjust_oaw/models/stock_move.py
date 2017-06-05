@@ -8,6 +8,7 @@ from openerp import models, fields
 
 class StockMove(models.Model):
     _inherit = "stock.move"
+
     image_small = fields.Binary(
         'Image',
         related='product_id.product_tmpl_id.image_small',
