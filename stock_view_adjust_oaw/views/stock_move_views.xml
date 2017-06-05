@@ -2,6 +2,17 @@
 <openerp>
 <data>
 
+    <record id="view_move_picking_tree" model="ir.ui.view">
+        <field name="name">stock.move.tree</field>
+        <field name="model">stock.move</field>
+        <field name="inherit_id" ref="stock.view_move_picking_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_uom_qty']" position="before">
+                <field name="image_small" widget="image" height="64px"/>
+            </xpath>
+        </field>
+    </record>
+
     <record id="view_move_tree_extended" model="ir.ui.view">
         <field name="name">stock.move.tree.extended</field>
         <field name="model">stock.move</field>
