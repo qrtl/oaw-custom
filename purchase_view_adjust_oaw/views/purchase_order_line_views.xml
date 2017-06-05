@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+    <record id="purchase_order_line_tree_z160422" model="ir.ui.view">
+        <field name="name">purchase.order.line.tree.z160422</field>
+        <field name="model">purchase.order.line</field>
+        <field name="inherit_id" ref="purchase.purchase_order_line_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_id']" position="after">
+                <field name="mto" string="MTO"/>
+                <field name="vci" string="VCI"/>
+            </xpath>
+            <xpath expr="//field[@name='product_id']" position="after">
+                <field name="lot_id"/>
+                <field name="move_state"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="purchase_order_line_form2_z160422" model="ir.ui.view">
+        <field name="name">purchase.order.line.form2.z160422</field>
+        <field name="model">purchase.order.line</field>
+        <field name="inherit_id" ref="purchase.purchase_order_line_form2"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_id']" position="after">
+                <field name="lot_id"/>
+            </xpath>
+            <xpath expr="//field[@name='date_planned']" position="after">
+                <field name="mto" string="MTO"/>
+                <field name="vci" string="VCI"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="purchase_order_line_search_z160422" model="ir.ui.view">
+        <field name="name">purchase.order.line.search.z160422</field>
+        <field name="model">purchase.order.line</field>
+        <field name="inherit_id" ref="purchase.purchase_order_line_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_id']" position="after">
+                <field name="lot_id"/>
+                <field name="move_state"/>
+            </xpath>
+            <xpath expr="//filter[@name='hide_cancelled']" position="before">
+                <filter name="mto" string="MTO" domain="[('mto', '=', True)]"/>
+                <filter name="vci" string="VCI" domain="[('vci', '=', True)]"/>
+                <filter name="receipt_done" string="Receipt Done" domain="[('move_state', '=', 'done')]"/>
+            </xpath>
+            <xpath expr="//filter[@string='Status']" position="after">
+                <filter string="Move State" domain="[]" context="{'group_by' : 'move_state'}" />
+            </xpath>
+        </field>
+    </record>
+
+</data>
+</openerp>
