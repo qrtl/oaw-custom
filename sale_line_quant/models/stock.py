@@ -1,20 +1,6 @@
 # -*- coding: utf-8 -*-
-#    Odoo, Open Source Management Solution
-#    Copyright (C) 2015-2016 Rooms For (Hong Kong) Limited T/A OSCG
-#    <https://www.odoo-asia.com>
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# Copyright 2015-2017 Quartile Limted
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
@@ -105,100 +91,7 @@ class stock_move(osv.osv):
         # Pass the lot reference if invoice created from pickings.
         res.update({'lot_id': move.lot_id.id})
         return res
-    
-    def action_assign(self, cr, uid, ids, context=None):
-        """ Checks the product type and accordingly writes the state.
-        """
-        
-        #NEED TO OVERRIDE COMPLETE METHOD SINCE LOGIC WAS INBETWEEN THE LINES. PLEASE CHECK TAG #oscg TAG FOR CHANGES DONE ON THIS.
-        
-        context = context or {}
-        quant_obj = self.pool.get("stock.quant")
-        to_assign_moves = []
-        main_domain = {}
-        todo_moves = []
-        operations = set()
-        for move in self.browse(cr, uid, ids, context=context):
-            if move.state not in ('confirmed', 'waiting', 'assigned'):
-                continue
-            if move.location_id.usage in ('supplier', 'inventory', 'production'):
-                to_assign_moves.append(move.id)
-                #in case the move is returned, we want to try to find quants before forcing the assignment
-                if not move.origin_returned_move_id:
-                    continue
-            if move.product_id.type == 'consu':
-                to_assign_moves.append(move.id)
-                continue
-            else:
-                todo_moves.append(move)
 
-                #we always keep the quants already assigned and try to find the remaining quantity on quants not assigned only
-                main_domain[move.id] = [('reservation_id', '=', False), ('qty', '>', 0)]
-
-                #if the move is preceeded, restrict the choice of quants in the ones moved previously in original move
-                ancestors = self.find_move_ancestors(cr, uid, move, context=context)
-                if move.state == 'waiting' and not ancestors:
-                    #if the waiting move hasn't yet any ancestor (PO/MO not confirmed yet), don't find any quant available in stock
-                    main_domain[move.id] += [('id', '=', False)]
-                elif ancestors:
-                    main_domain[move.id] += [('history_ids', 'in', ancestors)]
-
-                #if the move is returned from another, restrict the choice of quants to the ones that follow the returned move
-                if move.origin_returned_move_id:
-                    main_domain[move.id] += [('history_ids', 'in', move.origin_returned_move_id.id)]
-                for link in move.linked_move_operation_ids:
-                    operations.add(link.operation_id)
-        # Check all ops and sort them: we want to process first the packages, then operations with lot then the rest
-        operations = list(operations)
-        operations.sort(key=lambda x: ((x.package_id and not x.product_id) and -4 or 0) + (x.package_id and -2 or 0) + (x.lot_id and -1 or 0))
-        for ops in operations:
-            #first try to find quants based on specific domains given by linked operations
-            for record in ops.linked_move_operation_ids:
-                move = record.move_id
-                if move.id in main_domain:
-                    domain = main_domain[move.id] + self.pool.get('stock.move.operation.link').get_specific_domain(cr, uid, record, context=context)
-                    qty = record.qty
-                    if qty:
-                    # add a serial number field in SO line, which should be passed to delivery order 
-                    # to reserve a quant of the selected serial number                        
-                        if record.move_id.quant_id: #oscg
-                            quants = [(record.move_id.quant_id, record.move_id.quant_id.qty)] #oscg
-                        else: #oscg
-                            quants = quant_obj.quants_get_prefered_domain(cr,
-                                uid, ops.location_id, move.product_id, qty,
-                                domain=domain, prefered_domain_list=[],
-                                restrict_lot_id=move.restrict_lot_id.id,
-                                restrict_partner_id=move.restrict_partner_id.\
-                                id, context=context) #oscg
-                            
-                        quant_obj.quants_reserve(cr, uid, quants, move, record, context=context)
-        for move in todo_moves:
-            if move.linked_move_operation_ids:
-                continue
-            # then if the move isn't totally assigned, try to find quants without any specific domain
-            if move.state != 'assigned':
-                qty_already_assigned = move.reserved_availability
-                qty = move.product_qty - qty_already_assigned
-                
-                # add a serial number field in SO line, which should be passed to delivery order 
-                # to reserve a quant of the selected serial number
-                if move.quant_id: #oscg
-                    quants = [(move.quant_id, qty)] #oscg
-                else: #oscg
-                    quants = quant_obj.quants_get_prefered_domain(cr, uid,
-                        move.location_id, move.product_id, qty,
-                        domain=main_domain[move.id], prefered_domain_list=[],
-                        restrict_lot_id=move.restrict_lot_id.id,
-                        restrict_partner_id=move.restrict_partner_id.id,
-                        context=context) #oscg
-                
-#                 a = self.pool.get('stock.move').read(cr,uid,move.id)
-                quant_obj.quants_reserve(cr, uid, quants, move, context=context)
-
-        #force assignation of consumable products and incoming from supplier/inventory/production
-        if to_assign_moves:
-            self.force_assign(cr, uid, to_assign_moves, context=context)
-            
     def _prepare_procurement_from_move(self, cr, uid, move, context=None):
         res = super(stock_move, self)._prepare_procurement_from_move(cr, uid, move, context=context)
         # Pass the lot ref, to stock move.
