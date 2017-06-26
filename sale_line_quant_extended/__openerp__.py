@@ -4,7 +4,7 @@
 {
     'name': 'Sale Line Quant Extended',
     'category': 'Sales',
-    'version': '8.0.1.2.1',
+    'version': '8.0.1.3.0',
     'author': 'Quartile Limited',
     'website': 'https://www.odoo-asia.com',
     'depends': [

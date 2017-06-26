@@ -140,7 +140,6 @@ class StockMove(models.Model):
         res['is_mto'] = move.is_mto
         return res
 
-    @api.v7
     def action_assign(self, cr, uid, ids, context=None):
         # NEED TO OVERRIDE COMPLETE METHOD SINCE LOGIC WAS IN BETWEEN THE
         # LINES. SEE #oscg TAG FOR CHANGES DONE ON THIS METHOD.
@@ -169,6 +168,12 @@ class StockMove(models.Model):
 
                 #we always keep the quants already assigned and try to find the remaining quantity on quants not assigned only
                 main_domain[move.id] = [('reservation_id', '=', False), ('qty', '>', 0)]
+
+                # oscg add
+                # this is to prevent reserving quants that are taken by
+                # quotations for supplier return outgoing move
+                if move.location_dest_id.usage == 'supplier':
+                    main_domain[move.id] += [('sale_id', '=', False)]
 
                 #if the move is preceeded, restrict the choice of quants in the ones moved previously in original move
                 ancestors = self.find_move_ancestors(cr, uid, move, context=context)
