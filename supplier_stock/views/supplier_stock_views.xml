@@ -32,6 +32,10 @@
                 <field name="product_name"/>
                 <field name="currency_id"/>
                 <group expand="0" string="Group By">
+                    <group expand="0" name='filter' string="Filter">
+                    <filter name="updated" string="Updated and New Entry" domain="[('write_date','&gt;=',(context_today()+datetime.timedelta(days=-1)).strftime('%Y-%m-%d'))]"/>
+                    <filter name="new entry" string="New Entry" domain="[('create_date','&gt;=',(context_today()+datetime.timedelta(days=-1)).strftime('%Y-%m-%d'))]"/>
+                </group>
                     <filter string="Supplier" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
                     <filter string="Supplier Location" icon="terp-folder-green" domain="[]" context="{'group_by':'partner_loc_id'}"/>
                     <filter string="Currency" icon="terp-folder-green" domain="[]" context="{'group_by':'currency_id'}"/>
