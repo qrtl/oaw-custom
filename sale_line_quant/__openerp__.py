@@ -4,7 +4,7 @@
 {
     'name': 'Quant/Serial Number on Sales',
     'category': 'Sale',
-    'version': '8.0.1.5.0',
+    'version': '8.0.1.5.1',
     'author': 'Quartile Limited',
     'website': 'https://www.odoo-asia.com',
     'depends': [

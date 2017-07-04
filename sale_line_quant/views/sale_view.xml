@@ -34,7 +34,7 @@
             <xpath expr="/form/sheet/notebook/page[@string='Order Lines']/field[@name='order_line']/tree[@string='Sales Order Lines']/field[@name='tax_id'] " position="replace">
                 <field name="tax_id" widget="many2many_tags" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]" invisible="1"/>
             </xpath>
-            <xpath expr="/form/sheet/notebook/page[@string='Order Lines']/field[@name='order_line']/tree[@string='Sales Order Lines']/field[@name='price_subtotal'] " position="after">
+            <xpath expr="/form/sheet/notebook/page[@string='Order Lines']/field[@name='order_line']/tree[@string='Sales Order Lines']/field[@name='product_id'] " position="after">
                 <field name="quant_id"
                     options="{'no_quick_create':True, 'no_create_edit':True}"
                     domain="[('reservation_id', '=', False),
