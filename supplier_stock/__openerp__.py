@@ -5,7 +5,7 @@
 {
     'name': 'Supplier Stock',
     'category': 'Stock',
-    'version': '8.0.1.2.1',
+    'version': '8.0.1.2.2',
     'author': 'Quartile Limited T/A OSCG',
     'website': 'https://www.odoo-asia.com',
     'depends': [

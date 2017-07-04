@@ -38,7 +38,6 @@
                     <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
                 </group>
                 <group expand="0" name='filter' string="Filter">
-                    <filter name="updated" string="Updated and New Entry" domain="[('write_date','&gt;=',(context_today()+datetime.timedelta(days=-1)).strftime('%Y-%m-%d'))]"/>
                     <filter name="new_entry" string="New Entry" domain="[('create_date','&gt;=',(context_today()+datetime.timedelta(days=-1)).strftime('%Y-%m-%d'))]"/>
                 </group>
             </search>
