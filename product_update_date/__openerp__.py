@@ -1,22 +1,19 @@
 # -*- coding: utf-8 -*-
 # Copyright 2017 Quartile Limted
-# Copyright 2017 eHanse
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 {
-    'name': 'Supplier Stock',
-    'category': 'Stock',
-    'version': '8.0.1.2.2',
-    'author': 'Quartile Limited T/A OSCG',
+    'name': 'Product Update Date',
+    'version': '8.0.1.0.0',
+    'author': 'Quartile Limited',
     'website': 'https://www.odoo-asia.com',
+    'category': 'Product',
     'depends': [
-        'purchase',
+        "product_listprice_list_view",
     ],
-    'summary':"""""",
     'description': """
     """,
     'data': [
-        'security/ir.model.access.csv',
-        'views/supplier_location_views.xml',
+        'views/product_template_views.xml',
         'views/supplier_stock_views.xml',
     ],
     'installable': True,
