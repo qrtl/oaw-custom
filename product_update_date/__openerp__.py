@@ -14,6 +14,7 @@
     """,
     'data': [
         'views/product_template_views.xml',
+        'views/supplier_stock_views.xml',
     ],
     'installable': True,
 }

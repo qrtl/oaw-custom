@@ -21,3 +21,8 @@ class ProductTemplate(models.Model):
     def update_updated_date(self):
         for p in self:
             p.updated_date = fields.Datetime.now()
+            ss_recs = self.env['supplier.stock'].search(
+                [('product_id', '=', p.id)])
+            if ss_recs:
+                for rec in ss_recs:
+                    rec.write({'updated_date': p.updated_date})
