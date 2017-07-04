@@ -5,9 +5,9 @@
 {
     'name': 'Stock View Adjust OAW',
     'summary': '',
-    'version': '8.0.1.1.0',
+    'version': '8.0.1.1.1',
     'category': 'Stock',
-    'author': 'Rooms For (Hong Kong) Limited T/A OSCG',
+    'author': 'Quartile Limited',
     'website': 'https://www.odoo-asia.com',
     'description': """
     """,
