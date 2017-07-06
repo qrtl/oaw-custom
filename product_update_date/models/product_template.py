@@ -19,10 +19,5 @@ class ProductTemplate(models.Model):
     @api.depends('list_price', 'net_price', 'qty_reserved', 'qty_local_stock',
                  'qty_overseas')
     def update_updated_date(self):
-        for p in self:
-            p.updated_date = fields.Datetime.now()
-            ss_recs = self.env['supplier.stock'].search(
-                [('product_id', '=', p.id)])
-            if ss_recs:
-                for rec in ss_recs:
-                    rec.write({'updated_date': p.updated_date})
+        for pt in self:
+            pt.updated_date = fields.Datetime.now()

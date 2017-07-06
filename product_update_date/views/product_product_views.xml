@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+    <record id="product_product_tree_view_z1" model="ir.ui.view">
+        <field name="name">product.product.tree.view.z1</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product_listprice_list_view.product_product_tree_view_z1"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='chronoNote']" position="after">
+                <button name="update_updated_date" type="object" string="Updated" groups="base.group_sale_manager"/>
+            </xpath>
+        </field>
+    </record>
+
+</data>
+</openerp>
