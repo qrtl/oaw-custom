@@ -10,9 +10,17 @@ class SupplierStock(models.Model):
 
     updated_date = fields.Datetime(
         default=fields.Datetime.now(),
+        compute='update_updated_date',
+        store=True,
         string="Updated Date",
     )
 
+
+    @api.multi
+    @api.depends('product_id.product_tmpl_id.updated_date')
+    def update_updated_date(self):
+        for rec in self:
+            rec.updated_date = fields.Datetime.now()
 
     @api.multi
     def write(self, vals):
