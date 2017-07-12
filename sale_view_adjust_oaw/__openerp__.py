@@ -4,7 +4,7 @@
 {
     'name': 'Sales View Adjust OAW',
     'summary': '',
-    'version': '8.0.1.0.0',
+    'version': '8.0.1.0.1',
     'category': 'Sales',
     'author': 'Quartile Limited',
     'website': 'https://www.odoo-asia.com',
