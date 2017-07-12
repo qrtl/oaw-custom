@@ -4,7 +4,7 @@
 {
     'name': 'Purchase View Adjust',
     'summary': "",
-    'version': "8.0.1.1.0",
+    'version': "8.0.1.1.1",
     'category': 'Purchases',
     'website': 'https://www.odoo-asia.com',
     'author': 'Quartile Limited',
