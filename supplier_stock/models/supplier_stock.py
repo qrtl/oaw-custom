@@ -70,12 +70,6 @@ class SupplierStock(models.Model):
         related='product_id.product_tmpl_id.image_small',
         readonly=True,
     )
-    cost = fields.Float(
-        string='Unit Cost',
-        store=True,
-        readonly=True,
-        digits=dp.get_precision('Product Price'),
-    )
 
     @api.one
     @api.depends('price_unit', 'quantity', 'currency_id')
@@ -102,28 +96,13 @@ class SupplierStock(models.Model):
         return
 
     @api.model
-    def _get_current_rates(self):
-        rate_data = []
-        recs = self.env['res.currency'].search(
-            [('active', '=', True)]
-        )
-        for rec in recs:
-            if rec.rate:
-                rate_data.append({'currency_id': rec.id, 'rate': rec.rate})
-        return rate_data
-
-    @api.model
     def revaluate_supplier_stock(self, product_ids=[]):
         domain = [
             ('price_unit', '!=', False),
             ('currency_id', '!=', self.env.user.company_id.currency_id.id)]
         if product_ids:
             domain.append(('id', 'in', product_ids))
-        rate_data = self._get_current_rates()
-        for rate_dict in rate_data:
-            domain.append(('currency_id', '=', rate_dict['currency_id']))
-            stocks = self.search(domain)
-            domain.pop()
-            for stock in stocks:
-                stock.cost = stock.price_unit / rate_dict['rate']
+        stocks = self.search(domain)
+        for stock in stocks:
+            stock._compute_price_base()
         return True
