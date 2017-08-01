@@ -14,6 +14,6 @@
     ],
     "data": [
         "wizards/stock_vci_revaluation_wizard_view.xml",
-        'data/stock_vci_revaluation_data.xml',
+        "data/stock_vci_revaluation_data.xml",
     ],
 }

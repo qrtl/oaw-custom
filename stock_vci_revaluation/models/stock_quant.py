@@ -31,6 +31,7 @@ class StockQuant(models.Model):
         for rate_dict in rate_data:
             domain.append(('currency_id', '=', rate_dict['currency_id']))
             quants = self.search(domain)
+            domain.pop()
             for q in quants:
                 q.cost = q.purchase_price_unit / rate_dict['rate']
         return True

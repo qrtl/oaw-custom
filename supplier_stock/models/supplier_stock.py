@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
-# Copyright 2017 Rooms For (Hong Kong) Limted T/A OSCG
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+# Copyright 2017 Quartile Limited
+# Copyright 2017 eHanse
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from openerp import models, fields, api, _
+from openerp import api, fields, models, _
 import openerp.addons.decimal_precision as dp
 
 
@@ -69,7 +70,12 @@ class SupplierStock(models.Model):
         related='product_id.product_tmpl_id.image_small',
         readonly=True,
     )
-
+    cost = fields.Float(
+        string='Unit Cost',
+        store=True,
+        readonly=True,
+        digits=dp.get_precision('Product Price'),
+    )
 
     @api.one
     @api.depends('price_unit', 'quantity', 'currency_id')
@@ -94,3 +100,30 @@ class SupplierStock(models.Model):
             rec.price_unit_base = curr_obj.browse(rec.currency_id.id).compute(
                 rec.price_unit, company_curr)
         return
+
+    @api.model
+    def _get_current_rates(self):
+        rate_data = []
+        recs = self.env['res.currency'].search(
+            [('active', '=', True)]
+        )
+        for rec in recs:
+            if rec.rate:
+                rate_data.append({'currency_id': rec.id, 'rate': rec.rate})
+        return rate_data
+
+    @api.model
+    def revaluate_supplier_stock(self, product_ids=[]):
+        domain = [
+            ('price_unit', '!=', False),
+            ('currency_id', '!=', self.env.user.company_id.currency_id.id)]
+        if product_ids:
+            domain.append(('id', 'in', product_ids))
+        rate_data = self._get_current_rates()
+        for rate_dict in rate_data:
+            domain.append(('currency_id', '=', rate_dict['currency_id']))
+            stocks = self.search(domain)
+            domain.pop()
+            for stock in stocks:
+                stock.cost = stock.price_unit / rate_dict['rate']
+        return True
