@@ -2,7 +2,7 @@
 # Copyright 2017 Quartile Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from openerp import api, models, fields
+from openerp import models, fields, api
 
 
 class StockVciRevaluationWizard(models.TransientModel):
