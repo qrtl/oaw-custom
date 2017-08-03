@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-# Copyright 2017 Rooms For (Hong Kong) Limted T/A OSCG
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+# Copyright 2017 Quartile Limited
+# Copyright 2017 eHanse
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from openerp import models, fields, api, _
 import openerp.addons.decimal_precision as dp
@@ -69,7 +70,6 @@ class SupplierStock(models.Model):
         related='product_id.product_tmpl_id.image_small',
         readonly=True,
     )
-
 
     @api.one
     @api.depends('price_unit', 'quantity', 'currency_id')

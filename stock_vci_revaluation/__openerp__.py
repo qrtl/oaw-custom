@@ -3,7 +3,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 {
     "name": "Stock VCI Revaluation",
-    "version": "8.0.1.0.0",
+    "version": "8.0.1.1.0",
     "category": "Stock",
     "website": "https://www.odoo-asia.com/",
     "author": "Quartile Limited",
@@ -14,5 +14,6 @@
     ],
     "data": [
         "wizards/stock_vci_revaluation_wizard_view.xml",
+        "data/stock_vci_revaluation_data.xml",
     ],
 }

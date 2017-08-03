@@ -16,6 +16,7 @@
                 <field name="quantity"/>
                 <field name="currency_id" options="{'no_create_edit':True}"/>
                 <field name="price_unit"/>
+                <field name="price_unit_base" string="HKD Value"/>
                 <field name="price_subtotal" sum="Total Amount"/>
             </tree>
         </field>
@@ -55,8 +56,8 @@
     </record>
 
     <menuitem action="action_supplier_stock"
-        id="menu_supplier_stock"
-        parent="stock.menu_stock_inventory_control" sequence="10"/>
+              id="menu_supplier_stock"
+              parent="stock.menu_stock_inventory_control" sequence="10"/>
 
 </data>
 </openerp>
