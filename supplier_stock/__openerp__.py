@@ -15,11 +15,9 @@
     'description': """
     """,
     'data': [
-        'data/supplier_stock_data.xml',
         'security/ir.model.access.csv',
         'views/supplier_location_views.xml',
         'views/supplier_stock_views.xml',
-        'wizards/supplier_stock_revaluation_wizard_view.xml',
     ],
     'installable': True,
 }

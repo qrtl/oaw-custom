@@ -94,15 +94,3 @@ class SupplierStock(models.Model):
             rec.price_unit_base = curr_obj.browse(rec.currency_id.id).compute(
                 rec.price_unit, company_curr)
         return
-
-    @api.model
-    def revaluate_supplier_stock(self, product_ids=[]):
-        domain = [
-            ('price_unit', '!=', False),
-            ('currency_id', '!=', self.env.user.company_id.currency_id.id)]
-        if product_ids:
-            domain.append(('id', 'in', product_ids))
-        stocks = self.search(domain)
-        for stock in stocks:
-            stock._compute_price_base()
-        return True
