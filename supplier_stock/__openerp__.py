@@ -5,7 +5,7 @@
 {
     'name': 'Supplier Stock',
     'category': 'Stock',
-    'version': '8.0.1.3.3',
+    'version': '8.0.1.2.4',
     'author': 'Quartile Limited',
     'website': 'https://www.odoo-asia.com',
     'depends': [
