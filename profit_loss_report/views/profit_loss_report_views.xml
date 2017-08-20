@@ -7,6 +7,11 @@
         <field name="model">profit.loss.report</field>
         <field name="arch" type="xml">
             <tree editable="top">
+                <field name="in_move_id"/>
+                <field name="in_move_date"/>
+                <field name="in_period_id"/>
+                <field name="in_move_quant_owner_id"/>
+                <field name="stock_type"/>
                 <field name="product_id"/>
                 <field name="categ_id" invisible="1"/>
                 <field name="categ_name"/>
@@ -21,6 +26,8 @@
                 <field name="partner_id"/>
                 <field name="partner_ref" invisible="1"/>
                 <field name="sale_order_note"/>
+                <field name="out_move_id"/>
+                <field name="out_move_date"/>
             </tree>
         </field>
     </record>

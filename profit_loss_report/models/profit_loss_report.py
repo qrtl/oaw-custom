@@ -76,14 +76,47 @@ class ProfitLossReport(models.TransientModel):
         string='Quotation Notes',
         readonly=True,
     )
+    out_move_id = fields.Many2one(
+        comodel_name='stock.move',
+        string='Outgoing Move',
+        readonly=True,
+    )
+    out_move_date = fields.Date(
+        string='Outgoing Move Date',
+        readonly=True,
+    )
+    in_move_id = fields.Many2one(
+        comodel_name='stock.move',
+        string='Incoming Move',
+        readonly=True,
+    )
+    in_move_date = fields.Date(
+        string='Incoming Move Date',
+        readonly=True,
+    )
+    in_period_id = fields.Many2one(
+        comodel_name='account.period',
+        string='Period',
+        readonly=True,
+    )
+    in_move_quant_owner_id = fields.Many2one(
+        comodel_name='res.partner',
+        string='Owner',
+        readonly=True,
+    )
+    stock_type = fields.Selection(
+        [('own', 'Own Stock'),
+         ('vci', 'VCI')],
+        string='Stock Type',
+        readonly=True,
+    )
 
 
     @api.multi
-    @api.depends('list_price', 'net_price')
     def _get_discount(self):
-        for pt in self:
-            if not pt.list_price or not pt.net_price:
-                pt.discount = 0.0
+        for rec in self:
+            if not rec.list_price or not rec.net_price:
+                rec.discount = 0.0
             else:
-                pt.discount = (1 - pt.net_price / pt.list_price) * 100
+                rec.discount = (1 - rec.net_price / rec.list_price) * 100
         return
