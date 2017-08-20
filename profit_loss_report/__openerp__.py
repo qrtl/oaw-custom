@@ -9,6 +9,7 @@
     'category': 'Report',
     'depends': [
         'sale_line_quant_extended',
+        'product_offer',
     ],
     'description': """
     """,

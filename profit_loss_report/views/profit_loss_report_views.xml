@@ -6,9 +6,21 @@
         <field name="name">profit.loss.report.tree.view</field>
         <field name="model">profit.loss.report</field>
         <field name="arch" type="xml">
-            <tree>
+            <tree editable="top">
                 <field name="product_id"/>
-                <field name="categ_id"/>
+                <field name="categ_id" invisible="1"/>
+                <field name="categ_name"/>
+                <field name="lot_id"/>
+                <field name="date_order"/>
+                <field name="user_id"/>
+                <field name="sale_order_id"/>
+                <field name="invoice_id"/>
+                <field name="list_price"/>
+                <field name="discount"/>
+                <field name="net_price"/>
+                <field name="partner_id"/>
+                <field name="partner_ref" invisible="1"/>
+                <field name="sale_order_note"/>
             </tree>
         </field>
     </record>
