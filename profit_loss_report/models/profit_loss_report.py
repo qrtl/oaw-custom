@@ -139,6 +139,16 @@ class ProfitLossReport(models.TransientModel):
         string='FX Rate',
         readonly=True,
     )
+    purchase_base_price = fields.Float(
+        string='Purchase Base Price',
+        digits= dp.get_precision('Account'),
+        readonly = True,
+    )
+    supplier_invoice_id = fields.Many2one(
+        comodel_name='account.invoice',
+        string='Supplier Invoice',
+        readonly=True,
+    )
 
 
     @api.multi

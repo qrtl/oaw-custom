@@ -47,7 +47,8 @@ class ProfitLossReportWizard(models.TransientModel):
                 supplier_id,
                 supplier_ref,
                 purchase_currency_id,
-                purchase_currency_price
+                purchase_currency_price,
+                supplier_invoice_id
             )
         WITH
             outgoing_moves AS (
@@ -95,10 +96,11 @@ class ProfitLossReportWizard(models.TransientModel):
             ),
             purchase_data AS (
                 SELECT DISTINCT ON (pol.lot_id)
-                    po.id,
+                    po.id AS purchase_id,
                     po.partner_id,
                     rp.ref,
                     po.currency_id,
+                    pol.id AS purchase_line_id,
                     pol.price_unit,
                     pol.lot_id
                 FROM
@@ -112,6 +114,22 @@ class ProfitLossReportWizard(models.TransientModel):
                 ORDER BY
                     pol.lot_id,
                     po.date_order desc
+            ),
+            supplier_invoice_data AS (
+                SELECT DISTINCT ON (ail.purchase_line_id)
+                    ail.purchase_line_id,
+                    ai.id AS supplier_invoice_id
+                FROM
+                    account_invoice_line ail
+                JOIN
+                    account_invoice ai ON ail.invoice_id = ai.id
+                WHERE
+                    ai.type = 'in_invoice' AND
+                    ai.state != 'cancel' AND
+                    ai.company_id = %s
+                ORDER BY
+                    ail.purchase_line_id,
+                    ai.date_invoice
             )
         SELECT
             %s AS create_uid,
@@ -134,11 +152,12 @@ class ProfitLossReportWizard(models.TransientModel):
             im.id,
             im.date,
             im.quant_owner_id,
-            pd.id,
+            pd.purchase_id,
             pd.partner_id,
             pd.ref,
             pd.currency_id,
-            pd.price_unit
+            pd.price_unit,
+            sid.supplier_invoice_id
         FROM
             account_invoice_line ail
         JOIN
@@ -159,6 +178,9 @@ class ProfitLossReportWizard(models.TransientModel):
             incoming_moves im ON ail.lot_id = im.lot_id
         LEFT JOIN
             purchase_data pd ON ail.lot_id = pd.lot_id
+        LEFT JOIN
+            supplier_invoice_data sid ON
+                pd.purchase_line_id = sid.purchase_line_id
         WHERE
             ai.type = 'out_invoice' AND
             ai.state in ('open', 'paid') AND
@@ -167,6 +189,7 @@ class ProfitLossReportWizard(models.TransientModel):
         """
         company_id = self.env.user.company_id.id
         params = (
+            company_id,
             company_id,
             company_id,
             company_id,
@@ -211,6 +234,8 @@ class ProfitLossReportWizard(models.TransientModel):
                 rec.exchange_rate = self.env['res.currency'].with_context(
                     ctx)._get_conversion_rate(rec.purchase_currency_id,
                                               comp_currency_id)
+            rec.purchase_base_price = \
+                rec.purchase_currency_price * rec.exchange_rate
 
     @api.multi
     def action_generate_profit_loss_records(self):

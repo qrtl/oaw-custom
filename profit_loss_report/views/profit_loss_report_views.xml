@@ -32,8 +32,10 @@
                 <field name="supplier_ref" invisible="1"/>
                 <field name="purchase_currency_id"/>
                 <field name="purchase_currency_price"/>
-                <field name="purchase_order_id"/>
                 <field name="exchange_rate"/>
+                <field name="purchase_base_price"/>
+                <field name="purchase_order_id"/>
+                <field name="supplier_invoice_id"/>
             </tree>
         </field>
     </record>
