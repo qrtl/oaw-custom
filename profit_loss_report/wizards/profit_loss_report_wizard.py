@@ -42,7 +42,12 @@ class ProfitLossReportWizard(models.TransientModel):
                 out_move_date,
                 in_move_id,
                 in_move_date,
-                in_move_quant_owner_id
+                in_move_quant_owner_id,
+                purchase_order_id,
+                supplier_id,
+                supplier_ref,
+                purchase_currency_id,
+                purchase_currency_price
             )
         WITH
             outgoing_moves AS (
@@ -60,7 +65,8 @@ class ProfitLossReportWizard(models.TransientModel):
                     stock_quant sq ON qmr.quant_id = sq.id
                 WHERE
                     sl.usage = 'customer' AND
-                    sm.state = 'done'
+                    sm.state = 'done' AND
+                    sm.company_id = %s
                 ORDER BY
                     sq.lot_id,
                     sm.date desc
@@ -81,10 +87,31 @@ class ProfitLossReportWizard(models.TransientModel):
                     stock_quant sq ON qmr.quant_id = sq.id
                 WHERE
                     sl.usage = 'supplier' AND
-                    sm.state = 'done'
+                    sm.state = 'done' AND
+                    sm.company_id = %s
                 ORDER BY
                     sq.lot_id,
                     sm.date
+            ),
+            purchase_data AS (
+                SELECT DISTINCT ON (pol.lot_id)
+                    po.id,
+                    po.partner_id,
+                    rp.ref,
+                    po.currency_id,
+                    pol.price_unit,
+                    pol.lot_id
+                FROM
+                    purchase_order_line pol
+                JOIN
+                    purchase_order po ON pol.order_id = po.id
+                JOIN
+                    res_partner rp ON po.partner_id = rp.id
+                WHERE
+                    pol.company_id = %s
+                ORDER BY
+                    pol.lot_id,
+                    po.date_order desc
             )
         SELECT
             %s AS create_uid,
@@ -106,7 +133,12 @@ class ProfitLossReportWizard(models.TransientModel):
             om.date,
             im.id,
             im.date,
-            im.quant_owner_id
+            im.quant_owner_id,
+            pd.id,
+            pd.partner_id,
+            pd.ref,
+            pd.currency_id,
+            pd.price_unit
         FROM
             account_invoice_line ail
         JOIN
@@ -125,14 +157,22 @@ class ProfitLossReportWizard(models.TransientModel):
             outgoing_moves om ON ail.lot_id = om.lot_id
         LEFT JOIN
             incoming_moves im ON ail.lot_id = im.lot_id
+        LEFT JOIN
+            purchase_data pd ON ail.lot_id = pd.lot_id
         WHERE
             ai.type = 'out_invoice' AND
             ai.state in ('open', 'paid') AND
-            ai.date_invoice >= %s
+            ai.date_invoice >= %s AND
+            ail.company_id = %s
         """
+        company_id = self.env.user.company_id.id
         params = (
+            company_id,
+            company_id,
+            company_id,
             self.env.uid,
-            threshold_date
+            threshold_date,
+            company_id
         )
         self.env.cr.execute(query, params)
 
@@ -147,10 +187,30 @@ class ProfitLossReportWizard(models.TransientModel):
             if rec.in_move_date:
                 rec.in_period_id = self.env['account.period'].with_context(
                     ctx).find(rec.in_move_date)[:1]
-            if not rec.in_move_quant_owner_id == self.env.user.company_id.partner_id:
+            if not rec.in_move_quant_owner_id == \
+                    self.env.user.company_id.partner_id:
                 rec.stock_type = 'vci'
             else:
                 rec.stock_type = 'own'
+            if not rec.purchase_order_id and rec.stock_type == 'vci':
+                rec.supplier_id = rec.in_move_quant_owner_id
+                if rec.supplier_id:
+                    rec.supplier_ref = rec.in_move_quant_owner_id.ref
+                if rec.in_move_id:
+                    rec.purchase_order_id = \
+                        rec.in_move_id.purchase_line_id.order_id
+                    rec.purchase_currency_id = rec.in_move_id.currency_id
+                    rec.purchase_currency_price = \
+                        rec.in_move_id.purchase_price_unit
+            ctx['date'] = rec.out_move_date or rec.invoice_id.date_invoice \
+                if rec.stock_type == 'vci' else rec.in_move_date
+            comp_currency_id = self.env.user.company_id.currency_id
+            if rec.purchase_currency_id == comp_currency_id:
+                rec.exchange_rate = 1.0
+            elif ctx['date'] and rec.purchase_currency_id:
+                rec.exchange_rate = self.env['res.currency'].with_context(
+                    ctx)._get_conversion_rate(rec.purchase_currency_id,
+                                              comp_currency_id)
 
     @api.multi
     def action_generate_profit_loss_records(self):
@@ -158,4 +218,5 @@ class ProfitLossReportWizard(models.TransientModel):
         self.env.cr.execute("DELETE FROM profit_loss_report")
         self._inject_data(self.threshold_date)
         self._update_records()
-        return {'type': 'ir.actions.act_window_close'}
+        res = self.env.ref('profit_loss_report.profit_loss_report_action')
+        return res.read()[0]

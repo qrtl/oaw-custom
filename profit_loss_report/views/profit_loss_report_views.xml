@@ -28,6 +28,12 @@
                 <field name="sale_order_note"/>
                 <field name="out_move_id"/>
                 <field name="out_move_date"/>
+                <field name="supplier_id"/>
+                <field name="supplier_ref" invisible="1"/>
+                <field name="purchase_currency_id"/>
+                <field name="purchase_currency_price"/>
+                <field name="purchase_order_id"/>
+                <field name="exchange_rate"/>
             </tree>
         </field>
     </record>

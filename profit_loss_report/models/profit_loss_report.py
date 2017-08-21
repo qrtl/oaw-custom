@@ -110,6 +110,35 @@ class ProfitLossReport(models.TransientModel):
         string='Stock Type',
         readonly=True,
     )
+    purchase_order_id = fields.Many2one(
+        comodel_name='purchase.order',
+        string='Purchase Order',
+        readonly=True,
+    )
+    supplier_id = fields.Many2one(
+        comodel_name='res.partner',
+        string='Supplier',
+        readonly=True,
+    )
+    supplier_ref = fields.Char(
+        string='Supplier Ref.',
+        readonly=True,
+    )
+    purchase_currency_id = fields.Many2one(
+        comodel_name='res.currency',
+        string='Purchase Currency',
+        readonly=True,
+    )
+    purchase_currency_price = fields.Float(
+        string="Purchase Curr. Price",
+        digits=dp.get_precision('Product Price'),
+        readonly=True,
+    )
+    exchange_rate = fields.Float(
+        digits=(12, 6),
+        string='FX Rate',
+        readonly=True,
+    )
 
 
     @api.multi
