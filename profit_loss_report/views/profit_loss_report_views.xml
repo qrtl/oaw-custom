@@ -25,17 +25,23 @@
                 <field name="net_price"/>
                 <field name="partner_id"/>
                 <field name="partner_ref" invisible="1"/>
-                <field name="sale_order_note"/>
+                <field name="customer_payment_ref"/>
+                <field name="customer_payment_dates"/>
+                <field name="customer_payment_ids"/>
                 <field name="out_move_id"/>
                 <field name="out_move_date"/>
+                <field name="sale_order_note"/>
                 <field name="supplier_id"/>
                 <field name="supplier_ref" invisible="1"/>
+                <field name="supplier_invoice_number"/>
                 <field name="purchase_currency_id"/>
                 <field name="purchase_currency_price"/>
                 <field name="exchange_rate"/>
                 <field name="purchase_base_price"/>
                 <field name="purchase_order_id"/>
-                <field name="supplier_invoice_id"/>
+                <field name="purchase_invoice_id"/>
+                <field name="base_profit"/>
+                <field name="base_profit_percent"/>
             </tree>
         </field>
     </record>

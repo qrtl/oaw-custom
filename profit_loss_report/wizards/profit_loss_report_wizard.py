@@ -48,7 +48,8 @@ class ProfitLossReportWizard(models.TransientModel):
                 supplier_ref,
                 purchase_currency_id,
                 purchase_currency_price,
-                supplier_invoice_id
+                purchase_invoice_id,
+                supplier_invoice_number
             )
         WITH
             outgoing_moves AS (
@@ -115,10 +116,11 @@ class ProfitLossReportWizard(models.TransientModel):
                     pol.lot_id,
                     po.date_order desc
             ),
-            supplier_invoice_data AS (
+            purchase_invoice_data AS (
                 SELECT DISTINCT ON (ail.purchase_line_id)
                     ail.purchase_line_id,
-                    ai.id AS supplier_invoice_id
+                    ai.id AS supplier_invoice_id,
+                    ai.supplier_invoice_number
                 FROM
                     account_invoice_line ail
                 JOIN
@@ -157,7 +159,8 @@ class ProfitLossReportWizard(models.TransientModel):
             pd.ref,
             pd.currency_id,
             pd.price_unit,
-            sid.supplier_invoice_id
+            pid.supplier_invoice_id,
+            pid.supplier_invoice_number
         FROM
             account_invoice_line ail
         JOIN
@@ -179,8 +182,8 @@ class ProfitLossReportWizard(models.TransientModel):
         LEFT JOIN
             purchase_data pd ON ail.lot_id = pd.lot_id
         LEFT JOIN
-            supplier_invoice_data sid ON
-                pd.purchase_line_id = sid.purchase_line_id
+            purchase_invoice_data pid ON
+                pd.purchase_line_id = pid.purchase_line_id
         WHERE
             ai.type = 'out_invoice' AND
             ai.state in ('open', 'paid') AND
@@ -236,6 +239,17 @@ class ProfitLossReportWizard(models.TransientModel):
                                               comp_currency_id)
             rec.purchase_base_price = \
                 rec.purchase_currency_price * rec.exchange_rate
+            rec.base_profit = rec.net_price - rec.purchase_base_price
+            if rec.purchase_base_price:
+                rec.base_profit_percent = \
+                    rec.base_profit / rec.purchase_base_price * 100
+            else:
+                rec.base_profit_percent = 999.99
+            rec.customer_payment_ids = rec.invoice_id.payment_ids
+            rec.customer_payment_dates = ', '.join(
+                rec.customer_payment_ids.mapped('date'))
+            rec.customer_payment_ref = ', '.join(
+                rec.customer_payment_ids.mapped('ref'))
 
     @api.multi
     def action_generate_profit_loss_records(self):

@@ -144,12 +144,38 @@ class ProfitLossReport(models.TransientModel):
         digits= dp.get_precision('Account'),
         readonly = True,
     )
-    supplier_invoice_id = fields.Many2one(
+    purchase_invoice_id = fields.Many2one(
         comodel_name='account.invoice',
-        string='Supplier Invoice',
+        string='Purchase Invoice',
         readonly=True,
     )
-
+    supplier_invoice_number = fields.Char(
+        string='Supplier Invoice No.',
+        readonly=True,
+    )
+    base_profit = fields.Float(
+        string='Base Profit',
+        readonly=True,
+    )
+    base_profit_percent = fields.Float(
+        string='Profit %',
+        digits=dp.get_precision('Discount'),
+        readonly=True,
+    )
+    customer_payment_ids = fields.Many2many(
+        string='Customer Payment',
+        comodel_name='account.move.line',
+        # related='invoice_id.payment_ids',
+        readonly=True,
+    )
+    customer_payment_dates = fields.Char(
+        string='Payment Date',
+        readonly=True,
+    )
+    customer_payment_ref = fields.Char(
+        string='Payment Ref.',
+        readonly=True,
+    )
 
     @api.multi
     def _get_discount(self):
