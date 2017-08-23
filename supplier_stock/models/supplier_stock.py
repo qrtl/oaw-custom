@@ -43,6 +43,20 @@ class SupplierStock(models.Model):
         store=True,
         readonly=True,
     )
+
+    product_list_price = fields.Float(
+        string='Retail HKD',
+        related='product_id.list_price',
+        readonly=True,
+    )
+
+    product_list_price_discount = fields.Float(
+        string="Discount(%)",
+        digits=dp.get_precision('Discount'),
+        compute='_compute_discount',
+        readonly=True
+    )
+
     quantity = fields.Float(
         string='Quantity',
         digits=dp.get_precision('Product Unit of Measure'),
@@ -93,4 +107,14 @@ class SupplierStock(models.Model):
         for rec in self:
             rec.price_unit_base = curr_obj.browse(rec.currency_id.id).compute(
                 rec.price_unit, company_curr)
+        return
+
+    @api.multi
+    @api.depends('product_list_price', 'price_unit_base')
+    def _compute_discount(self):
+        for ss in self:
+            if ss.product_list_price == 0.0 or ss.price_unit_base == 0.0:
+                ss.product_list_price_discount = 0.0
+            else:
+                ss.product_list_price_discount = (1-(ss.price_unit_base/ss.product_list_price)) * 100
         return
