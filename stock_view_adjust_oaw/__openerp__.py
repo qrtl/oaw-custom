@@ -5,7 +5,7 @@
 {
     'name': 'Stock View Adjust OAW',
     'summary': '',
-    'version': '8.0.1.1.2',
+    'version': '8.0.1.2.0',
     'category': 'Stock',
     'author': 'Quartile Limited',
     'website': 'https://www.odoo-asia.com',
