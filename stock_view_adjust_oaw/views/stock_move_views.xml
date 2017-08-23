@@ -2,6 +2,17 @@
 <openerp>
 <data>
 
+    <record id="stock_move_inherit_slq_view1" model="ir.ui.view">
+            <field name="name">stock.move.inherit.slq.view1</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="sale_line_quant.stock_move_inherit_slq_view1"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='lot_id']" position="after">
+                    <field name="quant_lot_id" string="Case No. of Moved/Expected Quant" readonly="1"/>
+                </xpath>
+            </field>
+    </record>
+
     <record id="view_move_picking_tree" model="ir.ui.view">
         <field name="name">stock.move.tree</field>
         <field name="model">stock.move</field>
