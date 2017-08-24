@@ -1,0 +1,273 @@
+# -*- coding: utf-8 -*-
+# Copyright 2017 Quartile Limited
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
+from openerp import api, models, fields
+
+
+class ProfitLossReportWizard(models.TransientModel):
+    _name = "profit.loss.report.wizard"
+    _description = 'Profit & Loss Report Wizard'
+
+    from_date = fields.Date(
+        required=True,
+        string='From Date',
+        default=fields.Date.to_string(
+            datetime.now() - relativedelta(days=90)),
+    )
+    to_date = fields.Date(
+        required=True,
+        string='From Date',
+        default=fields.Date.context_today,
+    )
+
+
+    def _inject_data(self, from_date, to_date):
+        query = """
+        INSERT INTO
+            profit_loss_report (
+                create_uid,
+                create_date,
+                product_id,
+                categ_id,
+                categ_name,
+                lot_id,
+                date_order,
+                user_id,
+                sale_order_id,
+                invoice_id,
+                list_price,
+                net_price,
+                partner_id,
+                partner_ref,
+                sale_order_note,
+                out_move_id,
+                out_move_date,
+                in_move_id,
+                in_move_date,
+                in_move_quant_owner_id,
+                purchase_order_id,
+                supplier_id,
+                supplier_ref,
+                purchase_currency_id,
+                purchase_currency_price,
+                purchase_invoice_id,
+                supplier_invoice_number
+            )
+        WITH
+            outgoing_moves AS (
+                SELECT DISTINCT ON (sq.lot_id)
+                    sm.id,
+                    sq.lot_id,
+                    sm.date
+                FROM
+                    stock_move sm
+                JOIN
+                    stock_location sl ON sm.location_dest_id = sl.id
+                JOIN
+                    stock_quant_move_rel qmr ON sm.id = qmr.move_id
+                JOIN
+                    stock_quant sq ON qmr.quant_id = sq.id
+                WHERE
+                    sl.usage = 'customer' AND
+                    sm.state = 'done' AND
+                    sm.company_id = %s
+                ORDER BY
+                    sq.lot_id,
+                    sm.date desc
+            ),
+            incoming_moves AS (
+                SELECT DISTINCT ON (sq.lot_id)
+                    sm.id,
+                    sq.lot_id,
+                    sm.date,
+                    sm.quant_owner_id
+                FROM
+                    stock_move sm
+                JOIN
+                    stock_location sl ON sm.location_id = sl.id
+                JOIN
+                    stock_quant_move_rel qmr ON sm.id = qmr.move_id
+                JOIN
+                    stock_quant sq ON qmr.quant_id = sq.id
+                WHERE
+                    sl.usage = 'supplier' AND
+                    sm.state = 'done' AND
+                    sm.company_id = %s
+                ORDER BY
+                    sq.lot_id,
+                    sm.date
+            ),
+            purchase_data AS (
+                SELECT DISTINCT ON (pol.lot_id)
+                    po.id AS purchase_id,
+                    po.partner_id,
+                    rp.ref,
+                    po.currency_id,
+                    pol.id AS purchase_line_id,
+                    pol.price_unit,
+                    pol.lot_id
+                FROM
+                    purchase_order_line pol
+                JOIN
+                    purchase_order po ON pol.order_id = po.id
+                JOIN
+                    res_partner rp ON po.partner_id = rp.id
+                WHERE
+                    pol.company_id = %s
+                ORDER BY
+                    pol.lot_id,
+                    po.date_order desc
+            ),
+            purchase_invoice_data AS (
+                SELECT DISTINCT ON (ail.purchase_line_id)
+                    ail.purchase_line_id,
+                    ai.id AS supplier_invoice_id,
+                    ai.supplier_invoice_number
+                FROM
+                    account_invoice_line ail
+                JOIN
+                    account_invoice ai ON ail.invoice_id = ai.id
+                WHERE
+                    ai.type = 'in_invoice' AND
+                    ai.state != 'cancel' AND
+                    ai.company_id = %s
+                ORDER BY
+                    ail.purchase_line_id,
+                    ai.date_invoice
+            )
+        SELECT
+            %s AS create_uid,
+            NOW() AS create_date,
+            pp.id,
+            pc.id,
+            pc.name,
+            ail.lot_id,
+            so.date_order,
+            ai.user_id,
+            so.id,
+            ai.id,
+            pt.list_price,
+            pt.net_price,
+            so.partner_id,
+            rp.ref,
+            so.note,
+            om.id,
+            om.date,
+            im.id,
+            im.date,
+            im.quant_owner_id,
+            pd.purchase_id,
+            pd.partner_id,
+            pd.ref,
+            pd.currency_id,
+            pd.price_unit,
+            pid.supplier_invoice_id,
+            pid.supplier_invoice_number
+        FROM
+            account_invoice_line ail
+        JOIN
+            account_invoice ai ON ail.invoice_id = ai.id
+        JOIN
+            product_product pp ON ail.product_id = pp.id
+        JOIN
+            product_template pt ON pp.product_tmpl_id = pt.id
+        JOIN
+            product_category pc ON pt.categ_id = pc.id
+        JOIN
+            res_partner rp ON ai.partner_id = rp.id
+        LEFT JOIN
+            sale_order so ON ail.so_id = so.id
+        LEFT JOIN
+            outgoing_moves om ON ail.lot_id = om.lot_id
+        LEFT JOIN
+            incoming_moves im ON ail.lot_id = im.lot_id
+        LEFT JOIN
+            purchase_data pd ON ail.lot_id = pd.lot_id
+        LEFT JOIN
+            purchase_invoice_data pid ON
+                pd.purchase_line_id = pid.purchase_line_id
+        WHERE
+            ai.type = 'out_invoice' AND
+            ai.state in ('open', 'paid') AND
+            ai.date_invoice >= %s AND
+            ai.date_invoice <= %s AND
+            ail.company_id = %s
+        """
+        company_id = self.env.user.company_id.id
+        params = (
+            company_id,
+            company_id,
+            company_id,
+            company_id,
+            self.env.uid,
+            from_date,
+            to_date,
+            company_id
+        )
+        self.env.cr.execute(query, params)
+
+
+    @api.multi
+    def _update_records(self):
+        self.ensure_one()
+        ctx = dict(self._context)
+        ctx['company_id'] = self.env.user.company_id.id
+        recs = self.env['profit.loss.report'].search([])
+        for rec in recs:
+            if rec.in_move_date:
+                rec.in_period_id = self.env['account.period'].with_context(
+                    ctx).find(rec.in_move_date)[:1]
+            if not rec.in_move_quant_owner_id == \
+                    self.env.user.company_id.partner_id:
+                rec.stock_type = 'vci'
+            else:
+                rec.stock_type = 'own'
+            if not rec.purchase_order_id and rec.stock_type == 'vci':
+                rec.supplier_id = rec.in_move_quant_owner_id
+                if rec.supplier_id:
+                    rec.supplier_ref = rec.in_move_quant_owner_id.ref
+                if rec.in_move_id:
+                    rec.purchase_order_id = \
+                        rec.in_move_id.purchase_line_id.order_id
+                    rec.purchase_currency_id = rec.in_move_id.currency_id
+                    rec.purchase_currency_price = \
+                        rec.in_move_id.purchase_price_unit
+            ctx['date'] = rec.out_move_date or rec.invoice_id.date_invoice \
+                if rec.stock_type == 'vci' else rec.in_move_date
+            comp_currency_id = self.env.user.company_id.currency_id
+            if rec.purchase_currency_id == comp_currency_id:
+                rec.exchange_rate = 1.0
+            elif ctx['date'] and rec.purchase_currency_id:
+                rec.exchange_rate = self.env['res.currency'].with_context(
+                    ctx)._get_conversion_rate(rec.purchase_currency_id,
+                                              comp_currency_id)
+            rec.purchase_base_price = \
+                rec.purchase_currency_price * rec.exchange_rate
+            rec.base_profit = rec.net_price - rec.purchase_base_price
+            if rec.purchase_base_price:
+                rec.base_profit_percent = \
+                    rec.base_profit / rec.purchase_base_price * 100
+            else:
+                rec.base_profit_percent = 999.99
+            rec.customer_payment_ids = rec.invoice_id.payment_ids
+            rec.customer_payment_dates = ', '.join(
+                rec.customer_payment_ids.mapped('date'))
+            rec.customer_payment_ref = ', '.join(
+                rec.customer_payment_ids.mapped('ref'))
+            rec.supplier_payment_ids = rec.purchase_invoice_id.payment_ids
+            rec.supplier_payment_dates = ', '.join(
+                rec.supplier_payment_ids.mapped('date'))
+            rec.customer_payment_ref = ', '.join(
+                rec.supplier_payment_ids.mapped('ref'))
+
+    @api.multi
+    def action_generate_profit_loss_records(self):
+        self.ensure_one()
+        self.env.cr.execute("DELETE FROM profit_loss_report")
+        self._inject_data(self.from_date, self.to_date)
+        self._update_records()
+        res = self.env.ref('profit_loss_report.profit_loss_report_action')
+        return res.read()[0]
