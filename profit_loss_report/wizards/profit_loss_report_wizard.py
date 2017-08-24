@@ -260,8 +260,13 @@ class ProfitLossReportWizard(models.TransientModel):
             rec.supplier_payment_ids = rec.purchase_invoice_id.payment_ids
             rec.supplier_payment_dates = ', '.join(
                 rec.supplier_payment_ids.mapped('date'))
-            rec.customer_payment_ref = ', '.join(
+            rec.supplier_payment_ref = ', '.join(
                 rec.supplier_payment_ids.mapped('ref'))
+            if rec.purchase_invoice_id and \
+                            rec.purchase_invoice_id.state == 'paid':
+                rec.supplier_payment_state = 'done'
+            else:
+                rec.supplier_payment_state = 'to_pay'
 
     @api.multi
     def action_generate_profit_loss_records(self):

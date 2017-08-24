@@ -43,6 +43,7 @@
                 <field name="purchase_base_price"/>
                 <field name="purchase_order_id"/>
                 <field name="purchase_invoice_id"/>
+                <field name="supplier_payment_state"/>
                 <field name="base_profit"/>
                 <field name="base_profit_percent"/>
             </tree>

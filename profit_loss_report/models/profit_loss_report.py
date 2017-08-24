@@ -188,6 +188,17 @@ class ProfitLossReport(models.TransientModel):
         string='Payment Ref.',
         readonly=True,
     )
+    supplier_payment_ref = fields.Char(
+        string='Payment Ref.',
+        readonly=True,
+    )
+    supplier_payment_state = fields.Selection(
+        [('to_pay', 'To Be Paid'),
+         ('done', 'Done')],
+        string='Supplier Payment Status',
+        readonly=True,
+    )
+
 
     @api.multi
     def _get_discount(self):
