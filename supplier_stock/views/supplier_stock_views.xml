@@ -8,16 +8,18 @@
         <field name="arch" type="xml">
             <tree string="Supplier Stock" editable="top">
                 <field name="partner_id" domain="[('supplier','=',True)]" options="{'no_create_edit':True}"/>
-                <field name="partner_loc_id"/>
-                <field name="supplier_lead_time"/>
+                <field name="partner_loc_id" string="Location"/>
                 <field name="product_id" options="{'no_create_edit':True}"/>
-                <field name="product_name"/>
                 <field name="image_small" string="Image" widget="image" height="64px"/>
-                <field name="quantity"/>
+                <field name="quantity" string="Qty"/>
                 <field name="currency_id" options="{'no_create_edit':True}"/>
+                <field name="product_name" stringt="Name"/>
                 <field name="price_unit"/>
+                <field name="product_list_price" />
+                <field name="product_list_price_discount" />
                 <field name="price_unit_base" string="HKD Value"/>
                 <field name="price_subtotal" sum="Total Amount"/>
+                <field name="supplier_lead_time"/>
             </tree>
         </field>
     </record>
