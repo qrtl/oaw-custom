@@ -34,6 +34,9 @@
                 <field name="supplier_id"/>
                 <field name="supplier_ref" invisible="1"/>
                 <field name="supplier_invoice_number"/>
+                <field name="supplier_payment_ref"/>
+                <field name="supplier_payment_dates"/>
+                <field name="supplier_payment_ids"/>
                 <field name="purchase_currency_id"/>
                 <field name="purchase_currency_price"/>
                 <field name="exchange_rate"/>

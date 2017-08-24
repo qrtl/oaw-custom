@@ -11,15 +11,20 @@ class ProfitLossReportWizard(models.TransientModel):
     _name = "profit.loss.report.wizard"
     _description = 'Profit & Loss Report Wizard'
 
-    threshold_date = fields.Date(
+    from_date = fields.Date(
         required=True,
-        string='Threshold Date',
+        string='From Date',
         default=fields.Date.to_string(
             datetime.now() - relativedelta(days=90)),
     )
+    to_date = fields.Date(
+        required=True,
+        string='From Date',
+        default=fields.Date.context_today,
+    )
 
 
-    def _inject_data(self, threshold_date):
+    def _inject_data(self, from_date, to_date):
         query = """
         INSERT INTO
             profit_loss_report (
@@ -188,6 +193,7 @@ class ProfitLossReportWizard(models.TransientModel):
             ai.type = 'out_invoice' AND
             ai.state in ('open', 'paid') AND
             ai.date_invoice >= %s AND
+            ai.date_invoice <= %s AND
             ail.company_id = %s
         """
         company_id = self.env.user.company_id.id
@@ -197,7 +203,8 @@ class ProfitLossReportWizard(models.TransientModel):
             company_id,
             company_id,
             self.env.uid,
-            threshold_date,
+            from_date,
+            to_date,
             company_id
         )
         self.env.cr.execute(query, params)
@@ -250,12 +257,17 @@ class ProfitLossReportWizard(models.TransientModel):
                 rec.customer_payment_ids.mapped('date'))
             rec.customer_payment_ref = ', '.join(
                 rec.customer_payment_ids.mapped('ref'))
+            rec.supplier_payment_ids = rec.purchase_invoice_id.payment_ids
+            rec.supplier_payment_dates = ', '.join(
+                rec.supplier_payment_ids.mapped('date'))
+            rec.customer_payment_ref = ', '.join(
+                rec.supplier_payment_ids.mapped('ref'))
 
     @api.multi
     def action_generate_profit_loss_records(self):
         self.ensure_one()
         self.env.cr.execute("DELETE FROM profit_loss_report")
-        self._inject_data(self.threshold_date)
+        self._inject_data(self.from_date, self.to_date)
         self._update_records()
         res = self.env.ref('profit_loss_report.profit_loss_report_action')
         return res.read()[0]
