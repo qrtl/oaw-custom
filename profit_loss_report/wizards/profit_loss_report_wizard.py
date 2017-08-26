@@ -150,7 +150,7 @@ class ProfitLossReportWizard(models.TransientModel):
             so.id,
             ai.id,
             pt.list_price,
-            pt.net_price,
+            ail.price_subtotal,
             so.partner_id,
             rp.ref,
             so.note,
