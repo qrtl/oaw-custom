@@ -76,6 +76,13 @@ class ProfitLossReport(models.TransientModel):
         string='Quotation Notes',
         readonly=True,
     )
+    sale_state = fields.Selection(
+        [('open', 'Open Payment'),
+         ('balance', 'Balance Payment'),
+         ('done', 'Done')],
+        string='Sales Status',
+        readonly=True,
+    )
     out_move_id = fields.Many2one(
         comodel_name='stock.move',
         string='Outgoing Move',
