@@ -220,11 +220,12 @@ class ProfitLossReportWizard(models.TransientModel):
             if rec.in_move_date:
                 rec.in_period_id = self.env['account.period'].with_context(
                     ctx).find(rec.in_move_date)[:1]
-            if not rec.in_move_quant_owner_id == \
-                    self.env.user.company_id.partner_id:
-                rec.stock_type = 'vci'
-            else:
-                rec.stock_type = 'own'
+            if rec.in_move_quant_owner_id:
+                if rec.in_move_quant_owner_id == \
+                        self.env.user.company_id.partner_id:
+                    rec.stock_type = 'own'
+                else:
+                    rec.stock_type = 'vci'
             if not rec.purchase_order_id and rec.stock_type == 'vci':
                 rec.supplier_id = rec.in_move_quant_owner_id
                 if rec.supplier_id:
