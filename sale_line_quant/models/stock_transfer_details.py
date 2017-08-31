@@ -3,7 +3,6 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from datetime import datetime
-# from openerp.osv import fields, osv
 from openerp import models, fields, api, _
 from openerp.exceptions import Warning
 
@@ -40,7 +39,7 @@ class stock_transfer_details(models.TransientModel):
                 'result_package_id': op.result_package_id.id,
                 'date': op.date, 
                 'owner_id': op.owner_id.id,
-#                 'invoice_state': op.invoice_state, # oscg
+                # 'invoice_state': op.invoice_state, # oscg
                 'purchase_line_id': op.purchase_line_id.id, # oscg
                 'move_dest_id': op.move_dest_id.id, # oscg
                 'sale_line_id': op.sale_line_id.id, # oscg
@@ -53,16 +52,27 @@ class stock_transfer_details(models.TransientModel):
         res.update(packop_ids=packs)
         return res
 
-
     @api.model
-    def _update_related_records(self, object, lot_id):
-        object.write({'lot_id': lot_id.id})
-        for line in object.invoice_lines:
+    def _update_related_records(self, rec, lot_id):
+        invoice_lines = []
+        rec.write({'lot_id': lot_id.id})
+        if rec.invoice_lines:
+            invoice_lines.append(rec.invoice_lines)
+        # if rec is PO line, then try to update lot_id of related SO line
+        # and customer invoice line(s) as well
+        if rec._name == 'purchase.order.line':
+            so_line = self.env['sale.order.line'].search(
+                [('purchase_line_id', '=', rec.id)])
+            if so_line:
+                so_line.write({'lot_id': lot_id.id})
+                if so_line.invoice_lines:
+                    invoice_lines.append(so_line.invoice_lines)
+        for line in invoice_lines:
             line.write({'lot_id': lot_id.id})
-            rel_lines = self.env['account.invoice.line'].search([('origin_invoice_line_id','=',line.id)])
+            rel_lines = self.env['account.invoice.line'].search(
+                [('origin_invoice_line_id','=',line.id)])
             for rel_line in rel_lines:
                 rel_line.write({'lot_id': lot_id.id})
-
 
     @api.one
     def do_detailed_transfer(self):
@@ -70,7 +80,6 @@ class stock_transfer_details(models.TransientModel):
         # Create new and update existing pack operations
         for lstits in [self.item_ids, self.packop_ids]:
             for prod in lstits:
-                
                 # >>> oscg
                 if prod.sale_line_id and prod.sale_line_id.\
                     order_id.order_policy == 'line_check':
@@ -84,20 +93,15 @@ class stock_transfer_details(models.TransientModel):
                     if check_error:
                         raise Warning(_('Error!'), _('You cannot transfer the \
                             product due to unpaid SO line(s).'))
-
                 if prod.purchase_line_id:
-                    self._update_related_records(prod.purchase_line_id, prod.lot_id)
-
+                    self._update_related_records(prod.purchase_line_id,
+                                                 prod.lot_id)
                 if prod.sale_line_id:
-                    # prod.sale_line_id.write({'lot_id': prod.lot_id.id})
-                    # # Write on specific invoice line respected to SO line with same lot number.
-                    # prod.sale_line_id.invoice_lines.write({'lot_id':prod.lot_id.id})
-                    self._update_related_records(prod.sale_line_id, prod.lot_id)
-
+                    self._update_related_records(prod.sale_line_id,
+                                                 prod.lot_id)
                 if prod.move_dest_id:
                     prod.move_dest_id.write({'lot_id':prod.lot_id.id })
                 # <<< oscg
-                
                 pack_datas = {
                     'product_id': prod.product_id.id,
                     'product_uom_id': prod.product_uom_id.id,
@@ -121,19 +125,6 @@ class stock_transfer_details(models.TransientModel):
         packops = self.env['stock.pack.operation'].search(['&', ('picking_id', '=', self.picking_id.id), '!', ('id', 'in', processed_ids)])
         for packop in packops:
             packop.unlink()
-
         # Execute the transfer of the picking
         self.picking_id.do_transfer()
-
         return True
-
-    
-class stock_transfer_details_items(models.TransientModel):
-    _inherit = 'stock.transfer_details_items'
-    
-#     invoice_state = fields.Char('Invoice State') # to block transfer if move has not been paid by customer in case of "On Demand (per SO Line)"
-    purchase_line_id = fields.Many2one('purchase.order.line',string="PO Line")
-    sale_line_id = fields.Many2one('sale.order.line',string="SO Line")
-    move_dest_id = fields.Many2one('stock.move',string="Destination Move")
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
