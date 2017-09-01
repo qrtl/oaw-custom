@@ -76,6 +76,21 @@ class ProfitLossReport(models.TransientModel):
         string='Quotation Notes',
         readonly=True,
     )
+    # FIXME we may deprecate this field if not needed
+    sale_state = fields.Selection(
+        [('open', 'Open Payment'),
+         ('balance', 'Balance Payment'),
+         ('done', 'Done')],
+        string='Sales Status',
+        readonly=True,
+    )
+    state = fields.Selection(
+        [('purch_done', 'PO Done'),
+         ('sale_done', 'SO Done'),
+         ('sale_purch_done', 'SO and PO Done')],
+        string='Status',
+        readonly=True,
+    )
     out_move_id = fields.Many2one(
         comodel_name='stock.move',
         string='Outgoing Move',
@@ -165,6 +180,7 @@ class ProfitLossReport(models.TransientModel):
     customer_payment_ids = fields.Many2many(
         string='Customer Payment',
         comodel_name='account.move.line',
+        related='invoice_id.payment_ids',
         readonly=True,
     )
     customer_payment_dates = fields.Char(
@@ -178,6 +194,7 @@ class ProfitLossReport(models.TransientModel):
     supplier_payment_ids = fields.Many2many(
         string='Supplier Payment',
         comodel_name='account.move.line',
+        related='purchase_invoice_id.payment_ids',
         readonly=True,
     )
     supplier_payment_dates = fields.Char(

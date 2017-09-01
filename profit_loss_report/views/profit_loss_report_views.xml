@@ -7,8 +7,8 @@
         <field name="model">profit.loss.report</field>
         <field name="arch" type="xml">
             <tree editable="top">
-                <field name="in_move_id"/>
-                <field name="in_move_date"/>
+                <field name="in_move_id" invisible="1"/>
+                <field name="in_move_date" invisible="1"/>
                 <field name="in_period_id"/>
                 <field name="in_move_quant_owner_id"/>
                 <field name="stock_type"/>
@@ -28,9 +28,11 @@
                 <field name="customer_payment_ref"/>
                 <field name="customer_payment_dates"/>
                 <field name="customer_payment_ids"/>
-                <field name="out_move_id"/>
+                <field name="out_move_id" invisible="1"/>
                 <field name="out_move_date"/>
                 <field name="sale_order_note"/>
+                <field name="sale_state"/>
+                <field name="state"/>
                 <field name="supplier_id"/>
                 <field name="supplier_ref" invisible="1"/>
                 <field name="supplier_invoice_number"/>
