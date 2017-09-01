@@ -220,11 +220,12 @@ class ProfitLossReportWizard(models.TransientModel):
             if rec.in_move_date:
                 rec.in_period_id = self.env['account.period'].with_context(
                     ctx).find(rec.in_move_date)[:1]
-            if not rec.in_move_quant_owner_id == \
-                    self.env.user.company_id.partner_id:
-                rec.stock_type = 'vci'
-            else:
-                rec.stock_type = 'own'
+            if rec.in_move_quant_owner_id:
+                if rec.in_move_quant_owner_id == \
+                        self.env.user.company_id.partner_id:
+                    rec.stock_type = 'own'
+                else:
+                    rec.stock_type = 'vci'
             if not rec.purchase_order_id and rec.stock_type == 'vci':
                 rec.supplier_id = rec.in_move_quant_owner_id
                 if rec.supplier_id:
@@ -252,12 +253,10 @@ class ProfitLossReportWizard(models.TransientModel):
                     rec.base_profit / rec.purchase_base_price * 100
             else:
                 rec.base_profit_percent = 999.99
-            rec.customer_payment_ids = rec.invoice_id.payment_ids
             rec.customer_payment_dates = ', '.join(
                 rec.customer_payment_ids.mapped('date'))
             rec.customer_payment_ref = ', '.join(
                 rec.customer_payment_ids.mapped('ref'))
-            rec.supplier_payment_ids = rec.purchase_invoice_id.payment_ids
             rec.supplier_payment_dates = ', '.join(
                 rec.supplier_payment_ids.mapped('date'))
             rec.supplier_payment_ref = ', '.join(
@@ -267,6 +266,21 @@ class ProfitLossReportWizard(models.TransientModel):
                 rec.supplier_payment_state = 'done'
             else:
                 rec.supplier_payment_state = 'to_pay'
+            # FIXME below 'if' block may be deprecated as necessary
+            if rec.out_move_id and rec.out_move_id.state == 'done' and \
+                    rec.invoice_id:
+                if rec.invoice_id.state == 'paid':
+                    rec.sale_state = 'done'
+                elif rec.invoice_id.residual and rec.customer_payment_ids:
+                    rec.sale_state = 'balance'
+                else:
+                    rec.sale_state = 'open'
+            if rec.purchase_invoice_id and rec.purchase_invoice_id.state == 'paid' and rec.invoice_id and rec.invoice_id.state == 'paid':
+                rec.state = 'sale_purch_done'
+            elif rec.purchase_invoice_id and rec.purchase_invoice_id.state == 'paid':
+                rec.state = 'purch_done'
+            elif rec.invoice_id and rec.invoice_id.state == 'paid':
+                rec.state = 'sale_done'
 
     @api.multi
     def action_generate_profit_loss_records(self):
