@@ -76,11 +76,19 @@ class ProfitLossReport(models.TransientModel):
         string='Quotation Notes',
         readonly=True,
     )
+    # FIXME we may deprecate this field if not needed
     sale_state = fields.Selection(
         [('open', 'Open Payment'),
          ('balance', 'Balance Payment'),
          ('done', 'Done')],
         string='Sales Status',
+        readonly=True,
+    )
+    state = fields.Selection(
+        [('purch_done', 'PO Done'),
+         ('sale_done', 'SO Done'),
+         ('sale_purch_done', 'SO and PO Done')],
+        string='Status',
         readonly=True,
     )
     out_move_id = fields.Many2one(

@@ -32,6 +32,7 @@
                 <field name="out_move_date"/>
                 <field name="sale_order_note"/>
                 <field name="sale_state"/>
+                <field name="state"/>
                 <field name="supplier_id"/>
                 <field name="supplier_ref" invisible="1"/>
                 <field name="supplier_invoice_number"/>

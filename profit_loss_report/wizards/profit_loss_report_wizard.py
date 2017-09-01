@@ -266,6 +266,7 @@ class ProfitLossReportWizard(models.TransientModel):
                 rec.supplier_payment_state = 'done'
             else:
                 rec.supplier_payment_state = 'to_pay'
+            # FIXME below 'if' block may be deprecated as necessary
             if rec.out_move_id and rec.out_move_id.state == 'done' and \
                     rec.invoice_id:
                 if rec.invoice_id.state == 'paid':
@@ -274,6 +275,12 @@ class ProfitLossReportWizard(models.TransientModel):
                     rec.sale_state = 'balance'
                 else:
                     rec.sale_state = 'open'
+            if rec.purchase_invoice_id and rec.purchase_invoice_id.state == 'paid' and rec.invoice_id and rec.invoice_id.state == 'paid':
+                rec.state = 'sale_purch_done'
+            elif rec.purchase_invoice_id and rec.purchase_invoice_id.state == 'paid':
+                rec.state = 'purch_done'
+            elif rec.invoice_id and rec.invoice_id.state == 'paid':
+                rec.state = 'sale_done'
 
     @api.multi
     def action_generate_profit_loss_records(self):
