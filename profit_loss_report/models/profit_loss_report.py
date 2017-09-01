@@ -172,6 +172,7 @@ class ProfitLossReport(models.TransientModel):
     customer_payment_ids = fields.Many2many(
         string='Customer Payment',
         comodel_name='account.move.line',
+        related='invoice_id.payment_ids',
         readonly=True,
     )
     customer_payment_dates = fields.Char(
@@ -185,6 +186,7 @@ class ProfitLossReport(models.TransientModel):
     supplier_payment_ids = fields.Many2many(
         string='Supplier Payment',
         comodel_name='account.move.line',
+        related='purchase_invoice_id.payment_ids',
         readonly=True,
     )
     supplier_payment_dates = fields.Char(

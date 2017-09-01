@@ -253,12 +253,12 @@ class ProfitLossReportWizard(models.TransientModel):
                     rec.base_profit / rec.purchase_base_price * 100
             else:
                 rec.base_profit_percent = 999.99
-            rec.customer_payment_ids = rec.invoice_id.payment_ids
+            # rec.customer_payment_ids = rec.invoice_id.payment_ids
             rec.customer_payment_dates = ', '.join(
                 rec.customer_payment_ids.mapped('date'))
             rec.customer_payment_ref = ', '.join(
                 rec.customer_payment_ids.mapped('ref'))
-            rec.supplier_payment_ids = rec.purchase_invoice_id.payment_ids
+            # rec.supplier_payment_ids = rec.purchase_invoice_id.payment_ids
             rec.supplier_payment_dates = ', '.join(
                 rec.supplier_payment_ids.mapped('date'))
             rec.supplier_payment_ref = ', '.join(
@@ -268,6 +268,9 @@ class ProfitLossReportWizard(models.TransientModel):
                 rec.supplier_payment_state = 'done'
             else:
                 rec.supplier_payment_state = 'to_pay'
+            if rec.out_move_id and rec.out_move_id.state == 'done':
+                if rec.invoice_id and rec.invoice_id.state == 'paid':
+                    rec.sale_state = 'done'
 
     @api.multi
     def action_generate_profit_loss_records(self):
