@@ -15,7 +15,7 @@ class ProfitLossReportWizard(models.TransientModel):
         required=True,
         string='From Date',
         default=fields.Date.to_string(
-            datetime.now() - relativedelta(days=30)),
+            datetime.now() - relativedelta(days=90)),
     )
     to_date = fields.Date(
         required=True,
