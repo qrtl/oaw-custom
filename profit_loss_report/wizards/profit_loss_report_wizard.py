@@ -54,7 +54,8 @@ class ProfitLossReportWizard(models.TransientModel):
                 purchase_currency_price,
                 purchase_invoice_id,
                 supplier_invoice_number,
-                invoice_type
+                customer_invoice_type,
+                supplier_invoice_type
             )
         WITH
             outgoing_moves AS (
@@ -122,16 +123,17 @@ class ProfitLossReportWizard(models.TransientModel):
                     po.date_order desc
             ),
             purchase_invoice_data AS (
-                SELECT DISTINCT ON (ail.purchase_line_id)
+                SELECT
                     ail.purchase_line_id,
                     ai.id AS supplier_invoice_id,
-                    ai.supplier_invoice_number
+                    ai.supplier_invoice_number,
+                    ai.type AS supplier_invoice_type
                 FROM
                     account_invoice_line ail
                 JOIN
                     account_invoice ai ON ail.invoice_id = ai.id
                 WHERE
-                    ai.type = 'in_invoice' AND
+                    ai.type in ('in_invoice', 'in_refund') AND
                     ai.state != 'cancel' AND
                     ai.company_id = %s
                 ORDER BY
@@ -166,7 +168,8 @@ class ProfitLossReportWizard(models.TransientModel):
             pd.price_unit,
             pid.supplier_invoice_id,
             pid.supplier_invoice_number,
-            ai.type
+            ai.type,
+            pid.supplier_invoice_type
         FROM
             account_invoice_line ail
         JOIN
@@ -241,7 +244,8 @@ class ProfitLossReportWizard(models.TransientModel):
                 purchase_currency_price,
                 purchase_invoice_id,
                 supplier_invoice_number,
-                invoice_type
+                customer_invoice_type,
+                supplier_invoice_type
             )
         WITH
             outgoing_moves AS (
@@ -288,20 +292,42 @@ class ProfitLossReportWizard(models.TransientModel):
                     sm.date
             ),
             purchase_invoice_data AS (
-                SELECT DISTINCT ON (ail.purchase_line_id)
+                SELECT
+                    ail.lot_id,
                     ail.purchase_line_id,
                     ai.id AS supplier_invoice_id,
-                    ai.supplier_invoice_number
+                    ai.supplier_invoice_number,
+                    ai.type AS supplier_invoice_type
                 FROM
                     account_invoice_line ail
                 JOIN
                     account_invoice ai ON ail.invoice_id = ai.id
                 WHERE
-                    ai.type = 'in_invoice' AND
+                    ai.type in ('in_invoice', 'in_refund') AND
                     ai.state != 'cancel' AND
                     ai.company_id = %s
                 ORDER BY
                     ail.purchase_line_id,
+                    supplier_invoice_type,
+                    ai.date_invoice
+            ),
+            customer_invoice_data AS (
+                SELECT
+                    ail.lot_id,
+                    ai.id AS customer_invoice_id,
+                    ai.user_id,
+                    ail.price_subtotal,
+                    ai.type AS customer_invoice_type
+                FROM
+                    account_invoice_line ail
+                JOIN
+                    account_invoice ai ON ail.invoice_id = ai.id
+                WHERE
+                    ai.type in ('out_invoice', 'out_refund') AND
+                    ai.state != 'cancel' AND
+                    ai.company_id = %s
+                ORDER BY
+                    ail.lot_id,
                     ai.date_invoice
             )
         SELECT
@@ -312,11 +338,11 @@ class ProfitLossReportWizard(models.TransientModel):
             pc.name,
             im.lot_id,
             so.date_order,
-            ai.user_id,
+            cid.user_id,
             so.id,
-            ai.id,
+            cid.customer_invoice_id,
             pt.list_price,
-            ail.price_subtotal,
+            cid.price_subtotal,
             so.partner_id,
             rp.ref,
             so.note,
@@ -332,7 +358,8 @@ class ProfitLossReportWizard(models.TransientModel):
             pol.price_unit,
             pid.supplier_invoice_id,
             pid.supplier_invoice_number,
-            ai.type
+            cid.customer_invoice_type,
+            pid.supplier_invoice_type
         FROM
             purchase_order_line pol
         JOIN
@@ -347,15 +374,14 @@ class ProfitLossReportWizard(models.TransientModel):
             res_partner rp ON pol.partner_id = rp.id
         LEFT JOIN
             purchase_invoice_data pid ON
-                pol.id = pid.purchase_line_id
+                pol.lot_id = pid.lot_id
         LEFT JOIN
             sale_order_line sol ON pol.lot_id = sol.lot_id
         LEFT JOIN
             sale_order so ON sol.order_id = so.id
-        LEFT JOIN account_invoice_line ail
-            ON ail.lot_id = pol.lot_id
         LEFT JOIN
-            account_invoice ai ON ail.invoice_id = ai.id
+            customer_invoice_data cid ON
+                pol.lot_id = cid.lot_id
         LEFT JOIN
             outgoing_moves om ON pol.lot_id = om.lot_id
         LEFT JOIN
@@ -372,6 +398,7 @@ class ProfitLossReportWizard(models.TransientModel):
         """
         company_id = self.env.user.company_id.id
         params = (
+            company_id,
             company_id,
             company_id,
             company_id,
@@ -419,7 +446,17 @@ class ProfitLossReportWizard(models.TransientModel):
                                               comp_currency_id)
             rec.purchase_base_price = \
                 rec.purchase_currency_price * rec.exchange_rate
-            if rec.invoice_type and rec.invoice_type == "out_refund":
+            if rec.supplier_invoice_type and rec.supplier_invoice_type == \
+                    "in_refund":
+                rec.base_profit = rec.net_price - rec.purchase_base_price
+            elif rec.supplier_invoice_type and rec.supplier_invoice_type == \
+                    "in_invoice":
+                rec.base_profit = rec.purchase_base_price - rec.net_price
+            elif rec.customer_invoice_type and rec.customer_invoice_type == \
+                    "out_invoice":
+                rec.base_profit = rec.net_price - rec.purchase_base_price
+            elif rec.customer_invoice_type and rec.customer_invoice_type == \
+                    "out_refund":
                 rec.base_profit = rec.purchase_base_price - rec.net_price
             else:
                 rec.base_profit = rec.net_price - rec.purchase_base_price
@@ -450,8 +487,12 @@ class ProfitLossReportWizard(models.TransientModel):
                     rec.sale_state = 'balance'
                 else:
                     rec.sale_state = 'open'
-            if rec.invoice_type and rec.invoice_type == "out_refund":
+            if rec.customer_invoice_type and rec.customer_invoice_type == \
+                    "out_refund":
                 rec.state = 'out_refund'
+            elif rec.supplier_invoice_type and rec.supplier_invoice_type == \
+                    "in_refund":
+                rec.state = 'in_refund'
             elif rec.purchase_invoice_id and rec.purchase_invoice_id.state == \
                     'paid' and rec.invoice_id and rec.invoice_id.state == \
                     'paid':
