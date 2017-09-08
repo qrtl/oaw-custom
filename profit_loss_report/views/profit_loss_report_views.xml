@@ -58,7 +58,48 @@
         <field name="arch" type="xml">
             <search string="Profit &amp; Loss Search">
                 <field name="product_id"/>
-                <field name="categ_id"/>
+                <field name="lot_id"/>
+                <field name="partner_id"/>
+                <field name="customer_payment_ref"/>
+                <field name="supplier_id"/>
+                <field name="supplier_invoice_number"/>
+                <group expand="0" name='state' string="Status">
+                    <filter string="PO DONE" name="purch_done"
+                            domain="[('state','=','purch_done')]"/>
+                    <filter string="SO DONE" name="sale_done"
+                            domain="[('state','=','sale_done')]"/>
+                    <filter string="SO and PO DONE" name="sale_purch_done"
+                            domain="[('state','=','sale_purch_done')]"/>
+                </group>
+                <group expand="0" name='supplier_payment_state'
+                       string="Supplier Payment Status">
+                    <filter string="To Be Paid" name="to_pay"
+                            domain="[('supplier_payment_state','=','to_pay')]"/>
+                    <filter string="Done" name="done"
+                            domain="[('supplier_payment_state','=','done')]"/>
+                </group>
+                <group expand="0" string="Group By">
+                    <filter string="Period" domain="[]"
+                            context="{'group_by':'in_period_id'}"/>
+                    <filter string="Owner" domain="[]"
+                            context="{'group_by':'in_move_quant_owner_id'}"/>
+                    <filter string="Stock Type" domain="[]"
+                            context="{'group_by':'stock_type'}"/>
+                    <filter string="Brand" domain="[]"
+                            context="{'group_by':'categ_name'}"/>
+                    <filter string="Customer" domain="[]"
+                            context="{'group_by':'partner_id'}"/>
+                    <filter string="Payment Ref." domain="[]"
+                            context="{'group_by':'customer_payment_ref'}"/>
+                    <filter string="Supplier" domain="[]"
+                            context="{'group_by':'supplier_id'}"/>
+                    <filter string="Supplier Invoice No." domain="[]"
+                            context="{'group_by':'supplier_invoice_number'}"/>
+                    <filter string="Supplier Payment Status" domain="[]"
+                            context="{'group_by':'supplier_payment_state'}"/>
+                    <filter string="Status" domain="[]"
+                            context="{'group_by':'state'}"/>
+                </group>
             </search>
         </field>
     </record>
