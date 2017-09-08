@@ -221,13 +221,11 @@ class ProfitLossReport(models.TransientModel):
     customer_invoice_type = fields.Selection(
         [('out_invoice', 'Customer Invoice'),
         ('out_refund', 'Customer Refund')],
-        string='Invoice Type',
         readonly=True,
     )
     supplier_invoice_type = fields.Selection(
         [('in_invoice', 'Supplier Invoice'),
          ('in_refund', 'Supplier Refund')],
-        string='Invoice Type',
         readonly=True,
     )
 
