@@ -87,7 +87,10 @@ class ProfitLossReport(models.TransientModel):
     state = fields.Selection(
         [('purch_done', 'PO Done'),
          ('sale_done', 'SO Done'),
-         ('sale_purch_done', 'SO and PO Done')],
+         ('sale_purch_done', 'SO and PO Done'),
+         ('out_refund', 'Customer Refund'),
+         ('in_refund', 'Supplier Refund')
+        ],
         string='Status',
         readonly=True,
     )
@@ -215,7 +218,16 @@ class ProfitLossReport(models.TransientModel):
         string='Supplier Payment Status',
         readonly=True,
     )
-
+    customer_invoice_type = fields.Selection(
+        [('out_invoice', 'Customer Invoice'),
+        ('out_refund', 'Customer Refund')],
+        readonly=True,
+    )
+    supplier_invoice_type = fields.Selection(
+        [('in_invoice', 'Supplier Invoice'),
+         ('in_refund', 'Supplier Refund')],
+        readonly=True,
+    )
 
     @api.multi
     def _get_discount(self):
