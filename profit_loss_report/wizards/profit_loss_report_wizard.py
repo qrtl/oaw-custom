@@ -194,7 +194,7 @@ class ProfitLossReportWizard(models.TransientModel):
             purchase_invoice_data pid ON
                 pd.purchase_line_id = pid.purchase_line_id
         WHERE
-            ai.type in ('out_invoice', 'out_refund') AND
+            ai.type <> 'in_invoice' AND
             ai.state in ('open', 'paid') AND
             ai.date_invoice >= %s AND
             ai.date_invoice <= (DATE %s + INTERVAL '1 DAY') AND
@@ -490,6 +490,9 @@ class ProfitLossReportWizard(models.TransientModel):
             if rec.customer_invoice_type and rec.customer_invoice_type == \
                     "out_refund":
                 rec.state = 'out_refund'
+            elif rec.customer_invoice_type and rec.customer_invoice_type == \
+                    "in_refund":
+                rec.state = 'in_refund'
             elif rec.supplier_invoice_type and rec.supplier_invoice_type == \
                     "in_refund":
                 rec.state = 'in_refund'
