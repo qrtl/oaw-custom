@@ -459,7 +459,7 @@ class ProfitLossReportWizard(models.TransientModel):
                     "out_refund":
                 rec.base_profit = rec.purchase_base_price - rec.net_price
             else:
-                rec.base_profit = rec.purchase_base_price - rec.net_price
+                rec.base_profit = rec.net_price - rec.purchase_base_price
             if rec.purchase_base_price:
                 rec.base_profit_percent = \
                     rec.base_profit / rec.purchase_base_price * 100
