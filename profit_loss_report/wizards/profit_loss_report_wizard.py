@@ -19,7 +19,7 @@ class ProfitLossReportWizard(models.TransientModel):
     )
     to_date = fields.Date(
         required=True,
-        string='From Date',
+        string='To Date',
         default=fields.Date.context_today,
     )
 
@@ -197,7 +197,7 @@ class ProfitLossReportWizard(models.TransientModel):
             ai.type in ('out_invoice', 'out_refund') AND
             ai.state in ('open', 'paid') AND
             ai.date_invoice >= %s AND
-            ai.date_invoice <= %s AND
+            ai.date_invoice <= (DATE %s + INTERVAL '1 DAY') AND
             ail.company_id = %s
         """
         company_id = self.env.user.company_id.id
@@ -393,7 +393,7 @@ class ProfitLossReportWizard(models.TransientModel):
                 FROM profit_loss_report
             ) AND
             po.date_order >= %s AND
-            po.date_order <= %s AND
+            po.date_order <= (DATE %s + INTERVAL '1 DAY') AND
             po.company_id = %s
         """
         company_id = self.env.user.company_id.id
@@ -459,7 +459,7 @@ class ProfitLossReportWizard(models.TransientModel):
                     "out_refund":
                 rec.base_profit = rec.purchase_base_price - rec.net_price
             else:
-                rec.base_profit = rec.net_price - rec.purchase_base_price
+                rec.base_profit = rec.purchase_base_price - rec.net_price
             if rec.purchase_base_price:
                 rec.base_profit_percent = \
                     rec.base_profit / rec.purchase_base_price * 100

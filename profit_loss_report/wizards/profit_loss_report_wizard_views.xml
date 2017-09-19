@@ -18,6 +18,7 @@
                             class="oe_highlight"/>
                     or
                     <button special="cancel"
+                            class="oe_link"
                             string="Cancel"/>
                 </footer>
             </form>
@@ -34,8 +35,8 @@
     </record>
 
     <menuitem action="action_profit_loss_report_wizard"
-        id="menu_profit_loss_report_wizard"
-        parent="base.next_id_64" sequence="7"/>
+              id="menu_profit_loss_report_wizard"
+              parent="base.next_id_64" sequence="7"/>
 
 </data>
 </openerp>

@@ -2,7 +2,7 @@
 # Copyright 2017 Quartile Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from openerp import models, fields, api
+from openerp import models, fields, api, http
 import openerp.addons.decimal_precision as dp
 
 
@@ -226,6 +226,11 @@ class ProfitLossReport(models.TransientModel):
     supplier_invoice_type = fields.Selection(
         [('in_invoice', 'Supplier Invoice'),
          ('in_refund', 'Supplier Refund')],
+        readonly=True,
+    )
+    image_small = fields.Binary(
+        'Image',
+        related='product_id.product_tmpl_id.image_small',
         readonly=True,
     )
 

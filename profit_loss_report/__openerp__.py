@@ -3,7 +3,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 {
     'name': 'Profit and Loss Report',
-    'version': '8.0.2.0.0',
+    'version': '8.0.2.0.1',
     'author': 'Quartile Limited',
     'website': 'https://www.odoo-asia.com',
     'category': 'Report',
