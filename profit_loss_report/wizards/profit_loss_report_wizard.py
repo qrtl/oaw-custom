@@ -140,7 +140,7 @@ class ProfitLossReportWizard(models.TransientModel):
                     ail.purchase_line_id,
                     ai.date_invoice
             )
-        SELECT DISTINCT
+        SELECT
             %s AS create_uid,
             NOW() AS create_date,
             pp.id,
@@ -448,18 +448,19 @@ class ProfitLossReportWizard(models.TransientModel):
                                               comp_currency_id)
             rec.purchase_base_price = \
                 rec.purchase_currency_price * rec.exchange_rate
-            if rec.supplier_invoice_type and rec.supplier_invoice_type == \
-                    "in_refund":
-                rec.base_profit = rec.net_price - rec.purchase_base_price
-            elif rec.supplier_invoice_type and rec.supplier_invoice_type == \
-                    "in_invoice":
-                rec.base_profit = rec.purchase_base_price - rec.net_price
-            elif rec.customer_invoice_type and rec.customer_invoice_type == \
-                    "out_invoice":
-                rec.base_profit = rec.net_price - rec.purchase_base_price
-            elif rec.customer_invoice_type and rec.customer_invoice_type == \
-                    "out_refund":
-                rec.base_profit = rec.purchase_base_price - rec.net_price
+            if rec.customer_invoice_type:
+                if rec.customer_invoice_type == "out_refund":
+                    rec.base_profit = rec.purchase_base_price - rec.net_price
+                elif rec.customer_invoice_type == "out_invoice":
+                    if rec.supplier_invoice_type:
+                        rec.base_profit = rec.net_price - \
+                                          rec.purchase_base_price
+            elif rec.supplier_invoice_type:
+                if rec.supplier_invoice_type == "in_invoice":
+                    rec.base_profit = rec.net_price - \
+                                      rec.purchase_base_price
+                if rec.supplier_invoice_type == "in_refund":
+                    rec.base_profit = rec.purchase_base_price - rec.net_price
             else:
                 rec.base_profit = rec.net_price - rec.purchase_base_price
             if rec.purchase_base_price:
