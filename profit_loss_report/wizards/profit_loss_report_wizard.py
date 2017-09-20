@@ -140,7 +140,7 @@ class ProfitLossReportWizard(models.TransientModel):
                     ail.purchase_line_id,
                     ai.date_invoice
             )
-        SELECT
+        SELECT DISTINCT
             %s AS create_uid,
             NOW() AS create_date,
             pp.id,
@@ -194,7 +194,9 @@ class ProfitLossReportWizard(models.TransientModel):
             purchase_invoice_data pid ON
                 pd.purchase_line_id = pid.purchase_line_id
         WHERE
-            ai.type <> 'in_invoice' AND
+            ai.type in ('out_invoice', 'out_refund') AND
+            (ai.type, pid.supplier_invoice_type) NOT IN (('out_refund',
+            'in_refund')) AND
             ai.state in ('open', 'paid') AND
             ai.date_invoice >= %s AND
             ai.date_invoice <= (DATE %s + INTERVAL '1 DAY') AND
