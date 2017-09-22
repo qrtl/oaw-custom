@@ -4,6 +4,7 @@
 
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+import pytz
 from openerp import api, models, fields
 
 
@@ -19,7 +20,7 @@ class ProfitLossReportWizard(models.TransientModel):
     )
     to_date = fields.Date(
         required=True,
-        string='From Date',
+        string='To Date',
         default=fields.Date.context_today,
     )
 
@@ -195,6 +196,8 @@ class ProfitLossReportWizard(models.TransientModel):
                 pd.purchase_line_id = pid.purchase_line_id
         WHERE
             ai.type in ('out_invoice', 'out_refund') AND
+            (ai.type, pid.supplier_invoice_type) NOT IN (('out_refund',
+            'in_refund')) AND
             ai.state in ('open', 'paid') AND
             ai.date_invoice >= %s AND
             ai.date_invoice <= %s AND
@@ -393,7 +396,7 @@ class ProfitLossReportWizard(models.TransientModel):
                 FROM profit_loss_report
             ) AND
             po.date_order >= %s AND
-            po.date_order <= %s AND
+            po.date_order <= (TIMESTAMP %s + INTERVAL '1 DAY') AND
             po.company_id = %s
         """
         company_id = self.env.user.company_id.id
@@ -446,18 +449,18 @@ class ProfitLossReportWizard(models.TransientModel):
                                               comp_currency_id)
             rec.purchase_base_price = \
                 rec.purchase_currency_price * rec.exchange_rate
-            if rec.supplier_invoice_type and rec.supplier_invoice_type == \
-                    "in_refund":
-                rec.base_profit = rec.net_price - rec.purchase_base_price
-            elif rec.supplier_invoice_type and rec.supplier_invoice_type == \
-                    "in_invoice":
-                rec.base_profit = rec.purchase_base_price - rec.net_price
-            elif rec.customer_invoice_type and rec.customer_invoice_type == \
-                    "out_invoice":
-                rec.base_profit = rec.net_price - rec.purchase_base_price
-            elif rec.customer_invoice_type and rec.customer_invoice_type == \
-                    "out_refund":
-                rec.base_profit = rec.purchase_base_price - rec.net_price
+            if rec.customer_invoice_type:
+                if rec.customer_invoice_type == "out_refund":
+                    rec.base_profit = rec.purchase_base_price - rec.net_price
+                elif rec.customer_invoice_type == "out_invoice":
+                    if rec.supplier_invoice_type:
+                        if rec.supplier_invoice_type == "in_invoice":
+                            rec.base_profit = rec.net_price - \
+                                              rec.purchase_base_price
+                        else:
+                            rec.base_profit = 0
+            elif rec.supplier_invoice_type:
+                rec.base_profit = 0
             else:
                 rec.base_profit = rec.net_price - rec.purchase_base_price
             if rec.purchase_base_price:
@@ -490,6 +493,9 @@ class ProfitLossReportWizard(models.TransientModel):
             if rec.customer_invoice_type and rec.customer_invoice_type == \
                     "out_refund":
                 rec.state = 'out_refund'
+            elif rec.customer_invoice_type and rec.customer_invoice_type == \
+                    "in_refund":
+                rec.state = 'in_refund'
             elif rec.supplier_invoice_type and rec.supplier_invoice_type == \
                     "in_refund":
                 rec.state = 'in_refund'
@@ -503,12 +509,20 @@ class ProfitLossReportWizard(models.TransientModel):
             elif rec.invoice_id and rec.invoice_id.state == 'paid':
                 rec.state = 'sale_done'
 
+    def _get_utc_date(self, date_tz):
+        tz = pytz.timezone(self.env.user.tz) or pytz.utc
+        date = datetime.strptime(date_tz, '%Y-%m-%d')
+        date_local = tz.localize(date, is_dst=None)
+        return date_local.astimezone(pytz.utc).strftime("%Y-%m-%d %H:%M:%S")
+
     @api.multi
     def action_generate_profit_loss_records(self):
         self.ensure_one()
         self.env.cr.execute("DELETE FROM profit_loss_report")
         self._inject_out_invoice_data(self.from_date, self.to_date)
-        self._inject_purchase_data(self.from_date, self.to_date)
+        from_date = self._get_utc_date(self.from_date)
+        to_date = self._get_utc_date(self.to_date)
+        self._inject_purchase_data(from_date, to_date)
         self._update_records()
         res = self.env.ref('profit_loss_report.profit_loss_report_action')
         return res.read()[0]

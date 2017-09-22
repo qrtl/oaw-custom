@@ -228,6 +228,11 @@ class ProfitLossReport(models.TransientModel):
          ('in_refund', 'Supplier Refund')],
         readonly=True,
     )
+    image_small = fields.Binary(
+        'Image',
+        related='product_id.product_tmpl_id.image_small',
+        readonly=True,
+    )
 
     @api.multi
     def _get_discount(self):
