@@ -453,14 +453,17 @@ class ProfitLossReportWizard(models.TransientModel):
                     rec.base_profit = rec.purchase_base_price - rec.net_price
                 elif rec.customer_invoice_type == "out_invoice":
                     if rec.supplier_invoice_type:
-                        rec.base_profit = rec.net_price - \
-                                          rec.purchase_base_price
+                        if rec.supplier_invoice_type == "in_invoice":
+                            rec.base_profit = rec.net_price - \
+                                              rec.purchase_base_price
+                        else:
+                            rec.base_profit = 0
             elif rec.supplier_invoice_type:
                 if rec.supplier_invoice_type == "in_invoice":
                     rec.base_profit = rec.net_price - \
                                       rec.purchase_base_price
                 if rec.supplier_invoice_type == "in_refund":
-                    rec.base_profit = rec.purchase_base_price - rec.net_price
+                    rec.base_profit = 0
             else:
                 rec.base_profit = rec.net_price - rec.purchase_base_price
             if rec.purchase_base_price:
