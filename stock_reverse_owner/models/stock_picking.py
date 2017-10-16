@@ -35,13 +35,16 @@ class stock_picking(models.Model):
         # loose checking when owner is changed in picking
         if self.owner_id.supplier and type == 'picking':
             res = False
-            for move in self.move_lines:
-                if move.reserved_quant_ids:
-                    for quant in move.reserved_quant_ids:
-                        if quant.owner_id == self.owner_id:
-                            res = True
-                else:
-                    res = True
+            if self.move_lines:
+                for move in self.move_lines:
+                    if move.reserved_quant_ids:
+                        for quant in move.reserved_quant_ids:
+                            if quant.owner_id == self.owner_id:
+                                res = True
+                    else:
+                        res = True
+            else:
+                res = True
             return res
         # strict checking for transfer
         if self.owner_id.supplier and type == 'transfer':
@@ -51,6 +54,7 @@ class stock_picking(models.Model):
                         if quant.owner_id != self.owner_id:
                             return False
             return True
+        return True
 
 
     @api.one
