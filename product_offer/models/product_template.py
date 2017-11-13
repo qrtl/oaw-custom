@@ -63,6 +63,16 @@ class ProductTemplate(models.Model):
         string="Net Price",
         digits=dp.get_precision('Product Price'),
     )
+    sale_hkd_ab = fields.Integer(
+        string="Stock Sale HKD AB",
+        digits=dp.get_precision('Product Price'),
+        store=True
+    )
+    sale_hkd_ac = fields.Integer(
+        string="Stock Sale HKD AB",
+        digits=dp.get_precision('Product Price'),
+        store=True
+    )
     net_price_integer = fields.Integer(  # for kanban presentation
         string="Net Price",
         compute="_get_net_price_integer",
@@ -75,8 +85,30 @@ class ProductTemplate(models.Model):
         compute='_get_discount',
         readonly=True,
     )
+    discount_ab = fields.Float(
+        string="Discount (%)",
+        digits=dp.get_precision('Discount'),
+        compute='_get_discount_ab',
+        readonly=True,
+    )
+    discount_ac = fields.Float(
+        string="Discount (%)",
+        digits=dp.get_precision('Discount'),
+        compute='_get_discount_ac',
+        readonly=True,
+    )
     net_price_cny = fields.Float(
         string='Sale RMB',
+        compute='_get_net_price_cny',
+        digits=dp.get_precision('Product Price')
+    )
+    sale_hkd_ab_cn = fields.Integer(
+        string='Sale AB RMB',
+        compute='_get_net_price_cny',
+        digits=dp.get_precision('Product Price')
+    )
+    sale_hkd_ac_cn = fields.Integer(
+        string='Sale AC RMB',
         compute='_get_net_price_cny',
         digits=dp.get_precision('Product Price')
     )
@@ -88,6 +120,11 @@ class ProductTemplate(models.Model):
         if cny_rec:
             for pt in self:
                 pt.net_price_cny = pt.net_price * cny_rec.rate_silent
+                pt.sale_hkd_ab_cn = pt.sale_hkd_ab * cny_rec.rate_silent
+                pt.sale_hkd_ac_cn = pt.sale_hkd_ac * cny_rec.rate_silent
+
+
+
 
     @api.multi
     @api.depends('list_price', 'net_price')
@@ -97,6 +134,26 @@ class ProductTemplate(models.Model):
                 pt.discount = 0.0
             else:
                 pt.discount = (1 - pt.net_price / pt.list_price) * 100
+        return
+
+    @api.multi
+    @api.depends('list_price', 'sale_hkd_ab')
+    def _get_discount_ab(self):
+        for pt in self:
+            if not pt.list_price or not pt.sale_hkd_ab:
+                pt.discount = 0.0
+            else:
+                pt.discount = (1 - pt.sale_hkd_ab / pt.list_price) * 100
+        return
+
+    @api.multi
+    @api.depends('list_price', 'sale_hkd_ac')
+    def _get_discount_ac(self):
+        for pt in self:
+            if not pt.list_price or not pt.sale_hkd_ac:
+                pt.discount = 0.0
+            else:
+                pt.discount = (1 - pt.sale_hkd_ac / pt.list_price) * 100
         return
 
     @api.multi
