@@ -178,7 +178,6 @@
                                     <li t-if="record.type.raw_value != 'service'">HK Stock: <field name="local_stock"/></li>
                                     <li t-if="record.type.raw_value != 'service'">Overseas Stock: <field name="overseas_stock"/></li>
                                     <li>HK Retail: <field name="list_price_integer"></field></li>
-                                    <!--TODO create new discount calculation-->
                                     <li>Discount: <field name="discount_ab"/>%</li>
                                     <li>Sale HKD: <field name="sale_hkd_ab"/></li>
                                 </ul>
@@ -205,7 +204,7 @@
         id="menu_product_template_en_sales_price_action"
         parent="base.menu_product" sequence="6" />
 
-     <!-- Product Offer (ZH): Sales Price = Product Offer AB -->
+     <!-- Product Offer (ZH): Sales Price = Product Offer AB CN -->
     <record id="product_template_zh_sales_price_kanban_view" model="ir.ui.view">
         <field name="name">Product.template.product.kanban</field>
         <field name="model">product.template</field>
@@ -230,7 +229,6 @@
                                     <li t-if="record.type.raw_value != 'service'">香港现货: <field name="local_stock"/></li>
                                     <li t-if="record.type.raw_value != 'service'">欧洲期货: <field name="overseas_stock"/></li>
                                     <li>港币公价: <field name="list_price_integer"></field></li>
-                                    <!--TODO Create new discount caluclation-->
                                     <li>折扣率: <field name="discount_ab"/>%</li>
                                     <li>港币卖价: <field name="sale_hkd_ab"/></li>
                                     <li><i>今日RMB卖价: <field name="sale_hkd_ab_cn"/></i></li>
@@ -260,7 +258,7 @@
 
 
 
-    <!-- Product Offer (ZH): Sales Price = Product Offer AC -->
+    <!-- Product Offer: Sales Price = Product Offer AC -->
      <record id="product_template_offer_ac_kanban_view" model="ir.ui.view">
         <field name="name">Product.template.product.kanban</field>
         <field name="model">product.template</field>
@@ -285,7 +283,6 @@
                                     <li t-if="record.type.raw_value != 'service'">HK Stock: <field name="local_stock"/></li>
                                     <li t-if="record.type.raw_value != 'service'">Overseas Stock: <field name="overseas_stock"/></li>
                                     <li>HK Retail: <field name="list_price_integer"></field></li>
-                                       <!--TODO Create new discount caluclation-->
                                     <li>Discount: <field name="discount_ac"/>%</li>
                                     <li>Sale HKD: <field name="sale_hkd_ac"/></li>
                                 </ul>
@@ -339,10 +336,9 @@
                                     <li t-if="record.type.raw_value != 'service'">香港现货: <field name="local_stock"/></li>
                                     <li t-if="record.type.raw_value != 'service'">欧洲期货: <field name="overseas_stock"/></li>
                                     <li>港币公价: <field name="list_price_integer"></field></li>
-                                       <!--TODO Create new discount caluclation-->
                                     <li>折扣率: <field name="discount_ac"/>%</li>
-                                    <li>港币卖价: <field name="sale_hkd_ab"/></li>
-                                    <li><i>今日RMB卖价: <field name="sale_hkd_ab_cn"/></i></li>
+                                    <li>港币卖价: <field name="sale_hkd_ac"/></li>
+                                    <li><i>今日RMB卖价: <field name="sale_hkd_ac_cn"/></i></li>
                                 </ul>
                             </div>
                         </div>
