@@ -11,8 +11,10 @@
                     <field name="image_small" string="Image" widget="image" height="64px"/>
                     <field name="list_price" string="Retail HKD"/>
                     <field name="discount" string="Discount %"/>
-                    <field name="net_price" string="Sale HKD"/>
-                    <field name="net_price_cny"/>
+                    <field name="net_price" string="Sale HKD AA"/>
+                    <field name="sale_hkd_ab" string="Sale HKD AB"/>
+                    <field name="sale_hkd_ac" string="Sale HKD AC"/>
+                    <!--<field name="net_price_cny"/>-->
                     <field name="advertise" string="Ads"/>
                     <field name="stock_location"/>
                     <field name="stock_leadtime"/>
@@ -42,6 +44,6 @@
 
         <menuitem action="product_product_action_z1"
             id="menu_product_product_action_z1"
-            parent="base.menu_product" sequence="9"/>
+            parent="base.menu_product" sequence="11"/>
     </data>
 </openerp>
