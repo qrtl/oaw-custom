@@ -36,6 +36,7 @@ class ProductTemplate(models.Model):
         compute='_get_stock_cost',
         digits=dp.get_precision('Product Price'),
     )
+
     stock_location = fields.Char(
         string="Stock Location",
         compute='_get_stock_location'
