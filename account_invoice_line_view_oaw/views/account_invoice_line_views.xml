@@ -14,6 +14,7 @@
                     default_order="id desc" editable="top">
                     <field name="id" readonly="1" invisible="1"/>
                     <field name="invoice_id" readonly="1"/>
+                    <field name="partner_ref" readonly="1"/>
                     <field name="product_id" readonly="1"/>
                     <field name="image_small" string="Image" widget="image" height="64px"/>
                     <field name="lot_id" readonly="1"/>
@@ -51,6 +52,7 @@
             	<search string="Search Invoice">
             		<field name="number" string="Number" filter_domain="['|',('number','ilike',self),('origin','ilike',self)]"/>
                     <field name="lot_id" string="Case No."/>
+                    <field name="partner_ref" string="Supplier Reference"/>
                     <field name="product_id" string="Product"/>
             		<field name="partner_id" string="Partner"/>
             		<filter string="Draft" domain="[('state','=','draft')]"/>
