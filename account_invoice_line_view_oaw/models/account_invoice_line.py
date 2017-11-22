@@ -103,6 +103,13 @@ class InvoiceLine(models.Model):
         readonly=True,
         string='Currency'
     )
+    partner_ref = fields.Char(
+        'Supplier Reference',
+        related='po_id.partner_ref',
+        readonly=True,
+        #store=True
+    )
+
     rate = fields.Float(
         compute='_get_base_amt',
         readonly=True,
@@ -133,6 +140,7 @@ class InvoiceLine(models.Model):
         related='product_id.product_tmpl_id.image_small',
         readonly=True,
     )
+
 
  
     def init(self, cr):
