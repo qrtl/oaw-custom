@@ -143,7 +143,7 @@ class ProductTemplate(models.Model):
             if not pt.list_price or not pt.sale_hkd_ab:
                 pt.discount = 0.0
             else:
-                pt.discount = (1 - pt.sale_hkd_ab / pt.list_price) * 100
+                pt.discount_ab = (1 - pt.sale_hkd_ab / pt.list_price) * 100
         return
 
     @api.multi
@@ -153,7 +153,7 @@ class ProductTemplate(models.Model):
             if not pt.list_price or not pt.sale_hkd_ac:
                 pt.discount = 0.0
             else:
-                pt.discount = (1 - pt.sale_hkd_ac / pt.list_price) * 100
+                pt.discount_ac = (1 - pt.sale_hkd_ac / pt.list_price) * 100
         return
 
     @api.multi
