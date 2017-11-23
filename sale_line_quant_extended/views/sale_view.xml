@@ -31,10 +31,7 @@
         </field>
     </record>
 
-      <!--&lt;!&ndash;Make sale order tree view editable&ndash;&gt;-->
-            <!--<xpath expr="[@name='tree']" position="attributes">-->
-               <!--<attribute name="editable">top</attribute>-->
-            <!--</xpath>-->
+
 
 
     <record id="view_order_tree_z160504" model="ir.ui.view">
@@ -42,17 +39,7 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_tree"/>
         <field name="arch" type="xml">
-
-             <!--&lt;!&ndash;Make sale order tree view editable&ndash;&gt;-->
-            <!--<xpath expr="//tree" position="attributes">-->
-               <!--<attribute name="editable">top</attribute>-->
-            <!--</xpath>-->
-
-
             <xpath expr="//field[@name='name']" position="after">
-                <!--Both fields not to be shown in sales order tree view-->
-                <!--<field name="is_mto" string="MTO"/>-->
-                <!--<field name="to_check" />-->
                 <field name="open_issue"/>
             </xpath>
              <xpath expr="//field[@name='state']" position="before">
