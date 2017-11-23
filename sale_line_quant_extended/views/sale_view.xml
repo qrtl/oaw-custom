@@ -9,7 +9,7 @@
         <field name="arch" type="xml">
             <field name="partner_id" position="after">
                 <field name="is_mto"/>
-                <field name="to_check"/>
+                <field name="to_check" string="Prepare"/>
             </field>
             <xpath expr="/form/sheet/notebook/page[1]/field[@name='order_line']" position="attributes">
                 <attribute name="context">
@@ -31,14 +31,19 @@
         </field>
     </record>
 
+
+
+
     <record id="view_order_tree_z160504" model="ir.ui.view">
         <field name="name">sale.order.tree.z160504</field>
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='name']" position="after">
-                <field name="is_mto" string="MTO"/>
-                <field name="to_check"/>
+                <field name="open_issue"/>
+            </xpath>
+             <xpath expr="//field[@name='state']" position="before">
+                <field name="checked"/>
             </xpath>
         </field>
     </record>
@@ -50,7 +55,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='name']" position="after">
                 <field name="is_mto" string="MTO"/>
-                <field name="to_check"/>
+                <field name="to_check" string="Prepare"/>
             </xpath>
         </field>
     </record>

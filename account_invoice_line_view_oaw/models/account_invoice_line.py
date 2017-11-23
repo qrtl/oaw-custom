@@ -108,6 +108,7 @@ class InvoiceLine(models.Model):
         related='po_id.partner_ref',
         readonly=True
     )
+
     rate = fields.Float(
         compute='_get_base_amt',
         readonly=True,
@@ -138,6 +139,7 @@ class InvoiceLine(models.Model):
         related='product_id.product_tmpl_id.image_small',
         readonly=True,
     )
+
 
     def init(self, cr):
         # to be executed only when installing the module.  update "stored" fields 

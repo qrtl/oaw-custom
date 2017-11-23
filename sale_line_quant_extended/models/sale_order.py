@@ -36,10 +36,21 @@ class SaleOrder(models.Model):
         help="""This field controls how invoice and delivery operations \
         are synchronized."""
     )
-    # is_walkin = fields.Boolean('Walk-in')
+    # For communication with warehouse group
     to_check = fields.Boolean(
         'To Be Checked'
     )
+
+    # Field for communication with Delivery Group
+    open_issue = fields.Boolean(
+        'Open Issue'
+    )
+
+    # Field for communication with Accounting
+    checked = fields.Boolean(
+        'Checked'
+    )
+
     # for search purpose
     seller_ids = fields.One2many(
         comodel_name='product.supplierinfo',
