@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="partner_statement_report_wizard_view" model="ir.ui.view">
+            <field name="name">partner.statement.report.wizard</field>
+            <field name="model">partner.statement.report.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Report Options">
+                    <separator string="Partner Statement Report" colspan="4"/>
+                    <group col="6">
+                        <field name="chart_account_id" widget="selection" on_change="onchange_chart_id(chart_account_id, context)" colspan="4" modifiers="{'required': true}"/>
+                        <field name="company_id" invisible="1" modifiers="{'invisible': true, 'readonly': true}"/>
+                        <field name="fiscalyear_id" domain="[('company_id','=',company_id)]" modifiers="{}"/>
+                        <field name="target_move" modifiers="{'required': true}"/>
+                        <newline/>
+                        <field name="result_selection" colspan="4" modifiers="{'required': true}"/>
+                    </group>
+                    <notebook tabpos="up" colspan="4">
+                        <page string="Time Filters" name="filters">
+                            <group>
+                                <field name="filter" on_change="onchange_filter(filter, fiscalyear_id)" modifiers="{'required': true}"/>
+                            </group>
+                            <group string="Dates" attrs="{'invisible':[('filter', '!=', 'filter_date')], 'required':[('filter', '=', 'filter_date')]}" modifiers="{'invisible': [['filter', '!=', 'filter_date']], 'required': [['filter', '=', 'filter_date']]}">
+                                <field name="date_from" modifiers="{}"/>
+                                <field name="date_to" modifiers="{}"/>
+                            </group>
+                            <group string="Periods" attrs="{'invisible':[('filter','!=','filter_period')], 'required':[('filter', '=', 'filter_period')]}" modifiers="{'invisible': [['filter', '!=', 'filter_period']], 'required': [['filter', '=', 'filter_period']]}">
+                                <field name="period_from" domain="[('fiscalyear_id', '=', fiscalyear_id), ('special', '=', False)]" modifiers="{}"/>
+                                <field name="period_to" domain="[('fiscalyear_id', '=', fiscalyear_id), ('special', '=', False)]" modifiers="{}"/>
+                            </group>
+                        </page>
+                        <page string="Partners Filters" name="partners">
+                            <separator string="Print only" colspan="4"/>
+                            <field name="partner_ids" colspan="4" nolabel="1" modifiers="{}"/>
+                        </page>
+                        <page string="Journals" name="journal_ids" invisible="True" modifiers="{'invisible': true}">
+                            <field name="journal_ids" modifiers="{'required': true}"/>
+                        </page>
+                    </notebook>
+                    <footer>
+                        <button icon="gtk-execute" name="xls_export"
+                                string="Export" type="object"
+                                context="{'xls_export':1}" colspan="2"/>
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_partner_statement_report_wizard"
+                model="ir.actions.act_window">
+            <field name="name">Partner Statement Report</field>
+            <field name="res_model">partner.statement.report.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="partner_statement_report_wizard_view"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="action_partner_statement_report_wizard"
+                  id="menu_partner_statement_report_wizard"
+                  parent="account.menu_finance_reporting" sequence="11"/>
+
+    </data>
+</openerp>
