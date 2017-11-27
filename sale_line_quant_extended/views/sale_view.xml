@@ -9,7 +9,8 @@
         <field name="arch" type="xml">
             <field name="partner_id" position="after">
                 <field name="is_mto"/>
-                <field name="to_check"/>
+                <field name="to_check" string="Prepare"/>
+                <field name="open_issue"/>
             </field>
             <xpath expr="/form/sheet/notebook/page[1]/field[@name='order_line']" position="attributes">
                 <attribute name="context">
@@ -31,14 +32,33 @@
         </field>
     </record>
 
+    <!--TODO use "active_id" of context-->
+    <!--<record id="action_orders_2" model="ir.actions.act_window">-->
+           <!--<field name="name">Open Sales Order</field>-->
+            <!--<field name="res_model">sale.order</field>-->
+            <!--<field name="view_mode">form</field>-->
+            <!--<field name="view_id" ref="view_order_form_inherit_z160503"/>-->
+            <!--<field name="domain">{(sale_order.id,'=',res_id)}</field>-->
+
+    <!--</record>-->
+
+
     <record id="view_order_tree_z160504" model="ir.ui.view">
         <field name="name">sale.order.tree.z160504</field>
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_tree"/>
         <field name="arch" type="xml">
+             <!--Make sale order tree view editable-->
+            <xpath expr="//tree" position="attributes">
+               <attribute name="editable">top</attribute>
+            </xpath>
             <xpath expr="//field[@name='name']" position="after">
-                <field name="is_mto" string="MTO"/>
-                <field name="to_check"/>
+                <button name="action_orders_2" type="object" icon="terp-gtk-jump-to-ltr" string="Open its Sales Order"/>
+                <!--<button name="action_orders_3" type="object" icon="terp-gtk-jump-to-ltr" string="Open its Sales Order"/>-->
+                <field name="open_issue"/>
+            </xpath>
+             <xpath expr="//field[@name='state']" position="before">
+                <field name="checked"/>
             </xpath>
         </field>
     </record>
@@ -50,7 +70,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='name']" position="after">
                 <field name="is_mto" string="MTO"/>
-                <field name="to_check"/>
+                <field name="to_check" string="Prepare"/>
             </xpath>
         </field>
     </record>
@@ -78,6 +98,8 @@
             </xpath>
         </field>
     </record>
+
+
 
 </data>
 </openerp>

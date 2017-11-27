@@ -36,13 +36,39 @@ class SaleOrder(models.Model):
         help="""This field controls how invoice and delivery operations \
         are synchronized."""
     )
-    # is_walkin = fields.Boolean('Walk-in')
+    # For communication with warehouse group
     to_check = fields.Boolean(
         'To Be Checked'
     )
+
+    # Field for communication with Delivery Group
+    open_issue = fields.Boolean(
+        'Open Issue'
+    )
+
+    # Field for communication with Accounting
+    checked = fields.Boolean(
+        'Checked'
+    )
+
     # for search purpose
     seller_ids = fields.One2many(
         comodel_name='product.supplierinfo',
         related='order_line.product_tmpl_id.seller_ids',
         string='Supplier',
     )
+
+    @api.multi
+    def action_orders_2(self):
+        view_id = self.env.ref('sale.view_order_form').id
+        context = {}
+        return {
+            'name':'Sales Order',
+            'view_mode':'form',
+            'view_type': 'form',
+            'res_model':'sale.order',
+            'view_id':view_id,
+            'type':'ir.actions.act_window',
+            'res_id':self.id,
+            'context':context,
+        }
