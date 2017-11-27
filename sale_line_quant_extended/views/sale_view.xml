@@ -40,9 +40,6 @@
                 <field name="is_mto" string="MTO"/>
                 <field name="to_check"/>
             </xpath>
-            <xpath expr="//tree" position="attributes">
-                <attribute name="editable">top</attribute>
-            </xpath>
         </field>
     </record>
 
