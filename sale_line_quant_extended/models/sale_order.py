@@ -57,3 +57,18 @@ class SaleOrder(models.Model):
         related='order_line.product_tmpl_id.seller_ids',
         string='Supplier',
     )
+
+    @api.multi
+    def action_orders_2(self):
+        view_id = self.env.ref('sale.view_order_form').id
+        context = {}
+        return {
+            'name':'Sales Order',
+            'view_mode':'form',
+            'view_type': 'form',
+            'res_model':'sale.order',
+            'view_id':view_id,
+            'type':'ir.actions.act_window',
+            'res_id':self.id,
+            'context':context,
+        }
