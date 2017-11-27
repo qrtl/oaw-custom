@@ -10,8 +10,7 @@ from openerp.addons.report_xls.utils import rowcol_to_cell
 from openerp.addons.partner_statement_report.report.partner_statement_report \
     import PartnerStatementReport
 from openerp.tools.translate import _
-# import logging
-# _logger = logging.getLogger(__name__)
+
 
 _column_sizes = [
     ('period', 12),
@@ -49,7 +48,6 @@ class partner_statement_report_xls(report_xls):
         ws.header_str = self.xls_headers['standard']
         ws.footer_str = self.xls_footers['standard']
 
-        # cf. account_report_partner_ledger.mako
         initial_balance_text = {'initial_balance': _('Computed'),
                                 'opening_balance': _('Opening Entries'),
                                 False: _('No')}
@@ -191,7 +189,7 @@ class partner_statement_report_xls(report_xls):
         # Set light-grey background color
         light_green = 'pattern: pattern solid, fore_color 42;'
 
-        # cell styles for ledger lines
+        # cell styles for statement lines
         ll_cell_format = _xs['borders_all']
         ll_cell_style = xlwt.easyxf(ll_cell_format)
         ll_cell_style_grey = xlwt.easyxf(light_green +
@@ -218,7 +216,7 @@ class partner_statement_report_xls(report_xls):
 
         cnt = 0
         for account in objects:
-            if _p['ledger_lines'].get(account.id, False) or \
+            if _p['statement_lines'].get(account.id, False) or \
                     _p['init_balance'].get(account.id, False):
                 if not _p['partners_order'].get(account.id, False):
                     continue
@@ -314,7 +312,8 @@ class partner_statement_report_xls(report_xls):
 
                     curr_amt = 0.0
                     curr_rate = 0.0
-                    for line in _p['ledger_lines'][account.id].get(p_id, []):
+                    for line in _p['statement_lines'][account.id].get(p_id,
+                                                                      []):
 
                         total_debit += line.get('debit') or 0.0
                         total_credit += line.get('credit') or 0.0
@@ -397,7 +396,7 @@ class partner_statement_report_xls(report_xls):
                         else:
                             rec_code = line.get('rec_name')
 
-                        # Print row ledger line data #
+                        # Print row statement line data #
                         c_specs = [
                             ('period', 1, 0, 'text', line.get('period_code')
                              or '')

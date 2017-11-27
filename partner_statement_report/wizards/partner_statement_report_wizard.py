@@ -2,11 +2,7 @@
 # Copyright 2017 Quartile Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-import time
-
 from openerp import models, fields, api
-# import logging
-# _logger = logging.getLogger(__name__)
 
 
 class PartnerStatementReportWizard(models.TransientModel):
@@ -38,16 +34,11 @@ class PartnerStatementReportWizard(models.TransientModel):
         return self.check_report(cr, uid, ids, context=context)
 
     def _print_report(self, cr, uid, ids, data, context=None):
-        context = context or {}
-        if context.get('xls_export'):
-            # we update form with display account value
-            data = self.pre_print_report(cr, uid, ids, data, context=context)
-            return {'type': 'ir.actions.report.xml',
-                    'report_name': 'account.account_report_partner_statement_report_xls',
-                    'datas': data}
-        else:
-            return super(PartnerStatementReportWizard, self)._print_report(
-                cr, uid, ids, data, context=context)
+        # we update form with display account value
+        data = self.pre_print_report(cr, uid, ids, data, context=context)
+        return {'type': 'ir.actions.report.xml',
+                'report_name': 'account.account_report_partner_statement_report_xls',
+                'datas': data}
 
     def pre_print_report(self, cr, uid, ids, data, context=None):
         data = super(PartnerStatementReportWizard, self).pre_print_report(

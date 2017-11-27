@@ -32,6 +32,7 @@
     'images': [
         'images/ledger.png', ],
     'depends': ['account',
+                'account_chart_report',
                 'report_webkit'],
     'demo': [],
     'data': ['account_view.xml',
