@@ -11,6 +11,7 @@
                 <field name="is_mto"/>
                 <field name="to_check" string="Prepare"/>
                 <field name="open_issue"/>
+
             </field>
             <xpath expr="/form/sheet/notebook/page[1]/field[@name='order_line']" position="attributes">
                 <attribute name="context">
@@ -33,6 +34,7 @@
     </record>
 
 
+
     <record id="view_order_tree_z160504" model="ir.ui.view">
         <field name="name">sale.order.tree.z160504</field>
         <field name="model">sale.order</field>
@@ -44,6 +46,7 @@
             </xpath>
             <xpath expr="//field[@name='name']" position="after">
                 <button name="action_orders_2" type="object" icon="terp-gtk-jump-to-ltr" string="Open its Sales Order"/>
+
 
                 <field name="open_issue"/>
             </xpath>
@@ -59,6 +62,7 @@
         <field name="inherit_id" ref="sale.view_quotation_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='name']" position="after">
+                <field name="is_mto" string="MTO"/>
                 <field name="to_check" string="Prepare"/>
             </xpath>
         </field>
