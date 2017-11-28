@@ -35,7 +35,6 @@
 
 
 
-
     <record id="view_order_tree_z160504" model="ir.ui.view">
         <field name="name">sale.order.tree.z160504</field>
         <field name="model">sale.order</field>
