@@ -46,12 +46,13 @@
             </xpath>
             <xpath expr="//field[@name='name']" position="after">
                 <button name="action_orders_2" type="object" icon="terp-gtk-jump-to-ltr" string="Open its Sales Order"/>
-
-
                 <field name="open_issue"/>
             </xpath>
              <xpath expr="//field[@name='state']" position="before">
                 <field name="checked"/>
+            </xpath>
+            <xpath expr="//field[@name='user_id']" position="attributes">
+                <attribute name='readonly'>1</attribute>
             </xpath>
         </field>
     </record>
