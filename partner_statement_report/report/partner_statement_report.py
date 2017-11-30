@@ -213,55 +213,58 @@ class PartnerStatementReport(report_sxw.rml_parse,
         if not isinstance(move_line_ids, list):
             move_line_ids = [move_line_ids]
         sql = """
-SELECT l.id AS id,
-            l.date AS ldate,
-            l.currency_id,
-            l.account_id,
-            l.amount_currency,
-            l.name AS lname,
-            COALESCE(l.debit, 0.0) - COALESCE(l.credit, 0.0) AS balance,
-            l.debit,
-            l.credit,
-            l.period_id AS lperiod_id,
-            per.code as period_code,
-            l.partner_id AS lpartner_id,
-            m.name AS move_name,
-            COALESCE(partialrec.name, fullrec.name, '') AS rec_name,
-            COALESCE(partialrec.id, fullrec.id, NULL) AS rec_id,
-            m.id AS move_id,
-            c.name AS currency_code,
-            i.id AS invoice_id,
-            i.type AS invoice_type,
-            i.number AS invoice_number,
-            l.date_maturity,
-			i.supplier_invoice_number as supplier_invoice_number,
-			i.origin as quotation_number,
-			av.reference as payment_ref,
-			av.amount as payment_amt,
-			av.type as payment_type,
-			av.currency_id_name as payment_curr,
-			av.narration as int_note,
-			l.reconcile_invoice as invoice_ref,
-			l.reconcile_order as order_ref,
-			l.reconcile_item as reconcile_item_ref,
-			CASE WHEN l.reconcile_id IS NOT NULL THEN 'full'
-                 WHEN l.reconcile_partial_id IS NOT NULL THEN 'partial'
-            ELSE 'unreconcile'
-            END AS reconcile_state,
-            aa.type as account_type
-FROM account_move_line l
-    JOIN account_move m on (l.move_id = m.id)
-    LEFT JOIN res_currency c on (l.currency_id = c.id)
-    LEFT JOIN account_move_reconcile partialrec
-        on (l.reconcile_partial_id = partialrec.id)
-    LEFT JOIN account_move_reconcile fullrec on (l.reconcile_id = fullrec.id)
-    LEFT JOIN res_partner p on (l.partner_id = p.id)
-    LEFT JOIN account_invoice i on (m.id = i.move_id)
-    LEFT JOIN account_period per on (per.id = l.period_id)
-	LEFT JOIN account_voucher av on (m.id = av.move_id)
-	LEFT JOIN account_account aa ON (l.account_id = aa.id)
-    JOIN account_journal j on (l.journal_id = j.id)
-    WHERE l.id in %s"""
+            SELECT l.id AS id,
+                l.date AS ldate,
+                l.currency_id,
+                l.account_id,
+                l.amount_currency,
+                l.name AS lname,
+                COALESCE(l.debit, 0.0) - COALESCE(l.credit, 0.0) AS balance,
+                l.debit,
+                l.credit,
+                l.period_id AS lperiod_id,
+                per.code as period_code,
+                per.special AS peropen,
+                l.partner_id AS lpartner_id,
+                p.name AS partner_name,
+                m.name AS move_name,
+                COALESCE(partialrec.name, fullrec.name, '') AS rec_name,
+                COALESCE(partialrec.id, fullrec.id, NULL) AS rec_id,
+                m.id AS move_id,
+                c.name AS currency_code,
+                i.id AS invoice_id,
+                i.type AS invoice_type,
+                i.number AS invoice_number,
+                l.date_maturity,
+                i.supplier_invoice_number as supplier_invoice_number,
+                i.origin as quotation_number,
+                av.reference as payment_ref,
+                av.amount as payment_amt,
+                av.type as payment_type,
+                av.currency_id_name as payment_curr,
+                av.narration as int_note,
+                l.reconcile_invoice as invoice_ref,
+                l.reconcile_order as order_ref,
+                l.reconcile_item as reconcile_item_ref,
+                CASE WHEN l.reconcile_id IS NOT NULL THEN 'full'
+                     WHEN l.reconcile_partial_id IS NOT NULL THEN 'partial'
+                ELSE 'unreconcile'
+                END AS reconcile_state,
+                aa.type as account_type
+            FROM account_move_line l
+            JOIN account_move m on (l.move_id = m.id)
+            LEFT JOIN res_currency c on (l.currency_id = c.id)
+            LEFT JOIN account_move_reconcile partialrec
+                on (l.reconcile_partial_id = partialrec.id)
+            LEFT JOIN account_move_reconcile fullrec on (l.reconcile_id = fullrec.id)
+            LEFT JOIN res_partner p on (l.partner_id = p.id)
+            LEFT JOIN account_invoice i on (m.id = i.move_id)
+            LEFT JOIN account_period per on (per.id = l.period_id)
+            LEFT JOIN account_voucher av on (m.id = av.move_id)
+            LEFT JOIN account_account aa ON (l.account_id = aa.id)
+            JOIN account_journal j on (l.journal_id = j.id)
+            WHERE l.id in %s
+        """
         sql += (" ORDER BY %s" % (order,))
         try:
             self.cursor.execute(sql, (tuple(move_line_ids),))

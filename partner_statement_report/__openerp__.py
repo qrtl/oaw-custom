@@ -8,7 +8,6 @@
     'website': 'https://www.odoo-asia.com',
     'category': 'Report',
     'depends': [
-        'account_chart_report',
         'account_financial_report_webkit',
         'account_financial_report_webkit_xls',
     ],
