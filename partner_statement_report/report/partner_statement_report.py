@@ -263,7 +263,10 @@ class PartnerStatementReport(report_sxw.rml_parse,
             LEFT JOIN account_voucher av on (m.id = av.move_id)
             LEFT JOIN account_account aa ON (l.account_id = aa.id)
             JOIN account_journal j on (l.journal_id = j.id)
-            WHERE l.id in %s
+            WHERE
+                l.id in %s
+                AND l.debit <> 0
+                AND l.credit <> 0
         """
         sql += (" ORDER BY %s" % (order,))
         try:
