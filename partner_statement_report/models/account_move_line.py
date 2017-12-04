@@ -61,15 +61,9 @@ class AccountMoveLine(models.Model):
                             if item.move_id.name not in reconcile_item and \
                                     item.id <> aml.id:
                                 reconcile_item.append(item.move_id.name)
-                    if len(invoice_list) > 0:
-                        aml.reconcile_invoice = ','.join(invoice_list)
-                    else:
-                        aml.reconcile_invoice = False
-                    if len(order_list) > 0:
-                        aml.reconcile_order = ','.join(order_list)
-                    else:
-                        aml.reconcile_order = False
-                    if len(reconcile_item) > 0:
-                        aml.reconcile_item = ','.join(reconcile_item)
-                    else:
-                        aml.reconcile_item = False
+                    aml.reconcile_invoice = ','.join(invoice_list) if len(
+                        invoice_list) > 0 else False
+                    aml.reconcile_order = ','.join(order_list) if len(
+                        order_list) > 0 else False
+                    aml.reconcile_item = ','.join(reconcile_item) if len(
+                        reconcile_item) > 0 else False
