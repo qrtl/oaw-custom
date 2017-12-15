@@ -9,12 +9,7 @@ import openerp.addons.decimal_precision as dp
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
-    chrono =  fields.Boolean(
-        default = False
-    )
-    chronoNote = fields.Char(
-        string = "C24-Note"
-    )
+
     advertise = fields.Boolean(
         default=False
     )
