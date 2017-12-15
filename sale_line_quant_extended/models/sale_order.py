@@ -57,7 +57,7 @@ class SaleOrder(models.Model):
         related='order_line.product_tmpl_id.seller_ids',
         string='Supplier',
     )
-
+    # object action for chrono update button in sale order form view
     @api.multi
     def action_orders_2(self):
         view_id = self.env.ref('sale.view_order_form').id

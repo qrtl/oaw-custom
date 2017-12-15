@@ -137,6 +137,8 @@
                     <filter name="overseas" string="Overseas" domain="[('overseas_stock','=','Yes')]"/>
                     <filter name="local_overseas_w_res" string="Local&amp;overseas w R" domain="['|',('qty_local_stock','&gt;',0),('overseas_stock','=','Yes')]"/>
                     <filter name="local_overseas_wo_res" string="Local&amp;overseas w/o R" domain="['|',('local_stock_not_reserved','&gt;',0),('overseas_stock','=','Yes')]"/>
+                    <filter name="updated_date_chrono24" string="Chrono24 Updated 7D" domain="[('updated_date_chrono24','&gt;=',(context_today()+datetime.timedelta(days=-7)).strftime('%Y-%m-%d'))]"/>
+                    <filter name="updated_chrono24" string="Chrono24 Updated" domain="[('chrono24_updated','=',True)]"/>
                 </group>
            </xpath>
            <xpath expr="//filter[@string='Services']" position="replace">

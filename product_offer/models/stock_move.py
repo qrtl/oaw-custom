@@ -25,7 +25,8 @@ class StockMove(models.Model):
         for move in self:
             prod_tmpl = move.product_tmpl_id
             qty_in = self._get_qty_in(prod_tmpl.id)
-            prod_tmpl.qty_local_stock = int(prod_tmpl.qty_available + qty_in)
+            if prod_tmpl.qty_local_stock != int(prod_tmpl.qty_available + qty_in):
+                prod_tmpl.qty_local_stock = int(prod_tmpl.qty_available + qty_in)
         return
 
     @api.multi

@@ -48,7 +48,8 @@ class StockQuant(models.Model):
                 )
                 for q in quants:
                     rsvd_qty += q.qty
-            prod_tmpl.qty_reserved = int(rsvd_qty)
+            if prod_tmpl.qty_reserved != int(rsvd_qty):
+                prod_tmpl.qty_reserved = int(rsvd_qty)
         return
 
     @api.multi

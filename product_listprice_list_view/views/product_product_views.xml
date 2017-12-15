@@ -14,20 +14,20 @@
                     <field name="net_price" string="Sale HKD AA"/>
                     <field name="sale_hkd_ab" string="Sale HKD AB"/>
                     <field name="sale_hkd_ac" string="Sale HKD AC"/>
-                    <!--<field name="net_price_cny"/>-->
                     <field name="advertise" string="Ads"/>
                     <field name="stock_location"/>
                     <field name="stock_leadtime"/>
                     <field name="stock_cost" string="Cost HKD"/>
                     <field name="net_profit" string="Net Profit" fg_color="red:net_profit &lt; 0.00;"/>
-                    <field name="net_profit_pct" string="Net Profit %" />
+                    <field name="net_profit_pct" string="Net Profit %"/>
                     <field name="qty_reserved" string="Qty Reserved"/>
                     <field name="qty_local_stock" widget="integer" string="HK Stock"/>
                     <field name="qty_overseas" string="Qty Overseas"/>
                     <field name="last_in_date" string="Incoming Date" widget="date"/>
                     <field name="additional_info" string="Note"/>
-                    <field name="chrono" string="C24"/>
-                    <field name="chronoNote" />
+                    <field name="chrono24_updated" string="Chrono24 Updated"/>
+                    <field name="chrono" string="Chrono24"/>
+                    <field name="chronoNote"/>
                  </tree>
             </field>
         </record>
