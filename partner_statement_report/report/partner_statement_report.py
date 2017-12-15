@@ -265,8 +265,7 @@ class PartnerStatementReport(report_sxw.rml_parse,
             JOIN account_journal j on (l.journal_id = j.id)
             WHERE
                 l.id in %s
-                AND l.debit <> 0
-                AND l.credit <> 0
+                AND ((l.debit + l.credit) <> 0)
         """
         sql += (" ORDER BY %s" % (order,))
         try:
