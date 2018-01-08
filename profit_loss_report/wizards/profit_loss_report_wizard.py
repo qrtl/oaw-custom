@@ -40,6 +40,7 @@ class ProfitLossReportWizard(models.TransientModel):
                 invoice_id,
                 list_price,
                 net_price,
+                net_price_currency_id,
                 partner_id,
                 partner_ref,
                 sale_order_note,
@@ -154,6 +155,7 @@ class ProfitLossReportWizard(models.TransientModel):
             ai.id,
             pt.list_price,
             ail.price_subtotal,
+            ai.currency_id,
             so.partner_id,
             rp.ref,
             so.note,
@@ -232,6 +234,7 @@ class ProfitLossReportWizard(models.TransientModel):
                 invoice_id,
                 list_price,
                 net_price,
+                net_price_currency_id,
                 partner_id,
                 partner_ref,
                 sale_order_note,
@@ -320,6 +323,7 @@ class ProfitLossReportWizard(models.TransientModel):
                     ai.id AS customer_invoice_id,
                     ai.user_id,
                     ail.price_subtotal,
+                    ai.currency_id,
                     ai.type AS customer_invoice_type
                 FROM
                     account_invoice_line ail
@@ -346,6 +350,7 @@ class ProfitLossReportWizard(models.TransientModel):
             cid.customer_invoice_id,
             pt.list_price,
             cid.price_subtotal,
+            cid.currency_id,
             so.partner_id,
             rp.ref,
             so.note,
@@ -447,22 +452,30 @@ class ProfitLossReportWizard(models.TransientModel):
                 rec.exchange_rate = self.env['res.currency'].with_context(
                     ctx)._get_conversion_rate(rec.purchase_currency_id,
                                               comp_currency_id)
+            net_price_exchange_rate = 1.0
+            if rec.net_price_currency_id == comp_currency_id:
+                net_price_exchange_rate = 1.0
+            elif ctx['date'] and rec.net_price_currency_id:
+                net_price_exchange_rate = self.env['res.currency'].with_context(
+                    ctx)._get_conversion_rate(rec.net_price_currency_id,
+                                              comp_currency_id)
+            base_net_price = rec.net_price * net_price_exchange_rate
             rec.purchase_base_price = \
                 rec.purchase_currency_price * rec.exchange_rate
             if rec.customer_invoice_type:
                 if rec.customer_invoice_type == "out_refund":
-                    rec.base_profit = rec.purchase_base_price - rec.net_price
+                    rec.base_profit = rec.purchase_base_price - base_net_price
                 elif rec.customer_invoice_type == "out_invoice":
                     if rec.supplier_invoice_type:
                         if rec.supplier_invoice_type == "in_invoice":
-                            rec.base_profit = rec.net_price - \
+                            rec.base_profit = base_net_price - \
                                               rec.purchase_base_price
                         else:
                             rec.base_profit = 0
             elif rec.supplier_invoice_type:
                 rec.base_profit = 0
             else:
-                rec.base_profit = rec.net_price - rec.purchase_base_price
+                rec.base_profit = base_net_price - rec.purchase_base_price
             if rec.purchase_base_price:
                 rec.base_profit_percent = \
                     rec.base_profit / rec.purchase_base_price * 100

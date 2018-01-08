@@ -63,6 +63,11 @@ class ProfitLossReport(models.TransientModel):
         digits=dp.get_precision('Product Price'),
         readonly=True,
     )
+    net_price_currency_id = fields.Many2one(
+        comodel_name='res.currency',
+        string='Net Price Currency',
+        readonly=True,
+    )
     partner_id = fields.Many2one(
         comodel_name='res.partner',
         string='Customer',
@@ -177,7 +182,7 @@ class ProfitLossReport(models.TransientModel):
     )
     base_profit_percent = fields.Float(
         string='Profit %',
-        digits=dp.get_precision('Discount'),
+        digits=dp.get_precision('Account'),
         readonly=True,
     )
     customer_payment_ids = fields.Many2many(
