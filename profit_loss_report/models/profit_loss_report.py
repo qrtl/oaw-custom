@@ -172,6 +172,11 @@ class ProfitLossReport(models.TransientModel):
         string='Purchase Invoice',
         readonly=True,
     )
+    purchase_invoice_line_id = fields.Many2one(
+        comodel_name='account.invoice.line',
+        string='Purchase Invoice Line',
+        readonly=True,
+    )
     supplier_invoice_number = fields.Char(
         string='Supplier Invoice No.',
         readonly=True,

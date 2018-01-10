@@ -40,7 +40,6 @@ class ProfitLossReportWizard(models.TransientModel):
                 invoice_id,
                 list_price,
                 net_price,
-                net_price_currency_id,
                 partner_id,
                 partner_ref,
                 sale_order_note,
@@ -55,6 +54,7 @@ class ProfitLossReportWizard(models.TransientModel):
                 purchase_currency_id,
                 purchase_currency_price,
                 purchase_invoice_id,
+                purchase_invoice_line_id,
                 supplier_invoice_number,
                 customer_invoice_type,
                 supplier_invoice_type
@@ -126,6 +126,7 @@ class ProfitLossReportWizard(models.TransientModel):
             ),
             purchase_invoice_data AS (
                 SELECT
+                    ail.id as purchase_invoice_line_id,
                     ail.purchase_line_id,
                     ai.id AS supplier_invoice_id,
                     ai.supplier_invoice_number,
@@ -155,7 +156,6 @@ class ProfitLossReportWizard(models.TransientModel):
             ai.id,
             pt.list_price,
             ail.price_subtotal,
-            ai.currency_id,
             so.partner_id,
             rp.ref,
             so.note,
@@ -170,6 +170,7 @@ class ProfitLossReportWizard(models.TransientModel):
             pd.currency_id,
             pd.price_unit,
             pid.supplier_invoice_id,
+            pid.purchase_invoice_line_id,
             pid.supplier_invoice_number,
             ai.type,
             pid.supplier_invoice_type
@@ -234,7 +235,6 @@ class ProfitLossReportWizard(models.TransientModel):
                 invoice_id,
                 list_price,
                 net_price,
-                net_price_currency_id,
                 partner_id,
                 partner_ref,
                 sale_order_note,
@@ -249,6 +249,7 @@ class ProfitLossReportWizard(models.TransientModel):
                 purchase_currency_id,
                 purchase_currency_price,
                 purchase_invoice_id,
+                purchase_invoice_line_id,
                 supplier_invoice_number,
                 customer_invoice_type,
                 supplier_invoice_type
@@ -301,6 +302,7 @@ class ProfitLossReportWizard(models.TransientModel):
                 SELECT
                     ail.lot_id,
                     ail.purchase_line_id,
+                    ail.id AS purchase_invoice_line_id,
                     ai.id AS supplier_invoice_id,
                     ai.supplier_invoice_number,
                     ai.type AS supplier_invoice_type
@@ -323,7 +325,6 @@ class ProfitLossReportWizard(models.TransientModel):
                     ai.id AS customer_invoice_id,
                     ai.user_id,
                     ail.price_subtotal,
-                    ai.currency_id,
                     ai.type AS customer_invoice_type
                 FROM
                     account_invoice_line ail
@@ -350,7 +351,6 @@ class ProfitLossReportWizard(models.TransientModel):
             cid.customer_invoice_id,
             pt.list_price,
             cid.price_subtotal,
-            cid.currency_id,
             so.partner_id,
             rp.ref,
             so.note,
@@ -365,6 +365,7 @@ class ProfitLossReportWizard(models.TransientModel):
             po.currency_id,
             pol.price_unit,
             pid.supplier_invoice_id,
+            pid.purchase_invoice_line_id,
             pid.supplier_invoice_number,
             cid.customer_invoice_type,
             pid.supplier_invoice_type
@@ -433,7 +434,14 @@ class ProfitLossReportWizard(models.TransientModel):
                     rec.stock_type = 'own'
                 else:
                     rec.stock_type = 'vci'
-            if not rec.purchase_order_id and rec.stock_type == 'vci':
+            # Handle the purchase price
+            if rec.purchase_invoice_line_id:
+                invoice_line = rec.purchase_invoice_line_id
+                rec.purchase_currency_price = invoice_line.price_unit * \
+                                              (1.0 - (invoice_line.discount
+                                                      or 0.0) / 100.0)
+                rec.purchase_currency_id = invoice_line.invoice_id.currency_id
+            elif not rec.purchase_order_id and rec.stock_type == 'vci':
                 rec.supplier_id = rec.in_move_quant_owner_id
                 if rec.supplier_id:
                     rec.supplier_ref = rec.in_move_quant_owner_id.ref
@@ -452,6 +460,7 @@ class ProfitLossReportWizard(models.TransientModel):
                 rec.exchange_rate = self.env['res.currency'].with_context(
                     ctx)._get_conversion_rate(rec.purchase_currency_id,
                                               comp_currency_id)
+            # Handle the net price
             net_price_exchange_rate = 1.0
             if rec.net_price_currency_id == comp_currency_id:
                 net_price_exchange_rate = 1.0
@@ -462,6 +471,7 @@ class ProfitLossReportWizard(models.TransientModel):
             base_net_price = rec.net_price * net_price_exchange_rate
             rec.purchase_base_price = \
                 rec.purchase_currency_price * rec.exchange_rate
+            # Calculate the base_profit
             if rec.customer_invoice_type:
                 if rec.customer_invoice_type == "out_refund":
                     rec.base_profit = rec.purchase_base_price - base_net_price
@@ -481,6 +491,7 @@ class ProfitLossReportWizard(models.TransientModel):
                     rec.base_profit / rec.purchase_base_price * 100
             else:
                 rec.base_profit_percent = 999.99
+            # Handle the display of multi-payments
             rec.customer_payment_dates = ', '.join(
                 rec.customer_payment_ids.mapped('date'))
             rec.customer_payment_ref = ', '.join(
@@ -489,12 +500,13 @@ class ProfitLossReportWizard(models.TransientModel):
                 rec.supplier_payment_ids.mapped('date'))
             rec.supplier_payment_ref = ', '.join(
                 rec.supplier_payment_ids.mapped('ref'))
+            # FIXME below 'if' block may be deprecated as necessary
+            # Identify the state of the transaction
             if rec.purchase_invoice_id and rec.purchase_invoice_id.state == \
                     'paid':
                 rec.supplier_payment_state = 'done'
             else:
                 rec.supplier_payment_state = 'to_pay'
-            # FIXME below 'if' block may be deprecated as necessary
             if rec.out_move_id and rec.out_move_id.state == 'done' and \
                     rec.invoice_id:
                 if rec.invoice_id.state == 'paid':
