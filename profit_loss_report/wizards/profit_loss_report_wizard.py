@@ -328,6 +328,7 @@ class ProfitLossReportWizard(models.TransientModel):
                     ai.id AS customer_invoice_id,
                     ai.user_id,
                     ail.price_subtotal,
+                    ai.currency_id,
                     ai.type AS customer_invoice_type
                 FROM
                     account_invoice_line ail
