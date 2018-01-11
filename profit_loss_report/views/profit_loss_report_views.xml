@@ -24,6 +24,7 @@
                 <field name="list_price"/>
                 <field name="discount"/>
                 <field name="net_price"/>
+                <field name="net_price_currency_id"/>
                 <field name="partner_id"/>
                 <field name="partner_ref" invisible="1"/>
                 <field name="customer_payment_ref"/>
