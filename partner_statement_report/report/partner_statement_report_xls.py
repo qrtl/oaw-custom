@@ -500,15 +500,24 @@ class partner_statement_report_xls(report_xls):
                         partner_account_summary[p_id][account.type]['deposit'] \
                             += end_deposit
                     else:
-                        partner_account_summary[p_id] = {
-                            account.type: {
-                                'debit': total_debit or 0.0,
-                                'credit': total_credit or 0.0,
-                                'deposit': end_deposit or 0.0
+                        if not partner_account_summary.get(p_id):
+                            partner_account_summary[p_id] = {
+                                account.type: {
+                                    'debit': total_debit or 0.0,
+                                    'credit': total_credit or 0.0,
+                                    'deposit': end_deposit or 0.0
+                                }
                             }
-                        }
-                        partner_account_summary[p_id]['partner_name'] = \
-                            partner_name
+                            partner_account_summary[p_id]['partner_name'] = \
+                                partner_name
+                        else:
+                            partner_account_summary[p_id].update({
+                                account.type: {
+                                    'debit': total_debit or 0.0,
+                                    'credit': total_credit or 0.0,
+                                    'deposit': end_deposit or 0.0
+                                }
+                            })
 
                 #  Print row Cumulated Balance by account #
                 c_specs = [
