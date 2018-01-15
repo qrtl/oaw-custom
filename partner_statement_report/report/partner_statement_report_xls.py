@@ -75,7 +75,6 @@ class partner_statement_report_xls(report_xls):
         # Header Table
         nbr_columns = 16
         cell_format = _xs['bold'] + _xs['fill_blue'] + _xs['borders_all']
-        cell_style = xlwt.easyxf(cell_format)
         cell_style_center = xlwt.easyxf(cell_format + _xs['center'])
         c_specs = [
             ('coa', 2, 0, 'text', _('Chart of Account')),
@@ -92,7 +91,6 @@ class partner_statement_report_xls(report_xls):
             ws, row_pos, row_data, row_style=cell_style_center)
 
         cell_format = _xs['borders_all']
-        cell_style = xlwt.easyxf(cell_format)
         cell_style_center = xlwt.easyxf(cell_format + _xs['center'])
         c_specs = [
             ('coa', 2, 0, 'text', _p.chart_account.name),
@@ -126,7 +124,6 @@ class partner_statement_report_xls(report_xls):
         cell_format = _xs['xls_title'] + _xs['bold'] + \
             _xs['fill'] + _xs['borders_all']
         account_cell_style = xlwt.easyxf(cell_format)
-        account_cell_style_right = xlwt.easyxf(cell_format + _xs['right'])
         account_cell_style_decimal = xlwt.easyxf(
             cell_format + _xs['right'],
             num_format_str=report_xls.decimal_format)
@@ -138,8 +135,6 @@ class partner_statement_report_xls(report_xls):
         # Column Header Row
         cell_format = _xs['bold'] + _xs['fill'] + _xs['borders_all']
         c_hdr_cell_style = xlwt.easyxf(cell_format)
-        c_hdr_cell_style_right = xlwt.easyxf(cell_format + _xs['right'])
-        c_hdr_cell_style_center = xlwt.easyxf(cell_format + _xs['center'])
 
         # Column Initial Balance Row
         cell_format = _xs['italic'] + _xs['borders_all']
@@ -151,8 +146,6 @@ class partner_statement_report_xls(report_xls):
         # Column Cumulated balance Row
         cell_format = _xs['bold'] + _xs['fill'] + _xs['borders_all']
         c_cumul_cell_style = xlwt.easyxf(cell_format)
-        c_cumul_cell_style_right = xlwt.easyxf(cell_format + _xs['right'])
-        c_cumul_cell_style_center = xlwt.easyxf(cell_format + _xs['center'])
         c_cumul_cell_style_decimal = xlwt.easyxf(
             cell_format + _xs['right'],
             num_format_str=report_xls.decimal_format)
@@ -194,7 +187,6 @@ class partner_statement_report_xls(report_xls):
         ll_cell_style = xlwt.easyxf(ll_cell_format)
         ll_cell_style_grey = xlwt.easyxf(light_green +
                                          _xs['borders_all'])
-        ll_cell_style_center = xlwt.easyxf(ll_cell_format + _xs['center'])
         ll_cell_style_date = xlwt.easyxf(
             ll_cell_format + _xs['left'],
             num_format_str=report_xls.date_format)
@@ -215,6 +207,7 @@ class partner_statement_report_xls(report_xls):
             num_format_str='0.000000')
 
         cnt = 0
+        partner_account_summary = {}
         for account in objects:
             if _p['statement_lines'].get(account.id, False) or \
                     _p['init_balance'].get(account.id, False):
@@ -497,6 +490,35 @@ class partner_statement_report_xls(report_xls):
                     account_balance_cumul += cumul_balance
                     account_balance_cumul_curr += cumul_balance_curr
 
+                    # Add the balance to the partner_account_summary
+                    if partner_account_summary.get(p_id) and \
+                            partner_account_summary[p_id].get(account.type):
+                        partner_account_summary[p_id][account.type]['debit'] \
+                            += total_debit
+                        partner_account_summary[p_id][account.type]['credit'] \
+                            += total_credit
+                        partner_account_summary[p_id][account.type]['deposit'] \
+                            += end_deposit
+                    else:
+                        if not partner_account_summary.get(p_id):
+                            partner_account_summary[p_id] = {
+                                account.type: {
+                                    'debit': total_debit or 0.0,
+                                    'credit': total_credit or 0.0,
+                                    'deposit': end_deposit or 0.0
+                                }
+                            }
+                            partner_account_summary[p_id]['partner_name'] = \
+                                partner_name
+                        else:
+                            partner_account_summary[p_id].update({
+                                account.type: {
+                                    'debit': total_debit or 0.0,
+                                    'credit': total_credit or 0.0,
+                                    'deposit': end_deposit or 0.0
+                                }
+                            })
+
                 #  Print row Cumulated Balance by account #
                 c_specs = [
                     ('acc_title', 5, 0, 'text', ' - '.
@@ -517,6 +539,135 @@ class partner_statement_report_xls(report_xls):
                     ws, row_pos, row_data, account_cell_style)
                 row_pos += 2
 
+        self.generate_summary_sheet(_p, _xs, wb, partner_account_summary)
+
+    def generate_summary_sheet(self, _p, _xs, wb, partner_account_summary):
+        column_sizes = [
+            ('partner', 30, 'Partner'),
+            ('rec_debit', 15, 'Debit'),
+            ('rec_credit', 15, 'Credit'),
+            ('rec_balance', 15, 'Balance'),
+            ('rec_deposit_balance', 15, 'Deposit Balance'),
+            ('pay_debit', 15, 'Debit'),
+            ('pay_credit', 15, 'Credit'),
+            ('pay_balance', 15, 'Balance'),
+            ('pay_deposit_balance', 15, 'Deposit Balance'),
+        ]
+        column_sizes_list = [x[1] for x in column_sizes]
+
+        ws = wb.add_sheet('Partner Cross Accounts Balances')
+        ws.panes_frozen = True
+        ws.remove_splits = True
+        ws.portrait = 0  # Landscape
+        ws.fit_width_to_pages = 1
+        row_pos = 0
+
+        # set print header/footer
+        ws.header_str = self.xls_headers['standard']
+        ws.footer_str = self.xls_footers['standard']
+
+        # Title
+        title_cell_style = xlwt.easyxf(_xs['xls_title'])
+        c_title_cell_style = xlwt.easyxf(_xs['bold'])
+        c_title_cell_style_center = xlwt.easyxf(_xs['bold'] + _xs['center'])
+        account_cell_style = xlwt.easyxf(_xs['xls_title'] + _xs['bold'] + \
+            _xs['fill'] + _xs['borders_all'])
+        c_hdr_cell_style = xlwt.easyxf(_xs['bold'] + _xs['fill'] + _xs[
+            'borders_all'])
+        ll_cell_style = xlwt.easyxf(_xs['borders_all'])
+        ll_cell_style_decimal = xlwt.easyxf(_xs['borders_all'] + _xs['right'],
+            num_format_str=report_xls.decimal_format)
+
+        report_name = ' - '.join([_p.report_name.upper(),
+                                  _p.company.partner_id.name,
+                                  _p.company.currency_id.name])
+        c_specs = [
+            ('report_name', 1, 0, 'text', report_name),
+        ]
+        row_data = self.xls_row_template(c_specs, [x[0] for x in c_specs])
+        row_pos = self.xls_write_row(
+            ws, row_pos, row_data, row_style=title_cell_style)
+
+        c_sizes = column_sizes_list
+        c_specs = [('empty%s' % i, 1, c_sizes[i], 'text', None)
+                   for i in range(0, len(c_sizes))]
+        row_data = self.xls_row_template(c_specs, [x[0] for x in c_specs])
+        row_pos = self.xls_write_row(
+            ws, row_pos, row_data, set_column_size=True)
+
+        # Table Header Rows
+        c_specs = [
+            ('acc_title', 9, 0, 'text', 'Partner Cross Accounts Balances',
+             None, account_cell_style),
+        ]
+        row_data = self.xls_row_template(
+            c_specs, [x[0] for x in c_specs])
+        row_pos = self.xls_write_row(
+            ws, row_pos, row_data, c_title_cell_style)
+        row_pos += 1
+
+        c_specs = [
+            ('empty', 1, 0, 'text', None),
+            ('rec', 4, 0, 'text', _('Accounts Receivable'), None),
+            ('pay', 4, 0, 'text', _('Accounts Payable'), None),
+        ]
+        row_data = self.xls_row_template(c_specs, [x[0] for x in c_specs])
+        row_pos = self.xls_write_row(ws, row_pos, row_data,
+                                     c_title_cell_style_center)
+        c_specs = [(column_sizes[i][0], 1, column_sizes[i][1], 'text',
+                    column_sizes[i][2]) for i in range(0, len(column_sizes))]
+        row_data = self.xls_row_template(c_specs, [x[0] for x in c_specs])
+        row_pos = self.xls_write_row(ws, row_pos, row_data, c_hdr_cell_style)
+
+        for partner_id, account_summary in partner_account_summary.iteritems():
+            rec_debit = 0.0
+            rec_credit = 0.0
+            rec_deposit_balance = 0.0
+            rec_balance = 0.0
+            pay_debit = 0.0
+            pay_credit = 0.0
+            pay_deposit_balance = 0.0
+            pay_balance = 0.0
+            if account_summary.get('receivable'):
+                rec_debit = account_summary['receivable'].get('debit') or 0.0
+                rec_credit = account_summary['receivable'].get('credit') or 0.0
+                rec_deposit_balance = account_summary['receivable'].get(
+                    'deposit') or 0.0
+                rec_balance = rec_debit - rec_credit
+            if account_summary.get('payable'):
+                pay_debit = account_summary['payable'].get('debit') or 0.0
+                pay_credit = account_summary['payable'].get('credit') or 0.0
+                pay_deposit_balance = account_summary['payable'].get(
+                    'deposit') or 0.0
+                pay_balance = pay_debit - pay_credit
+            c_specs = [
+                ('partner', 1, 0, 'text', account_summary['partner_name'],
+                 None, ll_cell_style),
+                ('rec_debit', 1, 0, 'number', rec_debit, None,
+                 ll_cell_style_decimal),
+                ('rec_credit', 1, 0, 'number', rec_credit, None,
+                 ll_cell_style_decimal),
+                ('rec_balance', 1, 0, 'number', rec_balance, None,
+                 ll_cell_style_decimal),
+                ('rec_deposit_balance', 1, 0, 'number', rec_deposit_balance,
+                 None, ll_cell_style_decimal),
+                ('pay_debit', 1, 0, 'number', pay_debit, None,
+                 ll_cell_style_decimal),
+                ('pay_credit', 1, 0, 'number', pay_credit, None,
+                 ll_cell_style_decimal),
+                ('pay_balance', 1, 0, 'number', pay_balance, None,
+                 ll_cell_style_decimal),
+                ('pay_deposit_balance', 1, 0, 'number', pay_deposit_balance,
+                 None, ll_cell_style_decimal),
+            ]
+            row_data = self.xls_row_template(c_specs, [x[0] for x in c_specs])
+            row_pos = self.xls_write_row(ws, row_pos, row_data)
+
+        c_specs = [
+            ('empty', 9, 0, 'text', None),
+        ]
+        row_data = self.xls_row_template(c_specs, [x[0] for x in c_specs])
+        row_pos = self.xls_write_row(ws, row_pos, row_data, account_cell_style)
 
 partner_statement_report_xls(
     'report.account.account_report_partner_statement_report_xls',
