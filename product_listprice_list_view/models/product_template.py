@@ -41,6 +41,10 @@ class ProductTemplate(models.Model):
         compute='_get_stock_location',
     )
 
+    partners_note = fields.Text(
+        string = 'Partner Info',
+        compute='_get_overseas_note',
+    )
 
     def _get_quant_cost(self, prod_ids):
         quant_obj = self.env['stock.quant']
@@ -86,6 +90,29 @@ class ProductTemplate(models.Model):
             limit=1
         )
         return quant.location_id.name
+
+    def _get_overseas_note(self):
+        for pt in self:
+            # Ids of all  products variants of that template,
+            # which is actually always 1 because we do not have product variants
+            prod_ids = [p.id for p in pt.product_variant_ids]
+            # Are among those ids overseas_stock?
+            if pt.overseas_stock == 'Yes':
+                ss_obj = self.env['supplier.stock']
+                # Supplier Stock among those ids
+                ss_recs = ss_obj.search(
+                    [('product_id', '=', prod_ids)]
+                )
+                lowest_cost = 0.0
+                lowest_cost_ss_rec = False
+                for ss_rec in ss_recs:
+                    if not lowest_cost or ss_rec.price_unit_base < lowest_cost:
+                        lowest_cost = ss_rec.price_unit_base
+                        lowest_cost_ss_rec = ss_rec
+                if lowest_cost_ss_rec:
+                    pt.partners_note = lowest_cost_ss_rec.partners_note
+
+
 
     def _get_overseas_location_name(self, prod_ids):
         ss_obj = self.env['supplier.stock']

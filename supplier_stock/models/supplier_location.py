@@ -8,7 +8,7 @@ from openerp import models, fields
 
 class SupplierLocation(models.Model):
     _name = "supplier.location"
-    _description = "Supplier Location"
+    _description = "Partner Location"
     _order = "name"
 
     name = fields.Char(

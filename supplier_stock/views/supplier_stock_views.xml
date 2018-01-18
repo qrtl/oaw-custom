@@ -6,20 +6,23 @@
         <field name="name">view.supplier.stock.tree</field>
         <field name="model">supplier.stock</field>
         <field name="arch" type="xml">
-            <tree string="Supplier Stock" editable="top">
+            <tree string="Partner Stock" editable="top">
                 <field name="partner_id" domain="[('supplier','=',True)]" options="{'no_create_edit':True}"/>
                 <field name="partner_loc_id" string="Location"/>
                 <field name="product_id" options="{'no_create_edit':True}"/>
                 <field name="image_small" string="Image" widget="image" height="64px"/>
                 <field name="quantity" string="Qty"/>
                 <field name="currency_id" options="{'no_create_edit':True}"/>
-                <field name="product_name" stringt="Name"/>
+                <field name="domestic_retail_in_currency"/>
+                <!--<field name="product_name" stringt="Name"/>-->
+                <field name="discount_in_curr"/>
                 <field name="price_unit"/>
+                <field name="discount_in_curr"/>
                 <field name="product_list_price" />
                 <field name="product_list_price_discount" />
                 <field name="price_unit_base" string="HKD Value"/>
                 <field name="price_subtotal" sum="Total Amount"/>
-                <field name="supplier_lead_time"/>
+                <field name="partners_note"/>
             </tree>
         </field>
     </record>
@@ -28,7 +31,7 @@
         <field name="name">supplier.stock.search</field>
         <field name="model">supplier.stock</field>
         <field name="arch" type="xml">
-            <search string="Supplier Stock">
+            <search string="Partner Stock">
                 <field name="partner_id" domain="[('supplier','=',True)]"/>
                 <field name="partner_loc_id"/>
                 <field name="product_id"/>
