@@ -97,6 +97,7 @@ class SupplierStock(models.Model):
     discount_in_curr = fields.Float(
         string='Discount in currency',
         required=True,
+        digits=dp.get_precision('Discount'),
         compute='_discount_in_curr',
     )
 
@@ -137,6 +138,8 @@ class SupplierStock(models.Model):
     @api.multi
     def _discount_in_curr(self):
         for rec in self:
-            if rec.domestic_retail_in_currency > 0.0:
+            if rec.domestic_retail_in_currency == 0.0 or rec.price_unit == 0.0:
+                rec.discount_in_curr = 0.0
+            else:
                 rec.discount_in_curr = (1-(rec.price_unit/rec.domestic_retail_in_currency)) * 100
         return
