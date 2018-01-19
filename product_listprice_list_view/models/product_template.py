@@ -43,7 +43,7 @@ class ProductTemplate(models.Model):
 
     partners_note = fields.Text(
         string = 'Partner Info',
-        compute='_get_overseas_note',
+        compute='_get_stock_location',
     )
 
     def _get_quant_cost(self, prod_ids):
@@ -91,29 +91,6 @@ class ProductTemplate(models.Model):
         )
         return quant.location_id.name
 
-    def _get_overseas_note(self):
-        for pt in self:
-            # Ids of all  products variants of that template,
-            # which is actually always 1 because we do not have product variants
-            prod_ids = [p.id for p in pt.product_variant_ids]
-            # Are among those ids overseas_stock?
-            if pt.overseas_stock == 'Yes':
-                ss_obj = self.env['supplier.stock']
-                # Supplier Stock among those ids
-                ss_recs = ss_obj.search(
-                    [('product_id', '=', prod_ids)]
-                )
-                lowest_cost = 0.0
-                lowest_cost_ss_rec = False
-                for ss_rec in ss_recs:
-                    if not lowest_cost or ss_rec.price_unit_base < lowest_cost:
-                        lowest_cost = ss_rec.price_unit_base
-                        lowest_cost_ss_rec = ss_rec
-                if lowest_cost_ss_rec:
-                    pt.partners_note = lowest_cost_ss_rec.partners_note
-
-
-
     def _get_overseas_location_name(self, prod_ids):
         ss_obj = self.env['supplier.stock']
         ss_recs = ss_obj.search(
@@ -128,7 +105,8 @@ class ProductTemplate(models.Model):
         if lowest_cost_ss_rec:
             loc = lowest_cost_ss_rec.partner_loc_id.name
             supp_lt = lowest_cost_ss_rec.supplier_lead_time
-            return loc, supp_lt
+            partners_note = lowest_cost_ss_rec.partners_note
+            return loc, supp_lt, partners_note
         else:
             return False, False
 
@@ -140,7 +118,7 @@ class ProductTemplate(models.Model):
                 pt.stock_location = self._get_local_location_name(prod_ids)
                 pt.stock_leadtime = '0 day(s)'
             elif pt.overseas_stock == 'Yes':
-                pt.stock_location, supp_lt = \
+                pt.stock_location, supp_lt, pt.partners_note = \
                     self._get_overseas_location_name(prod_ids)
                 pt.stock_leadtime = str(supp_lt) + ' day(s)'
             else:
