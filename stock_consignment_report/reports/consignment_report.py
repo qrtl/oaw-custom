@@ -154,7 +154,7 @@ class ConsignmentReportCompute(models.TransientModel):
 
     def _inject_quant_values(self, section):
         query_inject_quant = ""
-        if section.code in [1, 2]:
+        if section.code == 1:
             query_inject_quant += """
 WITH
     paid_lot AS (
@@ -245,43 +245,54 @@ INNER JOIN
     stock_production_lot l ON q.lot_id = l.id
 INNER JOIN
     stock_location loc ON q.location_id = loc.id
+        """
+        if section.code != 4:
+            query_inject_quant += """
 INNER JOIN
     res_currency c ON q.currency_id = c.id
-        """
-        if section.code in [1, 2]:
+    """
+        else:
+            query_inject_quant += """
+LEFT JOIN
+    res_currency c ON q.currency_id = c.id
+    """
+        if section.code == 1:
             query_inject_quant += """
 LEFT JOIN
     paid_lot pl ON q.lot_id = pl.lot_id
             """
         query_inject_quant += """
 WHERE loc.usage = %s
-    AND q.original_owner_id = %s
         """
-        if section.code in [1, 2, 4]:
+        if section.code != 4:
+            query_inject_quant += """
+    AND q.original_owner_id = %s
+            """
+        if section.code in [1, 3]:
             query_inject_quant += """
     AND q.write_date >= %s
             """
         if section.code == 1:
             query_inject_quant += """
-    AND pl.lot_id IS NOT null
-            """
-        if section.code == 2:
-            query_inject_quant += """
     AND pl.lot_id IS null
             """
+        if section.code == 4:
+            query_inject_quant += """
+    AND loc.partner_id = %s
+            """
         status_desc = {
-            1: 'Sold & Paid',
-            2: 'Sold & NOT Paid',
-            3: 'In Stock',
-            4: 'Returned'
+            1: 'Sold & NOT Paid',
+            2: 'In Stock',
+            3: 'Returned',
+            4: 'Repair'
         }
         loc_usage = {
             1: 'customer',
-            2: 'customer',
-            3: 'internal',
-            4: 'supplier'
+            2: 'internal',
+            3: 'supplier',
+            4: 'internal'
         }
-        if section.code in [1, 2, 4]:
+        if section.code in [1, 3]:
             query_inject_quant_params = (
                 self.id,
                 section.id,
@@ -290,6 +301,15 @@ WHERE loc.usage = %s
                 loc_usage[section.code],
                 section.report_id.filter_partner_id.id,
                 section.report_id.threshold_date
+            )
+        elif section.code == 4:
+            query_inject_quant_params = (
+                self.id,
+                section.id,
+                self.env.uid,
+                status_desc[section.code],
+                loc_usage[section.code],
+                section.report_id.filter_partner_id.id
             )
         else:
             query_inject_quant_params = (
@@ -360,18 +380,20 @@ WHERE
     def _update_age(self, model, section):
         quants = model.search([('section_id', '=', section.id)])
         for quant in quants:
-            if section.code == 3:
-                out_date = fields.Datetime.now()
-            else:
-                out_date = False
-                if section.code in [1, 2]:
-                    usage = 'customer'
-                elif section.code == 4:
-                    usage = 'supplier'
-                locs = self.env['stock.location'].search([
-                    ('usage', '=', usage),
+            out_date = fields.Datetime.now()
+            if section.code != 2:
+                domain = [
                     ('active', '=', True),
-                ])
+                ]
+                if section.code == 1:
+                    domain.append(('usage', '=', 'customer'))
+                elif section.code == 3:
+                    domain.append(('usage', '=', 'supplier'))
+                elif section.code == 4:
+                    domain.append(('is_repair_location', '=', True))
+                    domain.append(('partner_id', '=',
+                                   section.report_id.filter_partner_id.id))
+                locs = self.env['stock.location'].search(domain)
                 move = self.env['stock.move'].search([
                     ('quant_lot_id', '=', quant.lot_id.id),
                     ('picking_type_code', '=', 'outgoing'),
@@ -469,18 +491,18 @@ class PartnerXslx(stock_abstract_report_xlsx.StockAbstractReportXslx):
 
     def _generate_report_content(self, workbook, report):
         title_vals = {
-            1: 'Part 1. Consignment Sold and Paid',
-            2: 'Part 2. Consignment Sold and Not Yet Paid',
-            3: 'Part 3. Consignment Available Stock',
-            4: 'Part 4. Consignment Back to Supplier'
+            1: 'Part 1. Consignment Sold and Not Yet Paid',
+            2: 'Part 2. Consignment Available Stock',
+            3: 'Part 3. Consignment Back to Supplier',
+            4: 'Part 4. Repair Cases'
         }
         for section in report.section_ids:
             self.write_array_title(title_vals[section.code])
 
-            if section.code in [1, 2, 4]:
+            if section.code in [1, 3, 4]:
                 self.write_array_header()
             # adjust array header
-            elif section.code == 3:
+            elif section.code == 2:
                 adj_col = {
                     9: _('Current Date'),
                 }
