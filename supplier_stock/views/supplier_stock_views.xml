@@ -13,14 +13,14 @@
                 <field name="image_small" string="Image" widget="image" height="64px"/>
                 <field name="quantity" string="Qty"/>
                 <field name="currency_id" options="{'no_create_edit':True}"/>
-                <field name="domestic_retail_in_currency"/>
+                <field name="retail_in_currency"/>
                 <field name="discount_in_curr"/>
                 <field name="price_unit"/>
                 <field name="product_list_price" />
                 <field name="product_list_price_discount" />
                 <field name="price_unit_base" string="HKD Value"/>
                 <field name="price_subtotal" sum="Total Amount"/>
-                <field name="partners_note"/>
+                <field name="partner_note"/>
             </tree>
         </field>
     </record>
