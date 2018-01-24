@@ -85,7 +85,7 @@ class SupplierStock(models.Model):
         readonly=True,
     )
     partners_note = fields.Text(
-        string = 'Partner Info',
+        string = 'Partner Note',
     )
     # Independent of current currency rate
 
