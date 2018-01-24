@@ -19,7 +19,7 @@ class SupplierStock(models.Model):
     )
     partner_loc_id = fields.Many2one(
         comodel_name='supplier.location',
-        string='Partner',
+        string='Partner Location',
         required=True,
     )
     supplier_lead_time = fields.Integer(
@@ -84,12 +84,11 @@ class SupplierStock(models.Model):
         related='product_id.product_tmpl_id.image_small',
         readonly=True,
     )
-    partners_note = fields.Text(
-        string = 'Partner Note',
+    partner_note = fields.Text(
+        string='Partner Note',
     )
     # Independent of current currency rate
-
-    domestic_retail_in_currency = fields.Float(
+    retail_in_currency = fields.Float(
         string='Retail in Currency',
         required=True,
         digits=dp.get_precision('Product Price'),
