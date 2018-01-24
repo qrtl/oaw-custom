@@ -20,7 +20,7 @@ class SupplierLocation(models.Model):
         default=True,
     )
     supplier_lead_time = fields.Integer(
-        string="Supplier Lead Time (Days)",
+        string="Partner Lead Time (Days)",
     )
     currency_id = fields.Many2one(
         string="Currency",

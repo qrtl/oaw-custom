@@ -29,7 +29,7 @@ class SupplierStock(models.Model):
     )
     currency_id = fields.Many2one(
         comodel_name='res.currency',
-        string='Currency',
+        string='Currency in %',
         required=True,
     )
     product_id = fields.Many2one(
@@ -137,8 +137,8 @@ class SupplierStock(models.Model):
     @api.multi
     def _discount_in_curr(self):
         for rec in self:
-            if rec.domestic_retail_in_currency == 0.0 or rec.price_unit == 0.0:
+            if rec.retail_in_currency == 0.0 or rec.price_unit == 0.0:
                 rec.discount_in_curr = 0.0
             else:
-                rec.discount_in_curr = (1-(rec.price_unit/rec.domestic_retail_in_currency)) * 100
+                rec.discount_in_curr = (1-(rec.price_unit/rec.retail_in_currency)) * 100
         return
