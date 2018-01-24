@@ -9,17 +9,17 @@ import openerp.addons.decimal_precision as dp
 
 class SupplierStock(models.Model):
     _name = "supplier.stock"
-    _description = "Supplier Stock"
+    _description = "Partner Stock"
     _order = "id desc"
 
     partner_id = fields.Many2one(
         comodel_name='res.partner',
-        string='Supplier',
+        string='Partner',
         required=True,
     )
     partner_loc_id = fields.Many2one(
         comodel_name='supplier.location',
-        string='Supplier Location',
+        string='Partner Location',
         required=True,
     )
     supplier_lead_time = fields.Integer(
@@ -29,7 +29,7 @@ class SupplierStock(models.Model):
     )
     currency_id = fields.Many2one(
         comodel_name='res.currency',
-        string='Currency',
+        string='Currency in %',
         required=True,
     )
     product_id = fields.Many2one(
@@ -63,7 +63,7 @@ class SupplierStock(models.Model):
         required=True,
     )
     price_unit = fields.Float(
-        string='Unit Price',
+        string='Cost in Currency',
         required=True,
         digits=dp.get_precision('Product Price'),
     )
@@ -84,6 +84,22 @@ class SupplierStock(models.Model):
         related='product_id.product_tmpl_id.image_small',
         readonly=True,
     )
+    partner_note = fields.Text(
+        string='Partner Note',
+    )
+    # Independent of current currency rate
+    retail_in_currency = fields.Float(
+        string='Retail in Currency',
+        required=True,
+        digits=dp.get_precision('Product Price'),
+    )
+    discount_in_curr = fields.Float(
+        string='Discount in currency',
+        required=True,
+        digits=dp.get_precision('Discount'),
+        compute='_discount_in_curr',
+    )
+
 
     @api.one
     @api.depends('price_unit', 'quantity', 'currency_id')
@@ -117,4 +133,12 @@ class SupplierStock(models.Model):
                 ss.product_list_price_discount = 0.0
             else:
                 ss.product_list_price_discount = (1-(ss.price_unit_base/ss.product_list_price)) * 100
+        return
+    @api.multi
+    def _discount_in_curr(self):
+        for rec in self:
+            if rec.retail_in_currency == 0.0 or rec.price_unit == 0.0:
+                rec.discount_in_curr = 0.0
+            else:
+                rec.discount_in_curr = (1-(rec.price_unit/rec.retail_in_currency)) * 100
         return

@@ -8,7 +8,7 @@ from openerp import models, fields
 
 class SupplierLocation(models.Model):
     _name = "supplier.location"
-    _description = "Supplier Location"
+    _description = "Partner Location"
     _order = "name"
 
     name = fields.Char(
@@ -20,7 +20,7 @@ class SupplierLocation(models.Model):
         default=True,
     )
     supplier_lead_time = fields.Integer(
-        string="Supplier Lead Time (Days)",
+        string="Partner Lead Time (Days)",
     )
     currency_id = fields.Many2one(
         string="Currency",
