@@ -41,6 +41,7 @@ class ProductTemplate(models.Model):
         compute='_get_stock_location',
     )
 
+
     partner_note = fields.Text(
         string = 'Partner Note',
         compute='_get_stock_location',

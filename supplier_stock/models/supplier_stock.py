@@ -84,6 +84,7 @@ class SupplierStock(models.Model):
         related='product_id.product_tmpl_id.image_small',
         readonly=True,
     )
+
     partner_note = fields.Text(
         string='Partner Note',
     )
