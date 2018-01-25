@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2016 Rooms For (Hong Kong) Limited T/A OSCG
+# Copyright 2018 Quartile Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from openerp import api, models, fields, _
@@ -134,11 +134,11 @@ class ConsignmentReportCompute(models.TransientModel):
         for section in sections:
             self._inject_quant_values(section)
             self._update_age(model, section)
-            if section.code in [1, 2]:
+            if section.code == 1:
                 self._update_invoice_info(section.id, section.code)
-            elif section.code == 3:
+            elif section.code == 2:
                 self._update_reservation(model, section.id)
-            elif section.code == 4:
+            elif section.code == 3:
                 self._delete_supplier_loc_quant(model, section.id)
                 self._update_remark(model, section.id)
         self.refresh()
@@ -284,7 +284,6 @@ WHERE loc.usage = %s
             1: 'Sold & NOT Paid',
             2: 'In Stock',
             3: 'Returned',
-            4: 'Repair'
         }
         loc_usage = {
             1: 'customer',
@@ -307,7 +306,7 @@ WHERE loc.usage = %s
                 self.id,
                 section.id,
                 self.env.uid,
-                status_desc[section.code],
+                '',
                 loc_usage[section.code],
                 section.report_id.filter_partner_id.id
             )
@@ -405,7 +404,7 @@ WHERE
             quant.write({'outgoing_date': out_date})
             if out_date:
                 stock_days = (
-                    fields.Datetime.from_string(out_date) - \
+                    fields.Datetime.from_string(out_date) -
                     fields.Datetime.from_string(quant.incoming_date)
                 ).days
                 quant.write({'stock_days': stock_days})
@@ -508,18 +507,10 @@ class PartnerXslx(stock_abstract_report_xlsx.StockAbstractReportXslx):
                 }
                 self.write_array_header(adj_col)
 
-            # for section 1, sort by remark, product_name and lot
-            if section.code == 1:
-                sorted_quants = sorted(
-                    section.quant_ids,
-                    key=lambda x: (x.remark, x.product_name, x.lot)
-                )
-            # otherwise, sort by product_name and lot
-            else:
-                sorted_quants = sorted(
-                    section.quant_ids,
-                    key=lambda x: (x.product_name, x.lot)
-                )
+            sorted_quants = sorted(
+                section.quant_ids,
+                key=lambda x: (x.product_name, x.lot)
+            )
             for quant in sorted_quants:
                 self.write_line(quant)
 
