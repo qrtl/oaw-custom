@@ -77,11 +77,17 @@ class SupplierStock(models.Model):
     price_unit_base = fields.Float(
         string='Unit Price (Base)',
         digits=dp.get_precision('Account'),
-        compute='_compute_price_base'
+        compute='_compute_price_base',
+        store=True,
     )
     image_small = fields.Binary(
         'Image',
         related='product_id.product_tmpl_id.image_small',
+        readonly=True,
+    )
+    image_medium = fields.Binary(
+        'Image Medium',
+        related='product_id.product_tmpl_id.image_medium',
         readonly=True,
     )
     partner_note = fields.Text(
@@ -117,6 +123,7 @@ class SupplierStock(models.Model):
             self.currency_id = self.partner_loc_id.currency_id
 
     @api.multi
+    @api.depends('price_unit')
     def _compute_price_base(self):
         curr_obj = self.env['res.currency']
         company_curr = self.env.user.company_id.currency_id
