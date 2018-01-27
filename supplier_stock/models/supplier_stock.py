@@ -128,7 +128,8 @@ class SupplierStock(models.Model):
         curr_obj = self.env['res.currency']
         company_curr = self.env.user.company_id.currency_id
         for rec in self:
-            rec.price_unit_base = curr_obj.browse(rec.currency_id.id).compute(
+            if rec.currency_id and rec.price_unit:
+                rec.price_unit_base = curr_obj.browse(rec.currency_id.id).compute(
                 rec.price_unit, company_curr)
         return
 
