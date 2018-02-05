@@ -140,7 +140,9 @@ class ConsignmentReportCompute(models.TransientModel):
                 self._update_reservation(model, section.id)
             elif section.code == 3:
                 self._delete_supplier_loc_quant(model, section.id)
-                self._update_remark(model, section.id)
+                self._update_remark(model, section.id, 'supplier')
+            else:
+                self._update_remark(model, section.id, 'internal')
         self.refresh()
 
     def _create_section_records(self):
@@ -428,15 +430,15 @@ WHERE
             if find_duplicate:
                 quant.unlink()
 
-    def _update_remark(self, model, section_id):
+    def _update_remark(self, model, section_id, usage):
         quants = model.search([('section_id', '=', section_id)])
         move_obj = self.env['stock.move']
-        supp_loc_ids = self.env['stock.location'].search([
-            ('usage', '=', 'supplier')]).ids
+        loc_ids = self.env['stock.location'].search([
+            ('usage', '=', usage)]).ids
         for quant in quants:
             move = move_obj.search([
                 ('quant_lot_id', '=', quant.lot_id.id),
-                ('location_dest_id', 'in', supp_loc_ids),
+                ('location_dest_id', 'in', loc_ids),
                 ('state', '=', 'done'),
             ], order='date desc', limit=1)
             if move and move.picking_id:
