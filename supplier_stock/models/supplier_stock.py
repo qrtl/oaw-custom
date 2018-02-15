@@ -123,7 +123,7 @@ class SupplierStock(models.Model):
             self.currency_id = self.partner_loc_id.currency_id
 
     @api.multi
-    @api.depends('price_unit')
+    @api.depends('price_unit','currency_id')
     def _compute_price_base(self):
         curr_obj = self.env['res.currency']
         company_curr = self.env.user.company_id.currency_id
