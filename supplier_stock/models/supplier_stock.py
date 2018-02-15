@@ -85,11 +85,6 @@ class SupplierStock(models.Model):
         related='product_id.product_tmpl_id.image_small',
         readonly=True,
     )
-    image_medium = fields.Binary(
-        'Image Medium',
-        related='product_id.product_tmpl_id.image_medium',
-        readonly=True,
-    )
     partner_note = fields.Text(
         string='Partner Note',
     )
