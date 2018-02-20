@@ -77,7 +77,8 @@ class SupplierStock(models.Model):
     price_unit_base = fields.Float(
         string='Unit Price (Base)',
         digits=dp.get_precision('Account'),
-        compute='_compute_price_base'
+        compute='_compute_price_base',
+        store=True,
     )
     image_small = fields.Binary(
         'Image',
@@ -117,11 +118,13 @@ class SupplierStock(models.Model):
             self.currency_id = self.partner_loc_id.currency_id
 
     @api.multi
+    @api.depends('price_unit','currency_id')
     def _compute_price_base(self):
         curr_obj = self.env['res.currency']
         company_curr = self.env.user.company_id.currency_id
         for rec in self:
-            rec.price_unit_base = curr_obj.browse(rec.currency_id.id).compute(
+            if rec.currency_id and rec.price_unit:
+                rec.price_unit_base = curr_obj.browse(rec.currency_id.id).compute(
                 rec.price_unit, company_curr)
         return
 
