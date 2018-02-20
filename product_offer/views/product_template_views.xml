@@ -486,8 +486,6 @@
         parent="base.menu_product" sequence="10" />
 
 
-
-
     <!--Search View-->
      <record id="product_template_search_view_m4" model="ir.ui.view">
         <field name="name">product.template.search.m4</field>
