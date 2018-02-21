@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+    <record id="view_supplier_stock_tree" model="ir.ui.view">
+        <field name="name">view.supplier.stock.tree</field>
+        <field name="model">supplier.stock</field>
+        <field name="inherit_id"
+               ref="supplier_stock.view_supplier_stock_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="groups">stock.group_stock_user</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="supplier_stock.action_supplier_stock"
+            model="ir.actions.act_window">
+         <field name="name">Partner Stock</field>
+         <field name="res_model">supplier.stock</field>
+         <field name="type">ir.actions.act_window</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree</field>
+         <field name="context">{'default_partner_id': 1}</field>
+         <field name="search_view_id" ref="supplier_stock.supplier_stock_search"/>
+    </record>
+
+</data>
+</openerp>
