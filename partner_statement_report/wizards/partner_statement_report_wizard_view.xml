@@ -11,7 +11,9 @@
                     <group col="6">
                         <field name="chart_account_id" widget="selection" on_change="onchange_chart_id(chart_account_id, context)" colspan="4" modifiers="{'required': true}"/>
                         <field name="company_id" invisible="1" modifiers="{'invisible': true, 'readonly': true}"/>
-                        <field name="fiscalyear_id" domain="[('company_id','=',company_id)]" modifiers="{}"/>
+                        <field name="fiscalyear_id"
+                               domain="[('company_id','=',company_id)]"
+                               modifiers="{}"/>
                         <field name="target_move" modifiers="{'required': true}"/>
                         <newline/>
                         <field name="result_selection" colspan="4" modifiers="{'required': true}"/>
@@ -26,11 +28,16 @@
                                 <field name="date_to" modifiers="{}"/>
                             </group>
                             <group string="Periods" attrs="{'invisible':[('filter','!=','filter_period')], 'required':[('filter', '=', 'filter_period')]}" modifiers="{'invisible': [['filter', '!=', 'filter_period']], 'required': [['filter', '=', 'filter_period']]}">
-                                <field name="period_from" domain="[('fiscalyear_id', '=', fiscalyear_id), ('special', '=', False)]" modifiers="{}"/>
-                                <field name="period_to" domain="[('fiscalyear_id', '=', fiscalyear_id), ('special', '=', False)]" modifiers="{}"/>
+                                <field name="period_from"
+                                       domain="[('fiscalyear_id', '=', fiscalyear_id), ('special', '=', False)]"
+                                       modifiers="{}"/>
+                                <field name="period_to"
+                                       domain="[('fiscalyear_id', '=', fiscalyear_id), ('special', '=', False)]"
+                                       modifiers="{}"/>
                             </group>
                         </page>
-                        <page string="Partners Filters" name="partners">
+                        <page string="Partners Filters" name="partners"
+                              groups="account.group_account_invoice">
                             <separator string="Print only" colspan="4"/>
                             <field name="partner_ids" colspan="4" nolabel="1" modifiers="{}"/>
                         </page>
@@ -60,7 +67,8 @@
 
         <menuitem action="action_partner_statement_report_wizard"
                   id="menu_partner_statement_report_wizard"
-                  parent="account.menu_finance_reporting" sequence="11"/>
+                  parent="account.menu_finance_reporting"
+                  groups="account.group_account_invoice" sequence="11"/>
 
     </data>
 </openerp>
