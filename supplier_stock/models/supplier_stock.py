@@ -118,11 +118,7 @@ class SupplierStock(models.Model):
             self.currency_id = self.partner_loc_id.currency_id
 
     @api.multi
-<<<<<<< Updated upstream
-    @api.depends('price_unit','currency_id')
-=======
     @api.depends('price_unit', 'currency_id')
->>>>>>> Stashed changes
     def _compute_price_base(self):
         curr_obj = self.env['res.currency']
         company_curr = self.env.user.company_id.currency_id
@@ -141,6 +137,7 @@ class SupplierStock(models.Model):
             else:
                 ss.product_list_price_discount = (1-(ss.price_unit_base/ss.product_list_price)) * 100
         return
+
     @api.multi
     def _discount_in_curr(self):
         for rec in self:
