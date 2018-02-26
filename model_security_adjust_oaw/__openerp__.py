@@ -17,9 +17,8 @@
     'description': """
     """,
     'data': [
+        'security/supplier_security.xml',
         'security/base_security.xml',
-        'security/sale_security.xml',
-        'security/stock_security.xml',
         'security/ir.model.access.csv',
         'views/account_fiscalyear_views.xml',
         'views/stock_views.xml',

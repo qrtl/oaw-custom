@@ -5,11 +5,11 @@
         <menuitem action="supplier_stock.action_supplier_stock"
                   id="supplier_stock.menu_supplier_stock"
                   parent="stock.menu_stock_inventory_control"
-                  groups="group_stock_supplier" sequence="10"/>
+                  groups="group_supplier" sequence="10"/>
 
         <menuitem name="Warehouse"
                   id="stock.menu_stock_root"
-                  groups="stock.group_stock_manager,stock.group_stock_user,group_stock_supplier"
+                  groups="stock.group_stock_manager,stock.group_stock_user,group_supplier"
                   sequence="70"/>
 
         <menuitem action="stock.action_picking_type_form"
@@ -35,7 +35,7 @@
                   groups="stock.group_stock_manager,stock.group_stock_user"/>
 
         <menuitem id="stock.next_id_61" name="Warehouse" sequence="15"
-                  parent="base.menu_reporting" groups="group_stock_supplier"/>
+                  parent="base.menu_reporting" groups="group_supplier"/>
 
         <menuitem id="stock_account.menu_action_wizard_valuation_history"
                   action="stock_account.action_wizard_stock_valuation_history"

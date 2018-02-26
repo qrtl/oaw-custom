@@ -6,7 +6,7 @@
             <field name="name">partner_stock: stock supplier: Access on own stock</field>
             <field name="model_id" ref="supplier_stock.model_supplier_stock"/>
             <field name="domain_force">[('partner_id', 'child_of', user.commercial_partner_id.id)]</field>
-            <field name="groups" eval="[(4, ref('group_stock_supplier'))]"/>
+            <field name="groups" eval="[(4, ref('group_supplier'))]"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_create" eval="True"/>
             <field name="perm_unlink" eval="True"/>

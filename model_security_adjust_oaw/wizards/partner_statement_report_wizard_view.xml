@@ -91,7 +91,8 @@
         <menuitem action="action_partner_statement_report_wizard"
                   id="menu_partner_statement_report_wizard"
                   parent="account.menu_finance_reporting"
-                  sequence="11"/>
+                  sequence="11"
+                  groups="group_supplier"/>
 
     </data>
 </openerp>
