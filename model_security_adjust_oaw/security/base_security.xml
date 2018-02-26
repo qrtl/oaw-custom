@@ -2,7 +2,7 @@
 <openerp>
     <data>
 
-        <record model="ir.rule" id="supplier_stock_stock_supplier_rule">
+        <record model="ir.rule" id="supplier_stock_supplier_rule">
             <field name="name">partner_stock: stock supplier: Access on own stock</field>
             <field name="model_id" ref="supplier_stock.model_supplier_stock"/>
             <field name="domain_force">[('partner_id', 'child_of', user.commercial_partner_id.id)]</field>
