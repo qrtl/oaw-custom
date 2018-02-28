@@ -14,8 +14,9 @@ class SupplierStock(models.Model):
         product = self.env['product.product'].browse(
             vals.get('product_id', False))
         if product:
-            product.product_tmpl_id.qty_overseas += \
-                int(vals.get('quantity', 0.0))
+            product.product_tmpl_id.sudo().write({
+                'qty_overseas': int(vals.get('quantity', 0.0))
+            })
         return res
 
     @api.multi

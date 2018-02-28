@@ -3,6 +3,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from openerp import models, fields, api
+from openerp import SUPERUSER_ID
 
 
 class PartnerStatementReportWizard(models.TransientModel):
@@ -50,5 +51,16 @@ class PartnerStatementReportWizard(models.TransientModel):
         vals = self.read(cr, uid, ids,
                          ['amount_currency', 'partner_ids'],
                          context=context)[0]
+        if not self.pool.get('res.users').has_group(
+                cr, uid, 'account.group_account_invoice'):
+            partner_id = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid,
+                                                   context=context).partner_id.id
+            vals['partner_ids'] = [partner_id]
         data['form'].update(vals)
+        return data
+
+    def _get_fiscalyear(self, cr, uid, context=None):
+        data = super(PartnerStatementReportWizard, self)._get_fiscalyear(cr, uid, context=context)
+        if not self.env.user.has_group('account.group_account_invoice'):
+            return False
         return data
