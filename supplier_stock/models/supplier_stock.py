@@ -29,7 +29,7 @@ class SupplierStock(models.Model):
     )
     currency_id = fields.Many2one(
         comodel_name='res.currency',
-        string='Currency in %',
+        string='Currency',
         required=True,
     )
     product_id = fields.Many2one(
@@ -95,7 +95,7 @@ class SupplierStock(models.Model):
         digits=dp.get_precision('Product Price'),
     )
     discount_in_curr = fields.Float(
-        string='Discount in currency',
+        string='Discount in currency in %',
         required=True,
         digits=dp.get_precision('Discount'),
         compute='_discount_in_curr',
