@@ -25,7 +25,7 @@
                     <field name="qty_overseas" string="Qty Overseas"/>
                     <field name="last_in_date" string="Incoming Date" widget="date"/>
                     <field name="additional_info" string="Note"/>
-                    <field name="partner_note" string="Partner Note"/>
+                    <field name="partner_note2" string="Partner Note"/>
                  </tree>
             </field>
         </record>
