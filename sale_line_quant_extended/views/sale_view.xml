@@ -51,6 +51,9 @@
              <xpath expr="//field[@name='state']" position="before">
                 <field name="checked"/>
             </xpath>
+            <xpath expr="//field[@name='user_id']" position="attributes">
+                <attribute name='readonly'>1</attribute>
+            </xpath>
         </field>
     </record>
 
