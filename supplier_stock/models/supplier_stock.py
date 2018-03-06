@@ -29,7 +29,7 @@ class SupplierStock(models.Model):
     )
     currency_id = fields.Many2one(
         comodel_name='res.currency',
-        string='Currency in %',
+        string='Currency',
         required=True,
     )
     product_id = fields.Many2one(
@@ -95,7 +95,7 @@ class SupplierStock(models.Model):
         digits=dp.get_precision('Product Price'),
     )
     discount_in_curr = fields.Float(
-        string='Discount in currency',
+        string='Discount in currency in %',
         required=True,
         digits=dp.get_precision('Discount'),
         compute='_discount_in_curr',
@@ -118,7 +118,7 @@ class SupplierStock(models.Model):
             self.currency_id = self.partner_loc_id.currency_id
 
     @api.multi
-    @api.depends('price_unit', 'currency_id')
+    @api.depends('price_unit','currency_id')
     def _compute_price_base(self):
         curr_obj = self.env['res.currency']
         company_curr = self.env.user.company_id.currency_id
@@ -137,7 +137,6 @@ class SupplierStock(models.Model):
             else:
                 ss.product_list_price_discount = (1-(ss.price_unit_base/ss.product_list_price)) * 100
         return
-
     @api.multi
     def _discount_in_curr(self):
         for rec in self:
