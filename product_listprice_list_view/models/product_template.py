@@ -41,7 +41,7 @@ class ProductTemplate(models.Model):
         compute='_get_stock_location',
     )
 
-    partner_note = fields.Text(
+    partner_note2 = fields.Text(
         string = 'Partner Note',
         compute='_get_stock_location',
     )
@@ -105,8 +105,8 @@ class ProductTemplate(models.Model):
         if lowest_cost_ss_rec:
             loc = lowest_cost_ss_rec.partner_loc_id.name
             supp_lt = lowest_cost_ss_rec.supplier_lead_time
-            partner_note = lowest_cost_ss_rec.partner_note
-            return loc, supp_lt, partner_note
+            partner_note2 = lowest_cost_ss_rec.partner_note
+            return loc, supp_lt, partner_note2
         else:
             return False, False, False
 
@@ -118,7 +118,7 @@ class ProductTemplate(models.Model):
                 pt.stock_location = self._get_local_location_name(prod_ids)
                 pt.stock_leadtime = '0 day(s)'
             elif pt.overseas_stock == 'Yes':
-                pt.stock_location, supp_lt, pt.partner_note = \
+                pt.stock_location, supp_lt, pt.partner_note2 = \
                     self._get_overseas_location_name(prod_ids)
                 pt.stock_leadtime = str(supp_lt) + ' day(s)'
             else:
