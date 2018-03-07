@@ -2,11 +2,6 @@
 <openerp>
     <data>
 
-        <menuitem action="supplier_stock.action_supplier_stock"
-                  id="supplier_stock.menu_supplier_stock"
-                  parent="stock.menu_stock_inventory_control"
-                  groups="group_supplier" sequence="10"/>
-
         <menuitem name="Warehouse"
                   id="stock.menu_stock_root"
                   groups="stock.group_stock_manager,stock.group_stock_user,group_supplier"
