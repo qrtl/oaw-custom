@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2017 Rooms For (Hong Kong) Limted T/A OSCG
+# Copyright 2017-2018 Quartile Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from openerp import models, fields, api
@@ -114,15 +114,18 @@ class ProductTemplate(models.Model):
     def _get_stock_location(self):
         for pt in self:
             prod_ids = [p.id for p in pt.product_variant_ids]
-            if pt.local_stock == 'Yes':
-                pt.stock_location = self._get_local_location_name(prod_ids)
-                pt.stock_leadtime = '0 day(s)'
-            elif pt.overseas_stock == 'Yes':
+            pt.stock_leadtime = '/'
+            if pt.overseas_stock == 'Yes':
                 pt.stock_location, supp_lt, pt.partner_note2 = \
                     self._get_overseas_location_name(prod_ids)
                 pt.stock_leadtime = str(supp_lt) + ' day(s)'
-            else:
-                pt.stock_leadtime = '/'
+            if pt.local_stock == 'Yes':
+                if pt.overseas_stock == 'Yes':
+                    pt.stock_location += ', ' + self._get_local_location_name(
+                        prod_ids)
+                else:
+                    pt.stock_location = self._get_local_location_name(prod_ids)
+                    pt.stock_leadtime = '0 day(s)'
 
     @api.multi
     @api.depends('net_price', 'stock_cost')
