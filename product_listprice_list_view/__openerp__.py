@@ -6,7 +6,7 @@
     'name': 'Product List Price Update List View',
     'version': '8.0.1.5.0',
     'author': 'Quartile Limited, eHanse',
-    'website': 'https://www.odoo-asia.com',
+    'website': 'https://www.quartile.co',
     'category': 'Product',
     'depends': [
         "sale",
