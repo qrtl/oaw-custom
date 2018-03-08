@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-# Copyright 2015-2017 Quartile Limted
+# Copyright 2015-2018 Quartile Limted
 # Copyright 2017 eHanse
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 {
     'name': 'Product List Price Update List View',
-    'version': '8.0.1.4.0',
+    'version': '8.0.1.5.0',
     'author': 'Quartile Limited, eHanse',
-    'website': 'https://www.odoo-asia.com',
+    'website': 'https://www.quartile.co',
     'category': 'Product',
     'depends': [
         "sale",
