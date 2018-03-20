@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2017 Quartile Limited
+# Copyright 2017-2018 Quartile Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from datetime import datetime
@@ -446,6 +446,7 @@ class ProfitLossReportWizard(models.TransientModel):
                                               (1.0 - (invoice_line.discount
                                                       or 0.0) / 100.0)
                 rec.purchase_currency_id = invoice_line.invoice_id.currency_id
+                rec.exchange_rate = 1 / invoice_line.rate
             elif not rec.purchase_order_id and rec.stock_type == 'vci':
                 rec.supplier_id = rec.in_move_quant_owner_id
                 if rec.supplier_id:
@@ -459,12 +460,13 @@ class ProfitLossReportWizard(models.TransientModel):
             ctx['date'] = rec.out_move_date or rec.invoice_id.date_invoice \
                 if rec.stock_type == 'vci' else rec.in_move_date
             comp_currency_id = self.env.user.company_id.currency_id
-            if rec.purchase_currency_id == comp_currency_id:
-                rec.exchange_rate = 1.0
-            elif ctx['date'] and rec.purchase_currency_id:
-                rec.exchange_rate = self.env['res.currency'].with_context(
-                    ctx)._get_conversion_rate(rec.purchase_currency_id,
-                                              comp_currency_id)
+            if not rec.exchange_rate:
+                if rec.purchase_currency_id == comp_currency_id:
+                    rec.exchange_rate = 1.0
+                elif ctx['date'] and rec.purchase_currency_id:
+                    rec.exchange_rate = self.env['res.currency'].with_context(
+                        ctx)._get_conversion_rate(rec.purchase_currency_id,
+                                                  comp_currency_id)
             # Handle the net price
             net_price_exchange_rate = 1.0
             if rec.net_price_currency_id == comp_currency_id:

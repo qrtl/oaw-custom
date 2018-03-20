@@ -4,7 +4,7 @@
 
         <menuitem name="Warehouse"
                   id="stock.menu_stock_root"
-                  groups="stock.group_stock_manager,stock.group_stock_user,group_supplier"
+                  groups="stock.group_stock_manager,stock.group_stock_user"
                   sequence="70"/>
 
         <menuitem action="stock.action_picking_type_form"

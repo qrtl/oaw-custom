@@ -58,9 +58,3 @@ class PartnerStatementReportWizard(models.TransientModel):
             vals['partner_ids'] = [partner_id]
         data['form'].update(vals)
         return data
-
-    def _get_fiscalyear(self, cr, uid, context=None):
-        data = super(PartnerStatementReportWizard, self)._get_fiscalyear(cr, uid, context=context)
-        if not self.env.user.has_group('account.group_account_invoice'):
-            return False
-        return data
