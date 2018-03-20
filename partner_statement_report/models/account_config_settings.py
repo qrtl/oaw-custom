@@ -25,4 +25,5 @@ class AccountConfigSettings(models.TransientModel):
     def set_initial_balance_mode(self):
         for config in self:
             param = self.env['ir.config_parameter']
-            param.set_param('initial_balance_mode', config.initial_balance_mode)
+            param.set_param('initial_balance_mode',
+                            config.initial_balance_mode or '')
