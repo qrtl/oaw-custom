@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2017 Quartile Limited
+# Copyright 2017-2018 Quartile Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from openerp import models, fields, api
@@ -57,10 +57,4 @@ class PartnerStatementReportWizard(models.TransientModel):
                                                    context=context).partner_id.id
             vals['partner_ids'] = [partner_id]
         data['form'].update(vals)
-        return data
-
-    def _get_fiscalyear(self, cr, uid, context=None):
-        data = super(PartnerStatementReportWizard, self)._get_fiscalyear(cr, uid, context=context)
-        if not self.env.user.has_group('account.group_account_invoice'):
-            return False
         return data

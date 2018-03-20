@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_account_config_settings" model="ir.ui.view">
+            <field name="name">account settings</field>
+            <field name="model">account.config.settings</field>
+            <field name="inherit_id" ref="account.view_account_config_settings"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='purchase_refund_journal_id']"
+                       position="after">
+                    <separator name="partner_statement_report"
+                               string="Partner Statement Report"/>
+                    <group name="partner_statement_report">
+                        <label for="initial_balance_mode"/>
+                        <div>
+                            <field name="initial_balance_mode" class="oe_inline"/>
+                        </div>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>
