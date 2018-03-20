@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-# Copyright 2017 Quartile Limted
+# Copyright 2017-2018 Quartile Limted
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 {
     'name': 'Partner Statement Report',
     'version': '8.0.2.0.0',
     'author': 'Quartile Limited',
-    'website': 'https://www.odoo-asia.com',
+    'website': 'https://www.quartile.co',
     'category': 'Report',
     'depends': [
         'account_financial_report_webkit',
