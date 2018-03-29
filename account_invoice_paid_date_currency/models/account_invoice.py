@@ -34,9 +34,9 @@ class AccountInvoice(models.Model):
                             account_invoice.company_id.currency_id:
                         rate = 1.0
                     else:
-                        rate = account_invoice.env['res.currency'].search([
-                            ('currency_id', '=',
-                             account_invoice.currency_id.id),
+                        rate = account_invoice.env[
+                                   'res.currency.rate'].search([
+                            ('currency_id', '=', account_invoice.currency_id.id),
                             ('name', '<=', paid_date),
                         ], order='name desc', limit=1).rate or 1.0
                     account_invoice.paid_date_currency_rate = rate
