@@ -16,7 +16,7 @@ class AccountInvoice(models.Model):
     paid_date_currency_rate = fields.Float(
         readonly=True,
         compute='get_paid_date_info',
-        string='Paid Day Currency Rate'
+        string='Paid Date Currency Rate'
     )
 
     @api.multi
