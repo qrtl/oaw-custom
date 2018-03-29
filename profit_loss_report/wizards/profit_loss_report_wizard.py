@@ -446,7 +446,11 @@ class ProfitLossReportWizard(models.TransientModel):
                                               (1.0 - (invoice_line.discount
                                                       or 0.0) / 100.0)
                 rec.purchase_currency_id = invoice_line.invoice_id.currency_id
-                rec.exchange_rate = 1 / invoice_line.rate
+                if invoice_line.invoice_id.paid_date:
+                    rec.exchange_rate = \
+                        1 / invoice_line.invoice_id.paid_date_currency_rate
+                else:
+                    rec.exchange_rate = 1 / invoice_line.rate
             elif not rec.purchase_order_id and rec.stock_type == 'vci':
                 rec.supplier_id = rec.in_move_quant_owner_id
                 if rec.supplier_id:
