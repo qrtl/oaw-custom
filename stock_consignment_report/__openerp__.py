@@ -4,9 +4,9 @@
 {
     "name": "Consignment Report",
     "summary": "",
-    "version": "8.0.1.5.0",
+    "version": "8.0.1.6.0",
     "category": "Reporting",
-    "website": "https://www.odoo-asia.com/",
+    "website": "https://www.quartile.co",
     "author": "Quartile Limited",
     "license": "AGPL-3",
     "application": False,
