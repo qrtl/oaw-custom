@@ -418,7 +418,7 @@ WHERE
                 quant.write({
                     'remark': quant.reservation_id.name_get()[0][1]})
             elif quant.sale_id:
-                quant.write({'remark': quant.sale_id.name})
+                quant.write({'remark': quant.sale_id.sudo().name})
 
     def _delete_supplier_loc_quant(self, model, section_id):
         quants = model.search([('section_id', '=', section_id)])
