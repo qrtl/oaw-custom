@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
-# Copyright 2017 Quartile Limted
+# Copyright 2017-2018 Quartile Limited
 # Copyright 2017 eHanse
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 {
     'name': 'Supplier Stock',
     'category': 'Stock',
-    'version': '8.0.1.2.4',
+    'version': '8.0.1.3.0',
     'author': 'Quartile Limited',
-    'website': 'https://www.odoo-asia.com',
+    'website': 'https://www.quartile.co',
     'depends': [
         'purchase',
     ],

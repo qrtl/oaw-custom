@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2017 Quartile Limted
+# Copyright 2017-2018 Quartile Limited
 # Copyright 2017 eHanse
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
@@ -26,6 +26,10 @@ class SupplierLocation(models.Model):
         string="Currency",
         comodel_name="res.currency",
         help="Default currency to be proposed in Supplier Stock records."
+    )
+    owner_id = fields.Many2one(
+        string="Owner",
+        comodel_name="res.partner",
     )
 
     _sql_constraints = [
