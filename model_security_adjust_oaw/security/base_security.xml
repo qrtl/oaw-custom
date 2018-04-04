@@ -17,8 +17,7 @@
             <field name="name">supplier_location: stock supplier: Access on own location</field>
             <field name="model_id"
                    ref="supplier_stock.model_supplier_location"/>
-            <field name="domain_force">[('owner_id', 'child_of',
-                user.commercial_partner_id.id)]</field>
+            <field name="domain_force">[('owner_id', 'child_of', user.commercial_partner_id.id)]</field>
             <field name="groups" eval="[(4, ref('group_supplier'))]"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_create" eval="True"/>
