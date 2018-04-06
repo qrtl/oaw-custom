@@ -11,6 +11,14 @@
             <xpath expr="//field[@name='partner_id']" position="attributes">
                 <attribute name="groups">stock.group_stock_user</attribute>
             </xpath>
+            <xpath expr="//field[@name='partner_loc_id']" position="replace">
+                <field name="partner_loc_id"
+                       groups="stock.group_stock_user"
+                       context="{'default_owner_id': partner_id}"/>
+                <field name="partner_loc_id_supplier"
+                       options="{'no_quick_create': True, 'no_create_edit': True}"
+                       groups="model_security_adjust_oaw.group_supplier"/>
+            </xpath>
         </field>
     </record>
 
@@ -21,7 +29,7 @@
          <field name="type">ir.actions.act_window</field>
          <field name="view_type">form</field>
          <field name="view_mode">tree</field>
-         <field name="context">{'default_partner_id': 1}</field>
+         <field name="context">{}</field>
          <field name="search_view_id" ref="supplier_stock.supplier_stock_search"/>
     </record>
 
