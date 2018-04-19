@@ -243,6 +243,15 @@ class ProfitLossReport(models.TransientModel):
         related='product_id.product_tmpl_id.image_small',
         readonly=True,
     )
+    payment_information = fields.Char(
+        string="Payment Information",
+        readonly=True,
+    )
+    base_amount = fields.Float(
+        string="Base Amount",
+        digits=dp.get_precision('Product Price'),
+        readonly=True,
+    )
 
     @api.multi
     def _get_discount(self):

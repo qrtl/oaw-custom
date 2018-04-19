@@ -27,9 +27,8 @@
                 <field name="net_price_currency_id"/>
                 <field name="partner_id"/>
                 <field name="partner_ref" invisible="1"/>
-                <field name="customer_payment_ref"/>
-                <field name="customer_payment_dates"/>
-                <field name="customer_payment_ids" widget="many2many_tags"/>
+                <field name="payment_information"/>
+                <field name="base_amount"/>
                 <field name="out_move_id" invisible="1"/>
                 <field name="out_move_date"/>
                 <field name="sale_order_note"/>
