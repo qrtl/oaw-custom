@@ -27,7 +27,7 @@
                 <field name="net_price_currency_id"/>
                 <field name="partner_id"/>
                 <field name="partner_ref" invisible="1"/>
-                <field name="payment_information"/>
+                <field name="customer_payment_information"/>
                 <field name="base_amount"/>
                 <field name="out_move_id" invisible="1"/>
                 <field name="out_move_date"/>
@@ -61,7 +61,7 @@
                 <field name="product_id"/>
                 <field name="lot_id"/>
                 <field name="partner_id"/>
-                <field name="customer_payment_ref"/>
+                <field name="customer_payment_information"/>
                 <field name="supplier_id"/>
                 <field name="supplier_invoice_number"/>
                 <group expand="0" name='state' string="Status">
@@ -90,8 +90,8 @@
                             context="{'group_by':'categ_name'}"/>
                     <filter string="Customer" domain="[]"
                             context="{'group_by':'partner_id'}"/>
-                    <filter string="Payment Ref." domain="[]"
-                            context="{'group_by':'customer_payment_ref'}"/>
+                    <filter string="Customer Payment Information." domain="[]"
+                            context="{'group_by':'customer_payment_information'}"/>
                     <filter string="Supplier" domain="[]"
                             context="{'group_by':'supplier_id'}"/>
                     <filter string="Supplier Invoice No." domain="[]"

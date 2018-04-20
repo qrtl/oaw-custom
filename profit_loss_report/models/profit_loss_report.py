@@ -196,14 +196,6 @@ class ProfitLossReport(models.TransientModel):
         related='invoice_id.payment_ids',
         readonly=True,
     )
-    customer_payment_dates = fields.Char(
-        string='Payment Date',
-        readonly=True,
-    )
-    customer_payment_ref = fields.Char(
-        string='Payment Ref.',
-        readonly=True,
-    )
     supplier_payment_ids = fields.Many2many(
         string='Supplier Payment',
         comodel_name='account.move.line',
@@ -212,10 +204,6 @@ class ProfitLossReport(models.TransientModel):
     )
     supplier_payment_dates = fields.Char(
         string='Payment Date',
-        readonly=True,
-    )
-    supplier_payment_ref = fields.Char(
-        string='Payment Ref.',
         readonly=True,
     )
     supplier_payment_ref = fields.Char(
@@ -243,7 +231,7 @@ class ProfitLossReport(models.TransientModel):
         related='product_id.product_tmpl_id.image_small',
         readonly=True,
     )
-    payment_information = fields.Char(
+    customer_payment_information = fields.Char(
         string="Payment Information",
         readonly=True,
     )

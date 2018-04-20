@@ -503,7 +503,11 @@ class ProfitLossReportWizard(models.TransientModel):
             else:
                 rec.base_profit_percent = 999.99
             # Handle the display of multi-payments
-            rec.payment_information, rec.base_amount = \
+            rec.supplier_payment_dates = ', '.join(
+                rec.supplier_payment_ids.mapped('date'))
+            rec.supplier_payment_ref = ', '.join(
+                rec.supplier_payment_ids.mapped('ref'))
+            rec.customer_payment_information, rec.base_amount = \
                 self._get_payment_information(rec.customer_payment_ids)
             # FIXME below 'if' block may be deprecated as necessary
             # Identify the state of the transaction
