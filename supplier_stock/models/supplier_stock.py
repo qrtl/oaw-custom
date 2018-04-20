@@ -9,6 +9,7 @@ import openerp.addons.decimal_precision as dp
 
 class SupplierStock(models.Model):
     _name = "supplier.stock"
+    _inherit = 'mail.thread'
     _description = "Partner Stock"
     _order = "id desc"
 
@@ -34,7 +35,7 @@ class SupplierStock(models.Model):
     )
     product_id = fields.Many2one(
         comodel_name='product.product',
-        string='Product',
+        string='Internal Code',
         required=True,
     )
     product_name = fields.Char(
@@ -43,20 +44,17 @@ class SupplierStock(models.Model):
         store=True,
         readonly=True,
     )
-
     product_list_price = fields.Float(
         string='Retail HKD',
         related='product_id.list_price',
         readonly=True,
     )
-
     product_list_price_discount = fields.Float(
         string="Discount(%)",
         digits=dp.get_precision('Discount'),
         compute='_compute_discount',
         readonly=True
     )
-
     quantity = fields.Float(
         string='Quantity',
         digits=dp.get_precision('Product Unit of Measure'),
@@ -100,7 +98,6 @@ class SupplierStock(models.Model):
         digits=dp.get_precision('Discount'),
         compute='_discount_in_curr',
     )
-
 
     @api.one
     @api.depends('price_unit', 'quantity', 'currency_id')

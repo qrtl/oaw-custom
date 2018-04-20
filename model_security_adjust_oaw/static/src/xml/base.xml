@@ -1,0 +1,7 @@
+<templates>
+    <t t-extend="SearchViewDrawer">
+        <t t-jquery="div.col-md-5">
+            this.attr('style', 'display: none;');
+        </t>
+    </t>
+</templates>
