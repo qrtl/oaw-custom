@@ -564,7 +564,7 @@ class ProfitLossReportWizard(models.TransientModel):
                 ], order='name desc', limit=1).rate or 1.0
                 payment_amount = sum(payment.move_id.line_id.mapped(
                     'amount_currency'))
-            payment_information += "%d.\t%s\n%s\n%s %s\n%f\n\n" % (
+            payment_information += "%d.%s\n%s\n%s %s\n%f\n\n" % (
                 count,
                 payment.ref,
                 payment.date,
