@@ -503,14 +503,12 @@ class ProfitLossReportWizard(models.TransientModel):
             else:
                 rec.base_profit_percent = 999.99
             # Handle the display of multi-payments
-            rec.customer_payment_dates = ', '.join(
-                rec.customer_payment_ids.mapped('date'))
-            rec.customer_payment_ref = ', '.join(
-                rec.customer_payment_ids.mapped('ref'))
             rec.supplier_payment_dates = ', '.join(
                 rec.supplier_payment_ids.mapped('date'))
             rec.supplier_payment_ref = ', '.join(
                 rec.supplier_payment_ids.mapped('ref'))
+            rec.customer_payment_information, rec.base_amount = \
+                self._get_payment_information(rec.customer_payment_ids)
             # FIXME below 'if' block may be deprecated as necessary
             # Identify the state of the transaction
             if rec.purchase_invoice_id and rec.purchase_invoice_id.state == \
@@ -550,6 +548,37 @@ class ProfitLossReportWizard(models.TransientModel):
         date = datetime.strptime(date_tz, '%Y-%m-%d')
         date_local = tz.localize(date, is_dst=None)
         return date_local.astimezone(pytz.utc).strftime("%Y-%m-%d %H:%M:%S")
+
+    def _get_payment_information(self, payment_ids):
+        base_amount = 0
+        payment_information = ""
+        count = 1
+        for payment in payment_ids:
+            if not payment.journal_id.currency or \
+                            payment.journal_id.currency == \
+                            payment.company_id.currency_id:
+                payment_exchange_rate = 1.0
+                payment_currency = payment.company_id.currency_id
+                payment_amount = payment.credit
+            else:
+                payment_currency = payment.journal_id.currency
+                payment_exchange_rate = self.env['res.currency.rate'].search([
+                    ('currency_id', '=', payment.journal_id.currency.id),
+                    ('name', '<=', payment.date),
+                ], order='name desc', limit=1).rate or 1.0
+                payment_amount = sum(payment.move_id.line_id.mapped(
+                    'amount_currency'))
+            payment_information += "%d.%s\n%s\n%s %s\n%f\n\n" % (
+                count,
+                payment.ref,
+                payment.date,
+                payment_amount,
+                payment_currency.name,
+                payment_exchange_rate,
+            )
+            base_amount += payment.credit
+            count += 1
+        return payment_information, base_amount
 
     @api.multi
     def action_generate_profit_loss_records(self):
