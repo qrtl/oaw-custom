@@ -5,6 +5,7 @@
 from openerp import api, models, fields, _
 from openerp.addons.abstract_report_xlsx.reports import stock_abstract_report_xlsx
 from openerp.report import report_sxw
+from openerp import SUPERUSER_ID
 
 
 class ConsignmentReport(models.TransientModel):
@@ -451,6 +452,10 @@ class PartnerXslx(stock_abstract_report_xlsx.StockAbstractReportXslx):
                  store=False):
         super(PartnerXslx, self).__init__(
             name, table, rml, parser, header, store)
+
+    def create(self, cr, uid, ids, data, context=None):
+        return super(PartnerXslx, self).create(cr, SUPERUSER_ID, ids, data,
+                                               context=context)
 
     def _get_report_name(self):
         return _('Consignment Report')
