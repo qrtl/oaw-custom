@@ -21,10 +21,14 @@
         'security/base_security.xml',
         'security/ir.model.access.csv',
         'views/account_fiscalyear_views.xml',
+        'views/advance_search_disable.xml',
         'views/stock_views.xml',
         'views/supplier_stock_views.xml',
         'wizards/consignment_report_wizard_view.xml',
         'wizards/partner_statement_report_wizard_view.xml',
+    ],
+    'qweb': [
+        'static/src/xml/base.xml',
     ],
     'installable': True,
 }
