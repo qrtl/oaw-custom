@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2017 Quartile Limited
+# Copyright 2017-2018 Quartile Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from collections import defaultdict
@@ -19,7 +19,7 @@ class PartnerStatementReport(report_sxw.rml_parse,
 
     def __init__(self, cursor, uid, name, context):
         super(PartnerStatementReport, self).__init__(
-            cursor, uid, name, context=context)
+            cursor, SUPERUSER_ID, name, context=context)
         self.pool = RegistryManager.get(self.cr.dbname)
         self.cursor = self.cr
 

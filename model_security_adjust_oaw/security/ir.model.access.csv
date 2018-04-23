@@ -4,6 +4,5 @@ access_supplier_location_supplier,access_supplier_location_supplier,supplier_sto
 access_account_journal_supplier,access_account_journal_supplier,account.model_account_journal,group_supplier,1,0,0,0
 access_account_period_supplier,access_account_period_supplier,account.model_account_period,group_supplier,1,0,0,0
 access_account_move_line_supplier,access_account_move_line_supplier,account.model_account_move_line,group_supplier,1,0,0,0
-access_res_partner_supplier,access_res_partner_supplier,base.model_res_partner,group_supplier,1,0,0,0
 access_stock_picking,stock.picking,stock.model_stock_picking,group_supplier,1,0,0,0
 access_stock_move,stock.move,stock.model_stock_move,group_supplier,1,0,0,0
