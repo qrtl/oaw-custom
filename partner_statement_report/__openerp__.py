@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-# Copyright 2017-2018 Quartile Limted
+# Copyright 2017-2018 Quartile Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 {
     'name': 'Partner Statement Report',
-    'version': '8.0.2.0.0',
+    'version': '8.0.2.1.0',
     'author': 'Quartile Limited',
     'website': 'https://www.quartile.co',
     'category': 'Report',

@@ -16,7 +16,7 @@
                        groups="stock.group_stock_user"
                        context="{'default_owner_id': partner_id}"/>
                 <field name="partner_loc_id_supplier"
-                       options="{'no_quick_create': True, 'no_create_edit': True}"
+                       options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"
                        groups="model_security_adjust_oaw.group_supplier"/>
             </xpath>
         </field>
