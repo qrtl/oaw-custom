@@ -5,7 +5,7 @@
 {
     'name': 'Supplier Stock',
     'category': 'Stock',
-    'version': '8.0.1.4.0',
+    'version': '8.0.1.4.1',
     'author': 'Quartile Limited',
     'website': 'https://www.quartile.co',
     'depends': [
