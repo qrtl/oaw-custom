@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2017 Rooms For (Hong Kong) Limted T/A OSCG
+# Copyright 2017-2018 Quartile Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from openerp import models, api
@@ -32,7 +32,9 @@ class SupplierStock(models.Model):
                 )
                 for r in records:
                     ovrs_qty += r.quantity
-            prod_tmpl.qty_overseas = int(ovrs_qty)
+            prod_tmpl.sudo().write({
+                'qty_overseas': int(ovrs_qty)
+            })
         return
 
     @api.multi
@@ -45,5 +47,9 @@ class SupplierStock(models.Model):
     @api.multi
     def unlink(self):
         for st in self:
-            st.product_id.product_tmpl_id.qty_overseas -= int(st.quantity)
+            qty_overseas = st.product_id.product_tmpl_id.qty_overseas - \
+                           int(st.quantity)
+            st.product_id.product_tmpl_id.sudo().write({
+                'qty_overseas': qty_overseas
+            })
         return super(SupplierStock, self).unlink()
