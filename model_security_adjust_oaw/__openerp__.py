@@ -27,6 +27,7 @@
         'wizards/consignment_report_wizard_view.xml',
         'wizards/partner_statement_report_wizard_view.xml',
     ],
+    'post_init_hook': '_update_partner_offer_fields',
     'qweb': [
         'static/src/xml/base.xml',
     ],
