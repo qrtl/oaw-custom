@@ -7,7 +7,11 @@ from openerp import models, fields, api
 
 class SupplierStock(models.Model):
     _inherit = "supplier.stock"
-
+    internal_code = fields.Char(
+        "Code",
+        related='product_id.product_tmpl_id.default_code',
+        readonly=True,
+    )
     prod_cat_selection = fields.Many2one(
         comodel_name='product.category',
         string='Brand',
