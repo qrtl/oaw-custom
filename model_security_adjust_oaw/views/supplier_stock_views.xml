@@ -20,6 +20,7 @@
                 <field name="product_id"
                        options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"
                        context="{'supplier_access_context':True}"/>
+
                 <field name="internal_code"/>
 
                 <field name="image_small" string="Image" widget="image" height="64px"/>
@@ -95,7 +96,6 @@
                    </group>
                    </group>
                </sheet>
-
                <div class="oe_chatter">
                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
                    <field name="message_ids" widget="mail_thread"/>
