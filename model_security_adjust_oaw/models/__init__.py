@@ -4,4 +4,4 @@ from . import account_fiscalyear
 from . import account_period
 from . import supplier_stock
 from . import product_product
-from . import product_category_ext
+from . import product_category

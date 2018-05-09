@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
-# Copyright 2017 Quartile Limited
+# Copyright 2017-2018 Quartile Limited
 # Copyright 2017 eHanse
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from openerp import models, fields, api, _
 import openerp.addons.decimal_precision as dp
-
 
 
 class SupplierStock(models.Model):
@@ -44,8 +43,6 @@ class SupplierStock(models.Model):
         related='product_id.product_tmpl_id.name',
         store=True,
     )
-
-
     product_list_price = fields.Float(
         string='Retail HKD',
         related='product_id.list_price',
@@ -107,9 +104,6 @@ class SupplierStock(models.Model):
         store=True
     )
 
-
-
-
     @api.one
     @api.depends('price_unit', 'quantity', 'currency_id')
     def _compute_price(self):
@@ -145,6 +139,7 @@ class SupplierStock(models.Model):
             else:
                 ss.product_list_price_discount = (1-(ss.price_unit_base/ss.product_list_price)) * 100
         return
+
     @api.multi
     def _discount_in_curr(self):
         for rec in self:
@@ -153,49 +148,3 @@ class SupplierStock(models.Model):
             else:
                 rec.discount_in_curr = (1-(rec.price_unit/rec.retail_in_currency)) * 100
         return
-
-# class ProductCategory(models.Model):
-#
-#     _inherit="product.category"
-#
-#     supplier_access = fields.Boolean(
-#         'Available for Supplier',
-#         default = False,
-#         store=True,
-#     )
-#
-#     @api.multi
-#     def name_get(self, context=None):
-#
-#         context = self._context or {}
-#         print(context)
-#         if context.get('supplier_access_context',False):
-#
-#             res =[]
-#             for cat in self:
-#                 res.append(
-#                     (cat.id, cat.name)
-#                 )
-#             return res
-#         else:
-#             return super(ProductCategory,self).name_get()
-#
-# from openerp.osv import fields, osv, orm
-# from openerp import SUPERUSER_ID
-#
-# class ProductProduct(osv.osv):
-#     _inherit = "product.product"
-#     def name_get(self, cr, user, ids, context=None):
-#         if context is None:
-#             context = {}
-#         print(context)
-#         if context.get('supplier_access_context', False):
-#
-#             res = []
-#             for product in self.browse(cr, SUPERUSER_ID, ids, context=context):
-#                 res.append(
-#                     (product.id, product.name)
-#                 )
-#             return res
-#         else:
-#             return super(ProductProduct, self).name_get(cr, user, ids, context=context)
