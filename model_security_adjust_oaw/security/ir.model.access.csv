@@ -6,3 +6,4 @@ access_account_period_supplier,access_account_period_supplier,account.model_acco
 access_account_move_line_supplier,access_account_move_line_supplier,account.model_account_move_line,group_supplier,1,0,0,0
 access_stock_picking,stock.picking,stock.model_stock_picking,group_supplier,1,0,0,0
 access_stock_move,stock.move,stock.model_stock_move,group_supplier,1,0,0,0
+access_product_category,product.category,product.model_product_category,group_supplier,1,0,0,0

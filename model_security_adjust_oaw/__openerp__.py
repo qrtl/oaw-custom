@@ -4,7 +4,7 @@
 {
     'name': 'Model Security Adjust OAW',
     'category': 'Security',
-    'version': '8.0.1.1.0',
+    'version': '8.0.1.2.0',
     'author': 'Quartile Limited',
     'website': 'https://www.quartile.co',
     'depends': [
@@ -27,6 +27,7 @@
         'wizards/consignment_report_wizard_view.xml',
         'wizards/partner_statement_report_wizard_view.xml',
     ],
+    'post_init_hook': '_update_partner_offer_fields',
     'qweb': [
         'static/src/xml/base.xml',
     ],
