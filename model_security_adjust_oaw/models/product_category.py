@@ -1,9 +1,11 @@
+# -*- coding: utf-8 -*-
+# Copyright 2018 Quartile Limited
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from openerp import models, fields, api, _
-import openerp.addons.decimal_precision as dp
+from openerp import models, fields, api
+
 
 class ProductCategory(models.Model):
-
     _inherit="product.category"
 
     supplier_access = fields.Boolean(
@@ -14,11 +16,8 @@ class ProductCategory(models.Model):
 
     @api.multi
     def name_get(self):
-
         context = self._context or {}
-        print(context)
         if context.get('supplier_access_context',False):
-
             res =[]
             for cat in self:
                 res.append(

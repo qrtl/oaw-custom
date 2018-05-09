@@ -2,6 +2,13 @@
 <openerp>
 <data>
 
+    <template id="assets_backend" name="model_security_adjust_oaw assets"
+              inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet"
+                  href="/model_security_adjust_oaw/static/src/css/supplier_chatter_box.css"/>
+        </xpath>
+    </template>
 
     <!--TREE, KANBAN, FORM-->
       <record id="view_supplier_access_tree" model="ir.ui.view">
@@ -13,16 +20,13 @@
                 <field name="partner_loc_id"
                        options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
                 <field name="prod_cat_selection"
-
                        options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"
                        domain="[('supplier_access','=',True)]"
                        context="{'supplier_access_context':True}"/>
                 <field name="product_id"
                        options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"
                        context="{'supplier_access_context':True}"/>
-
                 <field name="internal_code"/>
-
                 <field name="image_small" string="Image" widget="image" height="64px"/>
                 <field name="quantity" string="Qty"/>
                 <field name="currency_id" options="{'no_create_edit':True, 'no_open': True, 'no_create': True}"/>
@@ -37,7 +41,6 @@
             </tree>
         </field>
     </record>
-
 
      <record id="view_supplier_access_kanban" model="ir.ui.view">
         <field name="name">view.supplier.access.kanban</field>
@@ -67,7 +70,7 @@
     </record>
 
      <record id="view_supplier_access_form" model="ir.ui.view">
-        <field name="name">Sview.supplier.access.form</field>
+        <field name="name">view.supplier.access.form</field>
         <field name="model">supplier.stock</field>
         <field name="arch" type="xml">
            <form create="false" edit="false">
@@ -96,8 +99,7 @@
                    </group>
                    </group>
                </sheet>
-               <div class="oe_chatter">
-                   <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+               <div class="oe_chatter supplier_access">
                    <field name="message_ids" widget="mail_thread"/>
                </div>
            </form>
@@ -124,6 +126,7 @@
             </search>
         </field>
     </record>
+
      <!--Supplier Access: act_window-->
     <record id="view_supplier_access_action" model="ir.actions.act_window">
         <field name="name">Partner Stock</field>
@@ -134,18 +137,20 @@
         <field name="context">{'supplier_access_context':True}</field>
         <field name="search_view_id" ref="partner_stock_external_kanban_search"/>
     </record>
+
     <!--Actions directing to view modes with certain search view defaults-->
     <record id="view_supplier_access_tree_action" model="ir.actions.act_window.view">
         <field name="view_mode">tree</field>
         <field name="view_id" ref="view_supplier_access_tree"/>
         <field name="act_window_id" ref="view_supplier_access_action"/>
     </record>
+
     <record id="view_supplier_access_kanban_action" model="ir.actions.act_window.view">
         <field name="view_mode">kanban</field>
         <field name="view_id" ref="view_supplier_access_kanban"/>
         <field name="act_window_id" ref="view_supplier_access_action"/>
-
     </record>
+
     <record id="view_supplier_access_form_action" model="ir.actions.act_window.view">
         <field name="view_mode">form</field>
         <field name="view_id" ref="view_supplier_access_form"/>
@@ -154,23 +159,23 @@
 
     <!-- Menu Items -->
     <menuitem
-        id="base.menu_base_products_supplier"
+        id="menu_base_products_supplier"
         name="Stock Offer"
         groups="model_security_adjust_oaw.group_supplier"
         sequence="15"/>
 
     <menuitem
-        id="base.menu_products_supplier"
+        id="menu_products_supplier"
         name="Products"
         groups="model_security_adjust_oaw.group_supplier"
-        parent="base.menu_base_products_supplier"
+        parent="menu_base_products_supplier"
         sequence="15"/>
 
     <menuitem
         id="products_supplier"
         name="Stock Offer"
         groups="model_security_adjust_oaw.group_supplier"
-        parent="base.menu_products_supplier"
+        parent="menu_products_supplier"
         sequence="15"
         action="view_supplier_access_action"/>
 

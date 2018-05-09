@@ -37,8 +37,5 @@
             <field name="perm_write" eval="False"/>
         </record>
 
-
-
-
     </data>
 </openerp>
