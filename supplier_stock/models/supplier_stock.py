@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2017 Quartile Limited
+# Copyright 2017-2018 Quartile Limited
 # Copyright 2017 eHanse
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
@@ -42,7 +42,6 @@ class SupplierStock(models.Model):
         string='Product Name',
         related='product_id.product_tmpl_id.name',
         store=True,
-        readonly=True,
     )
     product_list_price = fields.Float(
         string='Retail HKD',
@@ -98,6 +97,12 @@ class SupplierStock(models.Model):
         digits=dp.get_precision('Discount'),
         compute='_discount_in_curr',
     )
+    new_description = fields.Char(
+        string='Reference',
+        related='product_id.product_tmpl_id.name',
+        readonly=True,
+        store=True
+    )
 
     @api.one
     @api.depends('price_unit', 'quantity', 'currency_id')
@@ -134,6 +139,7 @@ class SupplierStock(models.Model):
             else:
                 ss.product_list_price_discount = (1-(ss.price_unit_base/ss.product_list_price)) * 100
         return
+
     @api.multi
     def _discount_in_curr(self):
         for rec in self:
