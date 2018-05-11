@@ -10,16 +10,19 @@ class AccountInvoice(models.Model):
 
     paid_date = fields.Date(
         readonly=True,
+        store=True,
         compute='get_paid_date_info',
         string='Paid Date'
     )
     paid_date_currency_rate = fields.Float(
         readonly=True,
+        store=True,
         compute='get_paid_date_info',
         string='Paid Date Currency Rate'
     )
 
     @api.multi
+    @api.depends('state')
     def get_paid_date_info(self):
         for account_invoice in self:
             if account_invoice.state == 'paid':
