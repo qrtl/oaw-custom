@@ -29,6 +29,28 @@ class SupplierStock(models.Model):
         store=True,
     )
 
+    # qty_up = fields.Boolean(
+    #     string='Quantity increased',
+    #     readonly=True
+    # )
+    # qty_down = fields.Boolean(
+    #     string='Quantity decreased',
+    #     readonly=True
+    # )
+    # costprice_up = fields.Boolean(
+    #     string='Costprice increased',
+    #     readonly=True
+    # )
+    # costprice_down = fields.Boolean(
+    #     string='Costprice decreased',
+    #     readonly=True
+    # )
+    # note_updated = fields.Boolean(
+    #     string='Partner Note updated'
+    # )
+
+
+
     # Overwriting display_name's method for Supplier Access User
     @api.multi
     def name_get(self, *args, **kwargs):
@@ -91,20 +113,44 @@ class SupplierStock(models.Model):
                 else:
                     owners_duplicates.sudo().write({'owners_duplicates': False})
 
+    def check_changes(self, vals):
+        pt = self.product_id.product_tmpl_id
+        if 'quantity' in vals:
+            curr_quantity= self.quantity
+            if curr_quantity < vals['quantity']:
+                pt.sudo().write({'qty_up': True,'partner_stock_updated': True})
+            elif curr_quantity > vals['quantity']:
+                pt.sudo().write({'qty_down': True, 'partner_stock_updated': True})
+        if 'price_unit' in vals:
+            curr_price_unit = self.price_unit
+            if curr_price_unit < vals['price_unit']:
+                pt.sudo().write({'costprice_up': True, 'partner_stock_updated': True})
+            elif curr_price_unit > vals['quantity']:
+                pt.sudo().write({'costprice_down': True, 'partner_stock_updated': True})
+        if 'partner_note' in vals:
+            pt.sudo().write({'note_updated': True})
+
+
+
     @api.multi
     def write(self, vals):
-        res = super(SupplierStock, self).write(vals)
-        if 'quantity' in vals:
-            for ps in self:
+        for ps in self:
+            if 'quantity' in vals:
                 ps._get_owners_duplicates()
-        if self.env.user.has_group('model_security_adjust_oaw.group_supplier'):
-            server_actions = self.env['base.action.rule'].sudo().search([
-                ('model', '=', 'supplier.stock'),
-                ('kind', 'in', ('on_write', 'on_create_or_write')),
-                ('active', '=', True)
-            ], order='sequence')
-            for action in server_actions:
-                action.sudo()._process(action, [res.id])
+            ps.check_changes(vals)
+
+
+        res = super(SupplierStock, self).write(vals)
+        for ps in self:
+            if self.env.user.has_group('model_security_adjust_oaw.group_supplier'):
+                server_actions = self.env['base.action.rule'].sudo().search([
+                    ('model', '=', 'supplier.stock'),
+                    ('kind', 'in', ('on_write', 'on_create_or_write')),
+                    ('active', '=', True)
+                ], order='sequence')
+                for action in server_actions:
+                    action.sudo()._process(action, [res.id])
+
         return res
 
     @api.model
