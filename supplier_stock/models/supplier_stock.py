@@ -47,12 +47,14 @@ class SupplierStock(models.Model):
         string='Retail HKD',
         related='product_id.list_price',
         readonly=True,
+        store=True
     )
     product_list_price_discount = fields.Float(
         string="Discount(%)",
         digits=dp.get_precision('Discount'),
         compute='_compute_discount',
-        readonly=True
+        readonly=True,
+        store=True
     )
     quantity = fields.Float(
         string='Quantity',
@@ -63,6 +65,7 @@ class SupplierStock(models.Model):
         string='Cost in Currency',
         required=True,
         digits=dp.get_precision('Product Price'),
+        store=True
     )
     price_subtotal = fields.Float(
         string='Amount',
@@ -90,12 +93,14 @@ class SupplierStock(models.Model):
         string='Retail in Currency',
         required=True,
         digits=dp.get_precision('Product Price'),
+        store=True
     )
     discount_in_curr = fields.Float(
         string='Discount in currency in %',
         required=True,
         digits=dp.get_precision('Discount'),
         compute='_discount_in_curr',
+        store=True
     )
     new_description = fields.Char(
         string='Reference',
@@ -141,6 +146,7 @@ class SupplierStock(models.Model):
         return
 
     @api.multi
+    @api.depends('retail_in_currency', 'price_unit')
     def _discount_in_curr(self):
         for rec in self:
             if rec.retail_in_currency == 0.0 or rec.price_unit == 0.0:

@@ -20,5 +20,6 @@
         'views/supplier_location_views.xml',
         'views/supplier_stock_views.xml',
     ],
+    'post_init_hook': '_update_partner_offer_fields',
     'installable': True,
 }
