@@ -4,7 +4,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 {
     'name': 'Product List Price Update List View',
-    'version': '8.0.1.5.',
+    'version': '8.0.1.6.0',
     'author': 'Quartile Limited, eHanse',
     'website': 'https://www.quartile.co',
     'category': 'Product',

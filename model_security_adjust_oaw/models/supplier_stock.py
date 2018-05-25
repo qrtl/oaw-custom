@@ -95,9 +95,6 @@ class SupplierStock(models.Model):
         for ps in self:
             if 'quantity' in vals:
                 ps._get_owners_duplicates()
-            ps.check_changes(vals)
-
-
         res = super(SupplierStock, self).write(vals)
         for ps in self:
             if self.env.user.has_group('model_security_adjust_oaw.group_supplier'):
