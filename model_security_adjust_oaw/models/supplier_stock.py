@@ -9,9 +9,10 @@ class SupplierStock(models.Model):
     _inherit = "supplier.stock"
 
     internal_code = fields.Char(
-        "Code",
+        "Internal Code",
         related='product_id.product_tmpl_id.default_code',
         readonly=True,
+        store=True,
     )
     prod_cat_selection = fields.Many2one(
         comodel_name='product.category',

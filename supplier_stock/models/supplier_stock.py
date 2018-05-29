@@ -35,7 +35,7 @@ class SupplierStock(models.Model):
     )
     product_id = fields.Many2one(
         comodel_name='product.product',
-        string='Internal Code',
+        string='Code',
         required=True,
     )
     product_name = fields.Char(
