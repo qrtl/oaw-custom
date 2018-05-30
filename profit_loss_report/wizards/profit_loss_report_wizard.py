@@ -369,11 +369,11 @@ class ProfitLossReportWizard(models.TransientModel):
             rp.ref,
             po.currency_id,
             pol.price_unit,
-            pid.supplier_invoice_id,
-            pid.purchase_invoice_line_id,
-            pid.supplier_invoice_number,
+            COALESCE(pid.supplier_invoice_id, pid2.supplier_invoice_id),
+            COALESCE(pid.purchase_invoice_line_id, pid2.purchase_invoice_line_id),
+            COALESCE(pid.supplier_invoice_number, pid2.supplier_invoice_number),
             cid.customer_invoice_type,
-            pid.supplier_invoice_type
+            COALESCE(NULLIF(pid.supplier_invoice_type, ''), pid2.supplier_invoice_type)
         FROM
             purchase_order_line pol
         JOIN
@@ -389,6 +389,9 @@ class ProfitLossReportWizard(models.TransientModel):
         LEFT JOIN
             purchase_invoice_data pid ON
                 pol.lot_id = pid.lot_id
+        LEFT JOIN
+            purchase_invoice_data pid2 ON
+                pol.id = pid2.purchase_line_id
         LEFT JOIN
             sale_order_line sol ON pol.lot_id = sol.lot_id
         LEFT JOIN
@@ -430,15 +433,19 @@ class ProfitLossReportWizard(models.TransientModel):
         ctx['company_id'] = self.env.user.company_id.id
         recs = self.env['profit.loss.report'].search([])
         for rec in recs:
+            # Get the period of the record
             if rec.in_move_date:
                 rec.in_period_id = self.env['account.period'].with_context(
                     ctx).find(rec.in_move_date)[:1]
+
+            # Define quant type
             if rec.in_move_quant_owner_id:
                 if rec.in_move_quant_owner_id == \
                         self.env.user.company_id.partner_id:
                     rec.stock_type = 'own'
                 else:
                     rec.stock_type = 'vci'
+
             # Handle the purchase price
             if rec.purchase_invoice_line_id:
                 invoice_line = rec.purchase_invoice_line_id
@@ -461,8 +468,14 @@ class ProfitLossReportWizard(models.TransientModel):
                     rec.purchase_currency_id = rec.in_move_id.currency_id
                     rec.purchase_currency_price = \
                         rec.in_move_id.purchase_price_unit
-            ctx['date'] = rec.out_move_date or rec.invoice_id.date_invoice \
-                if rec.stock_type == 'vci' else rec.in_move_date
+
+            # Determine the purchase exchange rate
+            if rec.stock_type == 'vci':
+                ctx['date'] = rec.out_move_date or rec.invoice_id.date_invoice
+            elif not rec.in_move_date and rec.purchase_order_id:
+                ctx['date'] = rec.purchase_order_id.date_order
+            else:
+                ctx['date'] = rec.in_move_date
             comp_currency_id = self.env.user.company_id.currency_id
             if not rec.exchange_rate:
                 if rec.purchase_currency_id == comp_currency_id:
@@ -482,6 +495,7 @@ class ProfitLossReportWizard(models.TransientModel):
             base_net_price = rec.net_price * net_price_exchange_rate
             rec.purchase_base_price = \
                 rec.purchase_currency_price * rec.exchange_rate
+
             # Calculate the base_profit
             if rec.customer_invoice_type:
                 if rec.customer_invoice_type == "out_refund":
@@ -502,14 +516,17 @@ class ProfitLossReportWizard(models.TransientModel):
                     rec.base_profit / rec.purchase_base_price * 100
             else:
                 rec.base_profit_percent = 999.99
+
             # Handle the display of multi-payments
             rec.supplier_payment_dates = ', '.join(
                 rec.supplier_payment_ids.mapped('date'))
             rec.supplier_payment_ref = ', '.join(
                 rec.supplier_payment_ids.mapped('ref'))
-            rec.customer_payment_information, rec.base_amount = \
-                self._get_payment_information(rec.customer_payment_ids,
-                                              rec.net_price_currency_id)
+            if rec.invoice_id.statue == 'paid':
+                rec.customer_payment_information, rec.base_amount = \
+                    self._get_payment_information(rec.customer_payment_ids,
+                                                  rec.net_price_currency_id)
+
             # FIXME below 'if' block may be deprecated as necessary
             # Identify the state of the transaction
             if rec.purchase_invoice_id and rec.purchase_invoice_id.state == \
