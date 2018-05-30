@@ -137,7 +137,7 @@
             <field name="model">supplier.stock</field>
             <field name="arch" type="xml">
                 <search>
-                    <field name="product_id" string="Internal Code"/>
+                    <field name="product_id" string="Product"/>
                     <!--originally "new entry" filter of supplier stock but renamed for partner-->
                     <filter name="new_entry" string="Last Stock Entry"
                             domain="[('create_date','&gt;=',(context_today()+datetime.timedelta(days=-1)).strftime('%Y-%m-%d'))]"/>

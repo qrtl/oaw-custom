@@ -35,7 +35,7 @@ class SupplierStock(models.Model):
     )
     product_id = fields.Many2one(
         comodel_name='product.product',
-        string='Internal Code',
+        string='Code',
         required=True,
     )
     product_name = fields.Char(
@@ -97,10 +97,10 @@ class SupplierStock(models.Model):
     )
     discount_in_curr = fields.Float(
         string='Discount in currency in %',
-        required=True,
         digits=dp.get_precision('Discount'),
         compute='_discount_in_curr',
-        store=True
+        store=True,
+        readonly=True
     )
     new_description = fields.Char(
         string='Reference',
