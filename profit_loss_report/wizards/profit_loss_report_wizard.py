@@ -497,32 +497,35 @@ class ProfitLossReportWizard(models.TransientModel):
                 rec.purchase_currency_price * rec.exchange_rate
 
             # Calculate the base_profit
-            if rec.customer_invoice_type:
-                if rec.customer_invoice_type == "out_refund":
-                    rec.base_profit = rec.purchase_base_price - base_net_price
-                elif rec.customer_invoice_type == "out_invoice":
-                    if rec.supplier_invoice_type:
-                        if rec.supplier_invoice_type == "in_invoice":
-                            rec.base_profit = base_net_price - \
-                                              rec.purchase_base_price
-                        else:
-                            rec.base_profit = 0
-            elif rec.supplier_invoice_type:
-                rec.base_profit = 0
-            else:
-                rec.base_profit = base_net_price - rec.purchase_base_price
-            if rec.purchase_base_price:
-                rec.base_profit_percent = \
-                    rec.base_profit / rec.purchase_base_price * 100
-            else:
-                rec.base_profit_percent = 999.99
+            if rec.invoice_id and rec.invoice_id.state == 'paid' and \
+                    rec.purchase_invoice_id and \
+                            rec.purchase_invoice_id.state == 'paid':
+                if rec.customer_invoice_type:
+                    if rec.customer_invoice_type == "out_refund":
+                        rec.base_profit = rec.purchase_base_price - base_net_price
+                    elif rec.customer_invoice_type == "out_invoice":
+                        if rec.supplier_invoice_type:
+                            if rec.supplier_invoice_type == "in_invoice":
+                                rec.base_profit = base_net_price - \
+                                                  rec.purchase_base_price
+                            else:
+                                rec.base_profit = 0
+                elif rec.supplier_invoice_type:
+                    rec.base_profit = 0
+                else:
+                    rec.base_profit = base_net_price - rec.purchase_base_price
+                if rec.purchase_base_price:
+                    rec.base_profit_percent = \
+                        rec.base_profit / rec.purchase_base_price * 100
+                else:
+                    rec.base_profit_percent = 999.99
 
             # Handle the display of multi-payments
             rec.supplier_payment_dates = ', '.join(
                 rec.supplier_payment_ids.mapped('date'))
             rec.supplier_payment_ref = ', '.join(
                 rec.supplier_payment_ids.mapped('ref'))
-            if rec.invoice_id.statue == 'paid':
+            if rec.invoice_id.state == 'paid':
                 rec.customer_payment_information, rec.base_amount = \
                     self._get_payment_information(rec.customer_payment_ids,
                                                   rec.net_price_currency_id)
