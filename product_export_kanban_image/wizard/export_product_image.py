@@ -6,8 +6,10 @@ import os
 import imgkit
 import base64
 import cStringIO
+import time
 
 from openerp import models, fields, api, _
+from openerp.tools import config
 from openerp.exceptions import RedirectWarning
 
 
@@ -30,7 +32,7 @@ class ExportProductImage(models.TransientModel):
         product_ids = product_obj.browse(self._context.get("active_ids"))
 
         if all(not product.image for product in product_ids):
-            raise RedirectWarning(_('No any product has image to export'))
+            raise RedirectWarning(_('No products have image to export'))
         for product in product_ids:
             if not product.image:
                 product_ids -= product
@@ -56,15 +58,31 @@ class ExportProductImage(models.TransientModel):
                 cnt += 1
             html_str = html_str + "</tr>"
         html_str = html_str + "</table>"
-        Html_file = open("product_image.html", "w")
+
+        # Get the data_dir and form the paths for the temporary html and
+        # image files with current timestamp
+        data_dir = config['data_dir']
+        timestamp = int(time.time())
+        html_file_local_path = "%s/product_image_%d_%d.html" % (
+            data_dir,
+            timestamp,
+            self.env.user.id
+        )
+        image_local_path = "%s/product_image_%d_%d.png" % (
+            data_dir,
+            timestamp,
+            self.env.user.id
+        )
+
+        Html_file = open(html_file_local_path, "w")
         Html_file.write(html_str)
         Html_file.close()
 
-        image = imgkit.from_file("product_image.html", 'product_image.png')
+        image = imgkit.from_file(html_file_local_path, image_local_path)
         res = super(ExportProductImage, self).default_get(fields_list)
-        stream = cStringIO.StringIO(file("product_image.png").read())
+        stream = cStringIO.StringIO(file(image_local_path).read())
         res.update({'image_download': base64.encodestring(stream.getvalue())})
 
-        os.remove("product_image.html")
-        os.remove("product_image.png")
+        os.remove(html_file_local_path)
+        os.remove(image_local_path)
         return res
