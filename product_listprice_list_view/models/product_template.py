@@ -120,8 +120,7 @@ class ProductTemplate(models.Model):
                     self._get_overseas_location_name(prod_ids)
                 pt.stock_leadtime = str(supp_lt) + ' day(s)'
             if pt.local_stock == 'Yes':
-                local_location_name = self._get_local_location_name(
-                        prod_ids)
+                local_location_name = self._get_local_location_name(prod_ids)
                 if pt.overseas_stock == 'Yes':
                     if local_location_name:
                         pt.stock_location += ', ' + local_location_name
