@@ -23,7 +23,7 @@ class Procurement(models.Model):
     @api.model
     def _run(self, procurement):
         if procurement.rule_id and procurement.rule_id.action == 'buy_vci':
-            return procurement.make_vci_po()
+            return procurement.sudo().make_vci_po()
         return super(Procurement, self)._run(procurement)
 
     @api.multi
