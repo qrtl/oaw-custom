@@ -37,5 +37,32 @@
             <field name="perm_write" eval="False"/>
         </record>
 
+
+        <!--Narrow down shown product_templates to supplier_fm-->
+         <record model="ir.rule" id="res_partner_supplier_fm_product_rule">
+            <field name="name">product_template: stock supplier_fm: Sees on certain categories</field>
+            <field name="model_id"
+                   ref="product.model_product_template"/>
+            <field name="domain_force">[('categ_id', 'in', user.product_category_ids.ids)]</field>
+            <field name="groups" eval="[(4, ref('group_supplier_fm'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="perm_write" eval="False"/>
+        </record>
+        <!--Narrow down quotation accessible to those created by the supplier_fm-->
+        <record model="ir.rule" id="res_partner_supplier_fm_sale_rule">
+            <field name="name">sale_order: stock supplier_fm: Access on own quotation; but no delete(no unlink)</field>
+            <field name="model_id"
+                   ref="sale.model_sale_order"/>
+            <field name="domain_force">[('create_uid','child_of', user.commercial_partner_id.id)]</field>
+            <field name="groups" eval="[(4, ref('group_supplier_fm'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="perm_write" eval="True"/>
+        </record>
+
+
     </data>
 </openerp>

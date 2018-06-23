@@ -14,6 +14,7 @@ class ProductCategory(models.Model):
         store=True,
     )
 
+
     @api.multi
     def name_get(self):
         context = self._context or {}

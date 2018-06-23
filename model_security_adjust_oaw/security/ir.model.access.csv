@@ -1,4 +1,6 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+
 access_supplier_stock_supplier,access_supplier_stock_supplier,supplier_stock.model_supplier_stock,group_supplier,1,1,1,1
 access_supplier_location_supplier,access_supplier_location_supplier,supplier_stock.model_supplier_location,group_supplier,1,1,1,1
 access_account_journal_supplier,access_account_journal_supplier,account.model_account_journal,group_supplier,1,0,0,0
