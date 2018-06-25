@@ -126,5 +126,5 @@ class stock_transfer_details(models.TransientModel):
         for packop in packops:
             packop.unlink()
         # Execute the transfer of the picking
-        self.picking_id.do_transfer()
+        self.sudo().picking_id.do_transfer()
         return True
