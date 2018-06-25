@@ -10,7 +10,7 @@ class ProductCategory(models.Model):
 
     supplier_access = fields.Boolean(
         'Available for Supplier',
-        default = False,
+        default=False,
         store=True,
     )
 
