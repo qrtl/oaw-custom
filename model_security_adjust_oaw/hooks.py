@@ -22,6 +22,7 @@ def _update_partner_offer_fields(cr, registry):
           AND supplier_stock.partner_id = have_duplicates.partner_id
           AND have_duplicates.COUNT > 1
     ''')
+
     # Update Brand field
     cr.execute('''
         UPDATE
@@ -36,4 +37,21 @@ def _update_partner_offer_fields(cr, registry):
         ) AS subquery
         WHERE
             subquery.product_id = ss.product_id
+    ''')
+
+    # Initialize of related_partner in stock.move
+    cr.execute('''
+        UPDATE
+            stock_move
+        SET
+            related_user = sub_query.id
+        FROM(
+        SELECT
+            id,
+            partner_id
+        FROM
+            res_users
+        ) AS sub_query
+        WHERE
+            quant_owner_id = sub_query.partner_id
     ''')

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!--Sales/ Products-->
+        <record id="base.menu_product" model="ir.ui.menu">
+            <field name="groups_id"
+                   eval="[(6,0, [ref('base.group_sale_salesman_all_leads')])]"/>
+        </record>
+
+        <!--Sales/ Payment Follow Ups-->
+        <record id="base.menu_sales_followup" model="ir.ui.menu">
+            <field name="groups_id"
+                   eval="[(6,0, [ref('base.group_sale_manager')])]"/>
+        </record>
+
+    </data>
+</openerp>
