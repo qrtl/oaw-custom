@@ -34,7 +34,8 @@ class ProductTemplate(models.Model):
 
     stock_location = fields.Char(
         string="Stock Location",
-        compute='_get_stock_location'
+        compute='_get_stock_location',
+        store=True,
     )
     stock_leadtime = fields.Char(
         string='Stock Lead Time',
