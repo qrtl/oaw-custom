@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_order_form_inherit" model="ir.ui.view">
+            <field name="name">sale.order.form.sale.stock</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale_stock.view_order_form_inherit"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/sheet/notebook/page[@string='Order Lines']/field[@name='order_line']/tree[@string='Sales Order Lines']/field[@name='product_id']" position="after">
+                    <field name="movement" groups="model_security_adjust_oaw.group_supplier_fm"/>
+                    <field name="material" groups="model_security_adjust_oaw.group_supplier_fm"/>
+                </xpath>
+                <xpath expr="//*/header/button[@name='print_quotation']" position="after">
+                        <button name="print_supplier_fm" string="Print Supplier Quotation" type="object" states="draft" class="oe_highlight" groups="model_security_adjust_oaw.group_supplier_fm"/>
+                        <button name="print_supplier_fm" string="Print Supplier Quotation" type="object" states="sent,progress,manual" class="oe_highlight" groups="model_security_adjust_oaw.group_supplier_fm/"/>
+                    </xpath>
+                <xpath expr="//button[@name='action_view_delivery']"
+                       position="attributes">
+                    <attribute name="groups">stock.group_stock_manager</attribute>
+                </xpath>
+                <xpath expr="//button[@name='ship_recreate']"
+                       position="attributes">
+                    <attribute name="groups">stock.group_stock_manager</attribute>
+                </xpath>
+                <xpath expr="//button[@name='ship_corrected']"
+                       position="attributes">
+                    <attribute name="groups">stock.group_stock_manager</attribute>
+                </xpath>
+                <xpath expr="//button[@name='action_view_delivery']"
+                       position="after">
+                    <button name="action_supplier_view_delivery"
+                            string="View Delivery Order" type="object" class="oe_highlight"
+                            attrs="{'invisible': ['|',('picking_ids','=',False),('picking_ids','=',[])]}"
+                            groups="model_security_adjust_oaw.group_supplier_fm"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>
