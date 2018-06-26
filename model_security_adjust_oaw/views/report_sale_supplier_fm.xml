@@ -3,7 +3,7 @@
     <data>
         <template id="report_sale_supplier_fm_document">
                     <t t-call="model_security_adjust_oaw.external_layout">
-                        <div class="page">
+                        <div class="page" style="font-family:sans;">
                             <div class="oe_structure"/>
                                 <div class="row">
                                     <br />
@@ -55,7 +55,7 @@
                                 <table class="table table-condensed">
                                     <thead>
                                         <tr>
-                                            <th>Description</th>
+                                            <th>Reference</th>
                                             <!--New Fields For Supplier_FM-->
                                             <th>Movement</th>
                                             <th>Material</th>
@@ -120,31 +120,6 @@
                                  <div>
                                  <br /> <br />
                                  </div >
-                                 <table class="table-bordered" style="width:100%">
-                                      <tr style="font-size:10px">
-                                        <th colspan='2' style="text-align:center">No.</th>
-                                        <th colspan='2' style="text-align:center">Payment</th>
-                                        <th colspan='2' style="text-align:center">Main Item</th>
-                                        <th colspan='2' style="text-align:center">Warranty</th>
-                                        <th colspan='2' style="text-align:center">Manual</th>
-                                        <th colspan="2" style="text-align:center">Box</th>
-                                      </tr>
-
-                                      <tr t-foreach="o.order_line" t-as="l" style="height:32px">
-                                           <td colspan='2' style="width:5%"></td>
-                                           <td style="width:11%"></td>
-                                           <td style="width:8%"></td>
-                                           <td style="width:11%"></td>
-                                           <td style="width:8%"></td>
-                                           <td style="width:11%"></td>
-                                           <td style="width:8%"></td>
-                                           <td style="width:11%"></td>
-                                           <td style="width:8%"></td>
-                                           <td style="width:11%"></td>
-                                           <td style="width:8%"></td>
-                                      </tr>
-                                </table>
-
                                  <div class="oe_structure"/>
                                  </div>
                         </div>
@@ -182,7 +157,7 @@
                 <div class="row">
                     <div>
                         <div class="col-xs-4">
-                               <p>TOURBILLION WATCH DISTRIBUTION</p>
+                               <p>TOURBILLON WATCH DISTRIBUTION</p>
                                <p>SAIF DEK Q1-05_074B</p>
                                <p>PO BOX 513593</p>
                                <p>SHARJAH</p>
@@ -201,14 +176,14 @@
             <div class="footer"  style="margin:auto;font-size:81.25%;">
                 <div class="text-center" style="border-top: 1px solid black;">
                     <ul  class="list-inline" >
-                        <li>CHF ACCOUNT NAME:<span>TOURBILLION DISTRIBUTION FZE</span></li>
+                        <li>CHF ACCOUNT NAME:<span>TOURBILLON DISTRIBUTION FZE</span></li>
                         <li>CHF ACCOUNT IBAN:<span>AE6961 50000 50 5753990000</span></li>
                         <li>CHF ACCOUNT ARY BANK:<span>BANQUE DE COMMERCE ET DE PLACEMENT- BCP</span></li>
                         <li>CHF ACCOUNT SWIFT:<span>BPCPAEAD</span></li>
-                        <li>CHF ACCOUNT NAME:<span>TOURBILLION DISTRIBUTION FZE</span></li>
-                        <li>CHF ACCOUNT IBAN:<span>AE 8561 50000 50 575399 0003</span></li>
-                        <li>CHF ACCOUNT ARY BANK:<span>BANQUE DE COMMERCE ET DE PLACEMENT- BCP</span></li>
-                        <li>CHF ACCOUNT SWIFT:<span>BPCPAEAD</span></li>
+                        <li>HKD ACCOUNT NAME:<span>TOURBILLON DISTRIBUTION FZE</span></li>
+                        <li>HKD ACCOUNT IBAN:<span>AE 8561 50000 50 575399 0003</span></li>
+                        <li>HKD ACCOUNT ARY BANK:<span>BANQUE DE COMMERCE ET DE PLACEMENT- BCP</span></li>
+                        <li>HKD ACCOUNT SWIFT:<span>BPCPAEAD</span></li>
                     </ul>
                     <ul class="list-inline">
                         <li>Page:</li>
