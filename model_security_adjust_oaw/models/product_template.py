@@ -24,17 +24,18 @@ class ProductTemplate(models.Model):
 
     @api.multi
     def _get_material_and_movement(self):
-        description = self.name
-        if "AC" in description:
-            self.material = "QZ"
-        elif "5N" in description:
-            self.material = "Rose Gold"
-        elif "OG" in description:
-            self.material = "White Gold"
-        else:
-            self.material = "Steel"
-        if "QZ" in description:
-            self.movement = "Quartz"
-        else:
-            self.movement = "Automatic"
+        for pt in self:
+            description = pt.name
+            if "AC" in description:
+                pt.material = "QZ"
+            elif "5N" in description:
+                pt.material = "Rose Gold"
+            elif "OG" in description:
+                pt.material = "White Gold"
+            else:
+                pt.material = "Steel"
+            if "QZ" in description:
+                pt.movement = "Quartz"
+            else:
+                pt.movement = "Automatic"
 
