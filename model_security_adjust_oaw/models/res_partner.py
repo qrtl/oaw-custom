@@ -8,6 +8,12 @@ class ResPartner(models.Model):
         string = 'Accessible Product Category'
     )
 
+    related_partner = fields.Many2one(
+        comodel_name='res.partner',
+        string = "Related Partner"
+
+    )
+
     @api.multi
     def write(self,vals):
         if 'product_category_ids' in vals:

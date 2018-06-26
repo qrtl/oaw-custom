@@ -49,3 +49,9 @@ class SaleOrder(osv.osv):
             result['res_id'] = pick_ids and pick_ids[0] or False
 
         return result
+
+
+
+
+
+

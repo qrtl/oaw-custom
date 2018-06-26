@@ -12,7 +12,9 @@
         'stock_offer_report',
         'stock_consignment_report',
         'supplier_stock',
-        'product'
+        'product',
+        'stock_view_adjust_oaw'
+
     ],
     'summary':"""""",
     'description': """
@@ -24,6 +26,8 @@
         'views/account_fiscalyear_views.xml',
         'views/advance_search_disable.xml',
         'views/stock_views.xml',
+        'views/sale_views.xml',
+        'views/accounting_views.xml',
         'views/res_partner_views.xml',
         'views/sale_order_views.xml',
         'views/stock_picking_views.xml',
