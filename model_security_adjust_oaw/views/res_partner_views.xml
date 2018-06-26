@@ -9,6 +9,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='user_id']" position="after">
                     <field name="product_category_ids" widget="many2many_tags" groups="base.group_sale_manager"/>
+                    <field name="related_partner" groups="base.group_sale_manager"/>
                 </xpath>
             </field>
         </record>

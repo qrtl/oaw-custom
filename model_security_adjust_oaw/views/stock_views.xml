@@ -37,5 +37,56 @@
                   parent="stock.next_id_61" sequence="1"
                   groups="stock.group_stock_user"/>
 
+        <!--For Supplier Access FM-->
+        <!--Quants-->
+        <menuitem
+                id="stock.menu_quants"
+                name="Quants"
+                parent="stock.menu_traceability"
+                sequence="20"
+                action="stock.quantsact"
+                groups="base.group_no_one,model_security_adjust_oaw.group_supplier_fm"/>
+
+        <!--Stock Moves: Elevate access lvl of Stock Moves (removing all existing access groups, adding new group-->
+        <record id="stock.menu_action_move_form2"
+                model="ir.ui.menu">
+            <field name ="groups_id"
+                   eval="[(6,0, [ref('stock.group_stock_manager')])]">
+            </field>
+        </record>
+
+        <!--Serial Numbers-->
+        <record id="stock.menu_action_production_lot_form"
+                model="ir.ui.menu">
+            <field name ="groups_id"
+                   eval="[(6,0, [ref('stock.group_stock_manager')])]">
+            </field>
+        </record>
+
+         <!--All operations-->
+        <record id="stock.menu_action_picking_type_form"
+                model="ir.ui.menu">
+            <field name ="groups_id"
+                   eval="[(6,0, [ref('stock.group_stock_manager')])]">
+            </field>
+        </record>
+
+       <menuitem action="stock_picking_menu.action_picking_tree_incoming"
+        id="stock_picking_menu.menu_action_picking_tree_incoming"
+        parent="stock.menu_stock_warehouse_mgmt" sequence="5"
+       groups="stock.group_stock_manager"
+       />
+
+       <menuitem action="stock_picking_menu.action_picking_tree_internal"
+        id="stock_picking_menu.menu_action_picking_tree_internal"
+        parent="stock.menu_stock_warehouse_mgmt" sequence="10"
+       groups="stock.group_stock_manager"
+       />
+
+      <menuitem action="stock_picking_menu.action_picking_tree_outgoing"
+        id="stock_picking_menu.menu_action_picking_tree_outgoing"
+        parent="stock.menu_stock_warehouse_mgmt" sequence="15"
+      groups="stock.group_stock_manager"
+      />
     </data>
 </openerp>

@@ -17,3 +17,6 @@ class saleOrderLineSupplierAccess(models.Model):
         readonly=True,
         related="product_id.product_tmpl_id.material"
     )
+
+
+
