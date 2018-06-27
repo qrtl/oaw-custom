@@ -31,6 +31,7 @@
         'views/res_partner_views.xml',
         'views/sale_order_views.xml',
         'views/stock_picking_views.xml',
+        'views/stock_quant_views.xml',
         'views/supplier_stock_views.xml',
         'views/report_sale_supplier_fm.xml',
         'views/report_invoice_supplier_fm.xml',
