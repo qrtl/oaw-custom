@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from openerp import models, fields, osv
 from openerp import workflow
+from openerp import exceptions
 
 class saleOrderSupplierAccess(models.Model):
     _inherit = 'sale.order'
@@ -13,6 +14,18 @@ class saleOrderSupplierAccess(models.Model):
         assert len(ids) == 1, 'This option should only be used for a single id at a time'
         self.signal_workflow(cr, uid, ids, 'quotation_sent')
         return self.pool['report'].get_action(cr, uid, ids, 'model_security_adjust_oaw.report_sale_supplier_fm', context=context)
+
+        @api.multi
+        def write(self, vals):
+            if 'checked' or 'open_issue' in vals:
+                # checking if the active is is of group supplier fm
+                if self.env.user.has_group('model_security_adjust_oaw.res_partner_supplier_fm_product_rule'):
+                    for order in self:
+                        # Checking if orders customer's related partner is the active user
+                        # if not
+                        if order.partner_id.related_partner!= self.env.user:
+                            raise exceptions.UserError(_('You cannot modify the "Checked" and "Open Issue" field for the order(s)'))
+                            return super(saleOrderSupplierAccess, self).write(vals)
 
 
 
@@ -49,7 +62,6 @@ class SaleOrder(osv.osv):
             result['res_id'] = pick_ids and pick_ids[0] or False
 
         return result
-
 
 
 

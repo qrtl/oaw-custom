@@ -49,18 +49,7 @@
             <field name="perm_unlink" eval="False"/>
             <field name="perm_write" eval="False"/>
         </record>
-        <!--Supplier FM sees only stock moves where he is the owner-->
-         <record model="ir.rule" id="stock_move_supplier_fm">
-            <field name="name">stock.move: stock supplier_fm: Sees his stock moves</field>
-            <field name="model_id"
-                   ref="stock.model_stock_move"/>
-            <field name="domain_force">[('quant_owner_id', 'child_of', user.commercial_partner_id.id)]</field>
-            <field name="groups" eval="[(4, ref('group_supplier_fm'))]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
-            <field name="perm_write" eval="False"/>
-        </record>
+
         <!--Narrow down shown product_templates to supplier_fm-->
          <record model="ir.rule" id="res_partner_supplier_fm_product_rule">
             <field name="name">product_template: stock supplier_fm: Sees on certain categories</field>
