@@ -88,5 +88,23 @@
         parent="stock.menu_stock_warehouse_mgmt" sequence="15"
       groups="stock.group_stock_manager"
       />
+
+
+        <!--Inventor Controle Menu -->
+      <menuitem action="supplier_stock.action_supplier_stock"
+          id="supplier_stock.menu_supplier_stock"
+          parent="stock.menu_stock_inventory_control" sequence="10"
+          groups="stock.group_stock_manager"
+      />
+
+    <menuitem action="stock.action_inventory_form"
+              id="stock.menu_action_inventory_form"
+              parent="stock.menu_stock_inventory_control"
+              sequence="30"
+              groups="stock.group_stock_manager"
+    />
+
+
+
     </data>
 </openerp>
