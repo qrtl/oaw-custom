@@ -15,8 +15,8 @@
             model = "stock.picking"
             string = "Quotation/Order Partner"
             report_type = "qweb-pdf"
-            name = "model_security_adjust_oaw.report_picking_supplier_fm"
-            file = "model_security_adjust_oaw.report_picking_supplier_fm"
+            name = "model_security_adjust_oaw.report_picking_fm_document"
+            file = "model_security_adjust_oaw.report_picking_fm_document"
             />
 
     <report

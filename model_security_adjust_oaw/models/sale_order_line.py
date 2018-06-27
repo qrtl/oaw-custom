@@ -19,4 +19,3 @@ class saleOrderLineSupplierAccess(models.Model):
     )
 
 
-
