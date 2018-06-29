@@ -22,3 +22,13 @@ class SupplierStock(models.Model):
         if 'partner_loc_id' in vals or 'product_id' in vals:
             res.product_id.product_tmpl_id.sudo()._get_stock_location()
         return res
+
+    @api.multi
+    def unlink(self):
+        products = []
+        for ss in self:
+            products.append(ss.product_id.product_tmpl_id)
+        res = super(SupplierStock, self).unlink()
+        for  product in products:
+            product.sudo()._get_stock_location()
+        return res

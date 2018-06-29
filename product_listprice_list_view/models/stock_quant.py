@@ -22,3 +22,13 @@ class StockQuant(models.Model):
         if 'location_id' in vals or 'product_id' in vals or 'usage' in vals:
             res.product_id.product_tmpl_id.sudo()._get_stock_location()
         return res
+
+    @api.multi
+    def unlink(self):
+        products = []
+        for sq in self:
+            products.append(sq.product_id.product_tmpl_id)
+        res = super(StockQuant, self).unlink()
+        for product in products:
+            product.sudo()._get_stock_location()
+        return res
