@@ -4,7 +4,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 {
     'name': 'Product List Price Update List View',
-    'version': '8.0.1.6.0',
+    'version': '8.0.1.7.0',
     'author': 'Quartile Limited, eHanse',
     'website': 'https://www.quartile.co',
     'category': 'Product',
@@ -17,6 +17,7 @@
 * Adds a menu item 'Product List Price' to facilitate list price update
     """,
     'data': [
+        'data/ir_actions.xml',
         'views/product_product_views.xml',
     ],
     'installable': True,
