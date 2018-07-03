@@ -9,6 +9,7 @@ from openerp import SUPERUSER_ID
 class ProductProduct(osv.osv):
     _inherit = "product.product"
     _order = "name_template"
+
     def name_get(self, cr, user, ids, context=None):
         if context is None:
             context = {}
