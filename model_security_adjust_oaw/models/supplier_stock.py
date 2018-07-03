@@ -40,8 +40,7 @@ class SupplierStock(models.Model):
             )
         return result
 
-        # Takes care of the product selection in Supplier Access views
-
+    # Takes care of the product selection in Supplier Access views
     @api.onchange('prod_cat_selection')
     def on_change_category(self):
         ids = []
@@ -80,7 +79,7 @@ class SupplierStock(models.Model):
     @api.multi
     def _get_owners_duplicates(self):
         for ps in self:
-            # Duplidates of the supplier accessing his entries
+            # Duplicates of the supplier accessing his entries
             owners_duplicates = self.sudo().search(
                 [('product_id', '=', ps.product_id.id),
                  ('partner_id', '=', ps.partner_id.id),
@@ -106,7 +105,6 @@ class SupplierStock(models.Model):
                 ], order='sequence')
                 for action in server_actions:
                     action.sudo()._process(action, [res.id])
-
         return res
 
     @api.model
