@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+
         <record id="export_product_image_view" model="ir.ui.view">
             <field name="name">export.product.image.form</field>
             <field name="model">export.product.image</field>
@@ -30,5 +31,6 @@
                 res_model="export.product.image"
                 src_model="product.template"
                 view_mode="form" target="new" view_type="form"/>
+
     </data>
 </openerp>

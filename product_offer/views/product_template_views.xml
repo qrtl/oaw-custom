@@ -403,8 +403,8 @@
                                 <div name="tags"/>
                                 <ul>
                                     <li>HK Retail: <field name="list_price_integer"></field></li>
-                                    <li t-if="record.type.raw_value != 'service'">HK Stock: <field name="local_stock"/></li>
-                                    <li t-if="record.type.raw_value != 'service'">Overseas Stock: <field name="overseas_stock"/></li>
+                                    <li t-if="record.type.raw_value != 'service'">HK Stock: <field name="local_stock" no_export="True"/></li>
+                                    <li t-if="record.type.raw_value != 'service'">Overseas Stock: <field name="overseas_stock" no_export="True"/></li>
                                 </ul>
                             </div>
                         </div>
@@ -459,8 +459,8 @@
                                 <div name="tags"/>
                                 <ul>
                                     <li>港币公价: <field name="list_price_integer"></field></li>
-                                    <li t-if="record.type.raw_value != 'service'">香港现货: <field name="local_stock"/></li>
-                                    <li t-if="record.type.raw_value != 'service'">欧洲期货: <field name="overseas_stock"/></li>
+                                    <li t-if="record.type.raw_value != 'service'">香港现货: <field name="local_stock" no_export="True"/></li>
+                                    <li t-if="record.type.raw_value != 'service'">欧洲期货: <field name="overseas_stock" no_export="True"/></li>
                                 </ul>
                             </div>
                         </div>
