@@ -37,7 +37,6 @@
             <field name="perm_write" eval="False"/>
         </record>
 
-
         <!--IMportant rule for supplier fm to see all the products of all his quants.-->
         <record model="ir.rule" id="supplier_stock_supplier_rule">
             <field name="name">quants: stock supplier: Access on his products and quants</field>
@@ -74,7 +73,6 @@
             <field name="perm_unlink" eval="False"/>
             <field name="perm_write" eval="True"/>
         </record>
-
 
     </data>
 </openerp>

@@ -10,15 +10,13 @@ class ProductProduct(osv.osv):
     _inherit = "product.product"
     _order = "name_template"
 
-    #reference = fields.Char
-
     def name_get(self, cr, user, ids, context=None):
         if context is None:
             context = {}
-        if context.get('supplier_access_context', False) or self.pool.get('res.users').browse(cr, user, user,
-                                                                                              context=context).has_group(
+        if context.get('supplier_access_context', False) or \
+                self.pool.get('res.users').browse(cr, user, user,
+                                                  context=context).has_group(
               'model_security_adjust_oaw.group_supplier_fm'):
-
             res = []
             for product in self.browse(cr, SUPERUSER_ID, ids, context=context):
                 res.append(

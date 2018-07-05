@@ -40,8 +40,7 @@ class SupplierStock(models.Model):
             )
         return result
 
-        # Takes care of the product selection in Supplier Access views
-
+    # Takes care of the product selection in Supplier Access views
     @api.onchange('prod_cat_selection')
     def on_change_category(self):
         ids = []
