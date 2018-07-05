@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <report id="custom_report_sale_supplier_fm"
+                model="sale.order"
+                string="Quotation/Order Partner"
+                report_type="qweb-pdf"
+                name="model_security_adjust_oaw.report_sale_supplier_fm"
+                file="model_security_adjust_oaw.report_sale_supplier_fm"/>
+
+        <report id="custom_report_picking_supplier_fm"
+                model="stock.picking"
+                string="Quotation/Order Partner"
+                report_type="qweb-pdf"
+                name="model_security_adjust_oaw.report_picking_fm_document"
+                file="model_security_adjust_oaw.report_picking_fm_document"/>
+
+        <report id="custom_report_invoice_supplier_fm"
+                model="account.invoice"
+                string="Quotation/Order Partner"
+                report_type="qweb-pdf"
+                name="model_security_adjust_oaw.report_invoice_supplier_fm"
+                file="model_security_adjust_oaw.report_invoice_supplier_fm"/>
+
+    </data>
+</openerp>

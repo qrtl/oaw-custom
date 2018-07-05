@@ -2,26 +2,20 @@
 <openerp>
     <data>
 
-
         <!--COPY EXISTING TEMPLATE HERE AND MODIFY-->
-
-         <template id="report_invoice_supplier_fm">
-            <t t-call = "report.html_container">
-                <t t-foreach = "doc_ids" t-as="doc_id">
-                    <t t-raw = "translate_doc(doc_id, doc_model, 'partner_id.lang', 'model_security_adjust_oaw.report_invoice_supplier_fm_document')"/>
+        <template id="report_invoice_supplier_fm">
+            <t t-call="report.html_container">
+                <t t-foreach="doc_ids" t-as="doc_id">
+                    <t t-raw="translate_doc(doc_id, doc_model, 'partner_id.lang', 'model_security_adjust_oaw.report_invoice_supplier_fm_document')"/>
                 </t>
             </t>
         </template>
-
 
         <template id="external_layout">
             <t t-call="model_security_adjust_oaw.external_layout_header"/>
             <t t-raw="0"/>
             <t t-call="model_security_adjust_oaw.external_layout_footer"/>
         </template>
-
-
-
 
     </data>
 </openerp>

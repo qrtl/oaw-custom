@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
-# Copyright 2017 Rooms For (Hong Kong) Limted T/A OSCG
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+# Copyright 2018 Quartile Limited
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from openerp import models, fields, api
-import openerp.addons.decimal_precision as dp
 
 
 class ProductTemplate(models.Model):
@@ -14,12 +13,10 @@ class ProductTemplate(models.Model):
     material = fields.Char(
         string="Material",
         compute="_get_material_and_movement",
-
     )
     movement = fields.Char(
         string="Movement",
         compute="_get_material_and_movement",
-
     )
 
     @api.multi
@@ -38,4 +35,3 @@ class ProductTemplate(models.Model):
                 pt.movement = "Quartz"
             else:
                 pt.movement = "Automatic"
-

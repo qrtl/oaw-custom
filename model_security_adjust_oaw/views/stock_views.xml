@@ -39,13 +39,62 @@
 
         <!--For Supplier Access FM-->
         <!--Quants-->
-        <menuitem
-                id="stock.menu_quants"
-                name="Quants"
-                parent="stock.menu_traceability"
-                sequence="20"
-                action="stock.quantsact"
-                groups="base.group_no_one,model_security_adjust_oaw.group_supplier_fm"/>
+        <menuitem id="stock.menu_quants" name="Quants"
+                  parent="stock.menu_traceability" sequence="20"
+                  action="stock.quantsact"
+                  groups="base.group_no_one,model_security_adjust_oaw.group_supplier_fm"/>
+
+        <menuitem action="stock_picking_menu.action_picking_tree_incoming"
+                  id="stock_picking_menu.menu_action_picking_tree_incoming"
+                  parent="stock.menu_stock_warehouse_mgmt" sequence="5"
+                  groups="stock.group_stock_manager"/>
+
+        <menuitem action="stock_picking_menu.action_picking_tree_internal"
+                  id="stock_picking_menu.menu_action_picking_tree_internal"
+                  parent="stock.menu_stock_warehouse_mgmt" sequence="10"
+                  groups="stock.group_stock_manager"/>
+
+        <menuitem action="stock_picking_menu.action_picking_tree_outgoing"
+                  id="stock_picking_menu.menu_action_picking_tree_outgoing"
+                  parent="stock.menu_stock_warehouse_mgmt" sequence="15"
+                  groups="stock.group_stock_manager"/>
+
+        <!--Inventor Controle Menu -->
+        <menuitem action="supplier_stock.action_supplier_stock"
+                  id="supplier_stock.menu_supplier_stock"
+                  parent="stock.menu_stock_inventory_control" sequence="10"
+                  groups="stock.group_stock_manager"/>
+
+        <menuitem action="stock.action_inventory_form"
+                  id="stock.menu_action_inventory_form"
+                  parent="stock.menu_stock_inventory_control"
+                  sequence="30"
+                  groups="stock.group_stock_manager"/>
+
+        <menuitem id="menu_action_move_extended"
+                  parent="stock.menu_traceability"
+                  action="action_move_extended"
+                  sequence="5"
+                  groups="model_security_adjust_oaw.group_supplier_fm"/>
+
+        <record id='action_move_extended' model='ir.actions.act_window'>
+            <field name="name">Stock Moves (Ext.)</field>
+            <field name="res_model">stock.move</field>
+            <field name="view_type">form</field>
+            <field name="view_id"
+                   ref="stock_view_adjust_oaw.view_move_tree_extended"/>
+            <field name="search_view_id"
+                   ref="stock_view_adjust_oaw.view_move_search_z1"/>
+            <field name="domain">[('related_user','=',uid)]</field>
+        </record>
+
+        <!--Serial Numbers-->
+        <record id="stock_view_adjust_oaw.menu_action_move_extended"
+                model="ir.ui.menu">
+            <field name="groups_id"
+                   eval="[(6,0, [ref('stock.group_stock_manager')])]">
+            </field>
+        </record>
 
         <!--Stock Moves: Elevate access lvl of Stock Moves (removing all existing access groups, adding new group-->
         <record id="stock.menu_action_move_form2"
@@ -70,68 +119,6 @@
                    eval="[(6,0, [ref('stock.group_stock_manager')])]">
             </field>
         </record>
-
-        <menuitem action="stock_picking_menu.action_picking_tree_incoming"
-                  id="stock_picking_menu.menu_action_picking_tree_incoming"
-                  parent="stock.menu_stock_warehouse_mgmt" sequence="5"
-                  groups="stock.group_stock_manager"
-        />
-
-        <menuitem action="stock_picking_menu.action_picking_tree_internal"
-                  id="stock_picking_menu.menu_action_picking_tree_internal"
-                  parent="stock.menu_stock_warehouse_mgmt" sequence="10"
-                  groups="stock.group_stock_manager"
-        />
-
-        <menuitem action="stock_picking_menu.action_picking_tree_outgoing"
-                  id="stock_picking_menu.menu_action_picking_tree_outgoing"
-                  parent="stock.menu_stock_warehouse_mgmt" sequence="15"
-                  groups="stock.group_stock_manager"
-        />
-
-
-        <!--Inventor Controle Menu -->
-        <menuitem action="supplier_stock.action_supplier_stock"
-                  id="supplier_stock.menu_supplier_stock"
-                  parent="stock.menu_stock_inventory_control" sequence="10"
-                  groups="stock.group_stock_manager"
-        />
-
-        <menuitem action="stock.action_inventory_form"
-                  id="stock.menu_action_inventory_form"
-                  parent="stock.menu_stock_inventory_control"
-                  sequence="30"
-                  groups="stock.group_stock_manager"
-        />
-
-
-        <record id='action_move_extended' model='ir.actions.act_window'>
-            <field name="name">Stock Moves (Ext.)</field>
-            <field name="res_model">stock.move</field>
-            <field name="view_type">form</field>
-            <field name="view_id" ref="stock_view_adjust_oaw.view_move_tree_extended"/>
-            <field name="search_view_id" ref="stock_view_adjust_oaw.view_move_search_z1"/>
-            <!--<field name="domain">[('related_user','=',uid)]</field>-->
-
-
-        </record>
-
-        <menuitem id="menu_action_move_extended"
-                  parent="stock.menu_traceability"
-                  action="action_move_extended"
-                  sequence="5"
-                  groups="model_security_adjust_oaw.group_supplier_fm"
-        />
-
-
-        <!--Serial Numbers-->
-        <record id="stock_view_adjust_oaw.menu_action_move_extended"
-                model="ir.ui.menu">
-            <field name="groups_id"
-                   eval="[(6,0, [ref('stock.group_stock_manager')])]">
-            </field>
-        </record>
-
 
     </data>
 </openerp>

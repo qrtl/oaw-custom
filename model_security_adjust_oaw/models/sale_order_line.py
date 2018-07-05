@@ -1,21 +1,20 @@
 # -*- coding: utf-8 -*-
+# Copyright 2018 Quartile Limited
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+
 from openerp import models, fields, api
-from openerp import workflow
 
-class saleOrderLineSupplierAccess(models.Model):
+
+class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
-
 
     movement = fields.Char(
        'Movement',
         readonly=True,
-        related="product_id.product_tmpl_id.movement"
+        related="product_id.product_tmpl_id.movement",
     )
-
     material = fields.Char(
         'Material',
         readonly=True,
-        related="product_id.product_tmpl_id.material"
+        related="product_id.product_tmpl_id.material",
     )
-
-
