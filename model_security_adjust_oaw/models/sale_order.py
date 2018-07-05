@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
-from openerp import models, fields, osv
-from openerp import workflow
-from openerp import exceptions
+# Copyright 2018 Quartile Limited
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-class saleOrderSupplierAccess(models.Model):
+from openerp import models, fields, api, _
+from openerp.exceptions import Warning as UserError
+
+
+class SaleOrder(models.Model):
     _inherit = 'sale.order'
     _description = 'Extends sale order: Print Button Supplier FM'
 
@@ -15,24 +18,22 @@ class saleOrderSupplierAccess(models.Model):
         self.signal_workflow(cr, uid, ids, 'quotation_sent')
         return self.pool['report'].get_action(cr, uid, ids, 'model_security_adjust_oaw.report_sale_supplier_fm', context=context)
 
-        @api.multi
-        def write(self, vals):
-            if 'checked' or 'open_issue' in vals:
-                # checking if the active is is of group supplier fm
-                if self.env.user.has_group('model_security_adjust_oaw.res_partner_supplier_fm_product_rule'):
-                    for order in self:
-                        # Checking if orders customer's related partner is the active user
-                        # if not
-                        if order.partner_id.related_partner!= self.env.user:
-                            raise exceptions.UserError(_('You cannot modify the "Checked" and "Open Issue" field for the order(s)'))
-                            return super(saleOrderSupplierAccess, self).write(vals)
-
+    @api.multi
+    def write(self, vals):
+        if 'checked' in vals or 'open_issue' in vals:
+            for order in self:
+                # Checking if orders customer's related partner is the active user
+                if order.partner_id.related_partner and \
+                                order.partner_id.related_partner != \
+                                self.env.user.partner_id:
+                    raise UserError(_('You cannot modify the "Checked" and "Open Issue" field for the order(s)'))
+        return super(SaleOrder, self).write(vals)
 
 
 from openerp.osv import osv, fields
 
 
-class SaleOrder(osv.osv):
+class SaleOrderOsv(osv.osv):
     _inherit = "sale.order"
 
     def action_supplier_view_delivery(self, cr, uid, ids, context=None):
@@ -62,8 +63,3 @@ class SaleOrder(osv.osv):
             result['res_id'] = pick_ids and pick_ids[0] or False
 
         return result
-
-
-
-
-
