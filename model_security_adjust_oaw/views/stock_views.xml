@@ -2,6 +2,17 @@
 <openerp>
     <data>
 
+        <record id='action_move_extended' model='ir.actions.act_window'>
+            <field name="name">Stock Moves (Ext.)</field>
+            <field name="res_model">stock.move</field>
+            <field name="view_type">form</field>
+            <field name="view_id"
+                   ref="stock_view_adjust_oaw.view_move_tree_extended"/>
+            <field name="search_view_id"
+                   ref="stock_view_adjust_oaw.view_move_search_z1"/>
+            <field name="domain">[('related_user','=',uid)]</field>
+        </record>
+
         <menuitem name="Warehouse"
                   id="stock.menu_stock_root"
                   groups="stock.group_stock_manager,stock.group_stock_user"
@@ -76,17 +87,6 @@
                   action="action_move_extended"
                   sequence="5"
                   groups="model_security_adjust_oaw.group_supplier_fm"/>
-
-        <record id='action_move_extended' model='ir.actions.act_window'>
-            <field name="name">Stock Moves (Ext.)</field>
-            <field name="res_model">stock.move</field>
-            <field name="view_type">form</field>
-            <field name="view_id"
-                   ref="stock_view_adjust_oaw.view_move_tree_extended"/>
-            <field name="search_view_id"
-                   ref="stock_view_adjust_oaw.view_move_search_z1"/>
-            <field name="domain">[('related_user','=',uid)]</field>
-        </record>
 
         <!--Serial Numbers-->
         <record id="stock_view_adjust_oaw.menu_action_move_extended"
