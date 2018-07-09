@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-
         <!--Accounting: Top Menu item-->
         <record id="account.menu_finance" model="ir.ui.menu">
             <field name="groups_id"
                    eval="[(6,0, [ref('account.group_account_user'), ref('account.group_account_manager')])]"/>
+        </record>
+        <!--Reporting/Invoice Analysis-->
+        <menuitem action="account.action_account_invoice_report_all"
+                  id="account.menu_action_account_invoice_report_all"
+                  parent="account.menu_finance_reporting"
+                  sequence="0"
+                  groups="account.group_account_manager"/>
+        <!--Reporting/Follow-Ups Analysis RESET-->
+        <record id="account_followup.menu_action_followup_stat_follow"
+                model="ir.ui.menu">
+            <field name="groups_id"
+                   eval="[(6,0, [ref('account.group_account_manager')])]">
+            </field>
         </record>
 
     </data>
