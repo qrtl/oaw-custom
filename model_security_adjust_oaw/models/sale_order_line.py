@@ -8,7 +8,6 @@ from openerp import models, fields, api
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
-
     movement = fields.Char(
        'Movement',
         readonly=True,
