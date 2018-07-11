@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-
-
-  <!--TREE FOR SEARCH MORE-->
+        
+        <!--TREE FOR SEARCH MORE-->
         <record id="view_supplier_access_search_more_tree" model="ir.ui.view">
             <field name="name">product.product.tree.search.more</field>
             <field name="model">product.product</field>
@@ -18,8 +17,6 @@
                 </tree>
             </field>
         </record>
+       
     </data>
 </openerp>
-
-
-
