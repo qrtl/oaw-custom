@@ -5,7 +5,7 @@
         <record id="view_order_form_inherit" model="ir.ui.view">
             <field name="name">sale.order.form.sale.stock</field>
             <field name="model">sale.order</field>
-            <field name="inherit_id" ref="sale_stock.view_order_form_inherit"/>
+            <field name="inherit_id" ref="sale_view_adjust_oaw.view_order_form_tree_adjust"/>
             <field name="arch" type="xml">
                 <xpath expr="/form/sheet/notebook/page[@string='Order Lines']/field[@name='order_line']/tree[@string='Sales Order Lines']/field[@name='product_id']" position="after">
                     <field name="movement" groups="model_security_adjust_oaw.group_supplier_fm"/>
