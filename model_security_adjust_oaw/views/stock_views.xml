@@ -28,27 +28,49 @@
                   parent="stock.menu_stock_product" sequence="1"
                   groups="stock.group_stock_manager,stock.group_stock_user"/>
 
-        <menuitem parent="stock.next_id_61"
-                  action="stock_offer_report.action_offer_report_wizard"
-                  id="stock_offer_report.menu_offer_report_wizard"
-                  sequence="60"
-                  groups="stock.group_stock_manager,stock.group_stock_user"/>
+        <!--Reporting/Stock Valuation-->
+         <record id="stock_account.menu_action_wizard_valuation_history"
+                model="ir.ui.menu">
+            <field name="groups_id"
+                   eval="[(6,0, [ref('stock.group_stock_manager')])]">
+            </field>
+        </record>
 
-        <menuitem parent="stock.next_id_61"
-                  action="stock_consignment_report.action_consignment_report_wizard"
-                  id="stock_consignment_report.menu_consignment_report_wizard"
-                  sequence="50"
-                  groups="stock.group_stock_manager,stock.group_stock_user"/>
+        <!--Reporting/Stock Offer Report-->
+         <record id="stock_offer_report.menu_offer_report_wizard"
+                model="ir.ui.menu">
+            <field name="groups_id"
+                   eval="[(6,0, [ref('stock.group_stock_manager')])]">
+            </field>
+        </record>
 
+        <!--Reporting/(Internal) Stock Consignment Report-->
+        <record id="stock_consignment_report.menu_consignment_report_wizard"
+                model="ir.ui.menu">
+            <field name="groups_id"
+                   eval="[(6,0, [ref('stock.group_stock_manager')])]">
+            </field>
+        </record>
+
+        <!--Reporting/Latest Inventories & Moves -->
+        <menuitem parent="stock.next_id_61"
+                  action="stock.action_stock_line_date"
+                  id="stock.menu_report_stock_line_date"
+                  sequence="2"
+                  groups="stock.group_stock_manager"/>
+
+        <!--Reporting/(Internal) Partner Statement Report -->
+         <record id="partner_statement_report.menu_partner_statement_report_wizard"
+                model="ir.ui.menu">
+            <field name="groups_id"
+                   eval="[(6,0, [ref('account.group_account_manager')])]">
+            </field>
+        </record>
+
+        <!--Reporting/Warehouse-->
         <menuitem id="stock.next_id_61" name="Warehouse" sequence="15"
-                  parent="base.menu_reporting" groups="group_supplier"/>
+                  parent="base.menu_reporting" groups="group_supplier_fm"/>
 
-        <menuitem id="stock_account.menu_action_wizard_valuation_history"
-                  action="stock_account.action_wizard_stock_valuation_history"
-                  parent="stock.next_id_61" sequence="1"
-                  groups="stock.group_stock_user"/>
-
-        <!--For Supplier Access FM-->
         <!--Quants-->
         <menuitem id="stock.menu_quants" name="Quants"
                   parent="stock.menu_traceability" sequence="20"

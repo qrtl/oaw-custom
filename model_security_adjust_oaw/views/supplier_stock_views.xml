@@ -38,7 +38,7 @@
                            context="{'supplier_access_context':True}"/>
                     <field name="product_id"
                            options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"
-                           context="{'supplier_access_context':True}"/>
+                           context="{'supplier_access_context':True, 'tree_view_ref':'model_security_adjust_oaw.view_supplier_access_search_more_tree'}"/>
                     <field name="internal_code"/>
                     <field name="image_small" string="Image" widget="image"
                            height="64px"/>

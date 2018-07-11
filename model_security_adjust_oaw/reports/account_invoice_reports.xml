@@ -11,11 +11,5 @@
             </t>
         </template>
 
-        <template id="external_layout">
-            <t t-call="model_security_adjust_oaw.external_layout_header"/>
-            <t t-raw="0"/>
-            <t t-call="model_security_adjust_oaw.external_layout_footer"/>
-        </template>
-
     </data>
 </openerp>
