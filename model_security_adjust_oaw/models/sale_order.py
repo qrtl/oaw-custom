@@ -10,8 +10,6 @@ class SaleOrder(models.Model):
     _inherit = 'sale.order'
     _description = 'Extends sale order: Print Button Supplier FM'
 
-
-
     def print_supplier_fm(self, cr, uid, ids, context=None):
         '''
         This function prints the the quotation  and mark it as sent, so that we can see more easily the next step of the workflow
