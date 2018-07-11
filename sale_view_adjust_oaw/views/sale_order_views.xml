@@ -24,7 +24,9 @@
                     <field name="image_small" widget="image" height="64px"/>
                 </xpath>
                 <xpath expr="/form/sheet/notebook/page[@string='Order Lines']/field[@name='order_line']/tree[@string='Sales Order Lines']/field[@name='lot_id']"
-                       position="replace"/>
+                       position="attributes">
+                        <attribute name="invisible">True</attribute>
+                </xpath>
                 <xpath expr="/form/sheet/notebook/page[@string='Order Lines']/field[@name='order_line']/tree[@string='Sales Order Lines']/field[@name='product_uom_qty']"
                        position="replace"/>
                 <xpath expr="/form/sheet/notebook/page[@string='Order Lines']/field[@name='order_line']/tree[@string='Sales Order Lines']/field[@name='price_unit']"
