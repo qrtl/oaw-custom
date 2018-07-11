@@ -35,7 +35,6 @@
 
         <!--Just getting the footer of eHanse custom module: needs to be added as dependency -->
         <template id="external_layout_footer">
-            <!--<link rel="stylesheet" href="/model_security_adjust_oaw/static/src/css/external_header.css"/>-->
             <div class="footer" style="margin:auto;font-size:81.25%;">
                 <div class="text-center" style="border-top: 1px solid black;">
                     <ul class="list-inline">

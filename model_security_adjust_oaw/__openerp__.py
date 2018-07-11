@@ -34,6 +34,7 @@
         'views/stock_views.xml',
         'views/supplier_stock_views.xml',
         'views/reporting_views.xml',
+        'views/product_product.xml',
         'reports/account_invoice_reports.xml',
         'reports/common_templates.xml',
         'reports/sale_order_reports.xml',
