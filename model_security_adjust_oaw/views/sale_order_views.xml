@@ -2,6 +2,45 @@
 <openerp>
     <data>
 
+        <!--Lowering Purchase Price readability access-->
+        <record id="sale_margin_sale_order_line_form_ext" model="ir.ui.view">
+            <field name="name">view.order.form.tree.adjust</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale_margin.sale_margin_sale_order_line_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/sheet/notebook/page[@string='Order Lines']/field[@name='order_line']/tree[@string='Sales Order Lines']/field[@name='purchase_price']"
+                          position="attributes">
+                    <attribute name="groups">base.group_sale_salesman</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <!--Raising Purchase Price readability access-->
+        <record id="sale_order_line_quant_view_supplier_fm" model="ir.ui.view">
+            <field name="name">view.order.form.tree.adjust.supplier.fm</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale_line_quant_extended.sale_order_line_quant_view_z160509"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/sheet/notebook/page[@string='Order Lines']/field[@name='order_line']/tree[@string='Sales Order Lines']/field[@name='purchase_order_id']"
+                      position="attributes">
+                    <attribute name="groups">base.group_sale_salesman_all_leads</attribute>
+                </xpath>
+            </field>
+        </record>
+
+          <!--Making Pricelist visible, behind Payment Term-->
+        <record id="view_order_form_fm_pricelist_visible" model="ir.ui.view">
+            <field name="name">view.order.form.tree.adjust.supplier.fm</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                    <xpath expr="//field[@name='payment_term']" position="after">
+                        <field name="pricelist_id"/>
+                    </xpath>
+            </field>
+        </record>
+
+
         <record id="view_order_form_inherit" model="ir.ui.view">
             <field name="name">sale.order.form.sale.stock</field>
             <field name="model">sale.order</field>
