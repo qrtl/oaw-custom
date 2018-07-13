@@ -38,7 +38,7 @@
         </record>
 
         <!--IMportant rule for supplier fm to see all the products of all his quants.-->
-        <record model="ir.rule" id="supplier_stock_supplier_rule">
+        <record model="ir.rule" id="stock_quant_supplier_rule">
             <field name="name">quants: stock supplier: Access on his products and quants</field>
             <field name="model_id" ref="stock.model_stock_quant"/>
             <field name="domain_force">[('product_id.categ_id','in',user.product_category_ids.ids),'|',('usage','=','internal'),('owner_id','=',user.partner_id.id)]
