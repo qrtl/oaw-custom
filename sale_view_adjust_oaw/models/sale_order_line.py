@@ -21,4 +21,5 @@ class SaleOrderLine(models.Model):
     )
     line_sequence = fields.Integer(
         string="Sequence",
+        readonly=True,
     )
