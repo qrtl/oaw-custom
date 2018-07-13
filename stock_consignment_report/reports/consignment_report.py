@@ -417,7 +417,7 @@ WHERE
         for quant in quants:
             if quant.reservation_id:
                 quant.write({
-                    'remark': quant.reservation_id.name_get()[0][1]})
+                    'remark': quant.reservation_id.sudo().name_get()[0][1]})
             elif quant.sale_id:
                 quant.write({'remark': quant.sale_id.sudo().name})
 
