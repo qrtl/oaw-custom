@@ -66,6 +66,7 @@
                     <table class="table table-condensed">
                         <thead>
                             <tr>
+                                <th>No.</th>
                                 <th>Reference</th>
                                 <!--New Fields For Supplier_FM-->
                                 <th>Movement</th>
@@ -81,6 +82,9 @@
                         </thead>
                         <tbody class="sale_tbody">
                             <tr t-foreach="o.order_line" t-as="l">
+                                  <td>
+                                    <span t-field="l.line_sequence"/>
+                                </td>
                                 <td>
                                     <span t-field="l.product_id.name"/>
                                 </td>
