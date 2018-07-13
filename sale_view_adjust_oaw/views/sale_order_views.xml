@@ -2,7 +2,6 @@
 <openerp>
     <data>
 
-
         <record id="view_order_form_tree_adjust" model="ir.ui.view">
             <field name="name">view.order.form.tree.adjust</field>
             <field name="model">sale.order</field>
@@ -11,6 +10,7 @@
             <field name="arch" type="xml">
                 <xpath expr="/form/sheet/notebook/page[@string='Order Lines']/field[@name='order_line']/tree[@string='Sales Order Lines']/field[@name='product_id']"
                        position="before">
+                    <field name="line_sequence"/>
                     <field name="image_small" widget="image" height="64px"/>
                 </xpath>
                 <xpath expr="/form/sheet/notebook/page[@string='Order Lines']/field[@name='order_line']/tree[@string='Sales Order Lines']/field[@name='lot_id']"
