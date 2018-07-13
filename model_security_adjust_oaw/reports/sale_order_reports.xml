@@ -9,6 +9,9 @@
                     <div class="row">
                         <br/>
                         <br/>
+                            <br/>
+                            <br/>
+                            <br/>
                         <div class="col-xs-4">
                             <strong t-if="o.partner_shipping_id == o.partner_invoice_id">
                                 Invoice:
@@ -37,6 +40,7 @@
                              class="col-xs-4">
                         </div>
 
+
                         <div class="col-xs-4" style="text-align:right">
                             <h3>
                                 <span>INVOICE</span>
@@ -50,8 +54,8 @@
                             <span t-field="o.date_order"
                                   t-field-options='{"format": "yyyy-MM-dd"}'/>
                             <br/>
-                            <strong>Code:</strong>
-                            <span t-field="o.order_ref_report"/>
+                            <strong>Invoice Number:</strong>
+                            <span t-field="o.order_ref_fm_report"/>
                             <br/>
                         </div>
                         <div class="col-xs-5 col-xs-offset-1">
