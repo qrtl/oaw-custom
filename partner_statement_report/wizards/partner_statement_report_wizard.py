@@ -52,7 +52,7 @@ class PartnerStatementReportWizard(models.TransientModel):
                          ['amount_currency', 'partner_ids'],
                          context=context)[0]
         if not self.pool.get('res.users').has_group(
-                cr, uid, 'account.group_account_invoice'):
+                cr, uid, 'account.group_account_user'):
             partner_id = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid,
                                                    context=context).partner_id.id
             vals['partner_ids'] = [partner_id]
