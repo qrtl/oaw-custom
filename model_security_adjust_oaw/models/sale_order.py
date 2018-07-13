@@ -10,6 +10,11 @@ class SaleOrder(models.Model):
     _inherit = 'sale.order'
     _description = 'Extends sale order: Print Button Supplier FM'
 
+    order_ref_fm_report = fields.Char(
+        string="Order Reference",
+        readonly=True
+    )
+
     def print_supplier_fm(self, cr, uid, ids, context=None):
         '''
         This function prints the the quotation  and mark it as sent, so that we can see more easily the next step of the workflow
@@ -28,6 +33,19 @@ class SaleOrder(models.Model):
                                 self.env.user.partner_id:
                     raise UserError(_('You cannot modify the "Checked" and "Open Issue" field for the order(s)'))
         return super(SaleOrder, self).write(vals)
+
+    @api.model
+    def create(self, vals):
+        res = super(SaleOrder, self).create(vals)
+        # For quotation adjust: set new order_ref field
+        if 'name' in vals and 'partner_id' in vals:
+              name = vals['name']
+              #Get the reference number number
+              fragments_order_ref = vals['name'].split("-")
+              sub_order_ref = fragments_order_ref[-1]
+              res.order_ref_fm_report = sub_order_ref
+        return res
+
 
 
 from openerp.osv import osv, fields
