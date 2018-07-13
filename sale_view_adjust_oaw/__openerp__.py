@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
-# Copyright 2017 Quartile Limted
+# Copyright 2017-2018 Quartile Limted
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 {
     'name': 'Sales View Adjust OAW',
     'summary': '',
-    'version': '8.0.1.0.1',
+    'version': '8.0.1.1.0',
     'category': 'Sales',
     'author': 'Quartile Limited',
-    'website': 'https://www.odoo-asia.com',
+    'website': 'https://www.quartile.co',
     'description': """
     """,
     "license": "AGPL-3",
@@ -22,6 +22,7 @@
         'sale_margin'
     ],
     'data': [
+        'data/ir_actions.xml',
         'views/sale_order_views.xml',
     ],
 }
