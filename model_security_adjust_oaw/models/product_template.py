@@ -25,13 +25,13 @@ class ProductTemplate(models.Model):
         for pt in self:
             description = pt.name
             if "TT" in description:
-                pt.material = "Titan"
+                pt.material = "TT"
             elif "5N" in description:
-                pt.material = "Rose Gold"
+                pt.material = "5N"
             elif "CARBON" in description:
                 pt.material = "CARBON"
             elif "OG" in description:
-                pt.material = "White Gold"
+                pt.material = "OG"
             else:
                 pt.material = "Steel"
             if "QZ" in description:
