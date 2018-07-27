@@ -14,3 +14,7 @@ class StockMove(models.Model):
         related='product_id.product_tmpl_id.image_small',
         readonly=True,
     )
+    line_sequence = fields.Integer(
+        string="Sequence",
+        readonly=True,
+    )
