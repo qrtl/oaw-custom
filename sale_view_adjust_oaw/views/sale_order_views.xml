@@ -2,6 +2,24 @@
 <openerp>
     <data>
 
+        <template id="assets_backend" name="sale_view_adjust_oaw assets"
+                  inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <link rel="stylesheet" href="/sale_view_adjust_oaw/static/src/css/base.css"/>
+            </xpath>
+        </template>
+
+        <record id="view_order_form" model="ir.ui.view">
+            <field name="name">view.order.form.adjust</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet" position="attributes">
+                    <attribute name="class">extend_width</attribute>
+                </xpath>
+            </field>
+        </record>
+
         <record id="view_order_form_tree_adjust" model="ir.ui.view">
             <field name="name">view.order.form.tree.adjust</field>
             <field name="model">sale.order</field>
