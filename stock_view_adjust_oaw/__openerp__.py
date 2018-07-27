@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
-# Copyright 2015-2017 Quartile Limted
+# Copyright 2015-2018 Quartile Limted
 # Copyright 2017 eHanse
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 {
     'name': 'Stock View Adjust OAW',
     'summary': '',
-    'version': '8.0.1.2.0',
+    'version': '8.0.2.0.0',
     'category': 'Stock',
     'author': 'Quartile Limited',
-    'website': 'https://www.odoo-asia.com',
+    'website': 'https://www.quartile.co',
     'description': """
     """,
     "license": "AGPL-3",
@@ -21,6 +21,7 @@
         'stock_picking_menu',
     ],
     'data': [
+        'data/ir_actions.xml',
         'views/stock_move_views.xml',
         'views/stock_picking_views.xml',
         'views/stock_quant_views.xml',
