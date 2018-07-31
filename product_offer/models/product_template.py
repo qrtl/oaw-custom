@@ -22,6 +22,7 @@ class ProductTemplate(models.Model):
         readonly=True,
         help="Quantity on hand plus incoming quantity from stock moves that"
              "are 'Available' ('assigned') state.",
+        copy=False,
     )
     local_stock_not_reserved = fields.Integer(
         string="Local Stock",
@@ -32,10 +33,12 @@ class ProductTemplate(models.Model):
     qty_reserved = fields.Integer(
         string="Quantity Reserved",
         readonly=True,
+        copy=False,
     )
     qty_overseas = fields.Integer(
         string="Quantity Overseas",
         readonly=True,
+        copy=False,
     )
     last_in_date = fields.Datetime(
         string="Last Incoming Date",
@@ -113,7 +116,6 @@ class ProductTemplate(models.Model):
         digits=dp.get_precision('Product Price')
     )
 
-
     @api.multi
     def _get_net_price_cny(self):
         cny_rec = self.env['res.currency'].search([('name','=','CNY')])[0]
@@ -122,9 +124,6 @@ class ProductTemplate(models.Model):
                 pt.net_price_cny = pt.net_price * cny_rec.rate_silent
                 pt.sale_hkd_ab_cn = pt.sale_hkd_ab * cny_rec.rate_silent
                 pt.sale_hkd_ac_cn = pt.sale_hkd_ac * cny_rec.rate_silent
-
-
-
 
     @api.multi
     @api.depends('list_price', 'net_price')
