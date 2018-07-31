@@ -65,6 +65,7 @@ class ProductTemplate(models.Model):
             [('product_id', 'in', prod_ids)]
         )
         if records:
+            records._compute_price_base()
             return min(r.price_unit_base for r in records)
         return False
 
@@ -94,9 +95,10 @@ class ProductTemplate(models.Model):
 
     def _get_overseas_location_name(self, prod_ids):
         ss_obj = self.env['supplier.stock']
-        ss_recs = ss_obj.search(
-            [('product_id', 'in', prod_ids)]
-        )
+        ss_recs = ss_obj.sudo().search([
+            ('product_id', 'in', prod_ids),
+            ('quantity', '>', 0)
+        ])
         lowest_cost = 0.0
         lowest_cost_ss_rec = False
         for ss_rec in ss_recs:
