@@ -31,7 +31,6 @@ class ProductTemplate(models.Model):
         compute='_get_stock_cost',
         digits=dp.get_precision('Product Price'),
     )
-
     stock_location = fields.Char(
         string="Stock Location",
         compute='_get_stock_location',
@@ -41,7 +40,6 @@ class ProductTemplate(models.Model):
         string='Stock Lead Time',
         compute='_get_stock_location',
     )
-
     partner_note2 = fields.Text(
         string = 'Partner Note',
         compute='_get_stock_location',
@@ -62,10 +60,10 @@ class ProductTemplate(models.Model):
     def _get_supp_stock_cost(self, prod_ids):
         st_obj = self.env['supplier.stock']
         records = st_obj.search(
-            [('product_id', 'in', prod_ids)]
+            [('product_id', 'in', prod_ids),
+             ('quantity', '>', 0)]
         )
         if records:
-            records._compute_price_base()
             return min(r.price_unit_base for r in records)
         return False
 
