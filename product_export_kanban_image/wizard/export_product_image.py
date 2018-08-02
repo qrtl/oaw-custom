@@ -37,8 +37,12 @@ class ExportProductImage(models.TransientModel):
             action_id = context.get('params', False).get('action', False)
             action = self.pool('ir.actions.act_window').browse(
                 cr, uid, action_id, context=context)
-            if action.view_id:
-                request.session['kanban_view_id'] = action.view_id.id
+            for view in action.view_ids:
+                if view.view_mode == 'kanban':
+                    request.session['kanban_view_id'] = view.view_id.id
+            else:
+                if action.view_id:
+                    request.session['kanban_view_id'] = action.view_id.id
         return super(ExportProductImage, self).fields_view_get(
             cr, uid, view_id, view_type, context=context, toolbar=toolbar,
             submenu=submenu)
@@ -54,7 +58,7 @@ class ExportProductImage(models.TransientModel):
             if view_id.model == 'supplier.stock':
                 product_obj = self.env['supplier.stock']
                 image_field = 'image_medium'
-            fields = product_obj.fields_view_get(view_id.id, 'form')
+            fields = product_obj.sudo().fields_view_get(view_id.id, 'form')
             kanban_fields_list = []
 
             # Retrieve the fields in the Kanban view, skip fields that are
@@ -75,7 +79,8 @@ class ExportProductImage(models.TransientModel):
 
             product_ids = product_obj.browse(self._context.get("active_ids"))
 
-            if all(not product[image_field] for product in product_ids):
+            if all(not product[image_field] for product in
+                   product_ids):
                 raise RedirectWarning(_('No products have image to export'))
             for product in product_ids:
                 if not product[image_field]:
@@ -96,8 +101,8 @@ class ExportProductImage(models.TransientModel):
                     html_str += """<td>%s</td><td nowrap>""" % (product_image)
                     if view_id.model == 'supplier.stock':
                         html_str += "[%s] %s<br>" % (
-                            str(product_ids[cnt].product_id.default_code),
-                            str(product_ids[cnt].product_id.name)
+                            str(product_ids[cnt].product_id.sudo().default_code),
+                            str(product_ids[cnt].product_id.sudo().name)
                         )
                     else:
                         html_str += "[%s] %s<br>" % (
