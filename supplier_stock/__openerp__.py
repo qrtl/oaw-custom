@@ -5,7 +5,7 @@
 {
     'name': 'Supplier Stock',
     'category': 'Stock',
-    'version': '8.0.1.5.0',
+    'version': '8.0.2.0.0',
     'author': 'Quartile Limited',
     'website': 'https://www.quartile.co',
     'depends': [
@@ -17,6 +17,7 @@
     """,
     'data': [
         'security/ir.model.access.csv',
+        'data/ir_cron.xml',
         'views/supplier_location_views.xml',
         'views/supplier_stock_views.xml',
     ],
