@@ -11,7 +11,8 @@ class SupplierStock(models.Model):
     @api.multi
     def write(self, vals):
         res = super(SupplierStock, self).write(vals)
-        if 'partner_loc_id' in vals or 'product_id' in vals:
+        if 'partner_loc_id' in vals or 'product_id' in vals or 'quantity' in \
+                vals:
             for ss in self:
                 ss.product_id.product_tmpl_id.sudo()._get_stock_location()
         return res
@@ -19,7 +20,8 @@ class SupplierStock(models.Model):
     @api.model
     def create(self, vals):
         res = super(SupplierStock, self).create(vals)
-        if 'partner_loc_id' in vals or 'product_id' in vals:
+        if 'partner_loc_id' in vals or 'product_id' in vals or 'quantity' in \
+                vals:
             res.product_id.product_tmpl_id.sudo()._get_stock_location()
         return res
 
