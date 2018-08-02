@@ -154,3 +154,9 @@ class SupplierStock(models.Model):
             else:
                 rec.discount_in_curr = (1-(rec.price_unit/rec.retail_in_currency)) * 100
         return
+
+    @api.model
+    def update_price_unit_base(self):
+        supplier_stock = self.search([])
+        supplier_stock._compute_price_base()
+        return True

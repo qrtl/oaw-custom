@@ -4,7 +4,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 {
     'name': 'Product Offer',
-    'version': '8.0.1.6.0',
+    'version': '8.0.2.0.0',
     'author': 'Quartile Limited, eHanse',
     'website': 'https://www.quartile.co',
     'category': 'Product',
@@ -18,6 +18,7 @@
     'description': """
     """,
     'data': [
+        'data/ir_actions.xml',
         'views/product_template_views.xml',
     ],
     'post_init_hook': '_update_prod_tmpl_fields',
