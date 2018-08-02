@@ -37,8 +37,12 @@ class ExportProductImage(models.TransientModel):
             action_id = context.get('params', False).get('action', False)
             action = self.pool('ir.actions.act_window').browse(
                 cr, uid, action_id, context=context)
-            if action.view_id:
-                request.session['kanban_view_id'] = action.view_id.id
+            for view in action.view_ids:
+                if view.view_mode == 'kanban':
+                    request.session['kanban_view_id'] = view.view_id.id
+            else:
+                if action.view_id:
+                    request.session['kanban_view_id'] = action.view_id.id
         return super(ExportProductImage, self).fields_view_get(
             cr, uid, view_id, view_type, context=context, toolbar=toolbar,
             submenu=submenu)
@@ -47,10 +51,14 @@ class ExportProductImage(models.TransientModel):
     def default_get(self, fields_list):
         if request and request.session and request.session.get(
                 'kanban_view_id', False):
-            product_obj = self.env['product.template']
             view_id = self.env['ir.ui.view'].browse(request.session.get(
                 'kanban_view_id', False))
-            fields = product_obj.fields_view_get(view_id.id, 'form')
+            product_obj = self.env['product.template']
+            image_field = 'image'
+            if view_id.model == 'supplier.stock':
+                product_obj = self.env['supplier.stock']
+                image_field = 'image_medium'
+            fields = product_obj.sudo().fields_view_get(view_id.id, 'form')
             kanban_fields_list = []
 
             # Retrieve the fields in the Kanban view, skip fields that are
@@ -59,17 +67,23 @@ class ExportProductImage(models.TransientModel):
                 if node.xpath(".//field") and not node.xpath(".//field")[
                     0].get("no_export", False):
                     field_label = node.text or node.xpath("i")[0].text
+                    field_name = node.xpath(".//field")[0].get("name")
+                    if ':' not in field_label:
+                        field_label = [field_label, node.xpath(".//field")[
+                            0].get("name")]
+                        field_name = node.xpath(".//field")[1].get("name")
                     kanban_fields_list.append({
-                        "field_name": node.xpath(".//field")[0].get("name"),
+                        "field_name": field_name,
                         "field_label": field_label
                     })
 
             product_ids = product_obj.browse(self._context.get("active_ids"))
 
-            if all(not product.image for product in product_ids):
+            if all(not product[image_field] for product in
+                   product_ids):
                 raise RedirectWarning(_('No products have image to export'))
             for product in product_ids:
-                if not product.image:
+                if not product[image_field]:
                     product_ids -= product
 
             rows = len(product_ids) / 3
@@ -83,20 +97,33 @@ class ExportProductImage(models.TransientModel):
                     if len(product_ids.ids) == cnt:
                         break
                     product_image = '<img src="data:image/*;base64,%s" width="150"/>' % (
-                        str(product_ids[cnt].image))
+                        str(product_ids[cnt][image_field]))
                     html_str += """<td>%s</td><td nowrap>""" % (product_image)
-                    html_str += "[%s] %s<br>" % (
-                        str(product_ids[cnt].default_code),
-                        str(product_ids[cnt]["name"])
-                    )
+                    if view_id.model == 'supplier.stock':
+                        html_str += "[%s] %s<br>" % (
+                            str(product_ids[cnt].product_id.sudo().default_code),
+                            str(product_ids[cnt].product_id.sudo().name)
+                        )
+                    else:
+                        html_str += "[%s] %s<br>" % (
+                            str(product_ids[cnt].default_code),
+                            str(product_ids[cnt].name)
+                        )
                     for field in kanban_fields_list:
-                        field_label = field['field_label'].encode('utf-8')
+                        if isinstance(field['field_label'], list):
+                            field_label = '%s %s:' % (
+                                field['field_label'][0].encode('utf-8'),
+                                product_ids[cnt][field['field_label'][
+                                    1]].name.encode('utf-8'),
+                            )
+                        else:
+                            field_label = field['field_label'].encode('utf-8')
                         field_value = product_ids[cnt][field['field_name']]
                         if type(field_value) == bool:
-                            html_str += field_label + ": %s<br>" % str(
+                            html_str += field_label + " %s<br>" % str(
                                 'Yes' if field_value else 'NO')
                         else:
-                            html_str += field_label + ": %s<br>" % str(
+                            html_str += field_label + " %s<br>" % str(
                                 field_value)
 
                     html_str += "</td>"
