@@ -15,13 +15,13 @@ class StockMove(models.Model):
     )
 
     @api.multi
-    @api.depends('quant_ids', 'reserved_quant_ids')
+    @api.depends('quant_ids', 'reserved_quant_ids', 'quant_owner_id.user_ids')
     def get_related_user(self):
         for move in self:
             quant_owner_id = False
             if move.quant_ids:
-                quant_owner_id = move.quant_ids[0].owner_id
+                quant_owner_id = move.quant_ids[0].original_owner_id
             elif move.reserved_quant_ids:
-                quant_owner_id = move.reserved_quant_ids[0].owner_id
+                quant_owner_id = move.reserved_quant_ids[0].original_owner_id
             if quant_owner_id and quant_owner_id.user_ids:
                 move.related_user = quant_owner_id.user_ids[0].id
