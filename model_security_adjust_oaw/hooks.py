@@ -42,16 +42,17 @@ def _update_partner_offer_fields(cr, registry):
     # Initialize of related_partner in stock.move
     cr.execute('''
         UPDATE
-            stock_move
+            stock_move sm
         SET
-            related_user = sub_query.id
+            related_user = subquery.user_id
         FROM(
-        SELECT
-            id,
-            partner_id
-        FROM
-            res_users
-        ) AS sub_query
+            SELECT
+                sq.id AS quant_id,
+                ru.id AS user_id
+            FROM stock_quant sq
+            JOIN res_partner rp ON rp.id = sq.original_owner_id
+            JOIN res_users ru ON rp.id = ru.partner_id
+        ) AS subquery
         WHERE
-            quant_owner_id = sub_query.partner_id
+            subquery.quant_id = sm.quant_id
     ''')
