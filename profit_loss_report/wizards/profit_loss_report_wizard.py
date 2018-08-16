@@ -496,6 +496,20 @@ class ProfitLossReportWizard(models.TransientModel):
             rec.purchase_base_price = \
                 rec.purchase_currency_price * rec.exchange_rate
 
+            # Handle the display of multi-payments
+            rec.supplier_payment_dates = ', '.join(
+                rec.supplier_payment_ids.mapped('date'))
+            rec.supplier_payment_ref = ', '.join(
+                rec.supplier_payment_ids.mapped('ref'))
+            if rec.invoice_id.state == 'paid':
+                rec.customer_payment_reference, \
+                rec.customer_payment_currency_rate, rec.sale_base_price = \
+                    self._get_payment_information(rec.customer_payment_ids,
+                                                  rec.net_price,
+                                                  rec.invoice_id)
+                if rec.sale_base_price:
+                    base_net_price = rec.sale_base_price
+
             # Calculate the base_profit
             if rec.invoice_id and rec.invoice_id.state == 'paid' and \
                     rec.purchase_invoice_id and \
@@ -519,16 +533,6 @@ class ProfitLossReportWizard(models.TransientModel):
                         rec.base_profit / rec.purchase_base_price * 100
                 else:
                     rec.base_profit_percent = 999.99
-
-            # Handle the display of multi-payments
-            rec.supplier_payment_dates = ', '.join(
-                rec.supplier_payment_ids.mapped('date'))
-            rec.supplier_payment_ref = ', '.join(
-                rec.supplier_payment_ids.mapped('ref'))
-            if rec.invoice_id.state == 'paid':
-                rec.customer_payment_information, rec.base_amount = \
-                    self._get_payment_information(rec.customer_payment_ids,
-                                                  rec.net_price_currency_id)
 
             # FIXME below 'if' block may be deprecated as necessary
             # Identify the state of the transaction
@@ -570,41 +574,16 @@ class ProfitLossReportWizard(models.TransientModel):
         date_local = tz.localize(date, is_dst=None)
         return date_local.astimezone(pytz.utc).strftime("%Y-%m-%d %H:%M:%S")
 
-    def _get_payment_information(self, payment_ids, currency_id):
-        base_amount = 0
-        payment_information = ""
-        count = 1
-        for payment in payment_ids:
-            if not payment.journal_id.currency or \
-                            payment.journal_id.currency == \
-                            currency_id:
-                payment_exchange_rate = 1.0
-                payment_currency = currency_id
-                payment_amount = abs(payment.amount_currency) or payment.credit
-            else:
-                payment_currency = payment.journal_id.currency
-                base_currency_rate = self.env['res.currency.rate'].search([
-                    ('currency_id', '=', currency_id.id),
-                    ('name', '<=', payment.date),
-                ], order='name desc', limit=1).rate or 1.0
-                payment_currency_rate = self.env['res.currency.rate'].search([
-                    ('currency_id', '=', payment.journal_id.currency.id),
-                    ('name', '<=', payment.date),
-                ], order='name desc', limit=1).rate or 1.0
-                payment_exchange_rate = payment_currency_rate / \
-                                        base_currency_rate
-                payment_amount = payment.credit * payment_currency_rate
-            payment_information += "%d.%s\n%s\n%.2f %s\n%f\n\n" % (
-                count,
-                payment.ref,
-                payment.date,
-                payment_amount,
-                payment_currency.name,
-                payment_exchange_rate,
-            )
-            base_amount += payment.credit - payment.debit
-            count += 1
-        return payment_information, base_amount
+    def _get_payment_information(self, payment_ids, net_price, invoice_id):
+        payment_reference = ', '.join(payment_ids.mapped('ref'))
+        payment_currency_rate = False
+        sale_base_price = False
+        if len(payment_ids) == 1:
+            payment = payment_ids[0]
+            payment_reference = payment.ref
+            payment_currency_rate = invoice_id.paid_date_currency_rate
+            sale_base_price = net_price / payment_currency_rate
+        return payment_reference, payment_currency_rate, sale_base_price
 
     @api.multi
     def action_generate_profit_loss_records(self):

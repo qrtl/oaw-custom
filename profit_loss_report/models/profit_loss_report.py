@@ -68,6 +68,11 @@ class ProfitLossReport(models.TransientModel):
         string='Net Price Currency',
         readonly=True,
     )
+    sale_base_price = fields.Float(
+        string='Sale Base Price',
+        digits=dp.get_precision('Account'),
+        readonly=True,
+    )
     partner_id = fields.Many2one(
         comodel_name='res.partner',
         string='Customer',
@@ -231,8 +236,13 @@ class ProfitLossReport(models.TransientModel):
         related='product_id.product_tmpl_id.image_small',
         readonly=True,
     )
-    customer_payment_information = fields.Char(
-        string="Payment Information",
+    customer_payment_reference = fields.Char(
+        string="Payment Reference",
+        readonly=True,
+    )
+    customer_payment_currency_rate = fields.Float(
+        digits=(12, 6),
+        string="Payment FX Rate",
         readonly=True,
     )
     base_amount = fields.Float(
