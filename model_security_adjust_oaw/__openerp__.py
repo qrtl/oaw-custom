@@ -4,7 +4,7 @@
 {
     'name': 'Model Security Adjust OAW',
     'category': 'Security',
-    'version': '8.0.2.0.0',
+    'version': '8.0.2.1.0',
     'author': 'Quartile Limited',
     'website': 'https://www.quartile.co',
     'depends': [
@@ -15,6 +15,7 @@
         'product',
         'stock_view_adjust_oaw',
         'sale_line_quant_extended',
+        'profit_loss_report',
     ],
     'summary':"""""",
     'description': """
