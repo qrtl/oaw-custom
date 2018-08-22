@@ -15,9 +15,9 @@ class ProfitLossReportWizard(models.TransientModel):
             self.env.cr.execute("DELETE FROM profit_loss_report")
             self._inject_out_invoice_data(self.from_date, self.to_date)
             self.env.cr.execute("DELETE FROM profit_loss_report WHERE "
-                                "user_id IS NULL or user_id NOT IN ("
-                                "   SELECT id FROM res_users WHERE partner_id "
-                                "   = %d)" %
+                                "partner_id IS NULL or partner_id NOT IN ("
+                                "   SELECT id FROM res_partner WHERE "
+                                "   related_partner = %d)" %
                                 self.env.user.partner_id.id)
             self._update_records()
             self.env.cr.execute("UPDATE profit_loss_report SET "
