@@ -10,7 +10,12 @@
                    ref="stock_view_adjust_oaw.view_move_tree_extended"/>
             <field name="search_view_id"
                    ref="stock_view_adjust_oaw.view_move_search_z1"/>
-            <field name="domain">[('related_user','=',uid)]</field>
+            <field name="domain">
+                ['&amp;', ('quant_owner_related_user_id', '=', uid),
+                '|', ('so_id', '=', False),
+                '&amp;', ('so_id', '!=', False),
+                ('pick_partner_related_user_id', '=', uid)]
+            </field>
         </record>
 
         <menuitem name="Warehouse"

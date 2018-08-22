@@ -8,15 +8,20 @@ from openerp import models, fields, api
 class StockMove(models.Model):
     _inherit = 'stock.move'
 
-    related_user = fields.Many2one(
-        comomodel="res.partner",
-        compute="get_related_user",
+    quant_owner_related_user_id = fields.Many2one(
+        comodel_name="res.users",
+        compute="get_quant_owner_related_user_id",
+        store=True,
+    )
+    pick_partner_related_user_id = fields.Many2one(
+        comodel_name="res.users",
+        compute="get_pick_partner_related_user_id",
         store=True,
     )
 
     @api.multi
     @api.depends('quant_ids', 'reserved_quant_ids', 'quant_owner_id.user_ids')
-    def get_related_user(self):
+    def get_quant_owner_related_user_id(self):
         for move in self:
             quant_owner_id = False
             if move.quant_ids:
@@ -24,4 +29,13 @@ class StockMove(models.Model):
             elif move.reserved_quant_ids:
                 quant_owner_id = move.reserved_quant_ids[0].original_owner_id
             if quant_owner_id and quant_owner_id.user_ids:
-                move.related_user = quant_owner_id.user_ids[0].id
+                move.quant_owner_related_user_id = quant_owner_id.user_ids[0].id
+
+    @api.multi
+    @api.depends('pick_partner_id', 'pick_partner_id.related_partner')
+    def get_pick_partner_related_user_id(self):
+        for move in self:
+            if move.pick_partner_id and move.pick_partner_id.related_partner\
+                    and move.pick_partner_id.related_partner.user_ids:
+                move.pick_partner_related_user_id = \
+                    move.pick_partner_id.related_partner.user_ids[0].id
