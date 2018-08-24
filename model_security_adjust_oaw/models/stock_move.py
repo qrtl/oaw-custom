@@ -13,10 +13,9 @@ class StockMove(models.Model):
         compute="get_quant_owner_related_user_id",
         store=True,
     )
-    pick_partner_related_user_id = fields.Many2one(
-        comodel_name="res.users",
-        compute="get_pick_partner_related_user_id",
-        store=True,
+    supplier_pick_partner = fields.Char(
+        string="Pick Partner",
+        compute="get_supplier_pick_partner",
     )
 
     @api.multi
@@ -28,14 +27,17 @@ class StockMove(models.Model):
                 quant_owner_id = move.quant_ids[0].original_owner_id
             elif move.reserved_quant_ids:
                 quant_owner_id = move.reserved_quant_ids[0].original_owner_id
-            if quant_owner_id and quant_owner_id.user_ids:
-                move.quant_owner_related_user_id = quant_owner_id.user_ids[0].id
+            if quant_owner_id and quant_owner_id.sudo().user_ids:
+                move.quant_owner_related_user_id = quant_owner_id.sudo().user_ids[0].id
 
     @api.multi
-    @api.depends('pick_partner_id', 'pick_partner_id.related_partner')
-    def get_pick_partner_related_user_id(self):
+    def get_supplier_pick_partner(self):
         for move in self:
-            if move.pick_partner_id and move.pick_partner_id.related_partner\
-                    and move.pick_partner_id.related_partner.user_ids:
-                move.pick_partner_related_user_id = \
-                    move.pick_partner_id.related_partner.user_ids[0].id
+            if move.pick_partner_id.sudo().related_partner and \
+                    move.pick_partner_id.sudo().related_partner == \
+                    self.env.user.partner_id:
+                move.supplier_pick_partner = move.pick_partner_id.sudo().name
+            else:
+                move.supplier_pick_partner = \
+                    self.env['ir.config_parameter'].get_param(
+                'default_supplier_pick_partner')
