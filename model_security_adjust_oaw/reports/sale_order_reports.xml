@@ -57,6 +57,9 @@
                             <strong>Invoice Number:</strong>
                             <span t-field="o.order_ref_fm_report"/>
                             <br/>
+                            <strong>Reference/Description:</strong>
+                            <span t-field="o.client_order_ref"/>
+                            <br/>
                         </div>
                         <div class="col-xs-5 col-xs-offset-1">
                         </div>
@@ -73,10 +76,7 @@
                                 <th>Material</th>
                                 <th>Case No.</th>
                                 <th class="text-right">Quantity</th>
-                                <th class="text-right">Retail</th>
-                                <th groups="sale.group_discount_per_so_line">
-                                    Discount
-                                </th>
+                                <th class="text-right">Price</th>
                                 <th class="text-right">Subtotal</th>
                             </tr>
                         </thead>

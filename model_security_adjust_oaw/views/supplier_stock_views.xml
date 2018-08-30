@@ -155,6 +155,13 @@
                             string="Available Products By Brand"
                             domain="[('quantity','&gt;', 0)]"
                             context="{'group_by':'prod_cat_selection'}"/>
+                     <group expand="0" name='update_supplier_stock' string="Update Partner Stock">
+                        <filter name="qty_up" string="Qty Up" domain="[('product_id.product_tmpl_id.qty_up','=',True)]"/>
+                        <filter name="qty_down" string="Qty Down" domain="[('product_id.product_tmpl_id.qty_down','=',True)]"/>
+                        <filter name="cost_price_up" string="Cost Price Up" domain="[('product_id.product_tmpl_id.costprice_up','=',True)]"/>
+                        <filter name="cost_price_down" string="Cost Price Down" domain="[('product_id.product_tmpl_id.costprice_down','=',True)]"/>
+                        <filter name="note_updated" string="Note Updated" domain="[('product_id.product_tmpl_id.note_updated','=',True)]"/>
+                    </group>
                 </search>
             </field>
         </record>
