@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="product_template_form_view" model="ir.ui.view">
+            <field name="name">product.template.common.form</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@class='oe_chatter']"
+                       position="attributes">
+                    <attribute name="groups">stock.group_stock_manager</attribute>
+                </xpath>
+                <xpath expr="//div[@class='oe_chatter']"
+                       position="after">
+                    <div class="oe_chatter supplier_access"
+                         groups="model_security_adjust_oaw.group_supplier">
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+       
+    </data>
+</openerp>
