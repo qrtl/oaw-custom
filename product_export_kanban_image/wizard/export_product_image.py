@@ -111,7 +111,7 @@ class ExportProductImage(models.TransientModel):
                         )
                     for field in kanban_fields_list:
                         if isinstance(field['field_label'], list):
-                            field_label = '%s %s:' % (
+                            field_label = '%s %s: ' % (
                                 field['field_label'][0].encode('utf-8'),
                                 product_ids[cnt][field['field_label'][
                                     1]].name.encode('utf-8'),
@@ -119,16 +119,16 @@ class ExportProductImage(models.TransientModel):
                         else:
                             field_label = field['field_label'].encode('utf-8')
                         field_value = product_ids[cnt][field['field_name']]
-                        if field['field_name'] == 'discount':
+                        if 'discount' in field['field_name']:
                             if field_value:
                                 html_str += field_label + "{:,}".format(
                                     field_value, 2) + "%<br>"
                             else:
                                 html_str += field_label + "N/A<br>"
-                        elif 'price' in field['field_name']:
-                            precision_float = 0
-                            html_str += field_label + "{:,}".format(
-                                field_value, precision_float) + "<br>"
+                        elif type(field_value) == float or type(field_value)\
+                                == int:
+                            html_str += field_label + "{:,}".format(int(
+                                field_value)) + "<br>"
                         elif type(field_value) == bool:
                             html_str += field_label + " %s<br>" % str(
                                 'Yes' if field_value else 'NO')
