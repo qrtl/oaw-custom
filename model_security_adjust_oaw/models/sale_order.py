@@ -32,7 +32,17 @@ class SaleOrder(models.Model):
                                 order.partner_id.related_partner != \
                                 self.env.user.partner_id:
                     raise UserError(_('You cannot modify the "Checked" and "Open Issue" field for the order(s)'))
-        return super(SaleOrder, self).write(vals)
+        res =  super(SaleOrder, self).write(vals)
+        for so in self:
+            if self.env.user.has_group('model_security_adjust_oaw.group_supplier'):
+                server_actions = self.env['base.action.rule'].sudo().search([
+                    ('model', '=', 'sale.order'),
+                    ('kind', 'in', ('on_write', 'on_create_or_write')),
+                    ('active', '=', True)
+                ], order='sequence')
+                for action in server_actions:
+                    action.sudo()._process(action, [so.id])
+        return res
 
     @api.model
     def create(self, vals):
@@ -44,6 +54,14 @@ class SaleOrder(models.Model):
               fragments_order_ref = vals['name'].split("-")
               sub_order_ref = fragments_order_ref[-1]
               res.order_ref_fm_report = sub_order_ref
+        if self.env.user.has_group('model_security_adjust_oaw.group_supplier'):
+            server_actions = self.env['base.action.rule'].sudo().search([
+                ('model', '=', 'sale.order'),
+                ('kind', 'in', ('on_create', 'on_create_or_write')),
+                ('active', '=', True)
+            ], order='sequence')
+            for action in server_actions:
+                action.sudo()._process(action, [res.id])
         return res
 
 

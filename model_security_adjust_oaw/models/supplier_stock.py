@@ -8,6 +8,9 @@ from openerp import models, fields, api
 class SupplierStock(models.Model):
     _inherit = "supplier.stock"
 
+    partner_id = fields.Many2one(
+        default=lambda self: self.env.user.partner_id
+    )
     internal_code = fields.Char(
         "Internal Code",
         related='product_id.product_tmpl_id.default_code',
@@ -104,7 +107,7 @@ class SupplierStock(models.Model):
                     ('active', '=', True)
                 ], order='sequence')
                 for action in server_actions:
-                    action.sudo()._process(action, [res.id])
+                    action.sudo()._process(action, [ps.id])
         return res
 
     @api.model
