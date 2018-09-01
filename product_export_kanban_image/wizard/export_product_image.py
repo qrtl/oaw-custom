@@ -119,7 +119,17 @@ class ExportProductImage(models.TransientModel):
                         else:
                             field_label = field['field_label'].encode('utf-8')
                         field_value = product_ids[cnt][field['field_name']]
-                        if type(field_value) == bool:
+                        if field['field_name'] == 'discount':
+                            if field_value:
+                                html_str += field_label + "{:,}".format(
+                                    field_value, 2) + "%<br>"
+                            else:
+                                html_str += field_label + "N/A<br>"
+                        elif 'price' in field['field_name']:
+                            precision_float = 0
+                            html_str += field_label + "{:,}".format(
+                                field_value, precision_float) + "<br>"
+                        elif type(field_value) == bool:
                             html_str += field_label + " %s<br>" % str(
                                 'Yes' if field_value else 'NO')
                         else:
