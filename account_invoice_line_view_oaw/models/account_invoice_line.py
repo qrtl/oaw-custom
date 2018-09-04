@@ -141,7 +141,6 @@ class InvoiceLine(models.Model):
     )
     reviewed = fields.Boolean(
         'Reviewed',
-        store=True,
     )
 
 
