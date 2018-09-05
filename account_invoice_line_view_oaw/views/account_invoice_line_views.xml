@@ -26,6 +26,7 @@
                     <field name="period_id" invisible='1'/>
                     <field name="date_due" invisible='1'/>
                     <field name="user_id"/>
+                    <field name="reviewed" string="Reviewed"/>
                     <field name="partner_id"/>
                     <field name="ref"/>
                     <field name="company_id" invisible='1'/>
