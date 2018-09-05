@@ -28,8 +28,7 @@
             <field name="model">supplier.stock</field>
             <field name="arch" type="xml">
                 <tree string="Partner Stock" editable="top">
-                    <field name="partner_id" domain="[('supplier','=',True)]"
-                           options="{'no_create_edit':True}"/>
+                    <field name="partner_id" readonly="True"/>
                     <field name="partner_loc_id"
                            options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
                     <field name="prod_cat_selection"
