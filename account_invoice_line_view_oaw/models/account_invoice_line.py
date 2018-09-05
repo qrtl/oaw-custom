@@ -139,6 +139,9 @@ class InvoiceLine(models.Model):
         related='product_id.product_tmpl_id.image_small',
         readonly=True,
     )
+    reviewed = fields.Boolean(
+        'Reviewed',
+    )
 
 
     def init(self, cr):
