@@ -6,6 +6,8 @@
             <field name="name">res.partner.form</field>
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="groups_id"
+                   eval="[(6,0,[ref('model_security_adjust_oaw.group_supplier')])]"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@class='oe_chatter']"
                        position="attributes">
@@ -13,8 +15,7 @@
                 </xpath>
                 <xpath expr="//div[@class='oe_chatter']"
                        position="after">
-                    <div class="oe_chatter supplier_access"
-                         groups="model_security_adjust_oaw.group_supplier">
+                    <div class="oe_chatter supplier_access">
                         <field name="message_ids" widget="mail_thread"/>
                     </div>
                 </xpath>
