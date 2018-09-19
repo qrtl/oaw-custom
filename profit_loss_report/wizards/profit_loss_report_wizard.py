@@ -7,6 +7,13 @@ from dateutil.relativedelta import relativedelta
 import pytz
 from openerp import api, models, fields
 
+report_filters = [
+    'product_id',
+    'lot_id',
+    'partner_id',
+    'supplier_id',
+    'supplier_invoice_number'
+]
 
 class ProfitLossReportWizard(models.TransientModel):
     _name = "profit.loss.report.wizard"
@@ -22,6 +29,27 @@ class ProfitLossReportWizard(models.TransientModel):
         required=True,
         string='To Date',
         default=fields.Date.context_today,
+    )
+    product_id = fields.Many2many(
+        'product.product',
+        string='Product',
+    )
+    lot_id = fields.Many2many(
+        'stock.production.lot',
+        string='Case No.',
+    )
+    partner_id = fields.Many2many(
+        'res.partner',
+        'profit_loss_report_partner_id_filter',
+        string='Customer',
+    )
+    supplier_id = fields.Many2many(
+        'res.partner',
+        'profit_loss_report_supplier_id_filter',
+        string='Supplier',
+    )
+    supplier_invoice_number = fields.Char(
+        string='Supplier Invoice Number'
     )
 
     def _inject_out_invoice_data(self, from_date, to_date):
@@ -459,7 +487,6 @@ class ProfitLossReportWizard(models.TransientModel):
                 else:
                     rec.exchange_rate = 1 / invoice_line.rate
             elif not rec.purchase_order_id and rec.stock_type == 'vci':
-                rec.supplier_id = rec.in_move_quant_owner_id
                 if rec.supplier_id:
                     rec.supplier_ref = rec.in_move_quant_owner_id.ref
                 if rec.in_move_id:
@@ -498,15 +525,16 @@ class ProfitLossReportWizard(models.TransientModel):
 
             # Handle the display of multi-payments
             rec.supplier_payment_dates = ', '.join(
-                rec.supplier_payment_ids.mapped('date'))
+                rec.sudo().supplier_payment_ids.mapped('date'))
             rec.supplier_payment_ref = ', '.join(
-                rec.supplier_payment_ids.mapped('ref'))
+                rec.sudo().supplier_payment_ids.mapped('ref'))
             if rec.invoice_id.state == 'paid':
                 rec.customer_payment_reference, \
                 rec.customer_payment_currency_rate, rec.sale_base_price = \
-                    self._get_payment_information(rec.customer_payment_ids,
-                                                  rec.net_price,
-                                                  rec.invoice_id)
+                    self._get_payment_information(
+                        rec.sudo().customer_payment_ids,
+                        rec.net_price,
+                        rec.invoice_id)
                 if rec.sale_base_price:
                     base_net_price = rec.sale_base_price
 
@@ -545,7 +573,7 @@ class ProfitLossReportWizard(models.TransientModel):
                     rec.invoice_id:
                 if rec.invoice_id.state == 'paid':
                     rec.sale_state = 'done'
-                elif rec.invoice_id.residual and rec.customer_payment_ids:
+                elif rec.invoice_id.residual and rec.sudo().customer_payment_ids:
                     rec.sale_state = 'balance'
                 else:
                     rec.sale_state = 'open'
@@ -585,6 +613,45 @@ class ProfitLossReportWizard(models.TransientModel):
             sale_base_price = net_price / payment_currency_rate
         return payment_reference, payment_currency_rate, sale_base_price
 
+    def _filter_records(self):
+        filters = []
+        for filter in report_filters:
+            if self[filter]:
+                if type(self[filter]) in (str, unicode):
+                    value = self[filter].strip()
+                    filters.append("(%s NOT ILIKE '%%%s%%' OR %s IS NULL)" % (
+                        filter,
+                        value,
+                        filter
+                    ))
+                else:
+                    value = ",".join([str(id) for id in self[filter].ids])
+                    filters.append("(%s NOT IN (%s) OR %s IS NULL)" % (
+                        filter,
+                        value,
+                        filter
+                    ))
+        if filters:
+            filter_sql = "DELETE FROM profit_loss_report WHERE %s" % (
+                " OR ".join(filters)
+            )
+            self.env.cr.execute(filter_sql)
+
+    @api.multi
+    def _update_supplier_info(self):
+        self.ensure_one()
+        ctx = dict(self._context)
+        ctx['company_id'] = self.env.user.company_id.id
+        recs = self.env['profit.loss.report'].search([
+            ('in_move_quant_owner_id', '!=', False),
+            ('purchase_invoice_line_id', '=', False),
+            ('purchase_order_id', '=', False)
+        ])
+        for rec in recs:
+            if rec.in_move_quant_owner_id != \
+                    self.env.user.company_id.partner_id:
+                rec.supplier_id = rec.in_move_quant_owner_id
+
     @api.multi
     def action_generate_profit_loss_records(self):
         self.ensure_one()
@@ -593,6 +660,23 @@ class ProfitLossReportWizard(models.TransientModel):
         from_date = self._get_utc_date(self.from_date)
         to_date = self._get_utc_date(self.to_date)
         self._inject_purchase_data(from_date, to_date)
+        self._update_supplier_info()
+        self._filter_records()
         self._update_records()
         res = self.env.ref('profit_loss_report.profit_loss_report_action')
         return res.read()[0]
+
+    @api.onchange('product_id')
+    def onchange_product_id(self):
+        ids = []
+        for product in self.product_id:
+            # Update case number domain filter
+            lot_ids = self.env['stock.production.lot'].search([
+                ('product_id', '=', product.id)
+            ])
+            ids += lot_ids.ids
+        return {
+            'domain': {'lot_id': [('id', 'in', ids)]}
+        } if ids else {
+            'domain': {'lot_id': []}
+        }

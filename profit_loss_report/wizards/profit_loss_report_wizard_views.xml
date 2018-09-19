@@ -7,9 +7,16 @@
         <field name="model">profit.loss.report.wizard</field>
         <field name="arch" type="xml">
             <form>
-                <group>
+                <group string="Date Range">
                     <field name="from_date"/>
                     <field name="to_date"/>
+                </group>
+                <group string="Report Filters">
+                    <field name="product_id" widget="many2many_tags"/>
+                    <field name="lot_id" widget="many2many_tags"/>
+                    <field name="partner_id" widget="many2many_tags"/>
+                    <field name="supplier_id" widget="many2many_tags" groups="base.group_sale_manager"/>
+                    <field name="supplier_invoice_number"/>
                 </group>
                 <footer>
                     <button name="action_generate_profit_loss_records"
