@@ -629,7 +629,7 @@ class ProfitLossReportWizard(models.TransientModel):
                 ))
         if filters:
             filter_sql = "DELETE FROM profit_loss_report WHERE %s" % (
-                " AND ".join(filters)
+                " OR ".join(filters)
             )
             self.env.cr.execute(filter_sql)
 
