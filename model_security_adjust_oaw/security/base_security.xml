@@ -62,6 +62,7 @@
             <field name="perm_unlink" eval="False"/>
             <field name="perm_write" eval="False"/>
         </record>
+
         <!--Narrow down quotation accessible to those created by the supplier_fm-->
         <record model="ir.rule" id="res_partner_supplier_fm_sale_rule">
             <field name="name">sale_order: stock supplier_fm: Access on own quotation; but no delete(no unlink)</field>
@@ -72,6 +73,18 @@
             <field name="perm_read" eval="True"/>
             <field name="perm_create" eval="True"/>
             <field name="perm_unlink" eval="False"/>
+            <field name="perm_write" eval="True"/>
+        </record>
+
+        <record model="ir.rule" id="stock_production_lot_supplier_rule">
+            <field name="name">stock_production_lot: supplier: Access on his products' case number</field>
+            <field name="model_id"
+                   ref="stock.model_stock_production_lot"/>
+            <field name="domain_force">[('product_id.categ_id','in',user.product_category_ids.ids)]</field>
+            <field name="groups" eval="[(4, ref('group_supplier'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
             <field name="perm_write" eval="True"/>
         </record>
 
