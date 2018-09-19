@@ -7,6 +7,13 @@ from dateutil.relativedelta import relativedelta
 import pytz
 from openerp import api, models, fields
 
+report_filters = [
+    'product_id',
+    'lot_id',
+    'partner_id',
+    'supplier_id',
+    'supplier_invoice_number'
+]
 
 class ProfitLossReportWizard(models.TransientModel):
     _name = "profit.loss.report.wizard"
@@ -22,6 +29,27 @@ class ProfitLossReportWizard(models.TransientModel):
         required=True,
         string='To Date',
         default=fields.Date.context_today,
+    )
+    product_id = fields.Many2many(
+        'product.product',
+        string='Product',
+    )
+    lot_id = fields.Many2many(
+        'stock.production.lot',
+        string='Case No.',
+    )
+    partner_id = fields.Many2many(
+        'res.partner',
+        'profit_loss_report_partner_id_filter',
+        string='Customer',
+    )
+    supplier_id = fields.Many2many(
+        'res.partner',
+        'profit_loss_report_supplier_id_filter',
+        string='Supplier',
+    )
+    supplier_invoice_number = fields.Char(
+        string='Supplier Invoice Number'
     )
 
     def _inject_out_invoice_data(self, from_date, to_date):
@@ -585,6 +613,26 @@ class ProfitLossReportWizard(models.TransientModel):
             sale_base_price = net_price / payment_currency_rate
         return payment_reference, payment_currency_rate, sale_base_price
 
+    def _filter_records(self):
+        filters = []
+        for filter in report_filters:
+            if self[filter]:
+                if type(self[filter]) in (str, unicode):
+                    value = "'" + "','".join([number.strip() for number in self[
+                            filter].split(',')]) + ','
+                else:
+                    value = ",".join([str(id) for id in self[filter].ids])
+                filters.append("(%s NOT IN (%s) OR %s IS NULL)" % (
+                    filter,
+                    value,
+                    filter
+                ))
+        if filters:
+            filter_sql = "DELETE FROM profit_loss_report WHERE %s" % (
+                " AND ".join(filters)
+            )
+            self.env.cr.execute(filter_sql)
+
     @api.multi
     def action_generate_profit_loss_records(self):
         self.ensure_one()
@@ -593,6 +641,7 @@ class ProfitLossReportWizard(models.TransientModel):
         from_date = self._get_utc_date(self.from_date)
         to_date = self._get_utc_date(self.to_date)
         self._inject_purchase_data(from_date, to_date)
+        self._filter_records()
         self._update_records()
         res = self.env.ref('profit_loss_report.profit_loss_report_action')
         return res.read()[0]
