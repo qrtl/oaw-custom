@@ -77,7 +77,7 @@
         </record>
 
         <record model="ir.rule" id="stock_production_lot_supplier_rule">
-            <field name="name">stock_production_lot: supplier_fm: Access on his products' case number</field>
+            <field name="name">stock_production_lot: supplier: Access on his products' case number</field>
             <field name="model_id"
                    ref="stock.model_stock_production_lot"/>
             <field name="domain_force">[('product_id.categ_id','in',user.product_category_ids.ids)]</field>
