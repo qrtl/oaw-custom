@@ -487,7 +487,6 @@ class ProfitLossReportWizard(models.TransientModel):
                 else:
                     rec.exchange_rate = 1 / invoice_line.rate
             elif not rec.purchase_order_id and rec.stock_type == 'vci':
-                rec.supplier_id = rec.in_move_quant_owner_id
                 if rec.supplier_id:
                     rec.supplier_ref = rec.in_move_quant_owner_id.ref
                 if rec.in_move_id:
@@ -619,7 +618,7 @@ class ProfitLossReportWizard(models.TransientModel):
             if self[filter]:
                 if type(self[filter]) in (str, unicode):
                     value = self[filter].strip()
-                    filters.append("(%s NOT LIKE '%%%s%%' OR %s IS NULL)" % (
+                    filters.append("(%s NOT ILIKE '%%%s%%' OR %s IS NULL)" % (
                         filter,
                         value,
                         filter
@@ -638,6 +637,21 @@ class ProfitLossReportWizard(models.TransientModel):
             self.env.cr.execute(filter_sql)
 
     @api.multi
+    def _update_supplier_info(self):
+        self.ensure_one()
+        ctx = dict(self._context)
+        ctx['company_id'] = self.env.user.company_id.id
+        recs = self.env['profit.loss.report'].search([
+            ('in_move_quant_owner_id', '!=', False),
+            ('purchase_invoice_line_id', '=', False),
+            ('purchase_order_id', '=', False)
+        ])
+        for rec in recs:
+            if rec.in_move_quant_owner_id != \
+                    self.env.user.company_id.partner_id:
+                rec.supplier_id = rec.in_move_quant_owner_id
+
+    @api.multi
     def action_generate_profit_loss_records(self):
         self.ensure_one()
         self.env.cr.execute("DELETE FROM profit_loss_report")
@@ -645,8 +659,9 @@ class ProfitLossReportWizard(models.TransientModel):
         from_date = self._get_utc_date(self.from_date)
         to_date = self._get_utc_date(self.to_date)
         self._inject_purchase_data(from_date, to_date)
-        self._update_records()
+        self._update_supplier_info()
         self._filter_records()
+        self._update_records()
         res = self.env.ref('profit_loss_report.profit_loss_report_action')
         return res.read()[0]
 
