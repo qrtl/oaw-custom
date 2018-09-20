@@ -645,8 +645,8 @@ class ProfitLossReportWizard(models.TransientModel):
         from_date = self._get_utc_date(self.from_date)
         to_date = self._get_utc_date(self.to_date)
         self._inject_purchase_data(from_date, to_date)
-        self._filter_records()
         self._update_records()
+        self._filter_records()
         res = self.env.ref('profit_loss_report.profit_loss_report_action')
         return res.read()[0]
 
