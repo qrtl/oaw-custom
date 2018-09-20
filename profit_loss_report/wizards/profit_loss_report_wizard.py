@@ -649,3 +649,18 @@ class ProfitLossReportWizard(models.TransientModel):
         self._update_records()
         res = self.env.ref('profit_loss_report.profit_loss_report_action')
         return res.read()[0]
+
+    @api.onchange('product_id')
+    def onchange_product_id(self):
+        ids = []
+        for product in self.product_id:
+            # Update case number domain filter
+            lot_ids = self.env['stock.production.lot'].search([
+                ('product_id', '=', product.id)
+            ])
+            ids += lot_ids.ids
+        return {
+            'domain': {'lot_id': [('id', 'in', ids)]}
+        } if ids else {
+            'domain': {'lot_id': []}
+        }
