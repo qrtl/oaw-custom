@@ -618,15 +618,19 @@ class ProfitLossReportWizard(models.TransientModel):
         for filter in report_filters:
             if self[filter]:
                 if type(self[filter]) in (str, unicode):
-                    value = "'" + "','".join([number.strip() for number in self[
-                            filter].split(',')]) + "'"
+                    value = self[filter].strip()
+                    filters.append("(%s NOT LIKE '%%%s%%' OR %s IS NULL)" % (
+                        filter,
+                        value,
+                        filter
+                    ))
                 else:
                     value = ",".join([str(id) for id in self[filter].ids])
-                filters.append("(%s NOT IN (%s) OR %s IS NULL)" % (
-                    filter,
-                    value,
-                    filter
-                ))
+                    filters.append("(%s NOT IN (%s) OR %s IS NULL)" % (
+                        filter,
+                        value,
+                        filter
+                    ))
         if filters:
             filter_sql = "DELETE FROM profit_loss_report WHERE %s" % (
                 " OR ".join(filters)
@@ -645,3 +649,18 @@ class ProfitLossReportWizard(models.TransientModel):
         self._update_records()
         res = self.env.ref('profit_loss_report.profit_loss_report_action')
         return res.read()[0]
+
+    @api.onchange('product_id')
+    def onchange_product_id(self):
+        ids = []
+        for product in self.product_id:
+            # Update case number domain filter
+            lot_ids = self.env['stock.production.lot'].search([
+                ('product_id', '=', product.id)
+            ])
+            ids += lot_ids.ids
+        return {
+            'domain': {'lot_id': [('id', 'in', ids)]}
+        } if ids else {
+            'domain': {'lot_id': []}
+        }
