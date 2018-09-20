@@ -25,7 +25,6 @@ class ProfitLossReportWizard(models.TransientModel):
                                 "state = NULL,"
                                 "supplier_id = NULL,"
                                 "supplier_ref = NULL,"
-                                "supplier_invoice_number = NULL,"
                                 "supplier_payment_ref = NULL,"
                                 "supplier_payment_dates = NULL,"
                                 "purchase_currency_id = NULL,"

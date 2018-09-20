@@ -619,7 +619,7 @@ class ProfitLossReportWizard(models.TransientModel):
             if self[filter]:
                 if type(self[filter]) in (str, unicode):
                     value = "'" + "','".join([number.strip() for number in self[
-                            filter].split(',')]) + ','
+                            filter].split(',')]) + "'"
                 else:
                     value = ",".join([str(id) for id in self[filter].ids])
                 filters.append("(%s NOT IN (%s) OR %s IS NULL)" % (
