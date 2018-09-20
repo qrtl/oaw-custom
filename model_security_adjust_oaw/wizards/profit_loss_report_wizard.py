@@ -19,8 +19,9 @@ class ProfitLossReportWizard(models.TransientModel):
                                 "   SELECT id FROM res_partner WHERE "
                                 "   related_partner = %d)" %
                                 self.env.user.partner_id.id)
-            self._update_records()
+            self._update_supplier_info()
             self._filter_records()
+            self._update_records()
             self.env.cr.execute("UPDATE profit_loss_report SET "
                                 "state = NULL,"
                                 "supplier_id = NULL,"
