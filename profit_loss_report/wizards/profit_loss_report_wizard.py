@@ -525,15 +525,16 @@ class ProfitLossReportWizard(models.TransientModel):
 
             # Handle the display of multi-payments
             rec.supplier_payment_dates = ', '.join(
-                rec.supplier_payment_ids.mapped('date'))
+                rec.sudo().supplier_payment_ids.mapped('date'))
             rec.supplier_payment_ref = ', '.join(
-                rec.supplier_payment_ids.mapped('ref'))
+                rec.sudo().supplier_payment_ids.mapped('ref'))
             if rec.invoice_id.state == 'paid':
                 rec.customer_payment_reference, \
                 rec.customer_payment_currency_rate, rec.sale_base_price = \
-                    self._get_payment_information(rec.customer_payment_ids,
-                                                  rec.net_price,
-                                                  rec.invoice_id)
+                    self._get_payment_information(
+                        rec.sudo().customer_payment_ids,
+                        rec.net_price,
+                        rec.invoice_id)
                 if rec.sale_base_price:
                     base_net_price = rec.sale_base_price
 
@@ -572,7 +573,7 @@ class ProfitLossReportWizard(models.TransientModel):
                     rec.invoice_id:
                 if rec.invoice_id.state == 'paid':
                     rec.sale_state = 'done'
-                elif rec.invoice_id.residual and rec.customer_payment_ids:
+                elif rec.invoice_id.residual and rec.sudo().customer_payment_ids:
                     rec.sale_state = 'balance'
                 else:
                     rec.sale_state = 'open'
