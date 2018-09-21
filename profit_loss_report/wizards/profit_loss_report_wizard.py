@@ -573,7 +573,7 @@ class ProfitLossReportWizard(models.TransientModel):
                     rec.invoice_id:
                 if rec.invoice_id.state == 'paid':
                     rec.sale_state = 'done'
-                elif rec.invoice_id.residual and rec.customer_payment_ids:
+                elif rec.invoice_id.residual and rec.sudo().customer_payment_ids:
                     rec.sale_state = 'balance'
                 else:
                     rec.sale_state = 'open'
