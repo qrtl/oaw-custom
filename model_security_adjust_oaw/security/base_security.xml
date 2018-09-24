@@ -63,13 +63,25 @@
             <field name="perm_write" eval="False"/>
         </record>
 
-        <!--Narrow down quotation accessible to those created by the supplier_fm-->
-        <record model="ir.rule" id="res_partner_supplier_fm_sale_rule">
-            <field name="name">sale_order: stock supplier_fm: Access on own quotation; but no delete(no unlink)</field>
+
+        <record model="ir.rule" id="res_partner_supplier_sale_rule">
+            <field name="name">sale_order: stock supplier: Access on own quotation; but no delete(no unlink)</field>
             <field name="model_id"
                    ref="sale.model_sale_order"/>
-            <field name="domain_force">[('create_uid','child_of', user.commercial_partner_id.id)]</field>
-            <field name="groups" eval="[(4, ref('group_supplier_fm'))]"/>
+            <field name="domain_force">[('user_id','!=',False)]</field>
+            <field name="groups" eval="[(4, ref('group_supplier'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="perm_write" eval="True"/>
+        </record>
+
+         <record model="ir.rule" id="res_partner_supplier_sale_line_rule">
+            <field name="name">sale_order: stock supplier: Access on own quotation; but no delete(no unlink)</field>
+            <field name="model_id"
+                   ref="sale.model_sale_order_line"/>
+            <field name="domain_force">[('order_id.user_id','!=',False)]</field>
+            <field name="groups" eval="[(4, ref('group_supplier'))]"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_create" eval="True"/>
             <field name="perm_unlink" eval="False"/>
