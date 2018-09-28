@@ -7,6 +7,12 @@ def _update_partner_offer_fields(cr, registry):
 
     # Duplicates of one owner
     cr.execute('''
+            UPDATE
+              supplier_stock
+            SET
+              owners_duplicates = True
+            ''')
+    cr.execute('''
         UPDATE
           supplier_stock
         SET
