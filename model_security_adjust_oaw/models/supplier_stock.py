@@ -32,6 +32,10 @@ class SupplierStock(models.Model):
         string='Your duplicates',
         store=True,
     )
+    mto_amount = fields.Integer(
+        string = "Ordered",
+        compute = '_get_ordered_amount'
+    )
 
     # Overwriting display_name's method for Supplier Access User
     @api.multi
@@ -123,3 +127,18 @@ class SupplierStock(models.Model):
             for action in server_actions:
                 action.sudo()._process(action, [res.id])
         return res
+    @api.multi
+    def _get_ordered_amount(self):
+        for ss in self:
+            sol= self.env['sale.order.line'].sudo().search([
+                    ('is_mto', '=', True),
+                    ('state', 'in', ('draft', 'sent')),
+                    ('product_id', '=', ss.product_id.id)
+                ])
+            print sol
+            i = 0
+            for line in sol:
+                if line.order_id.supplier_id == self.env.user.partner_id:
+                    print "Random"
+                    i += 1
+            ss.mto_amount = i
