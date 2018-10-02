@@ -135,10 +135,12 @@ class SupplierStock(models.Model):
                     ('state', 'in', ('draft', 'sent')),
                     ('product_id', '=', ss.product_id.id)
                 ])
-            print sol
+
             i = 0
             for line in sol:
                 if line.order_id.supplier_id == self.env.user.partner_id:
-                    print "Random"
-                    i += 1
+                    if line.qty > 1:
+                        i = i + line.qty
+                    else:
+                        i += 1
             ss.mto_amount = i
