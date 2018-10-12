@@ -5,17 +5,18 @@
         <!--Sales/ Products-->
         <record id="base.menu_product" model="ir.ui.menu">
             <field name="groups_id"
-                   eval="[(6,0, [ref('base.group_sale_salesman_all_leads')])]"/>
+                   eval="[(6, 0, [ref('base.group_sale_salesman_all_leads')])]"/>
         </record>
 
         <!--Sales/ Payment Follow Ups-->
         <record id="base.menu_sales_followup" model="ir.ui.menu">
             <field name="groups_id"
-                   eval="[(6,0, [ref('base.group_sale_manager')])]"/>
+                   eval="[(6, 0, [ref('base.group_sale_manager')])]"/>
         </record>
+
         <!--Removing orignial "Sale" menu from External View-->
         <record id="base.menu_base_partner" model="ir.ui.menu">
-            <field name="groups_id" eval="[(3,ref('model_security_adjust_oaw.group_supplier'))]"/>
+            <field name="groups_id" eval="[(6, 0, [ref('base.group_sale_salesman_all_leads')])]"/>
         </record>
 
         <!--Actions -->
@@ -26,7 +27,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="sale.view_quotation_tree"/>
             <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="domain">[('user_id','=',uid),('state','not in',('draft','sent','cancel'))]</field>
+            <field name="domain">[('user_id', '=', uid),('state',' not in', ('draft', 'sent', 'cancel'))]</field>
             <field name="search_view_id" ref="sale.view_sales_order_filter"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
