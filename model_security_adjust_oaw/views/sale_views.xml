@@ -5,14 +5,68 @@
         <!--Sales/ Products-->
         <record id="base.menu_product" model="ir.ui.menu">
             <field name="groups_id"
-                   eval="[(6,0, [ref('base.group_sale_salesman_all_leads')])]"/>
+                   eval="[(6, 0, [ref('base.group_sale_salesman_all_leads')])]"/>
         </record>
 
         <!--Sales/ Payment Follow Ups-->
         <record id="base.menu_sales_followup" model="ir.ui.menu">
             <field name="groups_id"
-                   eval="[(6,0, [ref('base.group_sale_manager')])]"/>
+                   eval="[(6, 0, [ref('base.group_sale_manager')])]"/>
         </record>
+
+        <!--Removing orignial "Sale" menu from External View-->
+        <record id="base.menu_base_partner" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('base.group_sale_salesman_all_leads')])]"/>
+        </record>
+
+        <!--Actions -->
+           <record id="action_sales_orders_supplier" model="ir.actions.act_window">
+            <field name="name">Quotations</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="sale.view_quotation_tree"/>
+            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="domain">[('user_id', '=', uid),('state',' not in', ('draft', 'sent', 'cancel'))]</field>
+            <field name="search_view_id" ref="sale.view_sales_order_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a quotation, the first step of a new sale.
+              </p><p>
+                Odoo will help you handle efficiently the complete sale flow:
+                from the quotation to the sales order, the
+                delivery, the invoicing and the payment collection.
+              </p><p>
+                The social feature helps you organize discussions on each sales
+                order, and allow your customers to keep track of the evolution
+                of the sales order.
+              </p>
+            </field>
+        </record>
+
+        <!-- Menu Items -->
+        <!--Top Menu: External Sales-->
+        <menuitem
+                id="sales_external"
+                name="Sales And Orders"
+                groups="model_security_adjust_oaw.group_supplier"
+                sequence="15"/>
+        <menuitem
+                id="menu_sales_external"
+                name="Sales And Orders"
+                groups="model_security_adjust_oaw.group_supplier"
+                parent="sales_external"
+                sequence="15"/>
+        <!--Sales Orders menu_item with reference to the original action-->
+        <menuitem
+                id="sales_orders"
+                name="Sales Orders"
+                groups="model_security_adjust_oaw.group_supplier"
+                parent="menu_sales_external"
+                action="action_sales_orders_supplier"
+                sequence="15"/>
+
 
     </data>
 </openerp>
+

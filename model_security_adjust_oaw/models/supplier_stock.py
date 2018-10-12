@@ -33,6 +33,7 @@ class SupplierStock(models.Model):
         store=True,
     )
 
+
     # Overwriting display_name's method for Supplier Access User
     @api.multi
     def name_get(self, *args, **kwargs):
@@ -123,3 +124,4 @@ class SupplierStock(models.Model):
             for action in server_actions:
                 action.sudo()._process(action, [res.id])
         return res
+
