@@ -42,6 +42,7 @@
                     <field name="image_small" string="Image" widget="image"
                            height="64px"/>
                     <field name="quantity" string="Qty"/>
+
                     <field name="currency_id"
                            options="{'no_create_edit':True, 'no_open': True, 'no_create': True}"/>
                     <field name="retail_in_currency"/>
