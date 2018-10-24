@@ -9,7 +9,7 @@
 
     """,
     'author': 'Quartile Limited',
-    'website': 'http://www.quartile.co',
+    'website': 'https://www.quartile.co',
     "license": "AGPL-3",
     'depends': [
         'stock',
