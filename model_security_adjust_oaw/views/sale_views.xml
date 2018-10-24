@@ -27,7 +27,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="sale.view_quotation_tree"/>
             <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="domain">[('user_id', '=', uid),('state',' not in', ('draft', 'sent', 'cancel'))]</field>
+            <field name="domain">[('user_id', '=', uid)]</field>
             <field name="search_view_id" ref="sale.view_sales_order_filter"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
@@ -60,7 +60,7 @@
         <!--Sales Orders menu_item with reference to the original action-->
         <menuitem
                 id="sales_orders"
-                name="Sales Orders"
+                name="Quotations"
                 groups="model_security_adjust_oaw.group_supplier"
                 parent="menu_sales_external"
                 action="action_sales_orders_supplier"
