@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_picking_form" model="ir.ui.view">
+            <field name="name">stock.picking.form</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_assign']" position="attributes">
+                    <attribute name="context">{'button_assign': 1}</attribute>
+                </xpath>
+                <xpath expr="//button[@name='rereserve_pick']"
+                       position="replace">
+                    <button name="rereserve_pick"
+                            string="Recheck Availability" type="object"
+                            class="oe_highlight" groups="base.group_user"
+                            attrs="{'invisible': ['|', ('state', 'not in', ('waiting', 'partially_available')), ('pack_operation_exist','=',True)]}"
+                            context="{'button_assign': 1}"/>
+                </xpath>
+            </field>
+        </record>
+
+  </data>
+</openerp>
