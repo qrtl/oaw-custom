@@ -17,6 +17,7 @@
         'sale_line_quant_extended'
     ],
     'data': [
+        'views/stock_picking_views.xml'
     ],
     'installable': True,
     'auto_install': False,
