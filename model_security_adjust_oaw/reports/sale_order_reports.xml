@@ -135,7 +135,7 @@
                         </div>
                     </div>
 
-                    <p t-field="o.note"/>
+                    <p t-field="o.quot_report_note"/>
                     <div style="page-break-inside: avoid">
                         <div>
                             <br/>
