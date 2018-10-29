@@ -11,7 +11,12 @@
             <field name="name">Supplier</field>
             <field name="category_id" ref="module_category_supplier"/>
             <field name="implied_ids"
-                   eval="[(4, ref('base.group_user'))]"/>
+                   eval="[(4, ref('base.group_user')),
+                   (4, ref('base.group_sale_salesman'))
+
+                   ]"/>
+
+
         </record>
 
          <record id="group_supplier_fm" model="res.groups">
@@ -21,7 +26,7 @@
                    eval="[
                        (4, ref('model_security_adjust_oaw.group_supplier')),
                        (4, ref('stock.group_stock_user')),
-                       (4, ref('base.group_sale_salesman'))
+
                    ]"/>
         </record>
 
