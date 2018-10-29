@@ -92,7 +92,7 @@
                   id="menu_partner_statement_report_wizard"
                   parent="account.menu_finance_reporting"
                   sequence="11"
-                  groups="group_supplier_fm"/>
+                  groups="group_supplier"/>
 
     </data>
 </openerp>
