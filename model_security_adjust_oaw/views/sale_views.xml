@@ -61,7 +61,7 @@
         <menuitem
                 id="sales_orders"
                 name="Quotations"
-                groups="model_security_adjust_oaw.group_supplier"
+                groups="model_security_adjust_oaw.group_supplier_fm"
                 parent="menu_sales_external"
                 action="action_sales_orders_supplier"
                 sequence="15"/>
