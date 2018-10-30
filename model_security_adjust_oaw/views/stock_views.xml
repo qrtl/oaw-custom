@@ -71,7 +71,7 @@
 
         <!--Reporting/Warehouse-->
         <menuitem id="stock.next_id_61" name="Warehouse" sequence="15"
-                  parent="base.menu_reporting" groups="group_supplier_fm"/>
+                  parent="base.menu_reporting" groups="group_supplier"/>
 
         <!--Quants-->
         <menuitem id="stock.menu_quants" name="Quants"
