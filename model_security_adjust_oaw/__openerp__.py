@@ -38,6 +38,7 @@
         'views/supplier_stock_views.xml',
         'views/reporting_views.xml',
         'views/product_product.xml',
+        'views/product_category_views.xml',
         'reports/account_invoice_reports.xml',
         'reports/common_templates.xml',
         'reports/sale_order_reports.xml',
