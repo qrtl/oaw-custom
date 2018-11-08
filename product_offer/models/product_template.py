@@ -65,6 +65,7 @@ class ProductTemplate(models.Model):
     net_price = fields.Float(
         string="Net Price",
         digits=dp.get_precision('Product Price'),
+        store=True
     )
     sale_hkd_ab = fields.Integer(
         string="Stock Sale HKD AB",
