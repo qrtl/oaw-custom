@@ -14,6 +14,7 @@
                     <field name="net_price" string="Sale HKD AA"/>
                     <field name="sale_hkd_ab" string="Sale HKD AB"/>
                     <field name="sale_hkd_ac" string="Sale HKD AC"/>
+                    <field name="additional_info" string="Note"/>
                     <field name="advertise" string="Ads"/>
                     <field name="stock_location"/>
                     <field name="stock_leadtime"/>
@@ -24,7 +25,6 @@
                     <field name="qty_local_stock" widget="integer" string="HK Stock"/>
                     <field name="qty_overseas" string="Qty Overseas"/>
                     <field name="last_in_date" string="Incoming Date" widget="date"/>
-                    <field name="additional_info" string="Note"/>
                     <field name="partner_note2" string="Partner Note"/>
                  </tree>
             </field>
