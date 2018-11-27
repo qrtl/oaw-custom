@@ -8,6 +8,7 @@
     'author': 'Quartile Limited',
     'website': 'https://www.quartile.co',
     'depends': [
+        'sale',
         'partner_statement_report',
         'stock_offer_report',
         'stock_consignment_report',
