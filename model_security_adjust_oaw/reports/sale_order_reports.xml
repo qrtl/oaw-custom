@@ -2,6 +2,17 @@
 <openerp>
     <data>
 
+        <!--Makes the company print function unavailable to supplier groups-->
+        <report
+            id="sale.report_sale_order"
+            string="Quotation / Order"
+            model="sale.order"
+            groups="base.group_sale_salesman_all_leads"
+            report_type="qweb-pdf"
+            file="sale.report_saleorder"
+            name="sale.report_saleorder"
+        />
+
         <template id="report_sale_supplier_fm_document">
             <t t-call="model_security_adjust_oaw.external_layout">
                 <div class="page" style="font-family:sans;">
