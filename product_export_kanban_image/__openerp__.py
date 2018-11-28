@@ -21,6 +21,7 @@
     ],
     'data':[
         'wizard/export_product_image_view.xml',
+        'wizard/export_product_image_wizard_view.xml',
     ],
     'external_dependencies': {
         'python': ['imgkit'],
