@@ -9,7 +9,7 @@
                 <tree string="Export Product Image">
                     <field name="name"/>
                     <button name="download_image" type="object"
-                            string="Download" class="oe_highlight"/>
+                            string="Download"/>
                 </tree>
             </field>
         </record>

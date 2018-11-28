@@ -13,9 +13,7 @@ class ExportProductImage(models.TransientModel):
         readonly=True,
     )
     name = fields.Char(
-        string='Name',
-        help='Save image',
-        default="export_product_image.png"
+        string='Exported Image',
     )
 
     @api.multi
