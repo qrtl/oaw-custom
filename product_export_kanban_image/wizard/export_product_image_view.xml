@@ -3,43 +3,16 @@
     <data>
 
         <record id="export_product_image_view" model="ir.ui.view">
-            <field name="name">export.product.image.form</field>
+            <field name="name">export.product.image.tree</field>
             <field name="model">export.product.image</field>
             <field name="arch" type="xml">
-                <form string="Export Product Image">
-                    <label string="You can Download image from below button"/>
-                    <group>
-                        <group>
-                            <field name="name" invisible="1"/>
-                            <field name="image_download" filename='name'
-                                   readonly='1'/>
-                        </group>
-                    </group>
-                    <footer>
-                        <button string="_Cancel" class="btn-default"
-                                special="cancel"/>
-                    </footer>
-                </form>
+                <tree string="Export Product Image">
+                    <field name="name"/>
+                    <button name="download_image" type="object"
+                            string="Download" class="oe_highlight"/>
+                </tree>
             </field>
         </record>
-
-        <act_window
-                id="act_export_product_image"
-                multi="True"
-                key2="client_action_multi"
-                name="Export Kanban Image"
-                res_model="export.product.image"
-                src_model="product.template"
-                view_mode="form" target="new" view_type="form"/>
-
-        <act_window
-                id="act_export_supplier_stock_image"
-                multi="True"
-                key2="client_action_multi"
-                name="Export Kanban Image"
-                res_model="export.product.image"
-                src_model="supplier.stock"
-                view_mode="form" target="new" view_type="form"/>
 
     </data>
 </openerp>
