@@ -12,6 +12,7 @@
                     <field name="list_price" string="Retail HKD"/>
                     <field name="discount" string="Discount %"/>
                     <field name="net_price" string="Sale HKD AA"/>
+                    <field name="sale_hkd_aa_so" string="Sale HKD AA Special Offer"/>
                     <field name="sale_hkd_ab" string="Sale HKD AB"/>
                     <field name="sale_hkd_ac" string="Sale HKD AC"/>
                     <field name="additional_info" string="Note"/>

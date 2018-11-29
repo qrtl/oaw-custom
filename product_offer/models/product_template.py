@@ -71,6 +71,17 @@ class ProductTemplate(models.Model):
         digits=dp.get_precision('Product Price'),
         store=True
     )
+    sale_hkd_aa_so = fields.Float(
+        string="Stock Sale HKD AA Special Offer",
+        digits=dp.get_precision('Product Price'),
+        store=True
+    )
+    has_so = fields.Boolean(
+        "Has Special Offer",
+        default = "False",
+        compute = "_has_so",
+        store = True
+    )
     sale_hkd_ac = fields.Integer(
         string="Stock Sale HKD AB",
         digits=dp.get_precision('Product Price'),
@@ -105,6 +116,11 @@ class ProductTemplate(models.Model):
         compute='_get_net_price_cny',
         digits=dp.get_precision('Product Price')
     )
+    sale_hkd_aa_so_cn = fields.Integer(
+        string='Sale AB RMB',
+        compute='_get_net_price_cny',
+        digits=dp.get_precision('Product Price')
+    )
     sale_hkd_ab_cn = fields.Integer(
         string='Sale AB RMB',
         compute='_get_net_price_cny',
@@ -117,11 +133,22 @@ class ProductTemplate(models.Model):
     )
 
     @api.multi
+    @api.depends('sale_hkd_aa_so')
+    def _has_so(self):
+        for pt in self:
+            if pt.sale_hkd_aa_so > 0.0:
+                pt.has_so = True
+            else:
+                pt.has_so = False
+
+
+    @api.multi
     def _get_net_price_cny(self):
         cny_rec = self.env['res.currency'].search([('name','=','CNY')])[0]
         if cny_rec:
             for pt in self:
                 pt.net_price_cny = pt.net_price * cny_rec.rate_silent
+                pt.sale_hkd_aa_so_cn = pt.sale_hkd_aa_so * cny_rec.rate_silent
                 pt.sale_hkd_ab_cn = pt.sale_hkd_ab * cny_rec.rate_silent
                 pt.sale_hkd_ac_cn = pt.sale_hkd_ac * cny_rec.rate_silent
 
