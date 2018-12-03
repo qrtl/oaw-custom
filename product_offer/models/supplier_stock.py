@@ -2,7 +2,7 @@
 # Copyright 2017-2018 Quartile Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from openerp import models, api
+from openerp import models, api, fields
 
 
 class SupplierStock(models.Model):
@@ -38,8 +38,15 @@ class SupplierStock(models.Model):
         return
 
     @api.multi
+    def _update_prod_tmpl_modified(self):
+        for st in self:
+            st.product_id.product_tmpl_id.sudo().write({'partner_stock_last_modified': fields.Datetime.now()})
+        return
+
+    @api.multi
     def write(self, vals):
         res = super(SupplierStock, self).write(vals)
+        self._update_prod_tmpl_modified()
         if 'product_id' in vals or 'quantity' in vals:
             self._update_prod_tmpl_qty_overseas()
         return res
