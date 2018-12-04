@@ -37,11 +37,11 @@ class SupplierStock(models.Model):
             })
         return
 
-    @api.multi
+
     def _update_prod_tmpl_modified(self):
         for st in self:
             st.product_id.product_tmpl_id.sudo().write({'partner_stock_last_modified': fields.Datetime.now()})
-        return
+
 
     @api.multi
     def write(self, vals):
