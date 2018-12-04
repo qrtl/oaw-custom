@@ -44,7 +44,7 @@ class ProductTemplate(models.Model):
         string = 'Partner Note',
         compute='_get_stock_location',
     )
-
+    
     def _get_quant_cost(self, prod_ids):
         quant_obj = self.env['stock.quant']
         quant = quant_obj.search(

@@ -71,6 +71,11 @@ class ProductTemplate(models.Model):
         digits=dp.get_precision('Product Price'),
         store=True
     )
+    sale_hkd_aa_so = fields.Integer(
+        string="Stock Sale HKD AA Special Offer",
+        digits=dp.get_precision('Product Price'),
+        store=True
+    )
     sale_hkd_ac = fields.Integer(
         string="Stock Sale HKD AB",
         digits=dp.get_precision('Product Price'),
@@ -86,6 +91,12 @@ class ProductTemplate(models.Model):
         string="Discount (%)",
         digits=dp.get_precision('Discount'),
         compute='_get_discount',
+        readonly=True,
+    )
+    discount_so = fields.Float(
+        string="Discount (%)",
+        digits=dp.get_precision('Discount'),
+        compute='_get_discount_so',
         readonly=True,
     )
     discount_ab = fields.Float(
@@ -105,15 +116,21 @@ class ProductTemplate(models.Model):
         compute='_get_net_price_cny',
         digits=dp.get_precision('Product Price')
     )
-    sale_hkd_ab_cn = fields.Integer(
+    sale_hkd_aa_so_cn = fields.Integer(
         string='Sale AB RMB',
         compute='_get_net_price_cny',
         digits=dp.get_precision('Product Price')
     )
+
     sale_hkd_ac_cn = fields.Integer(
         string='Sale AC RMB',
         compute='_get_net_price_cny',
         digits=dp.get_precision('Product Price')
+    )
+    partner_stock_last_modified = fields.Datetime(
+        string="Last Modified",
+        readonly=True,
+        store=True,
     )
 
     @api.multi
@@ -122,7 +139,7 @@ class ProductTemplate(models.Model):
         if cny_rec:
             for pt in self:
                 pt.net_price_cny = pt.net_price * cny_rec.rate_silent
-                pt.sale_hkd_ab_cn = pt.sale_hkd_ab * cny_rec.rate_silent
+                pt.sale_hkd_aa_so_cn = pt.sale_hkd_aa_so * cny_rec.rate_silent
                 pt.sale_hkd_ac_cn = pt.sale_hkd_ac * cny_rec.rate_silent
 
     @api.multi
@@ -133,6 +150,16 @@ class ProductTemplate(models.Model):
                 pt.discount = 0.0
             else:
                 pt.discount = (1 - pt.net_price / pt.list_price) * 100
+        return
+
+    @api.multi
+    @api.depends('list_price', 'sale_hkd_aa_so')
+    def _get_discount_so(self):
+        for pt in self:
+            if not pt.list_price or not pt.sale_hkd_aa_so:
+                pt.discount = 0.0
+            else:
+                pt.discount = (1 - pt.sale_hkd_aa_so / pt.list_price) * 100
         return
 
     @api.multi
