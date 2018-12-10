@@ -2,6 +2,17 @@
 <openerp>
 <data>
 
+
+    <!-- Product Offer-->
+    <menuitem
+        id="product_offer_section"
+        name="Product Offer"
+        groups="base.group_sale_salesman"
+        parent="base.menu_base_partner"
+        sequence="25"/>
+
+
+
     <!-- add fields in form view -->
     <record id="product_template_form_view" model="ir.ui.view">
         <field name="name">product.template.common.form</field>
@@ -54,7 +65,7 @@
     </record>
 
     <record id="product_template_internal_action" model="ir.actions.act_window">
-        <field name="name">Product Offer AA</field>
+        <field name="name">AA</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">product.template</field>
         <field name="view_mode">kanban,tree,form</field>
@@ -65,7 +76,7 @@
 
     <menuitem action="product_template_internal_action"
         id="menu_product_template__internal_action"
-        parent="base.menu_product" sequence="4" />
+        parent="product_offer_section" sequence="4" />
 
     <!-- Products: Internal CN:: Product Offer AA CNY -->
     <record id="product_template_internal_CN_kanban_view" model="ir.ui.view">
@@ -106,7 +117,7 @@
     </record>
 
     <record id="product_template_internal_CN_action" model="ir.actions.act_window">
-        <field name="name">Product Offer AA (CN)</field>
+        <field name="name">AA (CN)</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">product.template</field>
         <field name="view_mode">kanban,tree,form</field>
@@ -117,7 +128,7 @@
 
     <menuitem action="product_template_internal_CN_action"
         id="menu_product_template__internal_CN_action"
-        parent="base.menu_product" sequence="5" />
+        parent="product_offer_section" sequence="5" />
 
     <!--Search View -->
     <record id="product_template_search_view" model="ir.ui.view">
@@ -126,6 +137,10 @@
         <field name="inherit_id" ref="product.product_template_search_view"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='product_variant_ids']" position="before">
+                <!--<group expand="0" name='new_receive' string="Special Offers">-->
+                    <!--<filter name="aa_special_offers" string="AA Special Offers" domain="[('sale_hkd_aa_so','&gt;=',0)]"/>-->
+                    <!--<filter name="ac_special_offers" string="AC Special Offers" domain="[('sale_hkd_ac_so','&gt;=',0)]"/>-->
+                <!--</group>-->
                 <group expand="0" name='new_receive' string="New Receive">
                     <filter name="received_today" string="Received today" domain="[('last_in_date','&gt;=',(context_today()+datetime.timedelta(days=-1)).strftime('%Y-%m-%d'))]"/>
                     <filter name="received_two_weeks" string="Received 2 weeks" domain="[('last_in_date','&gt;=',(context_today()+datetime.timedelta(weeks=-2)).strftime('%Y-%m-%d'))]"/>
@@ -162,10 +177,6 @@
         </field>
     </record>
 
-
-
-
-
        <!-- Product Offer AA-No-Qty-->
     <record id="product_template_en_sales_price_no_qty_kanban_view" model="ir.ui.view">
         <field name="name">Product.template.product.kanban.no.qty.en </field>
@@ -194,7 +205,7 @@
                                         <li t-if="record.type.raw_value != 'service'">Overseas Stock: <field name="overseas_stock"/></li>
                                         <!--<li t-if="record.type.raw_value != 'service'">Reserved: <field name="qty_reserved"/> <field name="uom_id"/></li>-->
                                         <li>HK Retail: <field name="list_price_integer"></field></li>
-                                        <li>Discount: <field name="discount_so"/>%</li>
+                                        <li>Discount: <field name="discount"/>%</li>
                                         <li>Sale HKD: <field name="net_price_integer"/></li>
                                     </t>
                                     <t t-if="record.sale_hkd_aa_so.raw_value > 0">
@@ -202,9 +213,9 @@
                                         <li t-if="record.type.raw_value != 'service'">Overseas Stock: <field name="overseas_stock"/></li>
                                         <!--<li t-if="record.type.raw_value != 'service'">Reserved: <field name="qty_reserved"/> <field name="uom_id"/></li>-->
                                         <li>HK Retail: <field name="list_price_integer"></field></li>
-                                        <li>Discount: <field name="discount_so"/>%</li>
+                                        <li>Discount: <field name="discount_aa_so"/>%</li>
                                         <li style="color:DarkGrey">Sale HKD: <field name="net_price_integer"/></li>
-                                        <li style="color:Red">Sale HKD Special: <field name="sale_hkd_aa_so" /></li>
+                                        <li style="color:Red"><b>Sale HKD Special: <field name="sale_hkd_aa_so" /></b></li>
                                     </t>
 
                                 </ul>
@@ -215,10 +226,9 @@
             </kanban>
         </field>
     </record>
-
     <record id="product_template_en_sales_price_no_qty_action" model="ir.actions.act_window">
         <!--<field name="name">Product Offer (EN): Sales Price</field>-->
-        <field name="name">Product Offer AA-NO-QTY</field>
+        <field name="name">AA-NO-QTY</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">product.template</field>
         <field name="view_mode">kanban,tree,form</field>
@@ -226,10 +236,9 @@
         <field name="view_id" ref="product_template_en_sales_price_no_qty_kanban_view"/>
         <field name="context">{"search_default_warehouse_internal_location":1}</field>
     </record>
-
     <menuitem action="product_template_en_sales_price_no_qty_action"
         id="menu_product_template_en_sales_price_no_qty_action"
-        parent="base.menu_product" sequence="6" />
+        parent="product_offer_section" sequence="6" />
 
      <!-- Product Offer AA-No-Qty CN -->
     <record id="product_template_cn_sales_price_no_qty_kanban_view" model="ir.ui.view">
@@ -260,7 +269,7 @@
                                         <!--<li t-if="record.type.raw_value != 'service'">已預留: <field name="qty_reserved"/> <field name="uom_id"/></li>-->
                                         <li>港币公价: <field name="list_price_integer"></field></li>
                                         <li>港币卖价: <field name="net_price_integer"/></li>
-                                        <li>折扣率: <field name="discount_so"/>%</li>
+                                        <li>折扣率: <field name="discount"/>%</li>
                                         <li><i>今日RMB卖价: <field name="net_price_cny"/></i></li>
                                     </t>
                                     <t t-if="record.sale_hkd_aa_so.raw_value > 0">
@@ -269,9 +278,9 @@
                                         <!--<li t-if="record.type.raw_value != 'service'">已預留: <field name="qty_reserved"/> <field name="uom_id"/></li>-->
                                         <li>港币公价: <field name="list_price_integer"></field></li>
                                         <li>港币卖价: <field name="net_price_integer"/></li>
-                                        <li>折扣率: <field name="discount_so"/>%</li>
+                                        <li>折扣率: <field name="discount_aa_so"/>%</li>
                                         <li style="color:DarkGrey"><i>今日RMB卖价: <field name="net_price_cny"/></i></li>R
-                                        <li style="color:Red"><i>MB減價後特價: <field name="sale_hkd_aa_so_cn"/></i></li>
+                                        <li style="color:Red"><b><i>MB減價後特價: <field name="sale_hkd_aa_so_cn"/></i></b></li>
                                     </t>
                                 </ul>
                             </div>
@@ -281,10 +290,9 @@
             </kanban>
         </field>
     </record>
-
     <record id="product_template_cn_sales_price_no_qty_action" model="ir.actions.act_window">
         <!--<field name="name">Product Offer (ZH): Sales Price</field>-->
-        <field name="name">Product Offer AA-NO-QTY (CN)</field>
+        <field name="name">AA-NO-QTY (CN)</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">product.template</field>
         <field name="view_mode">kanban,tree,form</field>
@@ -292,10 +300,10 @@
         <field name="view_id" ref="product_template_cn_sales_price_no_qty_kanban_view"/>
         <field name="context">{"search_default_warehouse_internal_location":1}</field>
     </record>
-
     <menuitem action="product_template_cn_sales_price_no_qty_action"
         id="menu_product_template_cn_sales_price_no_qty_action"
-        parent="base.menu_product" sequence="6" />
+        parent="product_offer_section" sequence="6" />
+
 
     <!-- Product Offer: Sales Price = Product Offer AC -->
      <record id="product_template_offer_ac_kanban_view" model="ir.ui.view">
@@ -332,23 +340,19 @@
             </kanban>
         </field>
     </record>
-
     <record id="product_template_offer_ac_action" model="ir.actions.act_window">
         <!--<field name="name">Product Offer (EN): Availability</field>-->
-        <field name="name">Product Offer AC</field>
+        <field name="name">AC</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">product.template</field>
         <field name="view_mode">kanban,tree,form</field>
         <field name="view_type">form</field>
         <field name="view_id" ref="product_template_offer_ac_kanban_view"/>
-
         <field name="context">{"search_default_warehouse_internal_location":1}</field>
-
     </record>
-
     <menuitem action="product_template_offer_ac_action"
         id="menu_product_template_offer_ac_action"
-        parent="base.menu_product" sequence="7" />
+        parent="product_offer_section" sequence="7" />
 
     <!-- Product Offer (ZH): Sales Price = Product Offer AC CN -->
      <record id="product_template_offer_ac_cn_kanban_view" model="ir.ui.view">
@@ -386,10 +390,9 @@
             </kanban>
         </field>
     </record>
-
     <record id="product_template_offer_ac_cn_action" model="ir.actions.act_window">
         <!--<field name="name">Product Offer (ZH): Availability</field>-->
-        <field name="name">Product Offer AC (CN)</field>
+        <field name="name">AC (CN)</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">product.template</field>
         <field name="view_mode">kanban,tree,form</field>
@@ -397,10 +400,157 @@
         <field name="view_id" ref="product_template_offer_ac_cn_kanban_view"/>
         <field name="context">{"search_default_warehouse_internal_location":1}</field>
     </record>
-
     <menuitem action="product_template_offer_ac_cn_action"
         id="menu_product_template_offer_ac_cn_action"
-        parent="base.menu_product" sequence="8" />
+        parent="product_offer_section" sequence="8" />
+
+
+
+
+
+
+
+           <!-- Product Offer AC-No-Qty-->
+    <record id="product_template_en_sales_price_ac_no_qty_kanban_view" model="ir.ui.view">
+        <field name="name">Product.template.product.kanban.no.qty.en </field>
+        <field name="model">product.template</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="type"/>
+                <field name="sale_hkd_ac_so"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_vignette oe_semantic_html_override">
+                            <a type="open"><img t-att-src="kanban_image('product.template', 'image_medium', record.id.value)" class="oe_kanban_image"/></a>
+                            <div class="oe_kanban_details">
+                                <h4>
+                                    <a type="open">
+                                         <span t-if="record.default_code.value">
+                                             [<field name="default_code"/>]
+                                          </span>
+                                         <field name="name"/>
+                                    </a>
+                                </h4>
+                                <div name="tags"/>
+                                <ul>
+                                    <t t-if="record.sale_hkd_ac_so.raw_value == 0">
+                                        <li t-if="record.type.raw_value != 'service'">HK Stock: <field name="local_stock"/></li>
+                                        <li t-if="record.type.raw_value != 'service'">Overseas Stock: <field name="overseas_stock"/></li>
+                                        <li>HK Retail: <field name="list_price_integer"></field></li>
+                                        <li>Discount: <field name="discount_ac"/>%</li>
+                                        <li>Sale HKD: <field name="sale_hkd_ac"/></li>
+                                    </t>
+                                    <t t-if="record.sale_hkd_ac_so.raw_value > 0">
+                                        <li t-if="record.type.raw_value != 'service'">HK Stock: <field name="local_stock"/></li>
+                                        <li t-if="record.type.raw_value != 'service'">Overseas Stock: <field name="overseas_stock"/></li>
+                                        <li>HK Retail: <field name="list_price_integer"></field></li>
+                                        <li>Discount: <field name="discount_ac_so"/>%</li>
+                                        <li style="color:DarkGrey">Sale HKD: <field name="sale_hkd_ac"/></li>
+                                        <li style="color:Red"><b>Sale HKD Special: <field name="sale_hkd_ac_so" /></b></li>
+                                    </t>
+                                </ul>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    <record id="product_template_en_sales_price_ac_no_qty_action" model="ir.actions.act_window">
+        <!--<field name="name">Product Offer (EN): Sales Price</field>-->
+        <field name="name">AC-NO-QTY</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="product_template_en_sales_price_ac_no_qty_kanban_view"/>
+        <field name="context">{"search_default_warehouse_internal_location":1}</field>
+    </record>
+    <menuitem action="product_template_en_sales_price_ac_no_qty_action"
+        id="menu_product_template_en_sales_price_ac_no_qty_action"
+        parent="product_offer_section" sequence="6" />
+
+     <!-- Product Offer AC-No-Qty CN -->
+    <record id="product_template_cn_sales_price_no_qty_ac_kanban_view" model="ir.ui.view">
+        <field name="name">Product.template.product.kanban.no.qty.cn</field>
+        <field name="model">product.template</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="type"/>
+                 <field name="sale_hkd_ac_so"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_vignette oe_semantic_html_override">
+                            <a type="open"><img t-att-src="kanban_image('product.template', 'image_medium', record.id.value)" class="oe_kanban_image"/></a>
+                            <div class="oe_kanban_details">
+                                <h4>
+                                    <a type="open">
+                                         <span t-if="record.default_code.value">
+                                             [<field name="default_code"/>]
+                                          </span>
+                                         <field name="name"/>
+                                    </a>
+                                </h4>
+                                <div name="tags"/>
+                                <ul>
+                                    <t t-if="record.sale_hkd_ac_so.raw_value == 0">
+                                        <li t-if="record.type.raw_value != 'service'">香港现货: <field name="local_stock"/></li>
+                                        <li t-if="record.type.raw_value != 'service'">欧洲期货: <field name="overseas_stock"/></li>
+                                        <li>港币公价: <field name="list_price_integer"></field></li>
+                                        <li>港币卖价: <field name="net_price_integer"/></li>
+                                        <li>折扣率: <field name="discount_ac"/>%</li>
+                                        <li><i>今日RMB卖价: <field name="sale_hkd_ac_cn"/></i></li>
+                                    </t>
+                                    <t t-if="record.sale_hkd_ac_so.raw_value > 0">
+                                        <li t-if="record.type.raw_value != 'service'">香港现货: <field name="local_stock"/></li>
+                                        <li t-if="record.type.raw_value != 'service'">欧洲期货: <field name="overseas_stock"/></li>
+                                        <li>港币公价: <field name="list_price_integer"></field></li>
+                                        <li>港币卖价: <field name="net_price_integer"/></li>
+                                        <li>折扣率: <field name="discount_ac_so"/>%</li>
+                                        <li style="color:DarkGrey"><i>今日RMB卖价: <field name="sale_hkd_ac_cn"/></i></li>
+                                        <li style="color:Red"><b><i>RMB減價後特價: <field name="sale_hkd_ac_so_cn"/></i></b></li>
+                                    </t>
+                                </ul>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    <record id="product_template_cn_sales_price_no_qty_ac_action" model="ir.actions.act_window">
+        <!--<field name="name">Product Offer (ZH): Sales Price</field>-->
+        <field name="name">AC-NO-QTY (CN)</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="product_template_cn_sales_price_no_qty_ac_kanban_view"/>
+        <field name="context">{"search_default_warehouse_internal_location":1}</field>
+    </record>
+    <menuitem action="product_template_cn_sales_price_no_qty_ac_action"
+        id="menu_product_template_cn_sales_price_no_qty_ac_action"
+        parent="product_offer_section" sequence="6" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     <!-- Product Offer (EN): Availability = Product Offer Available -->
     <!--TODO: Get New Price-->
@@ -439,7 +589,7 @@
 
     <record id="product_template_en_availability_action" model="ir.actions.act_window">
         <!--<field name="name">Product Offer (EN): Availability</field>-->
-        <field name="name">Product Offer Available</field>
+        <field name="name">Available</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">product.template</field>
         <field name="view_mode">kanban,tree,form</field>
@@ -452,7 +602,7 @@
 
     <menuitem action="product_template_en_availability_action"
         id="menu_product_template_en_availability_action"
-        parent="base.menu_product" sequence="9" />
+        parent="product_offer_section" sequence="9" />
 
 
 
@@ -495,7 +645,7 @@
 
     <record id="product_template_zh_availability_action" model="ir.actions.act_window">
         <!--<field name="name">Product Offer (ZH): Availability</field>-->
-        <field name="name">Product Offer Available (CN)</field>
+        <field name="name">Available (CN)</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">product.template</field>
         <field name="view_mode">kanban,tree,form</field>
@@ -506,7 +656,7 @@
 
     <menuitem action="product_template_zh_availability_action"
         id="menu_product_template_zh_availability_action"
-        parent="base.menu_product" sequence="10" />
+        parent="product_offer_section" sequence="10" />
 
 
     <!--Search View-->
