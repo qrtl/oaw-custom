@@ -14,6 +14,7 @@
                     <field name="net_price" string="Sale HKD AA"/>
                     <field name="sale_hkd_aa_so" string="Sale HKD AA Special Offer"/>
                     <field name="sale_hkd_ac" string="Sale HKD AC"/>
+                    <field name="sale_hkd_ac_so" string="Sale HKD AC Special Offer"/>
                     <field name="additional_info" string="Note"/>
                     <field name="advertise" string="Ads"/>
                     <field name="stock_location"/>
