@@ -260,8 +260,8 @@
                                         <li>港币公价: <field name="list_price_integer"></field></li>
                                         <li>港币卖价: <field name="net_price_integer"/></li>
                                         <li>折扣率: <field name="discount_aa_so"/>%</li>
-                                        <li style="color:DarkGrey"><i>今日RMB卖价: <field name="net_price_cny"/></i></li>R
-                                        <li style="color:Red"><b><i>MB減價後特價: <field name="sale_hkd_aa_so_cn"/></i></b></li>
+                                        <li style="color:DarkGrey"><i>今日RMB卖价: <field name="net_price_cny"/></i></li>
+                                        <li style="color:Red"><b><i>RMB減價後特價: <field name="sale_hkd_aa_so_cn"/></i></b></li>
                                     </t>
                                 </ul>
                             </div>
