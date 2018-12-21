@@ -82,10 +82,12 @@ class ExportProductImageWizard(models.TransientModel):
                         field_label = [field_label, node.xpath(".//field")[
                             0].get("name")]
                         field_name = node.xpath(".//field")[1].get("name")
-                    kanban_fields_list.append({
+                    item = {
                         "field_name": field_name,
                         "field_label": field_label
-                    })
+                    }
+                    if item not in kanban_fields_list:
+                        kanban_fields_list.append(item)
 
             filtered_list = self.product_export_filter(self._context.get("active_ids"))
             product_ids = product_obj.browse(filtered_list)
@@ -197,8 +199,9 @@ class ExportProductImageWizard(models.TransientModel):
                             html_str += field_label + "N/A<br>"
                     elif type(field_value) == float or type(field_value) \
                             == int:
-                        html_str += field_label + "{:,}".format(int(
-                            field_value)) + "<br>"
+                        value = "{:,}".format(int(field_value)) if \
+                            field_value != 0 else "N/A"
+                        html_str += field_label + value + "<br>"
                     elif type(field_value) == bool:
                         html_str += field_label + " %s<br>" % str(
                             'Yes' if field_value else 'NO')
