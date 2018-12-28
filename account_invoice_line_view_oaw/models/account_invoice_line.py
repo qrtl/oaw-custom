@@ -142,7 +142,12 @@ class InvoiceLine(models.Model):
     reviewed = fields.Boolean(
         'Reviewed',
     )
-
+    payment_reference = fields.Char(
+        'Payment Reference',
+        related = 'invoice_id.payment_ref',
+        store=True,
+        readonly=True,
+    )
 
     def init(self, cr):
         # to be executed only when installing the module.  update "stored" fields 
