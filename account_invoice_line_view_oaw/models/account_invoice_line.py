@@ -142,6 +142,12 @@ class InvoiceLine(models.Model):
     reviewed = fields.Boolean(
         'Reviewed',
     )
+    payment_ref = fields.Char(
+        'Payment Ref',
+        store=True,
+        readonly=True
+    )
+
 
 
     def init(self, cr):
