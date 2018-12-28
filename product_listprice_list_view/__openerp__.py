@@ -12,6 +12,7 @@
         "sale",
         "stock",
         "product_offer",
+
     ],
     'description': """
 * Adds a menu item 'Product List Price' to facilitate list price update

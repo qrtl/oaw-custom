@@ -158,6 +158,83 @@
         </field>
     </record>
 
+
+
+      <!--&lt;!&ndash; Product Offer (ALL) AA-No-Qty&ndash;&gt;-->
+    <!--<record id="product_template_en_sales_all_price_no_qty_kanban_view" model="ir.ui.view">-->
+        <!--<field name="name">Product.template.product.kanban.no.qty.en </field>-->
+        <!--<field name="model">product.template</field>-->
+        <!--<field name="arch" type="xml">-->
+            <!--<kanban>-->
+                <!--<field name="type"/>-->
+                <!--<field name="sale_hkd_aa_so"/>-->
+                <!--<templates>-->
+                    <!--<t t-name="kanban-box">-->
+                        <!--<div class="oe_kanban_vignette oe_semantic_html_override">-->
+                            <!--<a type="open"><img t-att-src="kanban_image('product.template', 'image_medium', record.id.value)" class="oe_kanban_image"/></a>-->
+                            <!--<div class="oe_kanban_details">-->
+                                <!--<h4>-->
+                                    <!--<a type="open">-->
+                                         <!--<span t-if="record.default_code.value">-->
+                                             <!--[<field name="default_code"/>]-->
+                                          <!--</span>-->
+                                         <!--<field name="name"/>-->
+                                    <!--</a>-->
+                                <!--</h4>-->
+                                <!--<div name="tags"/>-->
+                                <!--<ul>-->
+                                    <!--<t t-if="record.sale_hkd_aa_so.raw_value == 0">-->
+                                        <!--<li t-if="record.type.raw_value != 'service'">HK Stock: <field name="local_stock"/></li>-->
+                                        <!--<li t-if="record.type.raw_value != 'service'">Overseas Stock: <field name="overseas_stock"/></li>-->
+                                        <!--&lt;!&ndash;<li t-if="record.type.raw_value != 'service'">Reserved: <field name="qty_reserved"/> <field name="uom_id"/></li>&ndash;&gt;-->
+                                        <!--<li>HK Retail: <field name="list_price_integer"></field></li>-->
+                                        <!--<li>Discount: <field name="discount"/>%</li>-->
+                                        <!--<li>Sale HKD: <field name="net_price_integer"/></li>-->
+                                        <!--<li>Sale USD: <field name="sale_in_usd"/></li>-->
+                                        <!--<li>Sale EUR: <field name="sale_in_eur"/></li>-->
+                                        <!--<li>Sale CHF: <field name="sale_in_chf"/></li>-->
+                                        <!--<li>Sale RMB: <field name="sale_in_rmb"/></li>-->
+                                    <!--</t>-->
+                                    <!--<t t-if="record.sale_hkd_aa_so.raw_value > 0">-->
+                                        <!--<li t-if="record.type.raw_value != 'service'">HK Stock: <field name="local_stock"/></li>-->
+                                        <!--<li t-if="record.type.raw_value != 'service'">Overseas Stock: <field name="overseas_stock"/></li>-->
+                                        <!--&lt;!&ndash;<li t-if="record.type.raw_value != 'service'">Reserved: <field name="qty_reserved"/> <field name="uom_id"/></li>&ndash;&gt;-->
+                                        <!--<li>HK Retail: <field name="list_price_integer"></field></li>-->
+                                        <!--<li>Discount: <field name="discount_aa_so"/>%</li>-->
+                                        <!--<li style="color:DarkGrey">Sale HKD: <field name="net_price_integer"/></li>-->
+                                        <!--<li style="color:DarkGrey">Sale USD: <field name="sale_in_usd"/></li>-->
+                                        <!--<li style="color:DarkGrey">Sale EUR: <field name="sale_in_eur"/></li>-->
+                                        <!--<li style="color:DarkGrey">Sale CHF: <field name="sale_in_chf"/></li>-->
+                                        <!--<li style="color:DarkGrey">Sale RMB: <field name="sale_in_rmb"/></li>-->
+                                        <!--<li style="color:Red"><b>Sale HKD Special: <field name="sale_hkd_aa_so" /></b></li>-->
+                                        <!--<li style="color:Red"><b>Sale USD Special: <field name="sale_in_usd_so" /></b></li>-->
+                                        <!--<li style="color:Red"><b>Sale EUR Special: <field name="sale_in_eur_so" /></b></li>-->
+                                        <!--<li style="color:Red"><b>Sale CHF Special: <field name="sale_in_chf_so" /></b></li>-->
+                                        <!--<li style="color:Red"><b>Sale RMB Special: <field name="sale_in_rmb_so" /></b></li>-->
+                                    <!--</t>-->
+
+                                <!--</ul>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</t>-->
+                <!--</templates>-->
+            <!--</kanban>-->
+        <!--</field>-->
+    <!--</record>-->
+  <!--<record id="product_template_en_sales_all_price_no_qty_action" model="ir.actions.act_window">-->
+        <!--<field name="name">AA-NO-QTY (ALL)</field>-->
+        <!--<field name="type">ir.actions.act_window</field>-->
+        <!--<field name="res_model">product.template</field>-->
+        <!--<field name="view_mode">kanban,tree,form</field>-->
+        <!--<field name="view_type">form</field>-->
+        <!--<field name="view_id" ref="product_template_en_sales_all_price_no_qty_kanban_view"/>-->
+        <!--<field name="context">{"search_default_warehouse_internal_location":1}</field>-->
+    <!--</record>-->
+    <!--<menuitem action="product_template_en_sales_all_price_no_qty_action"-->
+        <!--id="menu_product_template_en_sales_price_no_qty_all_action"-->
+        <!--parent="product_offer_section" sequence="8" />-->
+
+
        <!-- Product Offer AA-No-Qty-->
     <record id="product_template_en_sales_price_no_qty_kanban_view" model="ir.ui.view">
         <field name="name">Product.template.product.kanban.no.qty.en </field>
@@ -208,7 +285,6 @@
         </field>
     </record>
     <record id="product_template_en_sales_price_no_qty_action" model="ir.actions.act_window">
-        <!--<field name="name">Product Offer (EN): Sales Price</field>-->
         <field name="name">AA-NO-QTY</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">product.template</field>
