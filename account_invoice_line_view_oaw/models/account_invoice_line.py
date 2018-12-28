@@ -142,8 +142,9 @@ class InvoiceLine(models.Model):
     reviewed = fields.Boolean(
         'Reviewed',
     )
-    payment_ref = fields.Char(
-        'Payment Ref',
+    payment_reference = fields.Char(
+        'Payment Reference',
+        related = 'invoice_id.payment_ref',
         store=True,
         readonly=True
     )
