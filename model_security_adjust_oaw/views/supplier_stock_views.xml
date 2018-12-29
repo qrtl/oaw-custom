@@ -53,7 +53,7 @@
                     <field name="price_unit_base" string="HKD Value"/>
                     <field name="price_subtotal" sum="Total Amount"/>
                     <field name="partner_note"/>
-                    <field name="_last_update"/>
+                    <field name="__last_update"/>
                 </tree>
             </field>
         </record>
