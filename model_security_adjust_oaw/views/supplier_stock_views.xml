@@ -53,6 +53,7 @@
                     <field name="price_unit_base" string="HKD Value"/>
                     <field name="price_subtotal" sum="Total Amount"/>
                     <field name="partner_note"/>
+                    <field name="__last_update"/>
                 </tree>
             </field>
         </record>
@@ -203,7 +204,7 @@
         <!-- Menu Items -->
         <menuitem
                 id="menu_base_products_supplier"
-                name="Stock Offer"
+                name="My Stock Offer"
                 groups="model_security_adjust_oaw.group_supplier"
                 sequence="15"/>
 
@@ -216,7 +217,7 @@
 
         <menuitem
                 id="products_supplier"
-                name="Stock Offer"
+                name="My Stock Offer"
                 groups="model_security_adjust_oaw.group_supplier"
                 parent="menu_products_supplier"
                 sequence="15"
