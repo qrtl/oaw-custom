@@ -15,8 +15,6 @@
                     <field name="sale_hkd_aa_so" string="Sale HKD AA Special Offer"/>
                     <field name="sale_hkd_ac" string="Sale HKD AC"/>
                     <field name="sale_hkd_ac_so" string="Sale HKD AC Special Offer"/>
-
-
                     <field name="stock_location"/>
                     <field name="stock_leadtime"/>
                     <field name="stock_cost" string="Cost HKD"/>
