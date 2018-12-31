@@ -140,21 +140,3 @@ class ProductTemplate(models.Model):
                 pt.net_profit = pt.net_price - pt.stock_cost
                 pt.net_profit_pct = (pt.net_price / pt.stock_cost) * 100 - 100
         return
-
-    # @api.multi
-    # def write(self, vals):
-    #     for pt in self:
-    #         if 'sale_hkd_aa_so' in vals:
-    #             if pt.net_price > vals['sale_hkd_aa_so']:
-    #                 usd_rec = self.env['res.currency'].search([('name', '=', 'USD')])[0]
-    #                 eur_rec = self.env['res.currency'].search([('name', '=', 'EUR')])[0]
-    #                 chf_rec = self.env['res.currency'].search([('name', '=', 'CHF')])[0]
-    #                 rmb_rec = self.env['res.currency'].search([('name', '=', 'CNY')])[0]
-    #                 if usd_rec and eur_rec and chf_rec and rmb_rec:
-    #                     # Updating special offer in foreign currencies for product offer kanban view
-    #                     pt.sale_in_usd_so = pt.sale_hkd_aa_so * usd_rec.rate_silent
-    #                     pt.sale_in_eur_so = pt.sale_hkd_aa_so * eur_rec.rate_silent
-    #                     pt.sale_in_chf_so = pt.sale_hkd_aa_so * chf_rec.rate_silent
-    #                     pt.sale_in_rmb_so = pt.sale_hkd_aa_so * rmb_rec.rate_silent
-    #
-    #     return super(ProductTemplate, self).write(vals)
