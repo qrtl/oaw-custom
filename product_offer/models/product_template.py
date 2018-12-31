@@ -136,14 +136,11 @@ class ProductTemplate(models.Model):
         compute='_get_net_price_cny',
         digits=dp.get_precision('Product Price')
     )
-
-
     partner_stock_last_modified = fields.Datetime(
         string="Last Modified",
         readonly=True,
         store=True,
     )
-
     sale_in_usd = fields.Float(
         string='Sale USD',
         compute='_get_sale_price_currency',
@@ -164,7 +161,6 @@ class ProductTemplate(models.Model):
         compute='_get_sale_price_currency',
         digits=dp.get_precision('Product Price')
     )
-
     sale_in_usd_so = fields.Float(
         string='Sale USD',
         compute='_get_sale_price_currency_discounted',
@@ -213,8 +209,6 @@ class ProductTemplate(models.Model):
                 pt.sale_in_chf_so = pt.sale_hkd_aa_so * chf_rec.rate_silent
                 pt.sale_in_rmb_so = pt.sale_hkd_aa_so * rmb_rec.rate_silent
 
-
-
     @api.multi
     def _get_net_price_cny(self):
         cny_rec = self.env['res.currency'].search([('name','=','CNY')])[0]
@@ -244,6 +238,7 @@ class ProductTemplate(models.Model):
             else:
                 pt.discount_aa_so = (1 - pt.sale_hkd_aa_so / pt.list_price) * 100
         return
+
     @api.multi
     @api.depends('list_price', 'sale_hkd_ac')
     def _get_discount_ac(self):
@@ -253,6 +248,7 @@ class ProductTemplate(models.Model):
             else:
                 pt.discount_ac = (1 - pt.sale_hkd_ac / pt.list_price) * 100
         return
+
     @api.multi
     @api.depends('list_price', 'sale_hkd_ac_so')
     def _get_discount_ac_so(self):
@@ -268,6 +264,7 @@ class ProductTemplate(models.Model):
     def _get_list_price_integer(self):
         for pt in self:
             pt.list_price_integer = int(pt.list_price)
+
     @api.multi
     @api.depends('net_price')
     def _get_net_price_integer(self):
@@ -282,11 +279,13 @@ class ProductTemplate(models.Model):
                 pt.local_stock = 'Yes'
             else:
                 pt.local_stock = 'No'
+
     @api.multi
     @api.depends('qty_local_stock', 'qty_reserved')
     def _get_local_stock_not_reserved(self):
         for pt in self:
             pt.local_stock_not_reserved = pt.qty_local_stock - pt.qty_reserved
+
     @api.multi
     @api.depends('qty_overseas')
     def _get_overseas_stock(self):
