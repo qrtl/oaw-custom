@@ -101,7 +101,7 @@
                                     <li>港币公价: <field name="list_price_integer"></field></li>
                                     <li>港币卖价: <field name="net_price_integer"/></li>
                                     <li>折扣率: <field name="discount"/>%</li>
-                                    <li><i>今日RMB卖价: <field name="net_price_cny"/></i></li>
+                                    <li><i>今日人民幣卖价: <field name="net_price_cny"/></i></li>
                                 </ul>
                             </div>
                         </div>
@@ -334,7 +334,7 @@
                                         <li>港币公价: <field name="list_price_integer"></field></li>
                                         <li>港币卖价: <field name="net_price_integer"/></li>
                                         <li>折扣率: <field name="discount"/>%</li>
-                                        <li><i>今日RMB卖价: <field name="net_price_cny"/></i></li>
+                                        <li><i>今日人民幣卖价: <field name="net_price_cny"/></i></li>
                                     </t>
                                     <t t-if="record.sale_hkd_aa_so.raw_value > 0">
                                         <li t-if="record.type.raw_value != 'service'">香港现货: <field name="local_stock"/></li>
@@ -343,8 +343,8 @@
                                         <li>港币公价: <field name="list_price_integer"></field></li>
                                         <li>港币卖价: <field name="net_price_integer"/></li>
                                         <li>折扣率: <field name="discount_aa_so"/>%</li>
-                                        <li style="color:DarkGrey"><i>今日RMB卖价: <field name="net_price_cny"/></i></li>
-                                        <li style="color:Red"><b><i>RMB減價後特價: <field name="sale_hkd_aa_so_cn"/></i></b></li>
+                                        <li style="color:DarkGrey"><i>今日人民幣卖价: <field name="net_price_cny"/></i></li>
+                                        <li style="color:Red"><b><i>人民幣減價後特價: <field name="sale_hkd_aa_so_cn"/></i></b></li>
                                     </t>
                                 </ul>
                             </div>
@@ -448,7 +448,7 @@
                                     <li>港币公价: <field name="list_price_integer"></field></li>
                                     <li>折扣率: <field name="discount_ac"/>%</li>
                                     <li>港币卖价: <field name="sale_hkd_ac"/></li>
-                                    <li><i>今日RMB卖价: <field name="sale_hkd_ac_cn"/></i></li>
+                                    <li><i>今日人民幣卖价: <field name="sale_hkd_ac_cn"/></i></li>
                                 </ul>
                             </div>
                         </div>
@@ -564,7 +564,7 @@
                                         <li>港币公价: <field name="list_price_integer"></field></li>
                                         <li>港币卖价: <field name="net_price_integer"/></li>
                                         <li>折扣率: <field name="discount_ac"/>%</li>
-                                        <li><i>今日RMB卖价: <field name="sale_hkd_ac_cn"/></i></li>
+                                        <li><i>今日人民幣卖价: <field name="sale_hkd_ac_cn"/></i></li>
                                     </t>
                                     <t t-if="record.sale_hkd_ac_so.raw_value > 0">
                                         <li t-if="record.type.raw_value != 'service'">香港现货: <field name="local_stock"/></li>
@@ -572,8 +572,8 @@
                                         <li>港币公价: <field name="list_price_integer"></field></li>
                                         <li>港币卖价: <field name="net_price_integer"/></li>
                                         <li>折扣率: <field name="discount_ac_so"/>%</li>
-                                        <li style="color:DarkGrey"><i>今日RMB卖价: <field name="sale_hkd_ac_cn"/></i></li>
-                                        <li style="color:Red"><b><i>RMB減價後特價: <field name="sale_hkd_ac_so_cn"/></i></b></li>
+                                        <li style="color:DarkGrey"><i>今日人民幣卖价: <field name="sale_hkd_ac_cn"/></i></li>
+                                        <li style="color:Red"><b><i>人民幣減價後特價: <field name="sale_hkd_ac_so_cn"/></i></b></li>
                                     </t>
                                 </ul>
                             </div>
