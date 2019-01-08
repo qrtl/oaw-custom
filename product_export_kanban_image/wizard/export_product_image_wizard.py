@@ -74,9 +74,7 @@ class ExportProductImageWizard(models.TransientModel):
             for node in etree.XML(fields['arch']).xpath("//li"):
                 if node.xpath(".//field") and not node.xpath(".//field")[
                     0].get("no_export", False):
-                    field_label = node.text or node.xpath("i") and \
-                                  node.xpath("i")[0].text or node.xpath("b")\
-                                  and node.xpath("b")[0].text
+                    field_label = "".join(node.itertext()).replace('%', '')
                     field_name = node.xpath(".//field")[0].get("name")
                     if ':' not in field_label:
                         field_label = [field_label, node.xpath(".//field")[
