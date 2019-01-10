@@ -58,7 +58,7 @@ class SupplierStock(models.Model):
     )
     quantity = fields.Float(
         string='Quantity',
-        digits=dp.get_precision('Product Unit of Measure'),
+        digits=dp.get_precision('Product Price'),
         required=True,
     )
     price_unit = fields.Float(
@@ -69,14 +69,14 @@ class SupplierStock(models.Model):
     )
     price_subtotal = fields.Float(
         string='Amount',
-        digits=dp.get_precision('Account'),
+        digits=dp.get_precision('Product Price'),
         store=True,
         readonly=True,
         compute='_compute_price'
     )
     price_unit_base = fields.Float(
         string='Unit Price (Base)',
-        digits=dp.get_precision('Account'),
+        digits=dp.get_precision('Product Price'),
         compute='_compute_price_base',
         store=True,
     )
