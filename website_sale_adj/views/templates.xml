@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <template id="products_item" name="Show Stock Quantity" inherit_id="website_sale.products_item">
+            <xpath expr="//h5" position="after">
+                <div>HK Stock: <span t-if="product.qty_local_stock" t-field="product.qty_local_stock"/><span t-if="not product.qty_local_stock">0</span></div>
+                <div>Overseas Stock: <span t-if="product.qty_overseas" t-field="product.qty_overseas"/><span t-if="not product.qty_overseas">0</span></div>
+            </xpath>
+        </template>
+
+        <template id="product" name="Product" inherit_id="website_sale.product">
+            <xpath expr="//form" position="after">
+                <div>
+                    <p class="text-muted">
+                        HK Stock: <span t-if="product.qty_local_stock" t-field="product.qty_local_stock"/><span t-if="not product.qty_local_stock">0</span><br/>
+                        Overseas Stock: <span t-if="product.qty_overseas" t-field="product.qty_overseas"/><span t-if="not product.qty_overseas">0</span>
+                    </p>
+                </div>
+            </xpath>
+            <xpath expr="//a[@id='add_to_cart']" position="replace"/>
+        </template>
+
+    </data>
+</openerp>
