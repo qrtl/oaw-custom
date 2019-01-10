@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-# Copyright 2018 Quartile Limited
+# Copyright 2019 Quartile Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from openerp import http, tools, _
+from openerp import http
 from openerp.addons.website_sale.controllers.main import website_sale
 
 
