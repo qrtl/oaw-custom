@@ -4,21 +4,48 @@
 
         <template id="products_item" name="Show Stock Quantity" inherit_id="website_sale.products_item">
             <xpath expr="//h5" position="after">
-                <div>HK Stock: <span t-if="product.qty_local_stock" t-field="product.qty_local_stock"/><span t-if="not product.qty_local_stock">0</span></div>
-                <div>Overseas Stock: <span t-if="product.qty_overseas" t-field="product.qty_overseas"/><span t-if="not product.qty_overseas">0</span></div>
+                <div>
+                    <span t-field="product.category_name"/>
+                </div>
+                <div>Stock:
+                    <span t-if="product.qty_local_stock and product.qty_overseas">HK, Overseas</span>
+                    <span t-if="product.qty_local_stock and not product.qty_overseas">HK</span>
+                    <span t-if="not product.qty_local_stock and product.qty_overseas">Overseas</span>
+                    <span t-if="not product.qty_local_stock and not product.qty_overseas">N/A</span>
+                </div>
+            </xpath>
+            <xpath expr="//img" position="attributes">
+                <attribute name="style">position: static !important; padding: 10px;</attribute>
+            </xpath>
+            <xpath expr="//div[@class='oe_product_image']" position="attributes">
+                <attribute name="style">position: static !important;</attribute>
             </xpath>
         </template>
 
         <template id="product" name="Product" inherit_id="website_sale.product">
-            <xpath expr="//form" position="after">
+            <xpath expr="//h1" position="after">
+                <h4 t-field="product.category_name"/>
+            </xpath>
+            <xpath expr="//form" position="before">
                 <div>
-                    <p class="text-muted">
-                        HK Stock: <span t-if="product.qty_local_stock" t-field="product.qty_local_stock"/><span t-if="not product.qty_local_stock">0</span><br/>
-                        Overseas Stock: <span t-if="product.qty_overseas" t-field="product.qty_overseas"/><span t-if="not product.qty_overseas">0</span>
-                    </p>
+                    <h4>
+                        Stock:
+                        <span t-if="product.qty_local_stock and product.qty_overseas">HK, Overseas</span>
+                        <span t-if="product.qty_local_stock and not product.qty_overseas">HK</span>
+                        <span t-if="not product.qty_local_stock and product.qty_overseas">Overseas</span>
+                        <span t-if="not product.qty_local_stock and not product.qty_overseas">N/A</span>
+                    </h4>
                 </div>
             </xpath>
-            <xpath expr="//a[@id='add_to_cart']" position="replace"/>
+        </template>
+
+        <template id="cart" name="Shopping Cart" inherit_id="website_sale.cart">
+            <xpath expr="//a[@class='btn btn-primary pull-right mb32']" position="attributes">
+                <attribute name="style">display: none;</attribute>
+            </xpath>
+            <xpath expr="//ul[@class='wizard pull-right']" position="attributes">
+                <attribute name="style">display: none;</attribute>
+            </xpath>
         </template>
 
     </data>
