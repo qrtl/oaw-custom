@@ -672,9 +672,9 @@
                                 </h4>
                                 <div name="tags"/>
                                 <ul>
-                                    <li>港币公价: <field name="list_price_integer"></field></li>
-                                    <li t-if="record.type.raw_value != 'service'">香港现货: <field name="local_stock" no_export="True"/></li>
-                                    <li t-if="record.type.raw_value != 'service'">欧洲期货: <field name="overseas_stock" no_export="True"/></li>
+                                    <li>港幣公價: <field name="list_price_integer"></field></li>
+                                    <li t-if="record.type.raw_value != 'service'">香港現貨: <field name="local_stock" no_export="True"/></li>
+                                    <li t-if="record.type.raw_value != 'service'">歐洲期貨: <field name="overseas_stock" no_export="True"/></li>
                                 </ul>
                             </div>
                         </div>
