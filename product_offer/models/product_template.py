@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2017 Rooms For (Hong Kong) Limted T/A OSCG
+# Copyright 2017-2019 Quartile Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from openerp import models, fields, api
@@ -180,6 +180,15 @@ class ProductTemplate(models.Model):
         string='Sale RMB',
         compute='_get_sale_price_currency_discounted',
         digits=dp.get_precision('Product Price')
+    )
+    oversea_retail_price = fields.Float(
+        string='Oversea Retail Price',
+        compute='_get_oversea_retail',
+    )
+    oversea_retail_currency_id = fields.Many2one(
+        comodel_name='res.currency',
+        string='Oversea Retail Currency',
+        compute='_get_oversea_retail',
     )
     brand = fields.Char(
         related='categ_id.name',

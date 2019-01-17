@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2017-2018 Quartile Limited
+# Copyright 2017-2019 Quartile Limited
 # Copyright 2017 eHanse
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
@@ -79,6 +79,12 @@ class SupplierStock(models.Model):
         string='Sales Price in HKD',
         digits=dp.get_precision('Product Price'),
         compute='_compute_price_base',
+        store=True,
+    )
+    retail_unit_base = fields.Float(
+        string='Retail Price (Base)',
+        digits=dp.get_precision('Product Price'),
+        compute='_compute_retail_base',
         store=True,
     )
     image_small = fields.Binary(
@@ -172,3 +178,15 @@ class SupplierStock(models.Model):
         supplier_stock = self.search([])
         supplier_stock._compute_price_base()
         return True
+
+    @api.multi
+    @api.depends('retail_in_currency', 'currency_id')
+    def _compute_retail_base(self):
+        curr_obj = self.env['res.currency']
+        company_curr = self.env.user.company_id.currency_id
+        for rec in self:
+            if rec.currency_id and rec.retail_in_currency:
+                rec.retail_unit_base = curr_obj.browse(
+                    rec.currency_id.id).compute(
+                    rec.retail_in_currency, company_curr)
+        return
