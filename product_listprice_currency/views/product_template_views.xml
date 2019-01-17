@@ -51,7 +51,7 @@
                                         <li>CHF Retail: <field name="retail_chf"/></li>
                                         <li>EUR Retail: <field name="retail_eur"/></li>
                                         <li>USD Retail: <field name="retail_usd"/></li>
-                                        <li>人民幣公價 Retail: <field name="retail_rmb"/></li>
+                                        <li>人民幣公價: <field name="retail_rmb"/></li>
                                     </ul>
                                 </div>
                             </div>
