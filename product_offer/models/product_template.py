@@ -190,6 +190,10 @@ class ProductTemplate(models.Model):
         string='Oversea Retail Currency',
         compute='_get_oversea_retail',
     )
+    brand = fields.Char(
+        related='categ_id.name',
+        string='Brand',
+    )
 
     @api.multi
     def _get_sale_price_currency(self):
