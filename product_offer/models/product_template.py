@@ -181,6 +181,10 @@ class ProductTemplate(models.Model):
         compute='_get_sale_price_currency_discounted',
         digits=dp.get_precision('Product Price')
     )
+    brand = fields.Char(
+        related='categ_id.name',
+        string='Brand',
+    )
 
     @api.multi
     def _get_sale_price_currency(self):
