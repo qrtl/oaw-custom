@@ -14,7 +14,7 @@
         <record id="product_comp_rule_custom_read" model="ir.rule">
             <field name="name" >Product Multi-company Custom Read</field>
             <field name="model_id" ref="product.model_product_template"/>
-            <field name="groups" eval="[(4, ref('base.group_sale_salesman')), (4, ref('stock.group_stock_user'))]"/>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
             <field name="domain_force"> [('company_id','!=',user.company_id.id)]</field>
             <field name="perm_read" eval="True"/>
             <field name="perm_create" eval="False"/>
@@ -25,7 +25,7 @@
         <record id="product_comp_rule_custom_update" model="ir.rule">
             <field name="name" >Product Multi-company Custom Update</field>
             <field name="model_id" ref="product.model_product_template"/>
-            <field name="groups" eval="[(4, ref('base.group_sale_salesman')), (4, ref('stock.group_stock_user'))]"/>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
             <field name="domain_force"> ['|',('company_id','=',user.company_id.id),('company_id','=',False)]</field>
             <field name="perm_read" eval="True"/>
             <field name="perm_create" eval="True"/>
