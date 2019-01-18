@@ -114,5 +114,9 @@
             </xpath>
         </template>
 
+        <template id="layout_footer_copyright" inherit_id="website.layout_footer_copyright">
+            <xpath expr="//div[@class='pull-right']" position="replace"/>
+        </template>
+
     </data>
 </openerp>
