@@ -8,6 +8,8 @@
             <field name="arch" type="xml">
                 <form string="Export Product Image Options">
                     <group>
+                        <field name="export_type"/>
+                        <field name="image_type" attrs="{'invisible': [('export_type', '!=', 'image')]}"/>
                         <field name="row"/>
                         <field name="product_limit"/>
                         <field name="total_page"/>
