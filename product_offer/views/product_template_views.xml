@@ -513,7 +513,7 @@
 
     <menuitem action="product_template_en_sales_price_ac_no_qty_action"
               id="menu_product_template_en_sales_price_ac_no_qty_action"
-              parent="product_offer_section" sequence="6" />
+              parent="product_offer_section" sequence="9" />
 
     <!-- Product Offer AC-No-Qty CN -->
     <record id="product_template_cn_sales_price_no_qty_ac_kanban_view" model="ir.ui.view">
@@ -578,7 +578,7 @@
 
     <menuitem action="product_template_cn_sales_price_no_qty_ac_action"
               id="menu_product_template_cn_sales_price_no_qty_ac_action"
-              parent="product_offer_section" sequence="6" />
+              parent="product_offer_section" sequence="9" />
 
     <!-- Product Offer (EN): Availability = Product Offer Available -->
     <!--TODO: Get New Price-->
@@ -629,7 +629,7 @@
 
     <menuitem action="product_template_en_availability_action"
               id="menu_product_template_en_availability_action"
-              parent="product_offer_section" sequence="9" />
+              parent="product_offer_section" sequence="10" />
 
     <!-- Product Offer (ZH): Availability = Product Offer Available CN -->
     <!--TODO: Get New Price-->
