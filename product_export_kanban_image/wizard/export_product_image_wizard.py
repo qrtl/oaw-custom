@@ -135,8 +135,8 @@ class ExportProductImageWizard(models.TransientModel):
             if self.export_type == 'pdf':
                 image_list = []
                 first_image = Image.open(image_path_list[0])
-                # for image in image_path_list:
-                #     image_list.append(Image.open(image))
+                for image in image_path_list[1:]:
+                    image_list.append(Image.open(image))
 
                 data_dir = config['data_dir']
                 timestamp = int(time.time())

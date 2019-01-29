@@ -3,7 +3,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 {
     'name': 'Export Product Kanban Image',
-    'version': '9.0.1.1.1',
+    'version': '8.0.2.0.0',
     'category' : 'Products',
      'license': "AGPL-3",
     'summary': """This module allow Export image(s) seleted products from list.""",
