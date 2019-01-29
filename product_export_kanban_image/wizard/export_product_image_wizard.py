@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2018 Quartile Limited
+# Copyright 2018-2019 Quartile Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 import os
@@ -9,6 +9,7 @@ import cStringIO
 import time
 import math
 from lxml import etree
+from PIL import Image
 
 from openerp import models, fields, api, _
 from openerp.tools import config
@@ -34,6 +35,22 @@ class ExportProductImageWizard(models.TransientModel):
     )
     export_pages = fields.Char(
         string='Page(s) to Export',
+    )
+    export_type = fields.Selection(
+        selection=[
+            ('image', 'Image'),
+            ('pdf', 'PDF'),
+        ],
+        string="Export Format",
+        default='image'
+    )
+    image_type = fields.Selection(
+        selection=[
+            ('jpeg', 'JPEG'),
+            ('png', 'PNG'),
+        ],
+        string="Image Format",
+        default='jpeg'
     )
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form',
@@ -87,7 +104,8 @@ class ExportProductImageWizard(models.TransientModel):
                     if item not in kanban_fields_list:
                         kanban_fields_list.append(item)
 
-            filtered_list = self.product_export_filter(self._context.get("active_ids"))
+            filtered_list = self.product_export_filter(
+                self._context.get("active_ids"))
             product_ids = product_obj.browse(filtered_list)
 
             if all(not product[image_field] for product in
@@ -97,18 +115,48 @@ class ExportProductImageWizard(models.TransientModel):
                 if not product[image_field]:
                     product_ids -= product
 
-            page_limit = self.row*3
+            page_limit = self.row * 3
             export_image_page = []
+            image_path_list = []
             page = 1
             while product_ids:
                 page_product_ids = product_ids[:page_limit]
-                export_image_page.append(self.generate_image(page_product_ids,
-                                                             kanban_fields_list,
-                                                             image_field,
-                                                             view_id,
-                                                             page).id)
+                image = self.generate_image(page_product_ids,
+                                            kanban_fields_list,
+                                            image_field,
+                                            view_id,
+                                            page)
+                image_path_list.append(image[1])
+                if self.export_type == 'image':
+                    export_image_page.append(image[0].id)
                 product_ids = product_ids[page_limit:]
                 page += 1
+
+            if self.export_type == 'pdf':
+                image_list = []
+                first_image = Image.open(image_path_list[0])
+                # for image in image_path_list:
+                #     image_list.append(Image.open(image))
+
+                data_dir = config['data_dir']
+                timestamp = int(time.time())
+                pdf_file_local_path = "%s/product_image_%d_%d.pdf" % (
+                    data_dir,
+                    timestamp,
+                    self.env.user.id
+                )
+                first_image.save(pdf_file_local_path, format="PDF",
+                                 resolution=100.0, save_all=True,
+                                 append_images=image_list)
+                stream = cStringIO.StringIO(file(pdf_file_local_path).read())
+                pdf_record = self.env['export.product.image'].create({
+                    'name': 'image_export.pdf',
+                    'image': base64.encodestring(stream.getvalue())
+                })
+                export_image_page.append(pdf_record.id)
+
+            for image in image_path_list:
+                os.remove(image)
 
             return {
                 'context': self.env.context,
@@ -125,8 +173,8 @@ class ExportProductImageWizard(models.TransientModel):
 
     def product_export_filter(self, product_ids):
         product_list = product_ids[:self.product_limit] if \
-                        self.product_limit and len(product_ids) > \
-                                          self.product_limit else product_ids
+            self.product_limit and len(product_ids) > \
+            self.product_limit else product_ids
         if self.export_pages:
             pages = []
             for page_option in self.export_pages.split(","):
@@ -135,12 +183,13 @@ class ExportProductImageWizard(models.TransientModel):
                 except ValueError:
                     if len(page_option.split("-")) > 1:
                         pages += range(int(page_option.split("-")[0]),
-                                       int(page_option.split("-")[1])+1)
+                                       int(page_option.split("-")[1]) + 1)
             pages = list(set(pages))
             pages.sort()
             filter_list = []
             for page in pages:
-                filter_list += product_list[(page-1)*self.row*3:][:self.row*3]
+                filter_list += product_list[(page - 1) * self.row * 3:][
+                               :self.row * 3]
             product_list = filter_list
         return product_list
 
@@ -153,10 +202,11 @@ class ExportProductImageWizard(models.TransientModel):
             raise UserError(_('No. of row must be greater than 0.'))
         else:
             self.total_page = math.ceil(math.ceil(float(
-                export_product)/3)/self.row)
+                export_product) / 3) / self.row)
 
     def generate_image(self, product_ids, kanban_fields_list, image_field,
                        view_id, page):
+        images_path_list = []
         rows = len(product_ids) / 3
         # Creating the html from the fields list
         html_str = "<table style='width:100%'>"
@@ -222,10 +272,11 @@ class ExportProductImageWizard(models.TransientModel):
             timestamp,
             self.env.user.id
         )
-        image_local_path = "%s/product_image_%d_%d.png" % (
+        image_local_path = "%s/product_image_%d_%d.%s" % (
             data_dir,
             timestamp,
-            self.env.user.id
+            self.env.user.id,
+            self.image_type
         )
 
         Html_file = open(html_file_local_path, "w")
@@ -236,10 +287,9 @@ class ExportProductImageWizard(models.TransientModel):
                                  options={'encoding': "UTF-8"})
         stream = cStringIO.StringIO(file(image_local_path).read())
         image_record = self.env['export.product.image'].create({
-            'name': 'page_%d.png' % page,
+            'name': 'page_%d.%s' % (page, self.image_type),
             'image': base64.encodestring(stream.getvalue())
         })
 
         os.remove(html_file_local_path)
-        os.remove(image_local_path)
-        return image_record
+        return image_record, image_local_path
