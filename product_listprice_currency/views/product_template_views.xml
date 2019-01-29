@@ -45,7 +45,6 @@
                                     </h4>
                                     <div name="tags"/>
                                     <ul>
-                                        <li>Reference: <field name="name"/></li>
                                         <li>Brand: <field name="brand"/></li>
                                         <li>HKD Retail: <field name="list_price"/></li>
                                         <li>CHF Retail: <field name="retail_chf"/></li>
