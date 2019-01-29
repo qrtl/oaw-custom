@@ -18,6 +18,6 @@ class StockReturnPicking(models.TransientModel):
                         product_tmpl_id.categ_id.enforce_qty_1:
                     quant = self.env['stock.quant'].search(
                         [('history_ids', 'in', move['move_id'])])
-                    if quant and quant.lot_id:
-                        move['lot_id'] = quant.lot_id.id
+                    if quant and quant[0].lot_id:
+                        move['lot_id'] = quant[0].lot_id.id
         return return_pick
