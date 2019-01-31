@@ -74,7 +74,8 @@ class stock_move(osv.osv):
                 and move.location_id.usage != 'customer' \
                 and not move.purchase_line_id \
                 and (not move.currency_id \
-                     or move.purchase_price_unit < 0):
+                     or move.purchase_price_unit < 0) and not \
+                    move.origin_returned_move_id:
                 return False
         return True
         
