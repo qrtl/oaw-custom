@@ -50,8 +50,7 @@
                     <field name="price_unit"/>
                     <field name="product_list_price"/>
                     <field name="product_list_price_discount"/>
-                    <field name="price_unit_base" string="HKD Value"/>
-                    <field name="price_subtotal" sum="Total Amount"/>
+                    <field name="price_unit_base"/>
                     <field name="partner_note"/>
                     <field name="__last_update"/>
                 </tree>
@@ -78,7 +77,7 @@
                                     </h4>
                                     <div name="tags"/>
                                     <ul>
-                                        <li>Retail<field name="currency_id"/>:
+                                        <li>Retail in<field name="currency_id"/>:
                                             <field name="retail_in_currency"></field>
                                         </li>
                                     </ul>
