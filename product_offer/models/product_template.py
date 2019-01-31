@@ -221,7 +221,7 @@ class ProductTemplate(models.Model):
                 pt.net_price_cny = pt.net_price * cny_rec.rate_silent
                 pt.sale_hkd_aa_so_cn = pt.sale_hkd_aa_so * cny_rec.rate_silent
                 pt.sale_hkd_ac_cn = pt.sale_hkd_ac * cny_rec.rate_silent
-                pt.sale_hkd_ac_so_cn = pt.sale_hkd_aa_so * cny_rec.rate_silent
+                pt.sale_hkd_ac_so_cn = pt.sale_hkd_ac_so * cny_rec.rate_silent
 
     @api.multi
     @api.depends('list_price', 'net_price')
