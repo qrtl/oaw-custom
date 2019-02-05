@@ -20,8 +20,10 @@ class SupplierStock(models.Model):
     )
     partner_loc_id = fields.Many2one(
         comodel_name='supplier.location',
+        default=lambda self: self._get_loc_id(),
         string='Partner Location',
         required=True,
+
     )
     supplier_lead_time = fields.Integer(
         string='Lead Time',
@@ -129,6 +131,12 @@ class SupplierStock(models.Model):
             self.currency_id = False
         else:
             self.currency_id = self.partner_loc_id.currency_id
+
+    @api.model
+    def _get_loc_id(self):
+        return self.env['supplier.location'].search([
+            ('owner_id', '=', self.env.user.partner_id.id)
+        ])[0]
 
     @api.multi
     @api.depends('price_unit','currency_id')
