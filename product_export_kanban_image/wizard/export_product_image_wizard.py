@@ -10,6 +10,7 @@ import time
 import math
 from lxml import etree
 from PIL import Image
+from fpdf import FPDF
 
 from openerp import models, fields, api, _
 from openerp.tools import config
@@ -145,9 +146,12 @@ class ExportProductImageWizard(models.TransientModel):
                     timestamp,
                     self.env.user.id
                 )
-                first_image.save(pdf_file_local_path, format="PDF",
-                                 resolution=100.0, save_all=True,
-                                 append_images=image_list)
+
+                pdf = FPDF('P', 'mm', 'A4')
+                for image_path in image_path_list:
+                    pdf.add_page()
+                    pdf.image(image_path, w=pdf.w*0.9)
+                pdf.output(pdf_file_local_path, "F")
                 stream = cStringIO.StringIO(file(pdf_file_local_path).read())
                 pdf_record = self.env['export.product.image'].create({
                     'name': 'image_export.pdf',
@@ -209,7 +213,7 @@ class ExportProductImageWizard(models.TransientModel):
         images_path_list = []
         rows = len(product_ids) / 3
         # Creating the html from the fields list
-        html_str = "<table style='width:100%'>"
+        html_str = "<table style='width: 210mm'>"
         cnt = 0
         for row in range(0, rows + 1):
             html_str = html_str + "<tr>"
