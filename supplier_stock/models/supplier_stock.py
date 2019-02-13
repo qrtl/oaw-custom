@@ -20,6 +20,7 @@ class SupplierStock(models.Model):
     )
     partner_loc_id = fields.Many2one(
         comodel_name='supplier.location',
+        default=lambda self: self._get_loc_id(),
         string='Partner Location',
         required=True,
     )
@@ -44,13 +45,13 @@ class SupplierStock(models.Model):
         store=True,
     )
     product_list_price = fields.Float(
-        string='Retail HKD',
+        string='Retail in HKD',
         related='product_id.list_price',
         readonly=True,
         store=True
     )
     product_list_price_discount = fields.Float(
-        string="Discount(%)",
+        string="Discount in HKD (%)",
         digits=dp.get_precision('Discount'),
         compute='_compute_discount',
         readonly=True,
@@ -62,7 +63,7 @@ class SupplierStock(models.Model):
         required=True,
     )
     price_unit = fields.Float(
-        string='Cost in Currency',
+        string='Sales Price in currency',
         required=True,
         digits=dp.get_precision('Product Price'),
         store=True
@@ -75,7 +76,7 @@ class SupplierStock(models.Model):
         compute='_compute_price'
     )
     price_unit_base = fields.Float(
-        string='Unit Price (Base)',
+        string='Sales Price in HKD',
         digits=dp.get_precision('Product Price'),
         compute='_compute_price_base',
         store=True,
@@ -102,7 +103,7 @@ class SupplierStock(models.Model):
         store=True
     )
     discount_in_curr = fields.Float(
-        string='Discount in currency in %',
+        string='Discount in currency (%)',
         digits=dp.get_precision('Discount'),
         compute='_discount_in_curr',
         store=True,
@@ -129,6 +130,12 @@ class SupplierStock(models.Model):
             self.currency_id = False
         else:
             self.currency_id = self.partner_loc_id.currency_id
+
+    @api.model
+    def _get_loc_id(self):
+        return self.env['supplier.location'].search([
+            ('owner_id', '=', self.env.user.partner_id.id)
+        ])[0]
 
     @api.multi
     @api.depends('price_unit','currency_id')
