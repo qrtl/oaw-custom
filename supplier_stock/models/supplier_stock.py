@@ -23,7 +23,6 @@ class SupplierStock(models.Model):
         default=lambda self: self._get_loc_id(),
         string='Partner Location',
         required=True,
-
     )
     supplier_lead_time = fields.Integer(
         string='Lead Time',
