@@ -9,7 +9,7 @@ class SupplierStock(models.Model):
     _inherit = "supplier.stock"
 
     partner_id = fields.Many2one(
-            default=lambda self: self.env.user.partner_id
+        default=lambda self: self.env.user.partner_id
     )
     internal_code = fields.Char(
         "Internal Code",
