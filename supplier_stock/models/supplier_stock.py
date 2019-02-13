@@ -127,9 +127,14 @@ class SupplierStock(models.Model):
 
     @api.model
     def _get_loc_id(self):
-        return self.env['supplier.location'].search([
+        locs = self.env['supplier.location'].search([
             ('owner_id', '=', self.env.user.partner_id.id)
-        ])[0]
+        ])
+        if locs:
+            return locs[0]
+        else:
+            return False
+
 
     @api.multi
     @api.depends('price_unit','currency_id')
