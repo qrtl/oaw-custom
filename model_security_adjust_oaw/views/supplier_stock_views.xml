@@ -209,7 +209,7 @@
 
         <menuitem
                 id="menu_products_supplier"
-                name="Products"
+                name="Product Offer"
                 groups="model_security_adjust_oaw.group_supplier"
                 parent="menu_base_products_supplier"
                 sequence="15"/>
