@@ -52,7 +52,6 @@
                     <field name="product_list_price_discount"/>
                     <field name="price_unit_base"/>
                     <field name="partner_note"/>
-                    <field name="__last_update"/>
                 </tree>
             </field>
         </record>
@@ -62,6 +61,7 @@
             <field name="model">supplier.stock</field>
             <field name="arch" type="xml">
                 <kanban default_order="product_id">
+                    <field name="currency_name"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_kanban_vignette oe_semantic_html_override">
