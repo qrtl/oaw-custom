@@ -33,6 +33,10 @@ class SupplierStock(models.Model):
         store=True,
     )
 
+    currency_name = fields.Char(
+        related='currency_id.name'
+    )
+
 
     # Overwriting display_name's method for Supplier Access User
     @api.multi
