@@ -90,17 +90,20 @@ class ExportProductImageWizard(models.TransientModel):
             # Retrieve the fields in the Kanban view, skip fields that are
             # with no_export="True"
             for node in etree.XML(fields['arch']).xpath("//li"):
-                if node.xpath(".//field") and not node.xpath(".//field")[
-                    0].get("no_export", False):
-                    field_label = "".join(node.itertext()).replace('%', '')
-                    field_name = node.xpath(".//field")[0].get("name")
-                    if ':' not in field_label:
-                        field_label = [field_label, node.xpath(".//field")[
-                            0].get("name")]
-                        field_name = node.xpath(".//field")[1].get("name")
+                if node.xpath(".//field") and \
+                        not node.xpath(".//field")[0].get("no_export", False):
+                    field_label = "".join(node.itertext()).split(":")[0] + ": "
+                    field_label_currency = False
+                    field_array = []
+                    for field in node.xpath(".//field"):
+                        if field.get('name') == 'currency_id':
+                            field_label_currency = field.get('name')
+                        else:
+                            field_array.append(field.get('name'))
                     item = {
-                        "field_name": field_name,
-                        "field_label": field_label
+                        "field_array": field_array,
+                        "field_label": field_label,
+                        "field_label_currency": field_label_currency
                     }
                     if item not in kanban_fields_list:
                         kanban_fields_list.append(item)
@@ -210,7 +213,6 @@ class ExportProductImageWizard(models.TransientModel):
 
     def generate_image(self, product_ids, kanban_fields_list, image_field,
                        view_id, page):
-        images_path_list = []
         rows = len(product_ids) / 3
         # Creating the html from the fields list
         html_str = "<table style='width: 210mm'>"
@@ -234,32 +236,32 @@ class ExportProductImageWizard(models.TransientModel):
                         str(product_ids[cnt].name)
                     )
                 for field in kanban_fields_list:
-                    if isinstance(field['field_label'], list):
-                        field_label = '%s %s: ' % (
-                            field['field_label'][0].encode('utf-8'),
-                            product_ids[cnt][field['field_label'][
-                                1]].name.encode('utf-8'),
-                        )
-                    else:
-                        field_label = field['field_label'].encode('utf-8')
-                    field_value = product_ids[cnt][field['field_name']]
-                    if 'discount' in field['field_name']:
-                        if field_value:
-                            html_str += field_label + "{:,}".format(
-                                field_value, 2) + "%<br>"
+                    # Label Value
+                    field_label = field['field_label'].encode('utf-8')
+                    if field['field_label_currency']:
+                        field_label = field_label.replace(
+                            ':', ' %s:' % str(product_ids[cnt][field[
+                                'field_label_currency']].name))
+
+                    # Field Value
+                    html_str += field_label
+                    for field_name in field['field_array']:
+                        field_value = product_ids[cnt][field_name]
+                        if 'discount' in field_name:
+                            if field_value:
+                                html_str += "{:,}".format(field_value, 2) + "%"
+                            else:
+                                html_str += "N/A"
+                        elif type(field_value) == float or type(field_value) \
+                                == int:
+                            html_str += "{:,}".format(int(field_value)) if \
+                                field_value != 0 else "N/A"
+                        elif type(field_value) == bool:
+                            html_str += "%s" % str('Yes' if field_value else 'NO')
                         else:
-                            html_str += field_label + "N/A<br>"
-                    elif type(field_value) == float or type(field_value) \
-                            == int:
-                        value = "{:,}".format(int(field_value)) if \
-                            field_value != 0 else "N/A"
-                        html_str += field_label + value + "<br>"
-                    elif type(field_value) == bool:
-                        html_str += field_label + " %s<br>" % str(
-                            'Yes' if field_value else 'NO')
-                    else:
-                        html_str += field_label + " %s<br>" % str(
-                            field_value)
+                            html_str += "%s" % str(field_value)
+                        html_str += " "
+                    html_str += "<br>"
 
                 html_str += "</td>"
                 cnt += 1
