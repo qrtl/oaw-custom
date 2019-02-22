@@ -92,6 +92,8 @@ class ExportProductImageWizard(models.TransientModel):
             for node in etree.XML(fields['arch']).xpath("//li"):
                 if node.xpath(".//field") and \
                         not node.xpath(".//field")[0].get("no_export", False):
+                    field_condition, condition_field_list = \
+                        self.get_condition_eval(node.get('t-if'))
                     field_label = "".join(node.itertext()).split(":")[0] + ": "
                     field_label_currency = False
                     field_array = []
@@ -101,6 +103,8 @@ class ExportProductImageWizard(models.TransientModel):
                         else:
                             field_array.append(field.get('name'))
                     item = {
+                        "field_condition": field_condition,
+                        "condition_field_list": condition_field_list,
                         "field_array": field_array,
                         "field_label": field_label,
                         "field_label_currency": field_label_currency
@@ -236,6 +240,22 @@ class ExportProductImageWizard(models.TransientModel):
                         str(product_ids[cnt].name)
                     )
                 for field in kanban_fields_list:
+                    # Check the condition of the field
+                    if field['field_condition']:
+                        for condition_field in field['condition_field_list']:
+                            # quote is needed for string fields
+                            condition_field_value = product_ids[cnt][
+                                condition_field]
+                            if not (type(condition_field_value) == float or \
+                                    type(condition_field_value) == int):
+                                condition_field_value = '\'' + \
+                                                        condition_field_value + '\''
+                            condition = field['field_condition'].replace(
+                                condition_field, str(condition_field_value))
+
+                        if not eval(condition):
+                            continue
+
                     # Label Value
                     field_label = field['field_label'].encode('utf-8')
                     if field['field_label_currency']:
@@ -299,3 +319,19 @@ class ExportProductImageWizard(models.TransientModel):
 
         os.remove(html_file_local_path)
         return image_record, image_local_path
+
+    def get_condition_eval(self, condition_string):
+        if condition_string:
+            eval_string = ''
+            field_list = []
+            for part in condition_string.split(' '):
+                if 'record' in part:
+                    field = part.replace('record.', '').replace(
+                        '.raw_value', '')
+                    eval_string += field
+                    field_list.append(field)
+                else:
+                    eval_string += part
+            return eval_string, field_list
+        else:
+            return False, False
