@@ -44,6 +44,18 @@ class ProductTemplate(models.Model):
         string = 'Partner Note',
         compute='_get_stock_location',
     )
+    retail_of_cheapest =  fields.Float(
+        string="Stock Cost",
+        compute='_get_stock_location',
+        digits=dp.get_precision('Product Price'),
+    )
+    curr_of_cheapest = fields.Char(
+        string="Currency",
+        compute='_get_stock_location',
+    )
+
+
+
     
     def _get_quant_cost(self, prod_ids):
         quant_obj = self.env['stock.quant']
@@ -107,9 +119,12 @@ class ProductTemplate(models.Model):
             loc = lowest_cost_ss_rec.partner_loc_id.name
             supp_lt = lowest_cost_ss_rec.supplier_lead_time
             partner_note2 = lowest_cost_ss_rec.partner_note
-            return loc, supp_lt, partner_note2
+            retail_of_cheapest = lowest_cost_ss_rec.retail_in_currency
+            curr_of_cheapest = lowest_cost_ss_rec.currency_id.name
+
+            return loc, supp_lt, partner_note2, retail_of_cheapest, curr_of_cheapest
         else:
-            return False, False, False
+            return False, False, False, False, False
 
     @api.multi
     def _get_stock_location(self):
@@ -117,7 +132,8 @@ class ProductTemplate(models.Model):
             prod_ids = [p.id for p in pt.product_variant_ids]
             pt.stock_leadtime = '/'
             if pt.overseas_stock == 'Yes':
-                pt.stock_location, supp_lt, pt.partner_note2 = \
+                pt.stock_location, supp_lt, pt.partner_note2,\
+                pt.retail_of_cheapest, pt.curr_of_cheapest = \
                     self._get_overseas_location_name(prod_ids)
                 pt.stock_leadtime = str(supp_lt) + ' day(s)'
             if pt.local_stock == 'Yes':

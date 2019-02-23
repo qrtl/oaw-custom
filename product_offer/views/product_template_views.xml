@@ -29,6 +29,7 @@
         <field name="arch" type="xml">
             <kanban>
                 <field name="type"/>
+                <field name="overseas_stock"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_vignette oe_semantic_html_override">
@@ -81,6 +82,7 @@
         <field name="arch" type="xml">
             <kanban>
                 <field name="type"/>
+                <field name="overseas_stock"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_vignette oe_semantic_html_override">
@@ -104,6 +106,7 @@
                                     <li>港幣賣價: <field name="net_price_integer"/></li>
                                     <li>折扣率: <field name="discount"/>%</li>
                                     <li><i>今日人民幣賣價: <field name="net_price_cny"/></i></li>
+
                                 </ul>
                             </div>
                         </div>
@@ -174,6 +177,8 @@
             <kanban>
                 <field name="type"/>
                 <field name="sale_hkd_aa_so"/>
+                <field name="overseas_stock"/>
+
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_vignette oe_semantic_html_override">
@@ -193,7 +198,7 @@
                                     <t t-if="record.sale_hkd_aa_so.raw_value == 0">
                                         <li t-if="record.type.raw_value != 'service'">HK Stock: <field name="local_stock"/></li>
                                         <li t-if="record.type.raw_value != 'service'">Overseas Stock: <field name="overseas_stock"/></li>
-                                        <!--<li t-if="record.type.raw_value != 'service'">Reserved: <field name="qty_reserved"/> <field name="uom_id"/></li>-->
+
                                         <li>HK Retail: <field name="list_price_integer"></field></li>
                                         <li>Discount: <field name="discount"/>%</li>
                                         <li>Sale HKD: <field name="net_price_integer"/></li>
@@ -251,6 +256,7 @@
             <kanban>
                 <field name="type"/>
                 <field name="sale_hkd_aa_so"/>
+                <field name="overseas_stock"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_vignette oe_semantic_html_override">
@@ -328,6 +334,7 @@
             <kanban>
                 <field name="type"/>
                 <field name="sale_hkd_aa_so"/>
+                <field name="overseas_stock"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_vignette oe_semantic_html_override">
@@ -393,6 +400,7 @@
             <kanban>
                 <field name="type"/>
                  <field name="sale_hkd_aa_so"/>
+                <field name="overseas_stock"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_vignette oe_semantic_html_override">
@@ -460,6 +468,7 @@
             <kanban>
                 <field name="type"/>
                 <field name="sale_hkd_ac_so"/>
+                <field name="overseas_stock"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_vignette oe_semantic_html_override">
@@ -523,6 +532,7 @@
             <kanban>
                 <field name="type"/>
                  <field name="sale_hkd_ac_so"/>
+                <field name="overseas_stock"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_vignette oe_semantic_html_override">
@@ -639,6 +649,7 @@
         <field name="arch" type="xml">
             <kanban>
                 <field name="type"/>
+                <field name="overseas_stock"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_vignette oe_semantic_html_override">
