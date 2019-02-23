@@ -45,8 +45,7 @@
                                 <div name="tags"/>
                                 <ul>
                                     <li>Brand: <field name="brand"></field></li>
-                                    <li t-if="record.type.raw_value != 'service'">HK Stock: <field name="qty_local_stock"/> <field name="uom_id"/></li>
-                                    <li t-if="record.type.raw_value != 'service'">Overseas Stock: <field name="qty_overseas"/> <field name="uom_id"/></li>
+                                    <li t-if="record.type.raw_value != 'service'">Stock: HK <field name="qty_local_stock"/>, Overseas <field name="qty_overseas"/></li>
                                     <li t-if="record.type.raw_value != 'service'">Reserved: <field name="qty_reserved"/> <field name="uom_id"/></li>
                                     <li>HK Retail: <field name="list_price_integer"></field></li>
                                     <li>Discount: <field name="discount"/>%</li>
@@ -97,8 +96,7 @@
                                 <div name="tags"/>
                                 <ul>
                                     <li>品牌: <field name="brand"></field></li>
-                                    <li t-if="record.type.raw_value != 'service'">香港現貨: <field name="qty_local_stock"/> <field name="uom_id"/></li>
-                                    <li t-if="record.type.raw_value != 'service'">歐洲期貨: <field name="qty_overseas"/> <field name="uom_id"/></li>
+                                    <li t-if="record.type.raw_value != 'service'">香港現貨: HK <field name="qty_local_stock"/>, 歐洲期貨 <field name="qty_overseas"/></li>
                                     <li t-if="record.type.raw_value != 'service'">已預留: <field name="qty_reserved"/> <field name="uom_id"/></li>
                                     <li>港幣公價: <field name="list_price_integer"></field></li>
                                     <li>港幣賣價: <field name="net_price_integer"/></li>
