@@ -29,6 +29,7 @@
         <field name="arch" type="xml">
             <kanban>
                 <field name="type"/>
+                <field name="overseas_stock"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_vignette oe_semantic_html_override">
@@ -48,7 +49,7 @@
                                     <li t-if="record.type.raw_value != 'service'">HK Stock: <field name="qty_local_stock"/> <field name="uom_id"/></li>
                                     <li t-if="record.type.raw_value != 'service'">Overseas Stock: <field name="qty_overseas"/> <field name="uom_id"/></li>
                                     <li t-if="record.type.raw_value != 'service'">Reserved: <field name="qty_reserved"/> <field name="uom_id"/></li>
-                                    <li>HK Retail: <field name="list_price_integer"></field></li>
+                                    <li id="hk-retail1">HK Retail: <field name="list_price_integer"></field></li>
                                     <li>Discount: <field name="discount"/>%</li>
                                     <li>Sale HKD: <field name="net_price_integer"/></li>
                                 </ul>
@@ -81,6 +82,7 @@
         <field name="arch" type="xml">
             <kanban>
                 <field name="type"/>
+                <field name="overseas_stock"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_vignette oe_semantic_html_override">
@@ -100,10 +102,11 @@
                                     <li t-if="record.type.raw_value != 'service'">香港現貨: <field name="qty_local_stock"/> <field name="uom_id"/></li>
                                     <li t-if="record.type.raw_value != 'service'">歐洲期貨: <field name="qty_overseas"/> <field name="uom_id"/></li>
                                     <li t-if="record.type.raw_value != 'service'">已預留: <field name="qty_reserved"/> <field name="uom_id"/></li>
-                                    <li>港幣公價: <field name="list_price_integer"></field></li>
+                                    <li id="hk-retail2">港幣公價: <field name="list_price_integer"></field></li>
                                     <li>港幣賣價: <field name="net_price_integer"/></li>
                                     <li>折扣率: <field name="discount"/>%</li>
                                     <li><i>今日人民幣賣價: <field name="net_price_cny"/></i></li>
+
                                 </ul>
                             </div>
                         </div>
@@ -174,6 +177,8 @@
             <kanban>
                 <field name="type"/>
                 <field name="sale_hkd_aa_so"/>
+                <field name="overseas_stock"/>
+
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_vignette oe_semantic_html_override">
@@ -193,8 +198,8 @@
                                     <t t-if="record.sale_hkd_aa_so.raw_value == 0">
                                         <li t-if="record.type.raw_value != 'service'">HK Stock: <field name="local_stock"/></li>
                                         <li t-if="record.type.raw_value != 'service'">Overseas Stock: <field name="overseas_stock"/></li>
-                                        <!--<li t-if="record.type.raw_value != 'service'">Reserved: <field name="qty_reserved"/> <field name="uom_id"/></li>-->
-                                        <li>HK Retail: <field name="list_price_integer"></field></li>
+
+                                        <li id="hk-retail3">HK Retail: <field name="list_price_integer"></field></li>
                                         <li>Discount: <field name="discount"/>%</li>
                                         <li>Sale HKD: <field name="net_price_integer"/></li>
                                         <li>Sale USD: <field name="sale_in_usd"/></li>
@@ -206,7 +211,7 @@
                                         <li t-if="record.type.raw_value != 'service'">HK Stock: <field name="local_stock"/></li>
                                         <li t-if="record.type.raw_value != 'service'">Overseas Stock: <field name="overseas_stock"/></li>
                                         <!--<li t-if="record.type.raw_value != 'service'">Reserved: <field name="qty_reserved"/> <field name="uom_id"/></li>-->
-                                        <li>HK Retail: <field name="list_price_integer"></field></li>
+                                        <li id="hk-retail4">HK Retail: <field name="list_price_integer"></field></li>
                                         <li>Discount: <field name="discount_aa_so"/>%</li>
                                         <li style="color:DarkGrey">Sale HKD: <field name="net_price_integer"/></li>
                                         <li style="color:DarkGrey">Sale USD: <field name="sale_in_usd"/></li>
@@ -251,6 +256,7 @@
             <kanban>
                 <field name="type"/>
                 <field name="sale_hkd_aa_so"/>
+                <field name="overseas_stock"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_vignette oe_semantic_html_override">
@@ -271,7 +277,7 @@
                                         <li t-if="record.type.raw_value != 'service'">香港現貨: <field name="local_stock"/></li>
                                         <li t-if="record.type.raw_value != 'service'">歐洲期貨: <field name="overseas_stock"/></li>
                                         <!--<li t-if="record.type.raw_value != 'service'">Reserved: <field name="qty_reserved"/> <field name="uom_id"/></li>-->
-                                        <li>港幣公價: <field name="list_price_integer"></field></li>
+                                        <li id="hk-retail5">港幣公價: <field name="list_price_integer"></field></li>
                                         <li>折扣率: <field name="discount"/>%</li>
                                         <li>港幣賣價: <field name="net_price_integer"/></li>
                                         <li>美元賣價: <field name="sale_in_usd"/></li>
@@ -283,7 +289,7 @@
                                         <li t-if="record.type.raw_value != 'service'">香港現貨: <field name="local_stock"/></li>
                                         <li t-if="record.type.raw_value != 'service'">歐洲期貨: <field name="overseas_stock"/></li>
                                         <!--<li t-if="record.type.raw_value != 'service'">Reserved: <field name="qty_reserved"/> <field name="uom_id"/></li>-->
-                                        <li>港幣公價: <field name="list_price_integer"></field></li>
+                                        <li id="hk-retail6">港幣公價: <field name="list_price_integer"></field></li>
 					                    <li>折扣率: <field name="discount_aa_so"/>%</li>
                                         <li style="color:DarkGrey">港幣賣價: <field name="net_price_integer"/></li>
                                         <li style="color:DarkGrey">美元賣價: <field name="sale_in_usd"/></li>
@@ -328,6 +334,7 @@
             <kanban>
                 <field name="type"/>
                 <field name="sale_hkd_aa_so"/>
+                <field name="overseas_stock"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_vignette oe_semantic_html_override">
@@ -348,7 +355,7 @@
                                         <li t-if="record.type.raw_value != 'service'">HK Stock: <field name="local_stock"/></li>
                                         <li t-if="record.type.raw_value != 'service'">Overseas Stock: <field name="overseas_stock"/></li>
                                         <!--<li t-if="record.type.raw_value != 'service'">Reserved: <field name="qty_reserved"/> <field name="uom_id"/></li>-->
-                                        <li>HK Retail: <field name="list_price_integer"></field></li>
+                                        <li id="hk-retail7">HK Retail: <field name="list_price_integer"></field></li>
                                         <li>Discount: <field name="discount"/>%</li>
                                         <li>Sale HKD: <field name="net_price_integer"/></li>
                                     </t>
@@ -356,7 +363,7 @@
                                         <li t-if="record.type.raw_value != 'service'">HK Stock: <field name="local_stock"/></li>
                                         <li t-if="record.type.raw_value != 'service'">Overseas Stock: <field name="overseas_stock"/></li>
                                         <!--<li t-if="record.type.raw_value != 'service'">Reserved: <field name="qty_reserved"/> <field name="uom_id"/></li>-->
-                                        <li>HK Retail: <field name="list_price_integer"></field></li>
+                                        <li id="hk-retail8">HK Retail: <field name="list_price_integer"></field></li>
                                         <li>Discount: <field name="discount_aa_so"/>%</li>
                                         <li style="color:DarkGrey">Sale HKD: <field name="net_price_integer"/></li>
                                         <li style="color:Red"><b>Sale HKD Special: <field name="sale_hkd_aa_so" /></b></li>
@@ -393,6 +400,7 @@
             <kanban>
                 <field name="type"/>
                  <field name="sale_hkd_aa_so"/>
+                <field name="overseas_stock"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_vignette oe_semantic_html_override">
@@ -413,7 +421,7 @@
                                         <li t-if="record.type.raw_value != 'service'">香港現貨: <field name="local_stock"/></li>
                                         <li t-if="record.type.raw_value != 'service'">歐洲期貨: <field name="overseas_stock"/></li>
                                         <!--<li t-if="record.type.raw_value != 'service'">已預留: <field name="qty_reserved"/> <field name="uom_id"/></li>-->
-                                        <li>港幣公價: <field name="list_price_integer"></field></li>
+                                        <li id="hk-retail9">港幣公價: <field name="list_price_integer"></field></li>
                                         <li>港幣賣價: <field name="net_price_integer"/></li>
                                         <li>折扣率: <field name="discount"/>%</li>
                                         <li><i>今日人民幣賣價: <field name="net_price_cny"/></i></li>
@@ -422,7 +430,7 @@
                                         <li t-if="record.type.raw_value != 'service'">香港現貨: <field name="local_stock"/></li>
                                         <li t-if="record.type.raw_value != 'service'">歐洲期貨: <field name="overseas_stock"/></li>
                                         <!--<li t-if="record.type.raw_value != 'service'">已預留: <field name="qty_reserved"/> <field name="uom_id"/></li>-->
-                                        <li>港幣公價: <field name="list_price_integer"></field></li>
+                                        <li id="hk-retail11">港幣公價: <field name="list_price_integer"></field></li>
                                         <li>港幣賣價: <field name="net_price_integer"/></li>
                                         <li>折扣率: <field name="discount_aa_so"/>%</li>
                                         <li style="color:DarkGrey"><i>今日人民幣賣價: <field name="net_price_cny"/></i></li>
@@ -460,6 +468,7 @@
             <kanban>
                 <field name="type"/>
                 <field name="sale_hkd_ac_so"/>
+                <field name="overseas_stock"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_vignette oe_semantic_html_override">
@@ -479,14 +488,14 @@
                                     <t t-if="record.sale_hkd_ac_so.raw_value == 0">
                                         <li t-if="record.type.raw_value != 'service'">HK Stock: <field name="local_stock"/></li>
                                         <li t-if="record.type.raw_value != 'service'">Overseas Stock: <field name="overseas_stock"/></li>
-                                        <li>HK Retail: <field name="list_price_integer"></field></li>
+                                        <li id="hk-retail12">HK Retail: <field name="list_price_integer"></field></li>
                                         <li>Discount: <field name="discount_ac"/>%</li>
                                         <li>Sale HKD: <field name="sale_hkd_ac"/></li>
                                     </t>
                                     <t t-if="record.sale_hkd_ac_so.raw_value > 0">
                                         <li t-if="record.type.raw_value != 'service'">HK Stock: <field name="local_stock"/></li>
                                         <li t-if="record.type.raw_value != 'service'">Overseas Stock: <field name="overseas_stock"/></li>
-                                        <li>HK Retail: <field name="list_price_integer"></field></li>
+                                        <li id="hk-retail13">HK Retail: <field name="list_price_integer"></field></li>
                                         <li>Discount: <field name="discount_ac_so"/>%</li>
                                         <li style="color:DarkGrey">Sale HKD: <field name="sale_hkd_ac"/></li>
                                         <li style="color:Red"><b>Sale HKD Special: <field name="sale_hkd_ac_so" /></b></li>
@@ -523,6 +532,7 @@
             <kanban>
                 <field name="type"/>
                  <field name="sale_hkd_ac_so"/>
+                <field name="overseas_stock"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_vignette oe_semantic_html_override">
@@ -542,7 +552,7 @@
                                     <t t-if="record.sale_hkd_ac_so.raw_value == 0">
                                         <li t-if="record.type.raw_value != 'service'">香港現貨: <field name="local_stock"/></li>
                                         <li t-if="record.type.raw_value != 'service'">歐洲期貨: <field name="overseas_stock"/></li>
-                                        <li>港幣公價: <field name="list_price_integer"></field></li>
+                                        <li id="hk-retail14">港幣公價: <field name="list_price_integer"></field></li>
                                         <li>港幣賣價: <field name="net_price_integer"/></li>
                                         <li>折扣率: <field name="discount_ac"/>%</li>
                                         <li><i>今日人民幣賣價: <field name="sale_hkd_ac_cn"/></i></li>
@@ -550,7 +560,7 @@
                                     <t t-if="record.sale_hkd_ac_so.raw_value > 0">
                                         <li t-if="record.type.raw_value != 'service'">香港現貨: <field name="local_stock"/></li>
                                         <li t-if="record.type.raw_value != 'service'">歐洲期貨: <field name="overseas_stock"/></li>
-                                        <li>港幣公價: <field name="list_price_integer"></field></li>
+                                        <li id="hk-retail15">港幣公價: <field name="list_price_integer"></field></li>
                                         <li>港幣賣價: <field name="net_price_integer"/></li>
                                         <li>折扣率: <field name="discount_ac_so"/>%</li>
                                         <li style="color:DarkGrey"><i>今日人民幣賣價: <field name="sale_hkd_ac_cn"/></i></li>
@@ -604,7 +614,7 @@
                                 <div name="tags"/>
                                 <ul>
                                     <li>Brand: <field name="brand"></field></li>
-                                    <li>HK Retail: <field name="list_price_integer"></field></li>
+                                    <li id="hk-retail16">HK Retail: <field name="list_price_integer"></field></li>
                                     <li t-if="record.type.raw_value != 'service'">HK Stock: <field name="local_stock" no_export="True"/></li>
                                     <li t-if="record.type.raw_value != 'service'">Overseas Stock: <field name="overseas_stock" no_export="True"/></li>
                                 </ul>
@@ -639,6 +649,7 @@
         <field name="arch" type="xml">
             <kanban>
                 <field name="type"/>
+                <field name="overseas_stock"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_vignette oe_semantic_html_override">
@@ -655,7 +666,7 @@
                                 <div name="tags"/>
                                 <ul>
                                     <li>品牌: <field name="brand"></field></li>
-                                    <li>港幣公價: <field name="list_price_integer"></field></li>
+                                    <li id="hk-retail17">港幣公價: <field name="list_price_integer"></field></li>
                                     <li t-if="record.type.raw_value != 'service'">香港現貨: <field name="local_stock" no_export="True"/></li>
                                     <li t-if="record.type.raw_value != 'service'">歐洲期貨: <field name="overseas_stock" no_export="True"/></li>
                                 </ul>
