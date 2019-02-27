@@ -11,7 +11,7 @@ def create(self, vals):
     res = super(SupplierStock, self).create(vals)
     product = self.env['product.product'].browse(
         vals.get('product_id', False))
-    location = self.env['supplier.stock'].browse(
+    location = self.env['supplier.location'].browse(
         vals.get('partner_loc_id', False))
     if product:
         if not location.hk_location:

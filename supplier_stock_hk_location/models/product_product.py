@@ -40,7 +40,7 @@ class ProductProduct(models.Model):
                     ('product_id', '=', prod.id)
                 ])
                 for r in records:
-                    if r.hk_locaton:
+                    if r.hk_location:
                         local_qty += r.quantity
                     else:
                         ovrs_qty += r.quantity
