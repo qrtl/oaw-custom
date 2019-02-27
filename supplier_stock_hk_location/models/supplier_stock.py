@@ -13,13 +13,6 @@ class SupplierStock(models.Model):
     )
 
     @api.multi
-    def _update_prod_tmpl_qty_overseas(self):
+    def _update_prod_tmpl_qty(self):
         for ss in self:
-            ss.product_id._update_overseas_info()
-
-    @api.multi
-    def write(self, vals):
-        res = super(SupplierStock, self).write(vals)
-        if 'partner_loc_id' in vals:
-            self._update_prod_tmpl_qty_overseas()
-        return res
+            ss.product_id._update_prod_tmpl_qty()

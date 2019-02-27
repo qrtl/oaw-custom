@@ -13,6 +13,8 @@
     ],
     'summary': """""",
     'description': """
+- Add "HK Location" field to classify the supplier location.
+- Overwrite/hook methods that are related to qty_overseas and qty_local_stock
     """,
     'data': [
         'views/supplier_location_views.xml',
