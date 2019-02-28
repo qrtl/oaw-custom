@@ -17,6 +17,7 @@
 - Overwrite/hook methods that are related to qty_overseas and qty_local_stock
     """,
     'data': [
+        'data/ir_actions.xml',
         'views/supplier_location_views.xml',
     ],
     'installable': True,
