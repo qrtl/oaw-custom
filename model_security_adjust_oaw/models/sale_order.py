@@ -25,13 +25,7 @@ class SaleOrder(models.Model):
 
     @api.multi
     def write(self, vals):
-        if 'checked' in vals or 'open_issue' in vals:
-            for order in self:
-                # Checking if orders customer's related partner is the active user
-                if order.partner_id.related_partner and \
-                                order.partner_id.related_partner != \
-                                self.env.user.partner_id:
-                    raise UserError(_('You cannot modify the "Checked" and "Open Issue" field for the order(s)'))
+        
         res =  super(SaleOrder, self).write(vals)
         for so in self:
             if self.env.user.has_group('model_security_adjust_oaw.group_supplier'):
