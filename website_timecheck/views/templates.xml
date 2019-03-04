@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <template id="products_categories" inherit_id="website_sale.products_categories" name="Product Categories">
+            <xpath expr="//li" position="replace">
+                <li t-att-class=" '' if request.session.new_arrival or request.session.special_offer else 'active' ">
+                    <a href="/shop/all_products">All Products</a>
+                </li>
+                <li t-att-class=" '' if not request.session.new_arrival else 'active' " groups="website_timecheck.group_timecheck_light">
+                    <a href="/shop/new_arrival">New Arrival</a>
+                </li>
+                <li t-att-class=" '' if not request.session.special_offer else 'active' ">
+                    <a href="/shop/special_offer">Special offer</a>
+                </li>
+                <br/>
+                <br/>
+                <li t-att-class=" '' if category else 'active' ">
+                    <a t-att-href="keep('/shop',category=0)">All Categories</a>
+                </li>
+            </xpath>
+        </template>
+
+        <template id="product_extended" name="product_extended" inherit_id="website_multi_image_zoom.product_extended">
+            <xpath expr="//div[@id='thumb_img_add']" position="attributes">
+                <attribute name="groups">website_timecheck.group_timecheck_light</attribute>
+            </xpath>
+        </template>
+
+        <template id="products_item" name="Show Stock Quantity" inherit_id="website_sale.products_item">
+            <xpath expr="//h5" position="after">
+                <div>
+                    <span t-field="product.category_name"/>
+                </div>
+                <div>Stock:
+                    <span t-if="product.qty_local_stock and product.qty_overseas">HK, Overseas</span>
+                    <span t-if="product.qty_local_stock and not product.qty_overseas">HK</span>
+                    <span t-if="not product.qty_local_stock and product.qty_overseas">Overseas</span>
+                    <span t-if="not product.qty_local_stock and not product.qty_overseas">N/A</span>
+                </div>
+            </xpath>
+            <xpath expr="//img" position="attributes">
+                <attribute name="style">position: static !important; padding: 10px;</attribute>
+            </xpath>
+            <xpath expr="//div[@class='oe_product_image']" position="attributes">
+                <attribute name="style">position: static !important;</attribute>
+            </xpath>
+            <xpath expr="//section" position="attributes">
+                <attribute name="style">position: static !important;</attribute>
+            </xpath>
+            <xpath expr="//div[@itemprop='offers']" position="replace">
+                <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" class="product_price"
+                     t-if="product.product_variant_ids" style="position: static !important;">
+                    <b t-if="not request.session.new_arrival">
+                        <span>HK Retail:</span>
+                        <t t-if="product.qty_overseas != 0 and product.oversea_retail_currency_id == product.company_id.currency_id and product.price &gt; product.oversea_retail_price">
+                            <span t-field="product.oversea_retail_price" style="white-space: nowrap;"  t-field-options='{
+                                  "widget": "monetary",
+                                  "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"}'/>
+                        </t>
+                        <t t-if="product.qty_overseas == 0 or
+                                 product.qty_overseas != 0 and product.oversea_retail_currency_id != product.company_id.currency_id or
+                                 product.qty_overseas != 0 and product.oversea_retail_currency_id == product.company_id.currency_id and product.price &lt;= product.oversea_retail_price">
+                            <span t-field="product.price" style="white-space: nowrap;"
+                                  t-field-options='{
+                                  "widget": "monetary",
+                                  "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"}'/>
+                        </t>
+                        <t t-if="product.qty_overseas != 0 and product.oversea_retail_currency_id != product.company_id.currency_id">
+                            <br/>
+                            <span>Oversea Retail:</span>
+                            <span t-field="product.oversea_retail_price" style="white-space: nowrap;"
+                                  t-field-options='{
+                                  "widget": "monetary",
+                                  "display_currency": "product.oversea_retail_currency_id"}'/>
+                        </t>
+                        <t t-if="request.session.special_offer">
+                            <br/>
+                            <span>Special Offer:</span>
+                            <span t-field="product.partner_stock_retail_currency_price" style="white-space: nowrap;"
+                                  t-field-options='{
+                                  "widget": "monetary",
+                                  "display_currency": "product.partner_stock_retail_currency_id"}'/>
+                        </t>
+                        <t groups="website_timecheck.group_timecheck_light">
+                            <br/>
+                            <span>Sale HKD:</span>
+                            <span t-field="product.sudo().stock_cost" style="white-space: nowrap;"/> HKD
+                            <br/>
+                            <span>Sale USD:</span>
+                            <span t-field="product.sale_in_usd" style="white-space: nowrap;"/> USD
+                            <br/>
+                            <span>Sale EUR:</span>
+                            <span t-field="product.sale_in_eur" style="white-space: nowrap;"/> EUR
+                            <br/>
+                            <span>Sale CHF:</span>
+                            <span t-field="product.sale_in_chf" style="white-space: nowrap;"/> CHF
+                            <br/>
+                            <span>人民幣賣價:</span>
+                            <span t-field="product.sale_in_rmb" style="white-space: nowrap;"/> RMB
+                        </t>
+                    </b>
+                </div>
+            </xpath>
+        </template>
+
+        <template id="product" name="Product" inherit_id="website_sale.product">
+            <xpath expr="//h1" position="after">
+                <h4 t-field="product.category_name"/>
+            </xpath>
+            <xpath expr="//form" position="before">
+                <div>
+                    <h4>
+                        Stock:
+                        <span t-if="product.qty_local_stock and product.qty_overseas">HK, Overseas</span>
+                        <span t-if="product.qty_local_stock and not product.qty_overseas">HK</span>
+                        <span t-if="not product.qty_local_stock and product.qty_overseas">Overseas</span>
+                        <span t-if="not product.qty_local_stock and not product.qty_overseas">N/A</span>
+                    </h4>
+                </div>
+            </xpath>
+        </template>
+
+        <template id="product_price" name="Product Price" inherit_id="website_sale.product_price">
+            <xpath expr="//h4[@class='oe_price_h4 css_editable_mode_hidden decimal_precision']" position="replace">
+                <h4 class="oe_price_h4 css_editable_mode_hidden decimal_precision"
+                    t-att-data-precision="user_id.partner_id.property_product_pricelist.currency_id.rounding">
+                    <b t-if="not request.session.new_arrival">
+                        <span>HK Retail:</span>
+                        <t t-if="product.qty_overseas != 0 and product.oversea_retail_currency_id == product.company_id.currency_id and product.price &gt; product.oversea_retail_price">
+                            <span t-field="product.oversea_retail_price" style="white-space: nowrap;"  t-field-options='{
+                                  "widget": "monetary",
+                                  "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"}'/>
+                        </t>
+                        <t t-if="product.qty_overseas == 0 or
+                                 product.qty_overseas != 0 and product.oversea_retail_currency_id != product.company_id.currency_id or
+                                 product.qty_overseas != 0 and product.oversea_retail_currency_id == product.company_id.currency_id and product.price &lt;= product.oversea_retail_price">
+                            <span t-field="product.price" style="white-space: nowrap;"
+                                  t-field-options='{
+                                  "widget": "monetary",
+                                  "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"}'/>
+                        </t>
+                        <t t-if="product.qty_overseas != 0 and product.oversea_retail_currency_id != product.company_id.currency_id">
+                            <br/>
+                            <span>Oversea Retail:</span>
+                            <span t-field="product.oversea_retail_price" style="white-space: nowrap;"
+                                  t-field-options='{
+                                  "widget": "monetary",
+                                  "display_currency": "product.oversea_retail_currency_id"}'/>
+                        </t>
+                        <t t-if="request.session.special_offer">
+                            <br/>
+                            <span>Special Offer:</span>
+                            <span t-field="product.partner_stock_retail_currency_price" style="white-space: nowrap;"
+                                  t-field-options='{
+                                  "widget": "monetary",
+                                  "display_currency": "product.partner_stock_retail_currency_id"}'/>
+                        </t>
+                        <t groups="website_timecheck.group_timecheck_light">
+                            <br/>
+                            <span>Sale HKD:</span>
+                            <span t-field="product.sudo().stock_cost" style="white-space: nowrap;"/> HKD
+                            <br/>
+                            <span>Sale USD:</span>
+                            <span t-field="product.sale_in_usd" style="white-space: nowrap;"/> USD
+                            <br/>
+                            <span>Sale EUR:</span>
+                            <span t-field="product.sale_in_eur" style="white-space: nowrap;"/> EUR
+                            <br/>
+                            <span>Sale CHF:</span>
+                            <span t-field="product.sale_in_chf" style="white-space: nowrap;"/> CHF
+                            <br/>
+                            <span>人民幣賣價:</span>
+                            <span t-field="product.sale_in_rmb" style="white-space: nowrap;"/> RMB
+                        </t>
+                    </b>
+                    <span itemprop="price" style="display:none;" t-esc="product.price"/>
+                    <span itemprop="priceCurrency" style="display:none;" t-esc="user_id.partner_id.property_product_pricelist.currency_id.name" class='decimal_precision' t-att-data-precision="website.pricelist_id.currency_id.rounding"/>
+                </h4>
+            </xpath>
+        </template>
+
+        <template id="cart" name="Shopping Cart" inherit_id="website_sale.cart">
+            <xpath expr="//th[@t-att-data-precision='website_sale_order.pricelist_id.currency_id.rounding']" position="attributes">
+                <attribute name="t-if">not website_sale_order.is_mto</attribute>
+            </xpath>
+            <xpath expr="//td[@name='price']" position="attributes">
+                <attribute name="t-if">not line.order_id.is_mto</attribute>
+            </xpath>
+        </template>
+
+        <template id="total" name="total" inherit_id="website_sale.total">
+            <xpath expr="//table" position="attributes">
+                <attribute name="t-if">website_sale_order and not website_sale_order.is_mto</attribute>
+            </xpath>
+        </template>
+
+    </data>
+</openerp>
