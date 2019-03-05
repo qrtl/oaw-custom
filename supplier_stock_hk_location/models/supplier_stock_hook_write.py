@@ -9,7 +9,6 @@ from openerp.addons.product_offer.models.supplier_stock import SupplierStock
 @api.multi
 def write(self, vals):
     res = super(SupplierStock, self).write(vals)
-    self._update_prod_tmpl_modified()
     if 'product_id' in vals or 'quantity' in vals or 'partner_loc_id' in vals:
         self._update_prod_tmpl_qty()
     return res
