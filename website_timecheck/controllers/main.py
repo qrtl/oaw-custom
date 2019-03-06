@@ -7,6 +7,7 @@ import werkzeug.utils
 from openerp.http import request
 from openerp import http
 from openerp.tools.translate import _
+from openerp import SUPERUSER_ID
 from openerp.addons.website_sale.controllers.main import website_sale
 from openerp.addons.web.controllers.main import Home
 from openerp.addons.web.controllers.main import ensure_db
@@ -40,6 +41,40 @@ class WebsiteSale(website_sale):
             'special_offer': True,
         })
         return request.redirect('/shop')
+
+    @http.route('/cart/update_payment_delivery_info', type='http',
+                auth="public", website=True)
+    def update_payment_delivery_info(self, **post):
+        order = request.website.sale_get_order(context=request.context)
+        if not order:
+            return request.redirect("/shop")
+        vals = {}
+        if post.get('payment_method', False):
+            vals['payment_method'] = post['payment_method']
+        if post.get('payment_desc', False):
+            vals['payment_desc'] = post['payment_desc']
+        if post.get('picking_date', False):
+            vals['picking_date'] = post['picking_date']
+        if post.get('other_inquiry', False):
+            vals['other_inquiry'] = post['other_inquiry']
+        order.sudo().write(vals)
+        return request.redirect("/order/submit")
+
+    @http.route(['/order/submit'], type='http', auth="public",
+                website=True)
+    def order_submit(self):
+        cr, uid, context = request.cr, request.uid, request.context
+
+        sale_order_id = request.session.get('sale_order_id')
+        if sale_order_id:
+            order = request.registry['sale.order'].browse(cr, SUPERUSER_ID,
+                                                          sale_order_id,
+                                                          context=context)
+        else:
+            return request.redirect('/shop')
+        request.session['sale_order_id'] = None
+        return request.website.render("website_timecheck.confirmation",
+                                      {'order': order})
 
 
 class Home(Home):
