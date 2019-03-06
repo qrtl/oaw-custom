@@ -193,12 +193,80 @@
             <xpath expr="//td[@name='price']" position="attributes">
                 <attribute name="t-if">not line.order_id.is_mto</attribute>
             </xpath>
+
+            <xpath expr="//table[@id='cart_products']" position="after">
+                <form action="/cart/update_payment_delivery_info" method="post">
+                    <div class="row">
+                        <div class="form-group col-lg-6">
+                            <label class="control-label" for="payment_method">Payment Method</label>
+                            <select name="payment_method" class="form-control">
+                                <option value="cash" t-att-selected="'cash' == website_sale_order.payment_method">Cash</option>
+                                <option value="china_bank_transfer" t-att-selected="'china_bank_transfer' == website_sale_order.payment_method">China Bank Transfer</option>
+                                <option value="hk_bank_cheque" t-att-selected="'hk_bank_cheque' == website_sale_order.payment_method">Hong Kong Banks' Cheque</option>
+                                <option value="direct_bank_transfer" t-att-selected="'direct_bank_transfer' == website_sale_order.payment_method">Bank Transfer to our HK company</option>
+                                <option value="visa_union_pay" t-att-selected="'visa_union_pay' == website_sale_order.payment_method">Visa or Union (Extra 2.2% as fee)</option>
+                                <option value="other" t-att-selected="'other' == website_sale_order.payment_method">Other Payment Method</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <label class="control-label" for="payment_desc">Other Payment Method</label>
+                            <input type="text" name="payment_desc" class="form-control" t-att-value="website_sale_order.payment_desc"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-lg-6">
+                            <label class="control-label" for="picking_date">Desire Picking Date (Delivery：Monday to Friday 15:00-18:00)</label>
+                            <input type="date" name="picking_date" class="form-control" t-att-value="website_sale_order.picking_date"/>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <label class="control-label" for="other_inquiry">Other Inquiry</label>
+                            <input type="text" name="other_inquiry" class="form-control" t-att-value="website_sale_order.other_inquiry"/>
+                        </div>
+                    </div>
+                    <div class="clearfix">
+                        <a class="btn btn-default btn-primary pull-right mb32 a-submit">Confirm and Submit <span class="fa fa-long-arrow-right"/></a>
+                    </div>
+                </form>
+            </xpath>
+            <xpath expr="//div[@id='right_column']" position="attributes">
+                <attribute name="style">display: none;</attribute>
+            </xpath>
+            <xpath expr="//div[@class='col-md-8 col-sm-9 oe_cart']" position="attributes">
+                <attribute name="class">oe_cart</attribute>
+            </xpath>
+
         </template>
 
         <template id="total" name="total" inherit_id="website_sale.total">
             <xpath expr="//table" position="attributes">
                 <attribute name="t-if">website_sale_order and not website_sale_order.is_mto</attribute>
             </xpath>
+        </template>
+
+        <template id="confirmation">
+            <t t-call="website.layout">
+                <t t-set="additional_title">Order - Submitted</t>
+                <div id="wrap">
+                    <div class="container oe_website_sale">
+                        <h1 class="mb32">Order
+                            <em t-field="order.name"/>
+                            Submitted
+                        </h1>
+                        <div class="row">
+                            <div class="col-md-8 oe_cart">
+                                <h2>Thank you for your order.</h2>
+                                <div class="oe_website_sale_tx_status" t-att-data-order-id="order.id">
+                                </div>
+                                <div class="clearfix"/>
+                                <div class="oe_structure"/>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="oe_structure"/>
+                </div>
+
+            </t>
         </template>
 
     </data>
