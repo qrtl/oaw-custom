@@ -17,6 +17,7 @@
     """,
     'data': [
         'security/timecheck_security.xml',
+        'views/sale_order_views.xml',
         'views/templates.xml',
     ],
     'installable': True,
