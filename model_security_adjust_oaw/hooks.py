@@ -22,6 +22,22 @@ def _update_partner_offer_fields(cr, registry):
           AND supplier_stock.partner_id = have_duplicates.partner_id
           AND have_duplicates.COUNT > 1
     ''')
+    cr.execute('''
+            UPDATE
+              supplier_stock
+            SET
+              owners_duplicates = False
+            FROM
+                (
+                SELECT count(id) COUNT, product_id, partner_id
+                FROM supplier_stock
+                GROUP BY product_id, partner_id
+                ) AS have_duplicates
+            WHERE
+              supplier_stock.product_id = have_duplicates.product_id
+              AND supplier_stock.partner_id = have_duplicates.partner_id
+              AND have_duplicates.COUNT = 1
+        ''')
 
     # Update Brand field
     cr.execute('''
