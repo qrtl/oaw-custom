@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2015-2017 Quartile Limted
+# Copyright 2015-2019 Quartile Limted
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from openerp import models, fields, api, _, SUPERUSER_ID
@@ -8,6 +8,11 @@ from openerp import models, fields, api, _, SUPERUSER_ID
 class PurchaseOrder(models.Model):
     _inherit = "purchase.order"
 
+    sale_order_customer_id = fields.Many2one(
+        'res.partner',
+        readonly=True,
+        string='Sales Order Customer',
+    )
 
     @api.multi
     def action_picking_create(self):

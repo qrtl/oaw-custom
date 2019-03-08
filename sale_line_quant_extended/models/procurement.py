@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
-# Copyright 2015-2017 Quartile Limted
+# Copyright 2015-2019 Quartile Limted
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from openerp import models, fields, api
-from openerp import SUPERUSER_ID
 
 
 class ProcurementOrder(models.Model):
@@ -11,14 +10,19 @@ class ProcurementOrder(models.Model):
 
 
     @api.model
-    def _update_so_line(self, res):
+    def _update_so_line_po(self, res):
         purchase_line_id = res[self.ids[0]]
-        sale_line_id = self.move_dest_id.procurement_id.sale_line_id.id
-        self.env['sale.order.line'].browse([sale_line_id])[0].sudo(SUPERUSER_ID).write({'purchase_line_id': purchase_line_id})
-
+        sale_order_line = self.move_dest_id.procurement_id.sale_line_id
+        self.env['sale.order.line'].browse([sale_order_line.id])[0].sudo().write({
+            'purchase_line_id': purchase_line_id
+        })
+        self.env['purchase.order.line'].browse(
+            purchase_line_id).order_id.sudo().write({
+                'sale_order_customer_id': sale_order_line.order_partner_id.id
+            })
 
     @api.multi
     def make_po(self):
         res = super(ProcurementOrder, self).make_po()
-        self._update_so_line(res)
+        self._update_so_line_po(res)
         return res
