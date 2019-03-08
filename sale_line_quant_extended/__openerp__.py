@@ -19,6 +19,7 @@
         'data/base_action_rule_data.xml',
         'data/update.xml',
         'views/sale_view.xml',
+        'views/purchase_view.xml',
     ],
     'installable': True,
 }
