@@ -33,6 +33,11 @@ class PurchaseOrder(models.Model):
 class PurchaseOrderLine(models.Model):
     _inherit = "purchase.order.line"
 
+    sale_order_customer_id = fields.Many2one(
+        related='order_id.sale_order_customer_id',
+        readonly=True,
+        string='Sales Order Customer',
+    )
 
     @api.one
     @api.depends('move_ids.state')
