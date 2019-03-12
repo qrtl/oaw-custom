@@ -26,4 +26,3 @@ class website(models.Model):
                 ('partner_stock_special_offer', '>=', date)
             ))
         return domain
-

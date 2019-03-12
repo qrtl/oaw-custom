@@ -55,7 +55,7 @@
                         <t t-if="not product.is_new_arrival">
                             <span>HK Retail:</span>
                             <t t-if="product.qty_overseas != 0 and product.oversea_retail_currency_id == product.company_id.currency_id and product.price &gt; product.oversea_retail_price">
-                                <span t-field="product.oversea_retail_price" style="white-space: nowrap;"  t-field-options='{
+                                <span t-field="product.list_price" style="white-space: nowrap;"  t-field-options='{
                                       "widget": "monetary",
                                       "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"}'/>
                             </t>
@@ -78,19 +78,7 @@
                             </t>
                             <t groups="website_timecheck.group_timecheck_light">
                                 <span>Sale HKD:</span>
-                                <span t-field="product.sudo().stock_cost" style="white-space: nowrap;"/> HKD
-                                <br/>
-                                <span>Sale USD:</span>
-                                <span t-field="product.sale_in_usd" style="white-space: nowrap;"/> USD
-                                <br/>
-                                <span>Sale EUR:</span>
-                                <span t-field="product.sale_in_eur" style="white-space: nowrap;"/> EUR
-                                <br/>
-                                <span>Sale CHF:</span>
-                                <span t-field="product.sale_in_chf" style="white-space: nowrap;"/> CHF
-                                <br/>
-                                <span>人民幣賣價:</span>
-                                <span t-field="product.sale_in_rmb" style="white-space: nowrap;"/> RMB
+                                <span t-field="product.sudo().list_price" style="white-space: nowrap;"/> HKD
                                 <br/>
                             </t>
                         </t>
@@ -156,18 +144,6 @@
                             <t groups="website_timecheck.group_timecheck_light">
                                 <span>Sale HKD:</span>
                                 <span t-field="product.sudo().stock_cost" style="white-space: nowrap;"/> HKD
-                                <br/>
-                                <span>Sale USD:</span>
-                                <span t-field="product.sale_in_usd" style="white-space: nowrap;"/> USD
-                                <br/>
-                                <span>Sale EUR:</span>
-                                <span t-field="product.sale_in_eur" style="white-space: nowrap;"/> EUR
-                                <br/>
-                                <span>Sale CHF:</span>
-                                <span t-field="product.sale_in_chf" style="white-space: nowrap;"/> CHF
-                                <br/>
-                                <span>人民幣賣價:</span>
-                                <span t-field="product.sale_in_rmb" style="white-space: nowrap;"/> RMB
                                 <br/>
                             </t>
                         </t>
@@ -255,8 +231,10 @@
                         <div class="row">
                             <div class="col-md-8 oe_cart">
                                 <h2>Thank you for your order.</h2>
+                                <h2>We will contact you soon.</h2>
                                 <div class="oe_website_sale_tx_status" t-att-data-order-id="order.id">
                                 </div>
+
                                 <div class="clearfix"/>
                                 <div class="oe_structure"/>
                             </div>
