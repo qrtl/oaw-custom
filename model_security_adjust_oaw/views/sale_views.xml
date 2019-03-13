@@ -59,7 +59,6 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="sale.view_quotation_tree"/>
             <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="domain">[('user_id', '=', uid)]</field>
             <field name="search_view_id" ref="view_sales_order_filter_supplier"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
