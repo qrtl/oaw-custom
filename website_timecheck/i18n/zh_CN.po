@@ -119,3 +119,8 @@ msgstr "谢谢您的订单。"
 msgid "Visa or Union (Extra 2.2% as fee)"
 msgstr "刷银联或信用卡 买方支付2.2%手续费"
 
+#. module: website_timecheck
+#: view:website:website_timecheck.confirmation
+msgid "We will contact you soon."
+msgstr "我们会尽快与您联系。"
+
