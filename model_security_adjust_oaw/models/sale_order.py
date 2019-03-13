@@ -14,6 +14,11 @@ class SaleOrder(models.Model):
         string="Order Reference",
         readonly=True
     )
+    create_partner_id = fields.Many2one(
+        'res.partner',
+        string="Sales Order Owner",
+        groups="base.group_sale_manager",
+    )
 
     def print_supplier_fm(self, cr, uid, ids, context=None):
         '''
@@ -21,12 +26,13 @@ class SaleOrder(models.Model):
         '''
         assert len(ids) == 1, 'This option should only be used for a single id at a time'
         self.signal_workflow(cr, uid, ids, 'quotation_sent')
-        return self.pool['report'].get_action(cr, uid, ids, 'model_security_adjust_oaw.report_sale_supplier_fm', context=context)
+        return self.pool['report'].get_action(cr, uid, ids, 'model_security_adjust_oaw.report_sale_supplier_fm',
+                                              context=context)
 
     @api.multi
     def write(self, vals):
-        
-        res =  super(SaleOrder, self).write(vals)
+
+        res = super(SaleOrder, self).write(vals)
         for so in self:
             if self.env.user.has_group('model_security_adjust_oaw.group_supplier'):
                 server_actions = self.env['base.action.rule'].sudo().search([
@@ -40,14 +46,17 @@ class SaleOrder(models.Model):
 
     @api.model
     def create(self, vals):
+        if 'create_partner_id' not in vals or 'create_partner_id' in vals \
+                and not vals['create_partner_id']:
+            vals['create_partner_id'] = self.env.user.partner_id.id
         res = super(SaleOrder, self).create(vals)
         # For quotation adjust: set new order_ref field
         if 'name' in vals and 'partner_id' in vals:
-              name = vals['name']
-              #Get the reference number number
-              fragments_order_ref = vals['name'].split("-")
-              sub_order_ref = fragments_order_ref[-1]
-              res.order_ref_fm_report = sub_order_ref
+            name = vals['name']
+            # Get the reference number number
+            fragments_order_ref = vals['name'].split("-")
+            sub_order_ref = fragments_order_ref[-1]
+            res.order_ref_fm_report = sub_order_ref
         if self.env.user.has_group('model_security_adjust_oaw.group_supplier'):
             server_actions = self.env['base.action.rule'].sudo().search([
                 ('model', '=', 'sale.order'),
@@ -57,7 +66,6 @@ class SaleOrder(models.Model):
             for action in server_actions:
                 action.sudo()._process(action, [res.id])
         return res
-
 
 
 from openerp.osv import osv, fields
