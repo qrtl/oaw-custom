@@ -16,14 +16,15 @@ class website(models.Model):
         date = (datetime.datetime.now() + datetime.timedelta(
             days=-7)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         if request.session.get('new_arrival'):
-            domain.extend((
-                ("qty_overseas", ">", 0),
-                ('partner_stock_new_arrival', '>=', date)
-            ))
+            domain.append(
+                ('stock_new_arrival', '>=', date)
+            )
         elif request.session.get('special_offer'):
             domain.extend((
-                ("qty_overseas", ">", 0),
-                ('partner_stock_special_offer', '>=', date)
+                '|',
+                ('local_stock_not_reserved', '>', 0),
+                ('overseas_stock', '=', 'Yes'),
+                ('sale_hkd_ac_so', '!=', 0)
             ))
         return domain
 
