@@ -16,6 +16,7 @@
     'description': """
     """,
     'data': [
+        'data/ir_actions.xml',
         'security/timecheck_security.xml',
         'views/sale_order_views.xml',
         'views/templates.xml',
