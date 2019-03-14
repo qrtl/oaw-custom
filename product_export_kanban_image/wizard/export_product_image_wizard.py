@@ -96,13 +96,17 @@ class ExportProductImageWizard(models.TransientModel):
                         self.get_condition_eval(node.get('t-if'))
                     field_label = "".join(node.itertext()).split(":")[0] + ": "
                     field_label_currency = False
+                    field_style = False
                     field_array = []
                     for field in node.xpath(".//field"):
-                        if field.get('name') == 'currency_id':
-                            field_label_currency = field.get('name')
-                        else:
-                            field_array.append(field.get('name'))
+                        if field.get('name') != 'uom_id':
+                            field_style = node.get('style')
+                            if field.get('name') == 'currency_id':
+                                field_label_currency = field.get('name')
+                            else:
+                                field_array.append(field.get('name'))
                     item = {
+                        "field_style": field_style,
                         "field_condition": field_condition,
                         "condition_field_list": condition_field_list,
                         "field_array": field_array,
@@ -263,6 +267,9 @@ class ExportProductImageWizard(models.TransientModel):
                             ':', ' %s:' % str(product_ids[cnt][field[
                                 'field_label_currency']].name))
 
+                    if field['field_style']:
+                        html_str += '<div style=\'%s\'>' % field['field_style']
+
                     # Field Value
                     html_str += field_label
                     for field_name in field['field_array']:
@@ -282,11 +289,13 @@ class ExportProductImageWizard(models.TransientModel):
                             html_str += "%s" % str(field_value)
                         html_str += " "
                     html_str += "<br>"
+                    if field['field_style']:
+                        html_str += '</div>'
 
                 html_str += "</td>"
                 cnt += 1
 
-            html_str = html_str + "</tr>"
+            html_str = html_str + "</tr><tr><td><br/></td><td><br/></td><td><br/></td></tr>"
         html_str = html_str + "</table>"
 
         # Get the data_dir and form the paths for the temporary html and
