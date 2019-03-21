@@ -30,8 +30,8 @@
         <template id="products_item" name="Show Stock Quantity" inherit_id="website_sale.products_item">
             <xpath expr="//h5" position="after">
                 <div>
-                    Ref: <span t-field="product.default_code"/><br/>
-                    <span t-field="product.category_name"/>
+                    Internal Code: <span t-field="product.default_code"/><br/>
+                    Brand: <span t-field="product.category_name"/>
                 </div>
                 <div>Stock:
                     <span t-if="product.qty_local_stock and product.qty_overseas">HK, Overseas</span>
@@ -41,18 +41,29 @@
                 </div>
             </xpath>
             <xpath expr="//img" position="attributes">
-                <attribute name="style">position: static !important; padding: 10px;</attribute>
+                <attribute name="style">position: static !important; padding: 10px; float: left;</attribute>
+                <attribute name="class">hidden-xs img img-responsive</attribute>
+            </xpath>
+            <xpath expr="//img" position="after">
+                <img itemprop="image" class="img img-responsive visible-xs-inline" style="position: static !important; float: left;"
+                     t-att-src="website.image_url(product, 'image', None if product_image_big else '300x300')" t-att-alt="product.name"/>
             </xpath>
             <xpath expr="//div[@class='oe_product_image']" position="attributes">
-                <attribute name="style">position: static !important;</attribute>
+                <attribute name="style">position: static !important; float: left;</attribute>
             </xpath>
             <xpath expr="//section" position="attributes">
-                <attribute name="style">position: static !important;</attribute>
+                <attribute name="style">position: static !important; float: left; background: none !important;</attribute>
             </xpath>
             <xpath expr="//div[@itemprop='offers']" position="replace">
                 <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" class="product_price"
                      t-if="product.product_variant_ids" style="position: static !important;">
                     <t t-if="not product.is_new_arrival">
+                        <t t-if="product.qty_overseas != 0 and product.oversea_retail_currency_id != product.company_id.currency_id">
+                            <span>Oversea Retail:</span>
+                            <span t-esc="'{:,.0f}'.format(product.oversea_retail_price)" style="white-space: nowrap;"/>
+                            <span t-field="product.oversea_retail_currency_id.name"/>
+                            <br/>
+                        </t>
                         <span>HKD Retail:</span>
                         <t t-if="product.qty_overseas != 0 and product.oversea_retail_currency_id == product.company_id.currency_id and product.price &gt; product.oversea_retail_price">
                             <span t-esc="'{:,.0f}'.format(product.oversea_retail_price)" style="white-space: nowrap;"/>
@@ -61,12 +72,6 @@
                                  product.qty_overseas != 0 and product.oversea_retail_currency_id != product.company_id.currency_id or
                                  product.qty_overseas != 0 and product.oversea_retail_currency_id == product.company_id.currency_id and product.price &lt;= product.oversea_retail_price">
                             <span t-esc="'{:,.0f}'.format(product.list_price)" style="white-space: nowrap;"/>
-                            <br/>
-                        </t>
-                        <t t-if="product.qty_overseas != 0 and product.oversea_retail_currency_id != product.company_id.currency_id">
-                            <span>Oversea Retail:</span>
-                            <span t-esc="'{:,.0f}'.format(product.oversea_retail_price)" style="white-space: nowrap;"/>
-                            <span t-field="product.oversea_retail_currency_id.name"/>
                             <br/>
                         </t>
                         <t groups="website_timecheck.group_timecheck_light">
@@ -81,6 +86,8 @@
                         <span style="color: red;">HKD</span>
                         <br/>
                     </t>
+                    <input name="product_id" t-att-value="product.product_variant_ids[0].id" type="hidden"/>
+                    <a class="btn btn-default btn-xs fa fa-shopping-cart a-submit"/>
                 </div>
             </xpath>
         </template>
@@ -161,6 +168,7 @@
                                     <p t-field="product.description_sale" class="text-muted"/>
                                 </div>
                                 <hr/>
+                                <a href="/shop" class="btn btn-default mb32">Back to Shop</a>
                             </div>
                         </div>
                     </section>
@@ -173,8 +181,8 @@
 
         <template id="product" name="Product" inherit_id="website_sale.product">
             <xpath expr="//h1" position="after">
-                <h4>Ref: <span t-field="product.default_code"/></h4>
-                <h4 t-field="product.category_name"/>
+                <h4>Internal Code: <span t-field="product.default_code"/></h4>
+                <h4>Brand: <span t-field="product.category_name"/></h4>
             </xpath>
             <xpath expr="//form" position="before">
                 <div>
@@ -194,6 +202,12 @@
                 <h4 class="oe_price_h4 css_editable_mode_hidden decimal_precision"
                     t-att-data-precision="user_id.partner_id.property_product_pricelist.currency_id.rounding">
                     <t t-if="not product.is_new_arrival">
+                        <t t-if="product.qty_overseas != 0 and product.oversea_retail_currency_id != product.company_id.currency_id">
+                            <span>Oversea Retail:</span>
+                            <span t-esc="'{:,.0f}'.format(product.oversea_retail_price)" style="white-space: nowrap;"/>
+                            <span t-field="product.oversea_retail_currency_id.name"/>
+                            <br/>
+                        </t>
                         <span>HKD Retail:</span>
                         <t t-if="product.qty_overseas != 0 and product.oversea_retail_currency_id == product.company_id.currency_id and product.price &gt; product.oversea_retail_price">
                             <span t-esc="'{:,.0f}'.format(product.oversea_retail_price)" style="white-space: nowrap;"/>
@@ -202,12 +216,6 @@
                                  product.qty_overseas != 0 and product.oversea_retail_currency_id != product.company_id.currency_id or
                                  product.qty_overseas != 0 and product.oversea_retail_currency_id == product.company_id.currency_id and product.price &lt;= product.oversea_retail_price">
                             <span t-esc="'{:,.0f}'.format(product.list_price)" style="white-space: nowrap;"/>
-                            <br/>
-                        </t>
-                        <t t-if="product.qty_overseas != 0 and product.oversea_retail_currency_id != product.company_id.currency_id">
-                            <span>Oversea Retail:</span>
-                            <span t-esc="'{:,.0f}'.format(product.oversea_retail_price)" style="white-space: nowrap;"/>
-                            <span t-field="product.oversea_retail_currency_id.name"/>
                             <br/>
                         </t>
                         <t groups="website_timecheck.group_timecheck_light">
@@ -304,8 +312,8 @@
                         </h1>
                         <div class="row">
                             <div class="col-md-8 oe_cart">
-                                <h2>Thank you for your order.</h2>
                                 <h2>We will contact you soon.</h2>
+                                <a href="/shop" class="btn btn-default mb32">Continue Shopping</a>
                                 <div class="oe_website_sale_tx_status" t-att-data-order-id="order.id">
                                 </div>
                                 <div class="clearfix"/>
@@ -317,6 +325,161 @@
                     <div class="oe_structure"/>
                 </div>
 
+            </t>
+        </template>
+
+        <template id="website_sale.products" name="Products">
+            <t t-call="website.layout">
+                <t t-set="additional_title">Shop</t>
+                <div id="wrap" class="js_sale">
+                    <div class="oe_structure"/>
+                    <div class="container oe_website_sale">
+                        <div class="products_pager">
+                            <div class="row" style="width: 100%;">
+                                <t t-call="website_sale.search">
+                                    <t t-set="search_class">pagination form-inline col-md-3</t>
+                                </t>
+                                <t t-call="website.pager"/>
+                            </div>
+                        </div>
+                        <div class='row'>
+                            <div class="hidden" id="products_grid_before"></div>
+                            <div class="col-md-12" id="products_grid">
+                                <table width="100%">
+                                    <tbody>
+                                        <tr t-ignore="true">
+                                            <td t-foreach="range(0,rows)" t-as="row" t-attf-width="#{100/rows}%"></td>
+                                        </tr>
+                                        <tr t-foreach="bins" t-as="tr_product">
+                                            <t t-foreach="tr_product" t-as="td_product">
+                                                <t t-if="td_product">
+                                                    <t t-set="product" t-value="td_product['product']"/>
+                                                    <td t-att-colspan="td_product['x'] != 1 and td_product['x']"
+                                                        t-att-rowspan="td_product['y'] != 1 and td_product['y']"
+                                                        t-attf-class="oe_product oe_grid oe-height-#{td_product['y']*2} #{ td_product['class'] }"
+                                                        style="height: 100% !important;">
+
+                                                        <div class="oe_product_cart"
+                                                             t-att-data-publish="product.website_published and 'on' or 'off'">
+
+                                                            <div class="css_options" t-ignore="true"
+                                                                 groups="base.group_website_publisher">
+                                                                <div t-attf-class="dropdown js_options"
+                                                                     t-att-data-id="product.id">
+                                                                    <button class="btn btn-default"
+                                                                            t-att-id="'dopprod-%s' % product.id"
+                                                                            role="button" data-toggle="dropdown">Options
+                                                                        <span class="caret"></span>
+                                                                    </button>
+                                                                    <ul class="dropdown-menu" role="menu"
+                                                                        t-att-aria-labelledby="'dopprod-%s' % product.id">
+                                                                        <li class='dropdown-submenu'>
+                                                                            <a tabindex="-1" href="#">Size</a>
+                                                                            <ul class="dropdown-menu" name="size">
+                                                                                <li>
+                                                                                    <a href="#">
+                                                                                        <table>
+                                                                                            <tr>
+                                                                                                <td class="selected"></td>
+                                                                                                <td t-att-class="product.website_size_x > 1 and 'selected'"></td>
+                                                                                                <td t-att-class="product.website_size_x > 2 and 'selected'"></td>
+                                                                                                <td t-att-class="product.website_size_x > 3 and 'selected'"></td>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <td t-att-class="product.website_size_y > 1 and 'selected'"></td>
+                                                                                                <td t-att-class="product.website_size_y > 1 and product.website_size_x > 1 and 'selected'"></td>
+                                                                                                <td t-att-class="product.website_size_y > 1 and product.website_size_x > 2 and 'selected'"></td>
+                                                                                                <td t-att-class="product.website_size_y > 1 and product.website_size_x > 3 and 'selected'"></td>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <td t-att-class="product.website_size_y > 2 and 'selected'"></td>
+                                                                                                <td t-att-class="product.website_size_y > 2 and product.website_size_x > 1 and 'selected'"></td>
+                                                                                                <td t-att-class="product.website_size_y > 2 and product.website_size_x > 2 and 'selected'"></td>
+                                                                                                <td t-att-class="product.website_size_y > 2 and product.website_size_x > 3 and 'selected'"></td>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <td t-att-class="product.website_size_y > 3 and 'selected'"></td>
+                                                                                                <td t-att-class="product.website_size_y > 3 and product.website_size_x > 1 and 'selected'"></td>
+                                                                                                <td t-att-class="product.website_size_y > 3 and product.website_size_x > 2 and 'selected'"></td>
+                                                                                                <td t-att-class="product.website_size_y > 3 and product.website_size_x > 3 and 'selected'"></td>
+                                                                                            </tr>
+                                                                                        </table>
+                                                                                    </a>
+                                                                                </li>
+                                                                            </ul>
+                                                                        </li>
+                                                                        <li class='dropdown-submenu'>
+                                                                            <a tabindex="-1" href="#">Styles</a>
+                                                                            <ul class="dropdown-menu" name="style">
+                                                                                <t t-foreach="styles" t-as="style">
+                                                                                    <li t-att-class="style_in_product(style, product) and 'active' or ''">
+                                                                                        <a href="#"
+                                                                                           t-att-data-id="style.id"
+                                                                                           t-att-data-class="style.html_class">
+                                                                                            <t t-esc="style.name"/>
+                                                                                        </a>
+                                                                                    </li>
+                                                                                </t>
+                                                                            </ul>
+                                                                        </li>
+                                                                        <li class='dropdown-submenu'>
+                                                                            <a tabindex="-1" href="#">Promote</a>
+                                                                            <ul class="dropdown-menu" name="sequence">
+                                                                                <li>
+                                                                                    <a href="#" class="js_go_to_top">
+                                                                                        Push to top
+                                                                                    </a>
+                                                                                </li>
+                                                                                <li>
+                                                                                    <a href="#" class="js_go_up">Push
+                                                                                        up
+                                                                                    </a>
+                                                                                </li>
+                                                                                <li>
+                                                                                    <a href="#" class="js_go_down">Push
+                                                                                        down
+                                                                                    </a>
+                                                                                </li>
+                                                                                <li>
+                                                                                    <a href="#" class="js_go_to_bottom">
+                                                                                        Push to bottom
+                                                                                    </a>
+                                                                                </li>
+                                                                            </ul>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                            <t t-set="product_image_big"
+                                                               t-value="td_product['x']+td_product['y'] > 2"/>
+                                                            <t t-call="website_sale.products_item"/>
+                                                        </div>
+
+                                                    </td>
+                                                </t>
+                                                <td t-if="not td_product" class="oe-height-2"/>
+                                            </t>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <t t-if="not bins">
+                                    <div class="text-center text-muted">
+                                        <h3 class="css_editable_display">No product defined.</h3>
+                                        <t groups="base.group_website_publisher">
+                                            <p groups="base.group_sale_manager">Use the <i>'Content'</i> top menu to
+                                                create a new product.
+                                            </p>
+                                        </t>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                        <div class="products_pager">
+                            <t t-call="website.pager"/>
+                        </div>
+                    </div>
+                    <div class="oe_structure mb32"/>
+                </div>
             </t>
         </template>
 
