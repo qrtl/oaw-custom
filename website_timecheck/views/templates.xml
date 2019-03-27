@@ -11,7 +11,18 @@
                     <a href="/shop/new_arrival">New Arrival</a>
                 </li>
                 <li t-att-class=" '' if not request.session.special_offer else 'active' ">
-                    <a href="/shop/special_offer">Special offer</a>
+                    <a href="/shop/special_offer">Special Offer</a>
+                </li>
+                <br/>
+                <br/>
+                <li t-att-class=" '' if request.session.hk_stock or request.session.oversea_stock else 'active' ">
+                    <a href="/shop/all_stock">All Stock</a>
+                </li>
+                <li t-att-class=" '' if not request.session.hk_stock else 'active' ">
+                    <a href="/shop/hk_stock">HK Stock</a>
+                </li>
+                <li t-att-class=" '' if not request.session.oversea_stock else 'active' ">
+                    <a href="/shop/oversea_stock">Oversea Stock</a>
                 </li>
                 <br/>
                 <br/>
@@ -74,16 +85,21 @@
                             <span t-esc="'{:,.0f}'.format(product.list_price)" style="white-space: nowrap;"/>
                             <br/>
                         </t>
-                        <t groups="website_timecheck.group_timecheck_light">
+                        <t t-if="not request.session.special_offer" groups="website_timecheck.group_timecheck_light">
                             <span>Sale HKD:</span>
                             <span t-esc="'{:,.0f}'.format(product.sale_hkd_ac)" style="white-space: nowrap;"/>
                             <br/>
                         </t>
+                        <t t-if="request.session.special_offer" groups="website_timecheck.group_timecheck_light">
+                            <span style="color: DarkGrey;">Sale HKD:</span>
+                            <span t-esc="'{:,.0f}'.format(product.sale_hkd_ac)" style="white-space: nowrap; color: DarkGrey;"/>
+                            <br/>
+                        </t>
                     </t>
                     <t t-if="request.session.special_offer">
-                        <span style="color: red;">Special Offer:</span>
-                        <span t-esc="'{:,.0f}'.format(product.sale_hkd_ac_so)" style="white-space: nowrap; color: red;"/>
-                        <span style="color: red;">HKD</span>
+                        <span style="color: red; font-weight:bold;">Special Offer:</span>
+                        <span t-esc="'{:,.0f}'.format(product.sale_hkd_ac_so)" style="white-space: nowrap; color: red; font-weight:bold;"/>
+                        <span style="color: red; font-weight:bold;">HKD</span>
                         <br/>
                     </t>
                     <input name="product_id" t-att-value="product.product_variant_ids[0].id" type="hidden"/>
@@ -218,18 +234,24 @@
                             <span t-esc="'{:,.0f}'.format(product.list_price)" style="white-space: nowrap;"/>
                             <br/>
                         </t>
-                        <t groups="website_timecheck.group_timecheck_light">
+                        <t t-if="not request.session.special_offer" groups="website_timecheck.group_timecheck_light">
                             <span>Sale HKD:</span>
                             <span t-esc="'{:,.0f}'.format(product.sale_hkd_ac)" style="white-space: nowrap;"/>
                             <br/>
                         </t>
+                        <t t-if="request.session.special_offer" groups="website_timecheck.group_timecheck_light">
+                            <span style="color: DarkGrey;">Sale HKD:</span>
+                            <span t-esc="'{:,.0f}'.format(product.sale_hkd_ac)" style="white-space: nowrap; color: DarkGrey;"/>
+                            <br/>
+                        </t>
                     </t>
                     <t t-if="request.session.special_offer">
-                        <span style="color: red;">Special Offer:</span>
-                        <span t-esc="'{:,.0f}'.format(product.sale_hkd_ac_so)" style="white-space: nowrap; color: red;"/>
-                        <span style="color: red;">HKD</span>
+                        <span style="color: red; font-weight:bold;">Special Offer:</span>
+                        <span t-esc="'{:,.0f}'.format(product.sale_hkd_ac_so)" style="white-space: nowrap; color: red; font-weight:bold;"/>
+                        <span style="color: red; font-weight:bold;">HKD</span>
                         <br/>
                     </t>
+
                     <span itemprop="price" style="display:none;" t-esc="product.price"/>
                     <span itemprop="priceCurrency" style="display:none;" t-esc="user_id.partner_id.property_product_pricelist.currency_id.name" class='decimal_precision' t-att-data-precision="website.pricelist_id.currency_id.rounding"/>
                 </h4>
