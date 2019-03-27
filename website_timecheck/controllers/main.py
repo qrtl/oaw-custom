@@ -42,6 +42,34 @@ class WebsiteSale(website_sale):
         })
         return request.redirect('/shop')
 
+    @http.route('/shop/all_stock', type='http', auth="public", website=True)
+    def shop_all_stock(self):
+        request.session.update({
+            'all_stock': True,
+            'hk_stock': False,
+            'oversea_stock': False,
+        })
+        return request.redirect('/shop')
+
+    @http.route('/shop/hk_stock', type='http', auth="public", website=True)
+    def shop_hk_stock(self):
+        request.session.update({
+            'all_stock': False,
+            'hk_stock': True,
+            'oversea_stock': False,
+        })
+        return request.redirect('/shop')
+
+    @http.route('/shop/oversea_stock', type='http', auth="public",
+                website=True)
+    def shop_oversea_stock(self):
+        request.session.update({
+            'all_stock': False,
+            'hk_stock': False,
+            'oversea_stock': True,
+        })
+        return request.redirect('/shop')
+
     @http.route('/cart/update_payment_delivery_info', type='http',
                 auth="public", website=True)
     def update_payment_delivery_info(self, **post):
