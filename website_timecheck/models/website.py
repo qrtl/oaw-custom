@@ -26,5 +26,13 @@ class website(models.Model):
                 ('overseas_stock', '=', 'Yes'),
                 ('sale_hkd_ac_so', '!=', 0)
             ))
+        if request.session.get('hk_stock'):
+            domain.append(
+                ('qty_local_stock', '>', 0)
+            )
+        elif request.session.get('oversea_stock'):
+            domain.append(
+                ('qty_overseas', '>', 0)
+            )
         return domain
 
