@@ -20,6 +20,7 @@ This module modify the website_sale module and provide following feature(s):
     ],
     'data': [
         'views/templates.xml',
+        'views/website_config_settings_views.xml',
     ],
     'installable': True,
 }
