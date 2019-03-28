@@ -112,6 +112,9 @@ class SupplierStock(models.Model):
         readonly=True,
         store=True
     )
+    hk_location = fields.Boolean(
+        related='partner_loc_id.hk_location'
+    )
 
     @api.one
     @api.depends('price_unit', 'quantity', 'currency_id')

@@ -9,6 +9,7 @@
                 <field name="name"/>
                 <field name="owner_id"/>
                 <field name="supplier_lead_time"/>
+                <field name="hk_location"/>
                 <field name="currency_id"/>
             </tree>
         </field>
@@ -24,6 +25,7 @@
                         <field name="name"/>
                         <field name="owner_id"/>
                         <field name="supplier_lead_time"/>
+                        <field name="hk_location"/>
                     </group>
                     <group>
                         <field name="active"/>

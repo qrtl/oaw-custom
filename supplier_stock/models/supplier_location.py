@@ -29,6 +29,10 @@ class SupplierLocation(models.Model):
         string='Owner',
         comodel_name='res.partner',
     )
+    hk_location = fields.Boolean(
+        string="HK Location",
+        default=False,
+    )
 
     _sql_constraints = [
         ('name_supp_location_uniq', 'unique(name)',
