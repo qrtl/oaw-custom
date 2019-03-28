@@ -77,18 +77,6 @@ class ProductTemplate(models.Model):
                 pt.overseas_stock = 'No'
 
     @api.multi
-    def _get_oversea_retail(self):
-        for pt in self:
-            if pt.product_variant_ids:
-                supplier_stock = self.env['supplier.stock'].sudo().search([
-                    ('product_id', '=', pt.product_variant_ids[0].id),
-                    ('quantity', '!=', 0),
-                    ('hk_location', '=', False)
-                ], order='retail_unit_base', limit=1)
-                pt.oversea_retail_price = supplier_stock.retail_in_currency
-                pt.oversea_retail_currency_id = supplier_stock.currency_id
-
-    @api.multi
     @api.depends('qty_local_stock')
     def _get_qty_local_own_stock(self):
         for pt in self:

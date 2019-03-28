@@ -11,7 +11,7 @@ class StockMove(models.Model):
         res = 0.0
         moves = self.search([
             ('product_tmpl_id', '=', prod_tmpl_id),
-            ('picking_type_code', '=', 'incoming'),
+            ('picking_code', '=', 'incoming'),
             ('state', '=', 'assigned'),
         ])
         for m in moves:
