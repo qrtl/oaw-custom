@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-<data>
 
     <record id="view_supplier_stock_tree" model="ir.ui.view">
         <field name="name">view.supplier.stock.tree</field>
@@ -61,5 +60,4 @@
               id="menu_supplier_stock"
               parent="stock.menu_stock_inventory_control" sequence="3"/>
 
-</data>
 </odoo>
