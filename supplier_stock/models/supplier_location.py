@@ -1,35 +1,33 @@
-# -*- coding: utf-8 -*-
-# Copyright 2017-2018 Quartile Limited
-# Copyright 2017 eHanse
+# Copyright 2019 Quartile Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from openerp import models, fields
+from odoo import models, fields
 
 
 class SupplierLocation(models.Model):
-    _name = "supplier.location"
-    _description = "Partner Location"
-    _order = "name"
+    _name = 'supplier.location'
+    _description = 'Partner Location'
+    _order = 'name'
 
     name = fields.Char(
-        string="Name",
+        string='Name',
         required=True,
     )
     active = fields.Boolean(
-        string="Active",
+        string='Active',
         default=True,
     )
     supplier_lead_time = fields.Integer(
-        string="Partner Lead Time (Days)",
+        string='Partner Lead Time (Days)',
     )
     currency_id = fields.Many2one(
-        string="Currency",
-        comodel_name="res.currency",
-        help="Default currency to be proposed in Supplier Stock records."
+        string='Currency',
+        comodel_name='res.currency',
+        help='Default currency to be proposed in Supplier Stock records.'
     )
     owner_id = fields.Many2one(
-        string="Owner",
-        comodel_name="res.partner",
+        string='Owner',
+        comodel_name='res.partner',
     )
 
     _sql_constraints = [

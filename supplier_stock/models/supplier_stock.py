@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
-# Copyright 2017-2019 Quartile Limited
-# Copyright 2017 eHanse
+# Copyright 2019 Quartile Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from openerp import models, fields, api, _
-import openerp.addons.decimal_precision as dp
+from odoo import models, fields, api, _
+import odoo.addons.decimal_precision as dp
 
 
 class SupplierStock(models.Model):
@@ -95,7 +93,6 @@ class SupplierStock(models.Model):
     partner_note = fields.Text(
         string='Partner Note',
     )
-    # Independent of current currency rate
     retail_in_currency = fields.Float(
         string='Retail in Currency',
         required=True,
@@ -141,9 +138,8 @@ class SupplierStock(models.Model):
         else:
             return False
 
-
     @api.multi
-    @api.depends('price_unit','currency_id')
+    @api.depends('price_unit', 'currency_id')
     def _compute_price_base(self):
         curr_obj = self.env['res.currency']
         company_curr = self.env.user.company_id.currency_id
