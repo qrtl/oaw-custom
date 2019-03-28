@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+
+    <record id="view_supplier_stock_tree" model="ir.ui.view">
+        <field name="name">view.supplier.stock.tree</field>
+        <field name="model">supplier.stock</field>
+        <field name="arch" type="xml">
+            <tree string="Partner Stock" editable="top">
+                <field name="partner_id" domain="[('supplier','=',True)]"/>
+                <field name="partner_loc_id" string="Location"/>
+                <field name="product_id"/>
+                <field name="image_small" string="Image" widget="image" height="64px"/>
+                <field name="quantity" string="Qty"/>
+                <field name="currency_id"/>
+                <field name="retail_in_currency"/>
+                <field name="discount_in_curr"/>
+                <field name="price_unit"/>
+                <field name="product_list_price" />
+                <field name="product_list_price_discount" />
+                <field name="price_unit_base"/>
+                <field name="partner_note"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="supplier_stock_search" model="ir.ui.view">
+        <field name="name">supplier.stock.search</field>
+        <field name="model">supplier.stock</field>
+        <field name="arch" type="xml">
+            <search string="Partner Stock">
+                <field name="partner_id"/>
+                <field name="partner_loc_id"/>
+                <field name="product_id"/>
+                <field name="product_name"/>
+                <field name="currency_id"/>
+                <group expand="0" string="Group By">
+                    <filter string="Supplier" name="supplier" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
+                    <filter string="Supplier Location" name="supplier_location" icon="terp-folder-green" domain="[]" context="{'group_by':'partner_loc_id'}"/>
+                    <filter string="Currency" name="currency" icon="terp-folder-green" domain="[]" context="{'group_by':'currency_id'}"/>
+                    <filter string="Product" name="product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
+                </group>
+                <group expand="0" name='filter' string="Filter">
+                    <filter name="new_entry" string="New Entry" domain="[('create_date','&gt;=',(context_today()+datetime.timedelta(days=-1)).strftime('%Y-%m-%d'))]"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_supplier_stock" model="ir.actions.act_window">
+         <field name="name">Partner Stock</field>
+         <field name="res_model">supplier.stock</field>
+         <field name="type">ir.actions.act_window</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree</field>
+         <field name="domain"></field>
+         <field name="search_view_id" ref="supplier_stock_search"/>
+    </record>
+
+    <menuitem action="action_supplier_stock"
+              id="menu_supplier_stock"
+              parent="stock.menu_stock_inventory_control" sequence="3"/>
+
+</data>
+</odoo>
