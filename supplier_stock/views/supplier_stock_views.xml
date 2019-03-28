@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data>
+<odoo>
 
     <record id="view_supplier_stock_tree" model="ir.ui.view">
         <field name="name">view.supplier.stock.tree</field>
@@ -29,16 +28,16 @@
         <field name="model">supplier.stock</field>
         <field name="arch" type="xml">
             <search string="Partner Stock">
-                <field name="partner_id" domain="[('supplier','=',True)]"/>
+                <field name="partner_id"/>
                 <field name="partner_loc_id"/>
                 <field name="product_id"/>
                 <field name="product_name"/>
                 <field name="currency_id"/>
                 <group expand="0" string="Group By">
-                    <filter string="Supplier" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
-                    <filter string="Supplier Location" icon="terp-folder-green" domain="[]" context="{'group_by':'partner_loc_id'}"/>
-                    <filter string="Currency" icon="terp-folder-green" domain="[]" context="{'group_by':'currency_id'}"/>
-                    <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
+                    <filter string="Supplier" name="supplier" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
+                    <filter string="Supplier Location" name="supplier_location" icon="terp-folder-green" domain="[]" context="{'group_by':'partner_loc_id'}"/>
+                    <filter string="Currency" name="currency" icon="terp-folder-green" domain="[]" context="{'group_by':'currency_id'}"/>
+                    <filter string="Product" name="product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
                 </group>
                 <group expand="0" name='filter' string="Filter">
                     <filter name="new_entry" string="New Entry" domain="[('create_date','&gt;=',(context_today()+datetime.timedelta(days=-1)).strftime('%Y-%m-%d'))]"/>
@@ -59,7 +58,6 @@
 
     <menuitem action="action_supplier_stock"
               id="menu_supplier_stock"
-              parent="stock.menu_stock_inventory_control" sequence="10"/>
+              parent="stock.menu_stock_inventory_control" sequence="3"/>
 
-</data>
-</openerp>
+</odoo>
