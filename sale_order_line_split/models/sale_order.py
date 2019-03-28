@@ -33,5 +33,4 @@ class SaleOrder(models.Model):
                 if order_line.product_uom_qty > 1.0 and \
                         order_line.product_id.tracking in ('serial', 'lot'):
                     order.need_split_line = True
-                    print('Check Line')
                     return
