@@ -1,19 +1,17 @@
-# -*- coding: utf-8 -*-
-# Copyright 2018 Quartile Limited
+# Copyright 2019 Quartile Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 {
-    'name': 'Correct List Price Update Currency',
-    'version': '8.0.1.0.0',
+    'name': 'Retail Currency Update',
+    'version': '12.0.1.0.0',
     'author': 'Quartile Limited',
     'website': 'https://www.quartile.co',
     'category': 'Product',
     'depends': [
         "sale",
         "stock",
-        "product_offer",
     ],
     'description': """
-* Adds a menu item 'Correct List Price Update Currency' to facilitate list 
+* Adds a menu item 'Retail Currency Update' to facilitate list 
 price (currency) update
     """,
     'data': [
