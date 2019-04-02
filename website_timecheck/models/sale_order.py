@@ -29,3 +29,44 @@ class SaleOrder(models.Model):
     other_inquiry = fields.Char(
         string='Other Inquiry',
     )
+
+    # According to the user group and price settings, update the price with
+    # portal user adds product to cart.
+    def _cart_update(self, product_id=None, line_id=None, add_qty=0,
+                     set_qty=0):
+        res = super(SaleOrder, self)._cart_update(product_id=product_id,
+                                                  line_id=line_id,
+                                                  add_qty=add_qty,
+                                                  set_qty=set_qty)
+        if 'line_id' in res and res['line_id']:
+            order_line = self.env['sale.order.line'].browse(res['line_id'])
+            product = order_line.product_id
+            if product.sale_hkd_ac_so:
+                order_line.price_unit = product.sale_hkd_ac_so
+            else:
+                if order_line.order_id.partner_id.user_ids and \
+                        order_line.order_id.partner_id.user_ids[
+                            0].has_group(
+                            'website_timecheck.group_timecheck_light'):
+                    order_line.price_unit = product.sale_hkd_ac
+                elif product.qty_overseas != 0 and \
+                        product.oversea_retail_currency_id == \
+                        product.company_id.currency_id and product.price > \
+                        product.oversea_retail_price:
+                    order_line.price_unit = product.oversea_retail_price
+                else:
+                    order_line.price_unit = product.list_price
+        return res
+
+
+from openerp.osv import osv, fields
+
+
+class SaleOrderOsv(osv.osv):
+    _inherit = "sale.order"
+
+    # print function for portal customer
+    def print_portal_quotation(self, cr, uid, ids, context=None):
+        return self.pool['report'].get_action(cr, uid, ids,
+                                              'sale.report_saleorder',
+                                              context=context)

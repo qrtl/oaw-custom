@@ -47,3 +47,14 @@ class ProductTemplate(models.Model):
                         'stock_new_arrival': False
                     })
         return super(ProductTemplate, self).write(vals)
+
+    @api.multi
+    def update_public_category(self):
+        for product in self:
+            if product.categ_id and not product.public_categ_ids:
+                public_categ_ids = self.env['product.public.category'].search([
+                    ('name', '=', product.categ_id.name)
+                ])
+                print product.categ_id.name
+                print public_categ_ids
+                product.public_categ_ids = public_categ_ids
