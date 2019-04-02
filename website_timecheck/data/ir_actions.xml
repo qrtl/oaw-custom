@@ -30,5 +30,61 @@
         <field eval="'ir.actions.server,%d'%unpublish_product_action" name="value"/>
     </record>
 
+    <record id="publish_product_product_action" model="ir.actions.server">
+        <field name="name">Publish Product(s)</field>
+        <field name="model_id" ref="product.model_product_product"/>
+        <field name="state">code</field>
+        <field name="code">self.browse(cr,uid,context.get('active_ids', [])).mapped('product_tmpl_id').write({'website_published': True})</field>
+    </record>
+
+    <record id="publish_product_product" model="ir.values">
+        <field eval="'client_action_multi'" name="key2"/>
+        <field eval="'product.product'" name="model"/>
+        <field name="name">publish.product</field>
+        <field eval="'ir.actions.server,%d'%publish_product_product_action" name="value"/>
+    </record>
+
+    <record id="unpublish_product_product_action" model="ir.actions.server">
+        <field name="name">Unpublish Product(s)</field>
+        <field name="model_id" ref="product.model_product_product"/>
+        <field name="state">code</field>
+        <field name="code">self.browse(cr,uid,context.get('active_ids', [])).mapped('product_tmpl_id').write({'website_published': False})</field>
+    </record>
+
+    <record id="unpublish_product_product" model="ir.values">
+        <field eval="'client_action_multi'" name="key2"/>
+        <field eval="'product.product'" name="model"/>
+        <field name="name">unpublish.product</field>
+        <field eval="'ir.actions.server,%d'%unpublish_product_product_action" name="value"/>
+    </record>
+
+    <record id="update_product_template_public_category_action" model="ir.actions.server">
+        <field name="name">Update Website Product Category</field>
+        <field name="model_id" ref="product.model_product_template"/>
+        <field name="state">code</field>
+        <field name="code">self.browse(cr,uid,context.get('active_ids', [])).update_public_category()</field>
+    </record>
+
+    <record id="update_product_template_public_category_action" model="ir.values">
+        <field eval="'client_action_multi'" name="key2"/>
+        <field eval="'product.template'" name="model"/>
+        <field name="name">unpublish.product</field>
+        <field eval="'ir.actions.server,%d'%update_product_template_public_category_action" name="value"/>
+    </record>
+
+    <record id="update_product_product_public_category_action" model="ir.actions.server">
+        <field name="name">Update Website Product Category</field>
+        <field name="model_id" ref="product.model_product_product"/>
+        <field name="state">code</field>
+        <field name="code">self.browse(cr,uid,context.get('active_ids', [])).mapped('product_tmpl_id').update_public_category()</field>
+    </record>
+
+    <record id="update_product_product_public_category_action" model="ir.values">
+        <field eval="'client_action_multi'" name="key2"/>
+        <field eval="'product.product'" name="model"/>
+        <field name="name">unpublish.product</field>
+        <field eval="'ir.actions.server,%d'%update_product_product_public_category_action" name="value"/>
+    </record>
+
 </data>
 </openerp>

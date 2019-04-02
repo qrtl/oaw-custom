@@ -1,0 +1,43 @@
+/* Button Background Color */
+.btn-primary {
+    background-color: #105656;
+    border-color: #105656;
+}
+/* Button Hover Background Color */
+.nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
+    background-color: #024846;
+}
+/* Hyperlink Text Color */
+a {
+    color: #105656;
+}
+/* Hyperlink Hover Text Color */
+a:hover, a:focus {
+    color: #024846;
+}
+/* Button Hover Color */
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open > .dropdown-toggle.btn-primary {
+    background-color: #024846;
+    border-color: #024846;
+}
+/* Cart Number Box Color */
+.label-primary {
+    background-color: #105656;
+}
+/* Active Page Number Box Color */
+.pagination > .active > a, .pagination > .active > span, .pagination > .active > a:hover, .pagination > .active > span:hover, .pagination > .active > a:focus, .pagination > .active > span:focus {
+    background-color: #105656;
+    border-color: #105656;
+}
+/* Hover Page Number Color */
+.pagination > li > a:hover, .pagination > li > span:hover, .pagination > li > a:focus, .pagination > li > span:focus {
+    color: #024846;
+}
+/* Page Number Color */
+.pagination > li > a, .pagination > li > span {
+    color: #105656;
+}
+/* Checkout Button Color */
+.btn-default {
+    color: #105656;
+}
