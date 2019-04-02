@@ -6,6 +6,7 @@
                 model="sale.order"
                 string="Partner Quotation/Order"
                 report_type="qweb-pdf"
+                groups="model_security_adjust_oaw.group_supplier"
                 name="model_security_adjust_oaw.report_sale_supplier_fm"
                 file="model_security_adjust_oaw.report_sale_supplier_fm"/>
 
@@ -13,6 +14,7 @@
                 model="stock.picking"
                 string="Partner Delivery"
                 report_type="qweb-pdf"
+                groups="model_security_adjust_oaw.group_supplier"
                 name="model_security_adjust_oaw.report_picking_fm_document"
                 file="model_security_adjust_oaw.report_picking_fm_document"/>
 
@@ -20,6 +22,7 @@
                 model="account.invoice"
                 string="Partner Invoice"
                 report_type="qweb-pdf"
+                groups="model_security_adjust_oaw.group_supplier"
                 name="model_security_adjust_oaw.report_invoice_supplier_fm"
                 file="model_security_adjust_oaw.report_invoice_supplier_fm"/>
 
