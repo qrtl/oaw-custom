@@ -68,5 +68,5 @@ class SaleOrderOsv(osv.osv):
     # print function for portal customer
     def print_portal_quotation(self, cr, uid, ids, context=None):
         return self.pool['report'].get_action(cr, uid, ids,
-                                              'sale.report_saleorder',
+                                              'website_timecheck.report_sale_order_website',
                                               context=context)
