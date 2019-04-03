@@ -1,13 +1,13 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#	* website_timecheck
+# * website_timecheck
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-06 08:48+0000\n"
-"PO-Revision-Date: 2019-03-06 08:48+0000\n"
+"POT-Creation-Date: 2019-04-03 06:24+0000\n"
+"PO-Revision-Date: 2019-04-03 06:24+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -22,8 +22,13 @@ msgstr "所有品牌"
 
 #. module: website_timecheck
 #: view:website:website_sale.products
+msgid "All Locations"
+msgstr "所有在售庫存"
+
+#. module: website_timecheck
+#: view:website:website_sale.products
 msgid "All Products"
-msgstr "所有商品"
+msgstr "所有產品"
 
 #. module: website_timecheck
 #: selection:sale.order,payment_method:0
@@ -38,15 +43,31 @@ msgid "Cash"
 msgstr "港幣現金"
 
 #. module: website_timecheck
+#: view:website:website_sale.products_item
+msgid "Checkout"
+msgstr "加到購物車"
+
+#. module: website_timecheck
 #: selection:sale.order,payment_method:0
 #: view:website:website_sale.cart
 msgid "China Bank Transfer"
-msgstr "內地銀行轉賬"
+msgstr "內地銀行轉賬,請查看網頁最下面當天可用賬號和匯率"
 
 #. module: website_timecheck
 #: view:website:website_sale.cart
 msgid "Confirm and Submit"
-msgstr "確認並提交"
+msgstr "確認並提交訂單"
+
+#. module: website_timecheck
+#: view:website:website_sale.cart
+#: view:website:website_timecheck.confirmation
+msgid "Continue Shopping"
+msgstr "繼續購物"
+
+#. module: website_timecheck
+#: field:product.template,curr_of_cheapest:0
+msgid "Currency"
+msgstr "幣種"
 
 #. module: website_timecheck
 #: field:sale.order,picking_date:0
@@ -59,15 +80,45 @@ msgid "Desire Picking Date (Delivery：Monday to Friday 15:00-18:00)"
 msgstr "取貨時間： 週一到週五下午15:00-18:00"
 
 #. module: website_timecheck
+#: view:website:website_sale.products
+msgid "HK Stock"
+msgstr "香港現貨"
+
+#. module: website_timecheck
+#: view:website:website_sale.product
+#: view:website:website_sale.products_item
+msgid "HK, Overseas"
+msgstr "香港, 海外"
+
+#. module: website_timecheck
+#: view:website:website_sale.product_price
+#: view:website:website_sale.products_item
+msgid "HKD Retail:"
+msgstr "港幣公價:"
+
+#. module: website_timecheck
 #: selection:sale.order,payment_method:0
 #: view:website:website_sale.cart
 msgid "Hong Kong Banks' Cheque"
 msgstr "香港的銀行支票"
 
 #. module: website_timecheck
+#: view:website:website_sale.product
+#: view:website:website_sale.products_item
+msgid "Internal Code:"
+msgstr "內部代碼:"
+
+#. module: website_timecheck
 #: help:sale.order,picking_date:0
 msgid "Monday to Friday 15:00-18:00"
 msgstr "週一到週五下午15:00-18:00"
+
+#. module: website_timecheck
+#: field:product.template,is_new_arrival:0
+#: field:product.template,stock_new_arrival:0
+#: view:website:website_sale.products
+msgid "New Arrival"
+msgstr "最新貨品"
 
 #. module: website_timecheck
 #: view:website:website_timecheck.confirmation
@@ -83,14 +134,30 @@ msgstr "訂單已提交"
 #: field:sale.order,other_inquiry:0
 #: view:website:website_sale.cart
 msgid "Other Inquiry"
-msgstr "其他需求"
+msgstr "其他需求,請填寫"
 
 #. module: website_timecheck
 #: field:sale.order,payment_desc:0
 #: selection:sale.order,payment_method:0
 #: view:website:website_sale.cart
 msgid "Other Payment Method"
-msgstr "其他支付方式"
+msgstr "其他支付方式,請填寫"
+
+#. module: website_timecheck
+#: view:website:website_sale.products
+msgid "Oversea Stock"
+msgstr "海外現貨"
+
+#. module: website_timecheck
+#: view:website:website_sale.product
+#: view:website:website_sale.products_item
+msgid "Overseas"
+msgstr "海外現貨"
+
+#. module: website_timecheck
+#: model:ir.model,name:website_timecheck.model_supplier_stock
+msgid "Partner Stock"
+msgstr "海外庫存"
 
 #. module: website_timecheck
 #: field:sale.order,payment_method:0
@@ -99,19 +166,47 @@ msgid "Payment Method"
 msgstr "付款方式"
 
 #. module: website_timecheck
+#: view:sale.order:website_timecheck.view_order_form
+msgid "Print Quotation"
+msgstr "列印報價單"
+
+#. module: website_timecheck
+#: view:website:website_sale.cart
+msgid "Sale HKD"
+msgstr "港幣賣價"
+
+#. module: website_timecheck
+#: view:website:website_sale.product_price
+#: view:website:website_sale.products_item
+msgid "Sale HKD:"
+msgstr "港幣賣價:"
+
+#. module: website_timecheck
 #: model:ir.model,name:website_timecheck.model_sale_order
 msgid "Sales Order"
-msgstr "銷貨單"
+msgstr "銷售訂單"
+
+#. module: website_timecheck
+#: view:website:website_sale.products
+msgid "Special Offer"
+msgstr "特價商品"
+
+#. module: website_timecheck
+#: view:website:website_sale.product_price
+#: view:website:website_sale.products_item
+msgid "Special Offer:"
+msgstr "特價:"
+
+#. module: website_timecheck
+#: view:website:website_sale.product
+#: view:website:website_sale.products_item
+msgid "Stock:"
+msgstr "庫存:"
 
 #. module: website_timecheck
 #: view:website:website_timecheck.confirmation
 msgid "Submitted"
 msgstr "已提交"
-
-#. module: website_timecheck
-#: view:website:website_timecheck.confirmation
-msgid "Thank you for your order."
-msgstr "謝謝您的訂單。"
 
 #. module: website_timecheck
 #: selection:sale.order,payment_method:0
@@ -123,4 +218,78 @@ msgstr "刷銀聯或信用卡 買方支付2.2%手續費"
 #: view:website:website_timecheck.confirmation
 msgid "We will contact you soon."
 msgstr "我們會盡快與您聯繫。"
+
+#. module: website_timecheck
+#: model:ir.model,name:website_timecheck.model_website
+msgid "Website"
+msgstr "網站"
+
+#. module: website_timecheck
+#: code:addons/website_timecheck/controllers/main.py:154
+#, python-format
+msgid "Wrong login/password"
+msgstr "用戶名或密碼輸入錯誤"
+
+#. module: website_timecheck
+#: view:website:website_sale.product
+#: view:website:website_sale.products_item
+msgid "HK"
+msgstr "香港現貨"
+
+#. module: website_timecheck
+#: view:website:website_sale.product_price
+#: view:website:website_sale.products_item
+msgid "Retail in"
+msgstr "公價"
+
+#. module: website
+#: view:website:website.layout
+msgid "Logout"
+msgstr "登出"
+
+#. module: website
+#: view:website:website.contactus
+#: view:website:website.layout
+#: view:website:website.snippets
+#: model:website.menu,name:website.menu_contactus
+msgid "Contact us"
+msgstr "聯繫我們"
+
+#. module: website_sale
+#: view:website:website_sale.products
+msgid "All Products"
+msgstr "所有產品"
+
+#. module: website_sale
+#: view:website:website_sale.search
+msgid "Search..."
+msgstr "搜尋..."
+
+#. module: website
+#: view:website:website.kanban_contain
+#: view:website:website.pager
+msgid "Prev"
+msgstr "前一個"
+
+#. module: website
+#: view:website:website.kanban_contain
+#: view:website:website.pager
+msgid "Next"
+msgstr "下一個"
+
+#. module: website_sale
+#: view:website:website_sale.cart
+#: view:website:website_sale.product
+msgid "Add to Cart"
+msgstr "加入購物車"
+
+#. module: website_timecheck
+#: view:website:website_sale.products
+msgid "Back to Shop"
+msgstr "繼續購物"
+
+#. module: website_sale
+#: view:website:website.layout
+msgid "My cart"
+msgstr "我的購物車"
 

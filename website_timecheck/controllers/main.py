@@ -20,6 +20,20 @@ class WebsiteSale(website_sale):
         request.session.update({
             'all_products': True,
             'new_arrival': False,
+            'special_offer': False,
+            'all_stock': True,
+            'hk_stock': False,
+            'oversea_stock': False,
+        })
+        return request.redirect('/shop')
+
+    @http.route('/shop/special_offer', type='http', auth="public",
+                website=True)
+    def shop_special_offer(self):
+        request.session.update({
+            'all_products': False,
+            'new_arrival': False,
+            'special_offer': True,
             'all_stock': True,
             'hk_stock': False,
             'oversea_stock': False,
@@ -31,6 +45,7 @@ class WebsiteSale(website_sale):
         request.session.update({
             'all_products': False,
             'new_arrival': True,
+            'special_offer': False,
             'all_stock': True,
             'hk_stock': False,
             'oversea_stock': False,
@@ -88,13 +103,14 @@ class WebsiteSale(website_sale):
     def order_submit(self):
         cr, uid, context = request.cr, request.uid, request.context
         sale_order_id = request.session.get('sale_order_id')
+        request.session['sale_last_order_id'] = sale_order_id
         request.session['sale_order_id'] = None
         if sale_order_id:
             order = request.registry['sale.order'].browse(cr, SUPERUSER_ID,
                                                           sale_order_id,
                                                           context=context)
-            order.message_subscribe(cr, SUPERUSER_ID, [sale_order_id],
-                                    [order.partner_id.id], context=context)
+            order.message_subscribe([order.partner_id.id])
+            order.message_unsubscribe_users([request.website.user_id.id])
         else:
             return request.redirect('/shop')
         return request.website.render("website_timecheck.confirmation",
@@ -129,10 +145,10 @@ class Home(Home):
                                                request.params['password'])
             if uid is not False:
                 user = request.env['res.users'].browse(uid)
-                if user.has_group('website_timecheck.group_timecheck_basic'):
+                if user.has_group('website_timecheck.group_timecheck_trial'):
                     base_url = request.env['ir.config_parameter'].get_param(
                         'web.base.url')
-                    redirect = base_url + '/shop'
+                    redirect = base_url + '/shop/special_offer'
                 return http.redirect_with_hash(redirect)
             request.uid = old_uid
             values['error'] = _("Wrong login/password")

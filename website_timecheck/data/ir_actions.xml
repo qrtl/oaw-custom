@@ -65,10 +65,10 @@
         <field name="code">self.browse(cr,uid,context.get('active_ids', [])).update_public_category()</field>
     </record>
 
-    <record id="update_product_template_public_category_action" model="ir.values">
+    <record id="update_product_template_public_category" model="ir.values">
         <field eval="'client_action_multi'" name="key2"/>
         <field eval="'product.template'" name="model"/>
-        <field name="name">unpublish.product</field>
+        <field name="name">update.product.template.category</field>
         <field eval="'ir.actions.server,%d'%update_product_template_public_category_action" name="value"/>
     </record>
 
@@ -79,10 +79,10 @@
         <field name="code">self.browse(cr,uid,context.get('active_ids', [])).mapped('product_tmpl_id').update_public_category()</field>
     </record>
 
-    <record id="update_product_product_public_category_action" model="ir.values">
+    <record id="update_product_product_public_category" model="ir.values">
         <field eval="'client_action_multi'" name="key2"/>
         <field eval="'product.product'" name="model"/>
-        <field name="name">unpublish.product</field>
+        <field name="name">update.product.product.category</field>
         <field eval="'ir.actions.server,%d'%update_product_product_public_category_action" name="value"/>
     </record>
 
