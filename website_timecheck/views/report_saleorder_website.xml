@@ -7,7 +7,7 @@
             model = "sale.order"
             string = "Chrono123 Website Quo"
             report_type = "qweb-pdf"
-            groups="base.group_sale_salesman_all_leads"
+            groups="base.group_sale_salesman_all_leads, website_timecheck.group_timecheck_light"
             name = "website_timecheck.report_sale_order_website"
             file = "website_timecheck.report_sale_order_website"
         />
