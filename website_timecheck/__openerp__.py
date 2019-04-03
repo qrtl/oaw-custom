@@ -20,6 +20,7 @@
         'security/timecheck_security.xml',
         'views/sale_order_views.xml',
         'views/templates.xml',
+        'views/report_saleorder_website.xml',
     ],
     'installable': True,
 }
