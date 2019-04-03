@@ -19,6 +19,13 @@ class website(models.Model):
             domain.append(
                 ('stock_new_arrival', '>=', date)
             )
+        elif request.session.get('special_offer'):
+            domain.extend((
+                '|',
+                ('local_stock_not_reserved', '>', 0),
+                ('overseas_stock', '=', 'Yes'),
+                ('sale_hkd_ac_so', '!=', 0)
+            ))
         if request.session.get('hk_stock'):
             domain.append(
                 ('qty_local_stock', '>', 0)
