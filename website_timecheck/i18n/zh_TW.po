@@ -283,8 +283,8 @@ msgstr "下一個"
 msgid "Add to Cart"
 msgstr "加入購物車"
 
-#. module: website_timecheck
-#: view:website:website_sale.products
+#. module: website_sale
+#: view:website:website_sale.product
 msgid "Back to Shop"
 msgstr "繼續購物"
 
