@@ -42,7 +42,7 @@ class ProductTemplate(models.Model):
                     product.sudo().write({
                         'stock_new_arrival': fields.Datetime.now()
                     })
-                if qty_local_stock == qty_reserved:
+                elif qty_local_stock == qty_reserved:
                     product.sudo().write({
                         'stock_new_arrival': False
                     })
