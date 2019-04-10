@@ -4,15 +4,9 @@
     <record id="update_qty_info_action" model="ir.actions.server">
         <field name="name">Update Quantity Info</field>
         <field name="model_id" ref="product.model_product_product"/>
+        <field name="binding_model_id" ref="product.model_product_product"/>
         <field name="state">code</field>
-        <field name="code">self.browse(cr,uid,context.get('active_ids', []))._update_prod_tmpl_qty()</field>
-    </record>
-
-    <record id="update_qty_inf" model="ir.values">
-        <field eval="'client_action_multi'" name="key2"/>
-        <field eval="'product.product'" name="model"/>
-        <field name="name">update.product.quantity.info</field>
-        <field eval="'ir.actions.server,%d'%update_qty_info_action" name="value"/>
+        <field name="code">self.browse(context.get('active_ids', []))._update_prod_tmpl_qty()</field>
     </record>
 
 </odoo>

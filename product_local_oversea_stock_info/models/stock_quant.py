@@ -7,7 +7,7 @@ from odoo import models, fields, api
 class StockQuant(models.Model):
     _inherit = "stock.quant"
 
-    usage = fields.fields.Selection(
+    usage = fields.Selection(
         related='location_id.usage',
         string='Location Type',
         readonly=True,
