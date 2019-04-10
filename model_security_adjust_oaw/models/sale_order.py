@@ -48,7 +48,8 @@ class SaleOrder(models.Model):
     def create(self, vals):
         if 'create_partner_id' not in vals or 'create_partner_id' in vals \
                 and not vals['create_partner_id']:
-            vals['create_partner_id'] = self.env.user.partner_id.id
+            vals['create_partner_id'] = \
+                self.env.user.partner_id.commercial_partner_id.id
         res = super(SaleOrder, self).create(vals)
         # For quotation adjust: set new order_ref field
         if 'name' in vals and 'partner_id' in vals:
@@ -67,8 +68,16 @@ class SaleOrder(models.Model):
                 action.sudo()._process(action, [res.id])
         return res
 
+    @api.onchange('partner_id')
+    def _onchange_partner_id(self):
+        print(self.partner_id.related_partner)
+        if self.partner_id and self.partner_id.related_partner:
+            self.create_partner_id = \
+                self.partner_id.related_partner.commercial_partner_id
+
 
 from openerp.osv import osv, fields
+from openerp import SUPERUSER_ID
 
 
 class SaleOrderOsv(osv.osv):
@@ -101,3 +110,15 @@ class SaleOrderOsv(osv.osv):
             result['res_id'] = pick_ids and pick_ids[0] or False
 
         return result
+
+    def onchange_partner_id(self, cr, uid, ids, part, context=None):
+        res = super(SaleOrderOsv, self).onchange_partner_id(
+            cr=cr, uid=uid, ids=ids, part=part, context=context)
+        res['value']['create_partner_id'] = False
+        if part:
+            partner = self.pool.get('res.partner').browse(
+                cr, SUPERUSER_ID, part, context=context)
+            if partner and partner.related_partner:
+                res['value']['create_partner_id'] = \
+                    partner.related_partner.commercial_partner_id.id
+        return res
