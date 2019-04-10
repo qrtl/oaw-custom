@@ -68,13 +68,6 @@ class SaleOrder(models.Model):
                 action.sudo()._process(action, [res.id])
         return res
 
-    @api.onchange('partner_id')
-    def _onchange_partner_id(self):
-        print(self.partner_id.related_partner)
-        if self.partner_id and self.partner_id.related_partner:
-            self.create_partner_id = \
-                self.partner_id.related_partner.commercial_partner_id
-
 
 from openerp.osv import osv, fields
 from openerp import SUPERUSER_ID
