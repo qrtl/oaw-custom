@@ -123,7 +123,6 @@ class SupplierStock(models.Model):
         if self.currency_id:
             self.price_subtotal = self.currency_id.round(self.price_subtotal)
 
-    @api.one
     @api.onchange('partner_loc_id')
     def _onchange_partner_loc_id(self):
         if not self.partner_loc_id:
