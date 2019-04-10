@@ -28,4 +28,3 @@ class ProductProduct(models.Model):
                 'qty_local_stock': int(local_qty) + prod_tmpl.qty_available,
                 'qty_overseas': int(ovrs_qty)
             })
-            prod_tmpl.sudo()._get_stock_location()
