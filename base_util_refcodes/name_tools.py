@@ -19,6 +19,7 @@
 ##############################################################################
 
 from openerp.osv import orm
+from openerp import SUPERUSER_ID
 
 
 def extended_name_get(obj, cr, uid, ids, name_mask, flds_templ, context=None):
@@ -45,7 +46,7 @@ def extended_name_get(obj, cr, uid, ids, name_mask, flds_templ, context=None):
         ids = [ids]
     flds_templ = list(set(flds_templ + [obj._rec_name]))
     res = []
-    for rec in obj.read(cr, uid, ids, flds_templ, context=context):
+    for rec in obj.read(cr, SUPERUSER_ID, ids, flds_templ, context=context):
         for key in flds_templ:
             if isinstance(rec[key], tuple):
                 # Tuple values (id, name) are replaced by the name
