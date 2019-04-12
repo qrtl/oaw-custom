@@ -1,20 +1,19 @@
-# -*- coding: utf-8 -*-
-# Copyright 2017 Quartile Limted
+# Copyright 2019 Quartile Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 {
     'name': 'Product Update Date',
-    'version': '8.0.1.1.0',
+    'version': '12.0.1.0.0',
     'author': 'Quartile Limited',
-    'website': 'https://www.odoo-asia.com',
+    'website': 'https://www.quartile.co',
     'category': 'Product',
     'depends': [
-        "product_listprice_list_view",
+        "product_offer_kanban_views",
     ],
     'description': """
     """,
     'data': [
+        'data/ir_actions.xml',
         'views/product_template_views.xml',
-        'views/product_product_views.xml',
         'views/supplier_stock_views.xml',
     ],
     'installable': True,
