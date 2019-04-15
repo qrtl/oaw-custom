@@ -86,5 +86,34 @@
         <field eval="'ir.actions.server,%d'%update_product_product_public_category_action" name="value"/>
     </record>
 
+    <record id="reset_product_template_public_category_action" model="ir.actions.server">
+        <field name="name">Reset Website Product Category</field>
+        <field name="model_id" ref="product.model_product_template"/>
+        <field name="state">code</field>
+        <field name="code">self.browse(cr,uid,context.get('active_ids', [])).reset_public_category()</field>
+    </record>
+
+    <record id="reset_product_template_public_category" model="ir.values">
+        <field eval="'client_action_multi'" name="key2"/>
+        <field eval="'product.template'" name="model"/>
+        <field name="name">reset.product.template.category</field>
+        <field eval="'ir.actions.server,%d'%reset_product_template_public_category_action" name="value"/>
+    </record>
+
+    <record id="reset_product_product_public_category_action" model="ir.actions.server">
+        <field name="name">Reset Website Product Category</field>
+        <field name="model_id" ref="product.model_product_product"/>
+        <field name="state">code</field>
+        <field name="code">self.browse(cr,uid,context.get('active_ids', [])).mapped('product_tmpl_id').reset_public_category()</field>
+    </record>
+
+    <record id="reset_product_product_public_category" model="ir.values">
+        <field eval="'client_action_multi'" name="key2"/>
+        <field eval="'product.product'" name="model"/>
+        <field name="name">reset.product.product.category</field>
+        <field eval="'ir.actions.server,%d'%reset_product_product_public_category_action" name="value"/>
+    </record>
+
+
 </data>
 </openerp>
