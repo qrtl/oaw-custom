@@ -116,6 +116,26 @@ class WebsiteSale(website_sale):
         return request.website.render("website_timecheck.confirmation",
                                       {'order': order})
 
+    @http.route([
+        '/shop',
+        '/shop/page/<int:page>',
+        '/shop/category/<model("product.public.category"):category>',
+        '/shop/category/<model("product.public.category"):category>/page/<int:page>'
+    ], type='http', auth="public", website=True)
+    def shop(self, page=0, category=None, search='', **post):
+        if category:
+            request.session.update({
+                'all_products': True,
+                'new_arrival': False,
+                'special_offer': False,
+                'all_stock': True,
+                'hk_stock': False,
+                'oversea_stock': False,
+            })
+        res = super(WebsiteSale, self).shop(page=page, category=category,
+                                            search=search, **post)
+        return res
+
 
 class Home(Home):
 
