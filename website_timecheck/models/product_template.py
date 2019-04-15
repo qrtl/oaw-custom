@@ -56,3 +56,8 @@ class ProductTemplate(models.Model):
                     ('name', '=', product.categ_id.name)
                 ])
                 product.public_categ_ids = public_categ_ids
+
+    @api.multi
+    def reset_public_category(self):
+        for product in self:
+            product.public_categ_ids = False
