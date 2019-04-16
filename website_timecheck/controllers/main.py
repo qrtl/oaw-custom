@@ -121,7 +121,7 @@ class WebsiteSale(website_sale):
         '/shop/page/<int:page>',
         '/shop/category/<model("product.public.category"):category>',
         '/shop/category/<model("product.public.category"):category>/page/<int:page>'
-    ], type='http', auth="public", website=True)
+    ], type='http', auth="user", website=True)
     def shop(self, page=0, category=None, search='', **post):
         if category:
             request.session.update({
