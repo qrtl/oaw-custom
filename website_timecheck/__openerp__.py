@@ -11,6 +11,7 @@
         'website_sale',
         'website_sale_adj',
         'website_multi_image_zoom',
+        'website_sale_login_required',
     ],
     'summary':"""""",
     'description': """
