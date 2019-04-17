@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <template id="products_categories" name="Custom Menus" inherit_id="website_sale.products_categories">
+            <xpath expr="//ul" position="inside">
+                <li t-att-class=" '' if not request.session.new_arrival else 'active' "><a href="/shop/new_arrival">New Arrival</a></li>
+                <li t-att-class=" '' if not request.session.special_offer else 'active' "><a href="/shop/special_offer">Special Offer</a></li>
+            </xpath>
+            <xpath expr="//li" position="replace">
+                <li t-att-class=" '' if not request.session.all_products else 'active' "><a href="/shop/all_products">All Products</a></li>
+            </xpath>
+        </template>
+
+    </data>
+</openerp>

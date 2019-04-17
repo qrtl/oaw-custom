@@ -8,6 +8,7 @@
     'author': 'Quartile Limited',
     'website': 'https://www.quartile.co',
     'depends': [
+        'oa_product_update_filter',
         'website_sale',
         'website_sale_adj',
         'website_multi_image_zoom',
@@ -20,8 +21,10 @@
         'data/ir_actions.xml',
         'reports/sale_order_reports.xml',
         'security/timecheck_security.xml',
+        'security/website_sale_security.xml',
         'views/sale_order_views.xml',
         'views/templates.xml',
+        'views/website_views.xml',
     ],
     'installable': True,
 }

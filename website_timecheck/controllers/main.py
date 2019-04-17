@@ -123,6 +123,9 @@ class WebsiteSale(website_sale):
         '/shop/category/<model("product.public.category"):category>/page/<int:page>'
     ], type='http', auth="user", website=True)
     def shop(self, page=0, category=None, search='', **post):
+        access_check = self.check_timecheck_access()
+        if access_check:
+            return access_check
         if category:
             request.session.update({
                 'all_products': True,
@@ -135,6 +138,34 @@ class WebsiteSale(website_sale):
         res = super(WebsiteSale, self).shop(page=page, category=category,
                                             search=search, **post)
         return res
+
+    @http.route(['/shop/product/<model("product.template"):product>'],
+                type='http', auth="user", website=True)
+    def product(self, product, category='', search='', **kwargs):
+        access_check = self.check_timecheck_access()
+        if access_check:
+            return access_check
+        return super(WebsiteSale, self).product(product=product,
+                                                category=category,
+                                                search=search,
+                                                **kwargs)
+
+    @http.route(['/shop/cart'], type='http', auth="user", website=True)
+    def cart(self, **post):
+        access_check = self.check_timecheck_access()
+        if access_check:
+            return access_check
+        return super(WebsiteSale, self).cart(**post)
+
+    def check_timecheck_access(self):
+        user = request.env['res.users'].sudo().browse(request.uid)
+        if not (user.sudo().has_group('website_timecheck.group_timecheck_trial')
+                or user.sudo().has_group('base.group_website_publisher')):
+            base_url = request.env['ir.config_parameter'].get_param(
+                'web.base.url')
+            redirect = base_url + '/web'
+            return http.redirect_with_hash(redirect)
+        return False
 
 
 class Home(Home):

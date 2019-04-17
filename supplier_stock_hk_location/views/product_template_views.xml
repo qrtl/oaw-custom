@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="product_template_search_view" model="ir.ui.view">
+            <field name="name">product.template.search</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product_offer.product_template_search_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='local_w_res']" position="replace">
+                    <filter name="local_w_res" string="Local w R" domain="[('qty_local_stock','&gt;',0)]"/>
+                </xpath>
+                <xpath expr="//filter[@name='local_overseas_w_res']" position="replace">
+                    <filter name="local_overseas_w_res" string="Local&amp;overseas w R" domain="['|',('qty_local_own_stock','&gt;',0),('overseas_stock','=','Yes')]"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>
