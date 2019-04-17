@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+
+    <record id="view_stock_quant_form_inherit_z160510" model="ir.ui.view">
+        <field name="name">stock.quant.inherit.slq.view.z160510</field>
+        <field name="model">stock.quant</field>
+        <field name="inherit_id" ref="stock.view_stock_quant_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='reservation_id']" position="after">
+                <field name="sale_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_stock_quant_tree_z160510" model="ir.ui.view">
+        <field name="name">stock.quant.tree.z160510</field>
+        <field name="model">stock.quant</field>
+        <field name="inherit_id" ref="sale_line_quant.view_stock_quant_tree_z6"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='lot_id']" position="replace"/>
+            <xpath expr="//field[@name='product_id']" position="after">
+                <field name="lot_id"/>
+            </xpath>
+            <xpath expr="//field[@name='reservation_id']" position="after">
+                <field name="sale_id"/>
+            </xpath>
+        </field>
+    </record>
+
+</data>
+</odoo>

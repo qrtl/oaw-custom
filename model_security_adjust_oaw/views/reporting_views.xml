@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!--Reporting-->
+        <record id="base.menu_reporting" model="ir.ui.menu">
+            <field name="groups_id"
+                   eval="[(6,0, [ref('model_security_adjust_oaw.group_supplier'),ref('account.group_account_manager')])]"/>
+        </record>
+
+        <!--Reporting/Sales-->
+        <record id="base.next_id_64" model="ir.ui.menu">
+            <field name="groups_id"
+                   eval="[(6,0, [ref('model_security_adjust_oaw.group_supplier_fm'),ref('base.group_sale_manager')])]"/>
+        </record>
+
+        <!--Reporting/Sales/Sales Analysis-->
+        <record id="sale.menu_report_product_all" model="ir.ui.menu">
+            <field name="groups_id"
+                   eval="[(6,0, [ref('base.group_sale_manager')])]"/>
+        </record>
+
+    </data>
+</odoo>

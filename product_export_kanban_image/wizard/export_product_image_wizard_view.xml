@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="export_product_image_wizard_view" model="ir.ui.view">
+            <field name="name">export.product.image.wizard.form</field>
+            <field name="model">export.product.image.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Export Product Image Options">
+                    <group>
+                        <field name="export_type"/>
+                        <field name="image_type" attrs="{'invisible': [('export_type', '!=', 'image')]}"/>
+                        <field name="row"/>
+                        <field name="product_limit"/>
+                        <field name="total_page"/>
+                        <field name="export_pages"/>
+                    </group>
+                    <footer>
+                        <button name="export_product_image" type="object"
+                                class="oe_highlight" string="Export"/>
+                        <button string="_Cancel" class="btn-default"
+                                special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <act_window
+                id="act_export_product_image"
+                multi="True"
+                key2="client_action_multi"
+                name="Export Kanban Image"
+                res_model="export.product.image.wizard"
+                src_model="product.template"
+                view_mode="form" target="new" view_type="form"/>
+
+        <act_window
+                id="act_export_supplier_stock_image"
+                multi="True"
+                key2="client_action_multi"
+                name="Export Kanban Image"
+                res_model="export.product.image.wizard"
+                src_model="supplier.stock"
+                view_mode="form" target="new" view_type="form"/>
+
+
+    </data>
+</odoo>

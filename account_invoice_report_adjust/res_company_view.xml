@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="view_company_form_z1" model="ir.ui.view">
+            <field name="name">res.company.form.z1</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+            <xpath expr="//page[@string='Report Configuration']" position="after">
+                <page string="Invoice Remarks">
+                    <group>
+                    	<field name="invoice_remark"/>
+                    </group>
+                </page>
+            </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

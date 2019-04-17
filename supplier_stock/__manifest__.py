@@ -11,7 +11,7 @@
         'mail',
         'stock',
     ],
-    'summary':"""""",
+    'summary': """""",
     'description': """
     """,
     'data': [

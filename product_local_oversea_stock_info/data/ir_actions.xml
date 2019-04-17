@@ -17,4 +17,20 @@
         <field name="code">records.mapped('product_variant_ids')._update_prod_tmpl_qty()</field>
     </record>
 
+    <record id="product_template_update_location_name" model="ir.actions.server">
+        <field name="name">Update Location Name</field>
+        <field name="model_id" ref="product.model_product_template"/>
+        <field name="binding_model_id" ref="product.model_product_template"/>
+        <field name="state">code</field>
+        <field name="code">records._get_stock_location()</field>
+    </record>
+
+    <record id="product_product_update_location_name" model="ir.actions.server">
+        <field name="name">Update Location Name</field>
+        <field name="model_id" ref="product.model_product_product"/>
+        <field name="binding_model_id" ref="product.model_product_product"/>
+        <field name="state">code</field>
+        <field name="code">records.mapped('product_tmpl_id')._get_stock_location()</field>
+    </record>
+
 </odoo>

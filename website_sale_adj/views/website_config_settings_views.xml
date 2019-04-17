@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_website_config_settings" model="ir.ui.view">
+            <field name="name">Website settings</field>
+            <field name="model">website.config.settings</field>
+            <field name="inherit_id" ref="website.view_website_config_settings"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@string='Social Media']" position="before">
+                    <label for="about_us"/>
+                    <div name="about_us">
+                        <div class="oe_inline">
+                            <field name="about_us"/>
+                        </div>
+                    </div>
+                    <label for="contact_description"/>
+                    <div name="contact_description">
+                        <div class="oe_inline">
+                            <field name="contact_description"/>
+                        </div>
+                    </div>
+                </xpath>
+
+            </field>
+        </record>
+
+    </data>
+</odoo>

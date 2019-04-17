@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="export_product_image_view" model="ir.ui.view">
+            <field name="name">export.product.image.tree</field>
+            <field name="model">export.product.image</field>
+            <field name="arch" type="xml">
+                <tree string="Export Product Image">
+                    <field name="name"/>
+                    <button name="download_image" type="object"
+                            string="Download"/>
+                </tree>
+            </field>
+        </record>
+
+    </data>
+</odoo>

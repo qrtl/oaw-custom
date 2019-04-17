@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+
+    <record id="update_overseas_info_action" model="ir.actions.server">
+        <field name="name">Update Overseas Info</field>
+        <field name="model_id" ref="product.model_product_product"/>
+        <field name="state">code</field>
+        <field name="code">self.browse(cr,uid,context.get('active_ids', []))._update_overseas_info()</field>
+    </record>
+
+    <record id="update_overseas_info" model="ir.values">
+        <field eval="'client_action_multi'" name="key2"/>
+        <field eval="'product.product'" name="model"/>
+        <field name="name">update.product.overseas.info</field>
+        <field eval="'ir.actions.server,%d'%update_overseas_info_action" name="value"/>
+    </record>
+
+</data>
+</odoo>

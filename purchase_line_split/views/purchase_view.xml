@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+   <record model="ir.ui.view" id="purchase_order_form_z160426">
+        <field name="name">purchase.order.form.z160426</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <button name="wkf_send_rfq" string="Send RFQ by Email" position="replace"/>
+            <button name="print_quotation" string="Print RFQ" position="replace"/>
+            <button name="print_quotation" string="Re-Print RFQ" position="after">
+                <button name="action_button_split_line" class="oe_highlight" attrs="{'invisible': [('need_auto_split', '=', False)]}" string="Split Lines" type="object" groups="base.group_user"/>
+                <field name="need_auto_split" invisible="1"/>
+            </button>
+        </field>
+    </record>
+
+</data>
+</odoo>

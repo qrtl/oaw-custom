@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <function model="stock.quant" name="_update_original_owner_id"/>
+    <function model="stock.quant" name="_update_repair"/>
+</data>
+</odoo>

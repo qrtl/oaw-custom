@@ -1,0 +1,126 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* website_timecheck
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-03-06 08:48+0000\n"
+"PO-Revision-Date: 2019-03-06 08:48+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: website_timecheck
+#: view:website:website_sale.products
+msgid "All Categories"
+msgstr "所有品牌"
+
+#. module: website_timecheck
+#: view:website:website_sale.products
+msgid "All Products"
+msgstr "所有商品"
+
+#. module: website_timecheck
+#: selection:sale.order,payment_method:0
+#: view:website:website_sale.cart
+msgid "Bank Transfer to our HK company"
+msgstr "轉賬到我們香港公司戶口"
+
+#. module: website_timecheck
+#: selection:sale.order,payment_method:0
+#: view:website:website_sale.cart
+msgid "Cash"
+msgstr "港幣現金"
+
+#. module: website_timecheck
+#: selection:sale.order,payment_method:0
+#: view:website:website_sale.cart
+msgid "China Bank Transfer"
+msgstr "內地銀行轉賬"
+
+#. module: website_timecheck
+#: view:website:website_sale.cart
+msgid "Confirm and Submit"
+msgstr "確認並提交"
+
+#. module: website_timecheck
+#: field:sale.order,picking_date:0
+msgid "Desire Picking Date"
+msgstr "取貨時間"
+
+#. module: website_timecheck
+#: view:website:website_sale.cart
+msgid "Desire Picking Date (Delivery：Monday to Friday 15:00-18:00)"
+msgstr "取貨時間： 週一到週五下午15:00-18:00"
+
+#. module: website_timecheck
+#: selection:sale.order,payment_method:0
+#: view:website:website_sale.cart
+msgid "Hong Kong Banks' Cheque"
+msgstr "香港的銀行支票"
+
+#. module: website_timecheck
+#: help:sale.order,picking_date:0
+msgid "Monday to Friday 15:00-18:00"
+msgstr "週一到週五下午15:00-18:00"
+
+#. module: website_timecheck
+#: view:website:website_timecheck.confirmation
+msgid "Order"
+msgstr "訂單"
+
+#. module: website_timecheck
+#: view:website:website_timecheck.confirmation
+msgid "Order - Submitted"
+msgstr "訂單已提交"
+
+#. module: website_timecheck
+#: field:sale.order,other_inquiry:0
+#: view:website:website_sale.cart
+msgid "Other Inquiry"
+msgstr "其他需求"
+
+#. module: website_timecheck
+#: field:sale.order,payment_desc:0
+#: selection:sale.order,payment_method:0
+#: view:website:website_sale.cart
+msgid "Other Payment Method"
+msgstr "其他支付方式"
+
+#. module: website_timecheck
+#: field:sale.order,payment_method:0
+#: view:website:website_sale.cart
+msgid "Payment Method"
+msgstr "付款方式"
+
+#. module: website_timecheck
+#: model:ir.model,name:website_timecheck.model_sale_order
+msgid "Sales Order"
+msgstr "銷貨單"
+
+#. module: website_timecheck
+#: view:website:website_timecheck.confirmation
+msgid "Submitted"
+msgstr "已提交"
+
+#. module: website_timecheck
+#: view:website:website_timecheck.confirmation
+msgid "Thank you for your order."
+msgstr "謝謝您的訂單。"
+
+#. module: website_timecheck
+#: selection:sale.order,payment_method:0
+#: view:website:website_sale.cart
+msgid "Visa or Union (Extra 2.2% as fee)"
+msgstr "刷銀聯或信用卡 買方支付2.2%手續費"
+
+#. module: website_timecheck
+#: view:website:website_timecheck.confirmation
+msgid "We will contact you soon."
+msgstr "我們會盡快與您聯繫。"
+

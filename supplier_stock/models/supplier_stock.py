@@ -188,3 +188,30 @@ class SupplierStock(models.Model):
                     rec.currency_id.id).compute(
                     rec.retail_in_currency, company_curr)
         return
+
+    @api.multi
+    def write(self, vals):
+        res = super(SupplierStock, self).write(vals)
+        if 'partner_loc_id' in vals or 'product_id' in vals or 'quantity' in \
+                vals:
+            for ss in self:
+                ss.product_id.product_tmpl_id.sudo()._get_stock_location()
+        return res
+
+    @api.model
+    def create(self, vals):
+        res = super(SupplierStock, self).create(vals)
+        if 'partner_loc_id' in vals or 'product_id' in vals or 'quantity' in \
+                vals:
+            res.product_id.product_tmpl_id.sudo()._get_stock_location()
+        return res
+
+    @api.multi
+    def unlink(self):
+        products = []
+        for ss in self:
+            products.append(ss.product_id.product_tmpl_id)
+        res = super(SupplierStock, self).unlink()
+        for product in products:
+            product.sudo()._get_stock_location()
+        return res

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+
+    <record id="view_procurement_form_inherit_enforce" model="ir.ui.view">
+        <field name="name">procurement.order.form.inherit</field>
+        <field name="model">procurement.order</field>
+        <field name="inherit_id" ref="procurement.procurement_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="quant_id" readonly="1"/>
+                <field name="lot_id" readonly="1"/>
+                <field name="is_enforce_qty" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+    
+    <record id="product_category_form_view_inherit" model="ir.ui.view">
+            <field name="name">product.category.inherit.slq.view1</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="product.product_category_form_view"/>
+            <field name="arch" type="xml">
+                <field name="type" position='after'>
+                    <field name='enforce_qty_1'/>
+                </field>
+            </field>
+    </record>
+    
+    <record model="ir.ui.view" id="partner_view_order_policy">
+            <field name="name">partner.view.order_policy</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id"
+                   ref="account.view_partner_property_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='credit_limit']" position="after">
+	                <field name="order_policy" />
+                </xpath>
+            </field>
+        </record>
+    
+</data>
+</odoo>
