@@ -10,6 +10,7 @@
     'depends': [
         'supplier_stock',
         'product_offer',
+        'product_listprice_list_view',
     ],
     'summary': """""",
     'description': """
@@ -18,6 +19,8 @@
     """,
     'data': [
         'data/ir_actions.xml',
+        'views/product_product_views.xml',
+        'views/product_template_views.xml',
         'views/supplier_location_views.xml',
     ],
     'installable': True,
