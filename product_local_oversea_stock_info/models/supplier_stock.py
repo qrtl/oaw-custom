@@ -30,6 +30,9 @@ class SupplierStock(models.Model):
                     'qty_local_stock': product.product_tmpl_id.qty_available + int(
                         vals.get('quantity', 0.0))
                 })
+        if 'partner_loc_id' in vals or 'product_id' in vals or 'quantity' in \
+                vals:
+            product.product_tmpl_id.sudo()._get_stock_location()
         return res
 
     @api.multi
@@ -37,11 +40,17 @@ class SupplierStock(models.Model):
         res = super(SupplierStock, self).write(vals)
         if 'product_id' in vals or 'quantity' in vals or 'partner_loc_id' in vals:
             self._update_prod_tmpl_qty()
+        if 'partner_loc_id' in vals or 'product_id' in vals or 'quantity' in \
+                vals:
+            for ss in self:
+                ss.product_id.product_tmpl_id.sudo()._get_stock_location()
         return res
 
     @api.multi
     def unlink(self):
+        products = []
         for ss in self:
+            products.append(ss.product_id.product_tmpl_id)
             if not ss.hk_location:
                 qty_overseas = ss.product_id.product_tmpl_id.qty_overseas - \
                                int(ss.quantity)
@@ -55,4 +64,7 @@ class SupplierStock(models.Model):
                 ss.product_id.product_tmpl_id.sudo().write({
                     'qty_local_stock': qty_local_stock
                 })
-        return super(SupplierStock, self).unlink()
+        res = super(SupplierStock, self).unlink()
+        for product in products:
+            product.sudo()._get_stock_location()
+        return res
