@@ -123,6 +123,9 @@ class WebsiteSale(website_sale):
         '/shop/category/<model("product.public.category"):category>/page/<int:page>'
     ], type='http', auth="user", website=True)
     def shop(self, page=0, category=None, search='', **post):
+        access_check = self.check_timecheck_access()
+        if access_check:
+            return access_check
         if category:
             request.session.update({
                 'all_products': True,
@@ -135,6 +138,42 @@ class WebsiteSale(website_sale):
         res = super(WebsiteSale, self).shop(page=page, category=category,
                                             search=search, **post)
         return res
+
+    @http.route(['/shop/product/<model("product.template"):product>'],
+                type='http', auth="user", website=True)
+    def product(self, product, category='', search='', **kwargs):
+        access_check = self.check_timecheck_access()
+        if access_check:
+            return access_check
+        return super(WebsiteSale, self).product(product=product,
+                                                category=category,
+                                                search=search,
+                                                **kwargs)
+
+    @http.route(['/shop/cart'], type='http', auth="user", website=True)
+    def cart(self, **post):
+        access_check = self.check_timecheck_access()
+        if access_check:
+            return access_check
+        return super(WebsiteSale, self).cart(**post)
+
+    def check_timecheck_access(self):
+        user = request.env['res.users'].sudo().browse(request.uid)
+        if not (user.sudo().has_group('website_timecheck.group_timecheck_trial')
+                or user.sudo().has_group('base.group_website_publisher')):
+            base_url = request.env['ir.config_parameter'].get_param(
+                'web.base.url')
+            redirect = base_url + '/web'
+            return http.redirect_with_hash(redirect)
+        return False
+
+    def _get_search_order(self, post):
+        # Overwrite by QTL
+        # OrderBy will be parsed in orm and so no direct sql injection
+        # id is added to be sure that order is a unique sort key
+        # return 'website_published desc,%s , id desc' % post.get('order', 'website_sequence desc')
+        return 'website_published desc, partner_offer_checked desc,' \
+               'website_product_seq_date desc, id desc'
 
 
 class Home(Home):
