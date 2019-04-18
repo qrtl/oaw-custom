@@ -52,27 +52,6 @@ class ProductTemplate(models.Model):
         compute='_get_qty_local_own_stock',
         store=True,
     )
-    advertise = fields.Boolean(
-        default=False,
-    )
-    net_profit = fields.Float(
-        string='Net Profit',
-        digits=dp.get_precision('Product Price'),
-        compute='_compute_net_profit',
-        readonly=True,
-        store=True,
-    )
-    net_profit_pct = fields.Float(
-        string='Net Profit Percent',
-        digits=dp.get_precision('Discount'),
-        compute='_compute_net_profit',
-        readonly=True,
-    )
-    stock_cost = fields.Float(
-        string='Stock Cost',
-        compute='_get_stock_cost',
-        digits=dp.get_precision('Product Price'),
-    )
     stock_location = fields.Char(
         string='Stock Location',
         compute='_get_stock_location',
@@ -135,39 +114,6 @@ class ProductTemplate(models.Model):
                     supplier_local_qty += ss.quantity
             pt.qty_local_own_stock = pt.qty_local_stock - supplier_local_qty
 
-    def _get_quant_cost(self, prod_ids):
-        quant = self.env['stock.quant'].search(
-            [('product_id', 'in', prod_ids),
-             ('usage', '=', 'internal')],
-            order='cost', limit=1
-        )
-        if quant:
-            return quant.cost
-        return False
-
-    def _get_supp_stock_cost(self, prod_ids):
-        records = self.env['supplier.stock'].search(
-            [('product_id', 'in', prod_ids),
-             ('quantity', '>', 0)]
-        )
-        if records:
-            return min(r.price_unit_base for r in records)
-        return False
-
-    @api.multi
-    def _get_stock_cost(self):
-        for pt in self:
-            prod_ids = [p.id for p in pt.product_variant_ids]
-            quant_cost = self._get_quant_cost(prod_ids)
-            if quant_cost:
-                pt.stock_cost = quant_cost
-                continue
-            supp_stock_cost = self._get_supp_stock_cost(prod_ids)
-            if supp_stock_cost:
-                pt.stock_cost = supp_stock_cost
-                continue
-            pt.stock_cost = pt.standard_price
-
     def _get_local_location_name(self, prod_ids):
         quant = self.env['stock.quant'].search(
             [('product_id', 'in', prod_ids),
@@ -217,16 +163,4 @@ class ProductTemplate(models.Model):
                 else:
                     pt.stock_location = local_location_name
                     pt.stock_leadtime = '0 day(s)'
-
-    @api.multi
-    @api.depends('net_price', 'stock_cost')
-    def _compute_net_profit(self):
-        for pt in self:
-            if pt.net_price == 0.0 or pt.stock_cost == 0.0:
-                pt.net_profit = 0.00
-                pt.net_profit_pct = 0.00
-            else:
-                pt.net_profit = pt.net_price - pt.stock_cost
-                pt.net_profit_pct = (pt.net_price / pt.stock_cost) * 100 - 100
-        return
 

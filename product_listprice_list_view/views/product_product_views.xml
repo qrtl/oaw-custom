@@ -5,7 +5,7 @@
         <field name="name">product.product.internal.view</field>
         <field name="model">product.product</field>
         <field name="arch" type="xml">
-            <tree string="Product List Price Update" editable="top" delete="false" decoration-danger="net_profit < 0">
+            <tree string="Product List Price Update" editable="top" delete="false" decoration-danger="net_profit &lt; 0">
                 <field name="default_code" string="Code" readonly="1"/>
                 <field name="name" string="Product Ref" readonly="1"/>
                 <field name="image_small" string="Image" widget="image" height="64px"/>
