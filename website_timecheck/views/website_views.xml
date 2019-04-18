@@ -3,7 +3,7 @@
     <data>
 
         <delete id="website.menu_website" model="ir.ui.menu"/>
-        <menuitem id="website.menu_website" parent="base.menu_config" name="Website"
+        <menuitem id="website.menu_website" name="Website"
                   groups="website_timecheck.group_timecheck_basic,base.group_website_publisher"
                   sequence="400" action="website.action_website"/>
 
