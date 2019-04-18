@@ -17,6 +17,11 @@ class ProductTemplate(models.Model):
         string='New Arrival',
         compute='_get_is_new_arrival',
     )
+    website_product_seq_date = fields.Datetime(
+        string='Product Sequence Date',
+        compute='_compute_website_product_seq_date',
+        store=True,
+    )
 
     @api.multi
     def _get_is_new_arrival(self):
@@ -61,3 +66,15 @@ class ProductTemplate(models.Model):
     def reset_public_category(self):
         for product in self:
             product.public_categ_ids = False
+
+    @api.multi
+    @api.depends('partner_stock_last_modified', 'last_in_date')
+    def _compute_website_product_seq_date(self):
+        for product in self:
+            product.website_product_seq_date = product.last_in_date or \
+                                               product.partner_stock_last_modified
+            if product.last_in_date and product.partner_stock_last_modified \
+                    and product.partner_stock_last_modified > \
+                    product.last_in_date:
+                product.website_product_seq_date = \
+                    product.partner_stock_last_modified

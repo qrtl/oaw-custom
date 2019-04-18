@@ -9,6 +9,7 @@
     'website': 'https://www.quartile.co',
     'depends': [
         'oa_product_update_filter',
+        'product_offer',
         'website_sale',
         'website_sale_adj',
         'website_multi_image_zoom',
