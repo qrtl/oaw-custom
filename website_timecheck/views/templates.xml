@@ -58,8 +58,8 @@
                     Internal Code: <span t-field="product.default_code"/><br/>
                 </div>
                 <div>Stock:
-                    <span t-if="product.qty_local_stock and product.qty_overseas">HK, Overseas</span>
-                    <span t-if="product.qty_local_stock and not product.qty_overseas">HK</span>
+                    <span t-if="product.qty_local_stock and product.qty_overseas">HK<span groups="website_timecheck.group_timecheck_light" t-if="product.qty_local_supplier_stock != 0">(R)</span>, Overseas</span>
+                    <span t-if="product.qty_local_stock and not product.qty_overseas">HK<span groups="website_timecheck.group_timecheck_light" t-if="product.qty_local_supplier_stock != 0">(R)</span></span>
                     <span t-if="not product.qty_local_stock and product.qty_overseas">Overseas</span>
                     <span t-if="not product.qty_local_stock and not product.qty_overseas">N/A</span>
                 </div>
@@ -222,8 +222,8 @@
                 <div>
                     <h4>
                         Stock:
-                        <span t-if="product.qty_local_stock and product.qty_overseas">HK, Overseas</span>
-                        <span t-if="product.qty_local_stock and not product.qty_overseas">HK</span>
+                        <span t-if="product.qty_local_stock and product.qty_overseas">HK<span groups="website_timecheck.group_timecheck_light" t-if="product.qty_local_supplier_stock != 0">(R)</span>, Overseas</span>
+                        <span t-if="product.qty_local_stock and not product.qty_overseas">HK<span groups="website_timecheck.group_timecheck_light" t-if="product.qty_local_supplier_stock != 0">(R)</span></span>
                         <span t-if="not product.qty_local_stock and product.qty_overseas">Overseas</span>
                         <span t-if="not product.qty_local_stock and not product.qty_overseas">N/A</span>
                     </h4>
