@@ -55,6 +55,9 @@ class WebsiteSale(website_sale):
     @http.route('/shop/all_stock', type='http', auth="public", website=True)
     def shop_all_stock(self):
         request.session.update({
+            'all_products': False,
+            'new_arrival': False,
+            'special_offer': False,
             'all_stock': True,
             'hk_stock': False,
             'oversea_stock': False,
@@ -64,6 +67,9 @@ class WebsiteSale(website_sale):
     @http.route('/shop/hk_stock', type='http', auth="public", website=True)
     def shop_hk_stock(self):
         request.session.update({
+            'all_products': False,
+            'new_arrival': False,
+            'special_offer': False,
             'all_stock': False,
             'hk_stock': True,
             'oversea_stock': False,
@@ -74,6 +80,9 @@ class WebsiteSale(website_sale):
                 website=True)
     def shop_oversea_stock(self):
         request.session.update({
+            'all_products': False,
+            'new_arrival': False,
+            'special_offer': False,
             'all_stock': False,
             'hk_stock': False,
             'oversea_stock': True,
