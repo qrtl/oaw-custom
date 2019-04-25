@@ -299,3 +299,9 @@ msgstr "继续购物"
 msgid "My cart"
 msgstr "我的购物车"
 
+#. module: website_timecheck
+#: view:website:website_sale.product
+#: view:website:website_sale.products_item
+msgid ", Overseas"
+msgstr ", 海外现货"
+
