@@ -10,7 +10,12 @@ class ProductTemplate(models.Model):
 
     qty_local_own_stock = fields.Integer(
         string='Quantity Local Stock',
-        compute='_get_qty_local_own_stock',
+        compute='_get_qty_local_stock',
+        store=True,
+    )
+    qty_local_supplier_stock = fields.Integer(
+        string='Quantity Local Supplier Stock',
+        compute='_get_qty_local_stock',
         store=True,
     )
 
@@ -28,7 +33,7 @@ class ProductTemplate(models.Model):
 
     @api.multi
     @api.depends('qty_local_stock')
-    def _get_qty_local_own_stock(self):
+    def _get_qty_local_stock(self):
         for pt in self:
             if pt.product_variant_ids:
                 supplier_local_qty = 0
@@ -40,3 +45,4 @@ class ProductTemplate(models.Model):
                 for ss in supplier_stocks:
                     supplier_local_qty += ss.quantity
             pt.qty_local_own_stock = pt.qty_local_stock - supplier_local_qty
+            pt.qty_local_supplier_stock = supplier_local_qty
