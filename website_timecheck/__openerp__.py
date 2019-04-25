@@ -10,6 +10,7 @@
     'depends': [
         'oa_product_update_filter',
         'product_offer',
+        'product_listprice_list_view',
         'website_sale',
         'website_sale_adj',
         'website_multi_image_zoom',
