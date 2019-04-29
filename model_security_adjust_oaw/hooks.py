@@ -72,20 +72,3 @@ def _update_partner_offer_fields(cr, registry):
         WHERE
             subquery.quant_id = sm.quant_id
     ''')
-
-    # Initialize of pick_partner_related_user_id in stock.move
-    cr.execute('''
-            UPDATE
-                stock_move sm
-            SET
-                pick_partner_related_user_id = subquery.user_id
-            FROM(
-                SELECT
-                    rp.id AS partner_id,
-                    ru.id AS user_id
-                FROM res_partner rp
-                JOIN res_users ru ON rp.id = ru.partner_id
-            ) AS subquery
-            WHERE
-                subquery.partner_id = sm.pick_partner_id
-        ''')
