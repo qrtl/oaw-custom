@@ -35,8 +35,8 @@ class ProductTemplate(models.Model):
     @api.depends('qty_local_stock')
     def _get_qty_local_stock(self):
         for pt in self:
+            supplier_local_qty = 0
             if pt.product_variant_ids:
-                supplier_local_qty = 0
                 supplier_stocks = self.env['supplier.stock'].sudo().search([
                     ('product_id', 'in', pt.product_variant_ids.ids),
                     ('quantity', '!=', 0),
