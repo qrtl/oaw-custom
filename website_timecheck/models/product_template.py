@@ -13,6 +13,13 @@ class ProductTemplate(models.Model):
     stock_new_arrival = fields.Datetime(
         string='New Arrival',
     )
+    special_offer_limit = fields.Datetime(
+        string='Special Offer Limit',
+    )
+    in_special_offer_limit = fields.Boolean(
+        string='Special Offer Limit',
+        compute='_get_in_special_offer_limit',
+    )
     is_new_arrival = fields.Boolean(
         string='New Arrival',
         compute='_get_is_new_arrival',
@@ -22,6 +29,19 @@ class ProductTemplate(models.Model):
         compute='_compute_website_product_seq_date',
         store=True,
     )
+
+    @api.multi
+    def _get_in_special_offer_limit(self):
+        for product in self:
+            if not self.env.user.has_group(
+                    'website_timecheck.group_timecheck_light'):
+                limit_date = (datetime.datetime.now() + datetime.timedelta(
+                    days=-3)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+                product.in_special_offer_limit = True if \
+                    product.special_offer_limit and \
+                    product.special_offer_limit >= limit_date else False
+            else:
+                product.in_special_offer_limit = True
 
     @api.multi
     def _get_is_new_arrival(self):
@@ -51,6 +71,8 @@ class ProductTemplate(models.Model):
                     product.sudo().write({
                         'stock_new_arrival': False
                     })
+        if 'sale_hkd_ac_so' in vals and vals['sale_hkd_ac_so']:
+            vals['special_offer_limit'] = fields.Datetime.now()
         return super(ProductTemplate, self).write(vals)
 
     @api.multi
