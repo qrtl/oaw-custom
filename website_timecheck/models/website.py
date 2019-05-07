@@ -13,19 +13,31 @@ class website(models.Model):
 
     def sale_product_domain(self):
         domain = super(website, self).sale_product_domain()
-        date = (datetime.datetime.now() + datetime.timedelta(
+        new_arrival_date = (datetime.datetime.now() + datetime.timedelta(
             days=-7)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        special_offer_date = (datetime.datetime.now() + datetime.timedelta(
+            days=-3)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         if request.session.get('new_arrival'):
             domain.append(
-                ('stock_new_arrival', '>=', date)
+                ('stock_new_arrival', '>=', new_arrival_date)
             )
         elif request.session.get('special_offer'):
-            domain.extend((
-                '|',
-                ('local_stock_not_reserved', '>', 0),
-                ('overseas_stock', '=', 'Yes'),
-                ('sale_hkd_ac_so', '!=', 0)
-            ))
+            if not self.env.user.has_group(
+                    'website_timecheck.group_timecheck_light'):
+                domain.extend((
+                    '|',
+                    ('local_stock_not_reserved', '>', 0),
+                    ('overseas_stock', '=', 'Yes'),
+                    ('sale_hkd_ac_so', '!=', 0),
+                    ('special_offer_limit', '>=', special_offer_date)
+                ))
+            else:
+                domain.extend((
+                    '|',
+                    ('local_stock_not_reserved', '>', 0),
+                    ('overseas_stock', '=', 'Yes'),
+                    ('sale_hkd_ac_so', '!=', 0)
+                ))
         if request.session.get('hk_stock'):
             domain.append(
                 ('qty_local_stock', '>', 0)
