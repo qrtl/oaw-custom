@@ -252,7 +252,7 @@
                             <span t-esc="'{:,.0f}'.format(product.list_price)" style="white-space: nowrap;"/>
                         </t>
                     </div>
-                    <div t-if="not product.sale_hkd_ac_so and not product.in_special_offer_limit" groups="website_timecheck.group_timecheck_light">
+                    <div t-if="not product.sale_hkd_ac_so" groups="website_timecheck.group_timecheck_light">
                         <span>Sale HKD:</span>
                         <span t-esc="'{:,.0f}'.format(product.sale_hkd_ac)" style="white-space: nowrap;"/>
                     </div>
@@ -260,7 +260,7 @@
                         <span style="color: DarkGrey;">Sale HKD:</span>
                         <span t-esc="'{:,.0f}'.format(product.sale_hkd_ac)" style="white-space: nowrap; color: DarkGrey;"/>
                     </div>
-                    <div t-if="product.sale_hkd_ac_so">
+                    <div t-if="product.sale_hkd_ac_so and not product.in_special_offer_limit">
                         <span style="color: red; font-weight:bold;">Special Offer:</span>
                         <span t-esc="'{:,.0f}'.format(product.sale_hkd_ac_so)" style="white-space: nowrap; color: red; font-weight:bold;"/>
                         <span style="color: red; font-weight:bold;">HKD</span>
