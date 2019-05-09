@@ -29,7 +29,7 @@ class website(models.Model):
                     ('local_stock_not_reserved', '>', 0),
                     ('overseas_stock', '=', 'Yes'),
                     ('sale_hkd_ac_so', '!=', 0),
-                    ('special_offer_limit', '>=', special_offer_date)
+                    ('special_offer_limit', '<=', special_offer_date)
                 ))
             else:
                 domain.extend((
