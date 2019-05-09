@@ -33,15 +33,15 @@ class ProductTemplate(models.Model):
     @api.multi
     def _get_in_special_offer_limit(self):
         for product in self:
-            if not self.env.user.has_group(
+            if self.env.user.has_group(
                     'website_timecheck.group_timecheck_light'):
+                product.in_special_offer_limit = False
+            else:
                 limit_date = (datetime.datetime.now() + datetime.timedelta(
                     days=-3)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
                 product.in_special_offer_limit = True if \
                     product.special_offer_limit and \
                     product.special_offer_limit >= limit_date else False
-            else:
-                product.in_special_offer_limit = True
 
     @api.multi
     def _get_is_new_arrival(self):
@@ -94,7 +94,7 @@ class ProductTemplate(models.Model):
     def _compute_website_product_seq_date(self):
         for product in self:
             product.website_product_seq_date = product.last_in_date or \
-                                               product.partner_stock_last_modified
+                product.partner_stock_last_modified
             if product.last_in_date and product.partner_stock_last_modified \
                     and product.partner_stock_last_modified > \
                     product.last_in_date:
