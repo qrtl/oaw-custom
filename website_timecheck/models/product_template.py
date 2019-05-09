@@ -41,7 +41,7 @@ class ProductTemplate(models.Model):
                     days=-3)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
                 product.in_special_offer_limit = True if \
                     product.special_offer_limit and \
-                    product.special_offer_limit <= limit_date or \
+                    product.special_offer_limit >= limit_date or \
                     not product.special_offer_limit else False
 
     @api.multi
