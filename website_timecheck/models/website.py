@@ -15,8 +15,6 @@ class website(models.Model):
         domain = super(website, self).sale_product_domain()
         new_arrival_date = (datetime.datetime.now() + datetime.timedelta(
             days=-7)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-        special_offer_date = (datetime.datetime.now() + datetime.timedelta(
-            days=-3)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         if request.session.get('new_arrival'):
             domain.append(
                 ('stock_new_arrival', '>=', new_arrival_date)
@@ -29,7 +27,8 @@ class website(models.Model):
                     ('local_stock_not_reserved', '>', 0),
                     ('overseas_stock', '=', 'Yes'),
                     ('sale_hkd_ac_so', '!=', 0),
-                    ('special_offer_limit', '<=', special_offer_date)
+                    ('special_offer_limit', '<=', datetime.datetime.now().strftime(
+                        DEFAULT_SERVER_DATETIME_FORMAT))
                 ))
             else:
                 domain.extend((
@@ -47,4 +46,3 @@ class website(models.Model):
                 ('qty_overseas', '>', 0)
             )
         return domain
-

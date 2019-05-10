@@ -37,11 +37,10 @@ class ProductTemplate(models.Model):
                     'website_timecheck.group_timecheck_light'):
                 product.in_special_offer_limit = False
             else:
-                limit_date = (datetime.datetime.now() + datetime.timedelta(
-                    days=-3)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
                 product.in_special_offer_limit = True if \
                     product.special_offer_limit and \
-                    product.special_offer_limit >= limit_date or \
+                    product.special_offer_limit >= datetime.datetime.now().strftime(
+                        DEFAULT_SERVER_DATETIME_FORMAT) or \
                     not product.special_offer_limit else False
 
     @api.multi
@@ -73,7 +72,9 @@ class ProductTemplate(models.Model):
                         'stock_new_arrival': False
                     })
         if 'sale_hkd_ac_so' in vals and vals['sale_hkd_ac_so']:
-            vals['special_offer_limit'] = fields.Datetime.now()
+            special_offer_limit = (datetime.datetime.now() + datetime.timedelta(
+                days=+3))
+            vals['special_offer_limit'] = special_offer_limit
         return super(ProductTemplate, self).write(vals)
 
     @api.multi
