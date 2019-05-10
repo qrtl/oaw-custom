@@ -9,22 +9,16 @@
     'depends': [
         'stock',
         'sale_margin',
-        'vendor_consignment_stock',
-        'sale_owner_stock_sourcing',
-        'account_invoice_refund_link',
+        'stock_move_line_quant',
     ],
     'summary':""" Serial Number Quant on Sales Order Line""",
     'description': """ 
 Modification on sales order line by adding quant and serial number selection.
     """,
     'data': [
-        'security/group.xml',
-        'views/sale_view.xml',
-        'views/purchase_view.xml',
-        'views/stock_view.xml',
-        'views/sale_stock_view.xml',
-        'views/so_line_quant_view.xml',
-        'views/account_invoice_view.xml',
+        'views/sale_order_views.xml',
+        'views/stock_quant_views.xml',
+        'views/stock_move_line_views.xml',
     ],
     'installable': True,
 }
