@@ -187,7 +187,7 @@ class WebsiteSale(website_sale):
 
 class Home(Home):
 
-    @http.route('/web/login', type='http', auth="none")
+    @http.route('/web/login', type='http', auth="public")
     def web_login(self, redirect=None, **kw):
         ensure_db()
         if request.httprequest.method == 'GET' and redirect and request.session.uid:
