@@ -23,20 +23,14 @@ class website(models.Model):
             if not self.env.user.has_group(
                     'website_timecheck.group_timecheck_light'):
                 domain.extend((
-                    '|',
-                    ('local_stock_not_reserved', '>', 0),
-                    ('overseas_stock', '=', 'Yes'),
                     ('sale_hkd_ac_so', '!=', 0),
                     ('special_offer_limit', '<=', datetime.datetime.now().strftime(
                         DEFAULT_SERVER_DATETIME_FORMAT))
                 ))
             else:
-                domain.extend((
-                    '|',
-                    ('local_stock_not_reserved', '>', 0),
-                    ('overseas_stock', '=', 'Yes'),
+                domain.append(
                     ('sale_hkd_ac_so', '!=', 0)
-                ))
+                )
         if request.session.get('hk_stock'):
             domain.append(
                 ('qty_local_stock', '>', 0)
