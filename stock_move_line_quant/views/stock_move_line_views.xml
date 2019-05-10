@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_stock_move_line_operation_tree" model="ir.ui.view">
+        <field name="name">stock.move.line.operations.tree</field>
+        <field name="model">stock.move.line</field>
+        <field name="inherit_id" ref="stock.view_stock_move_line_operation_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='lot_name']" position="after">
+                <field name="purchase_price_unit" attrs="{'readonly': [('state', '=', 'done')]}" invisible="not context.get('show_purchase_fields')"/>
+                <field name="currency_id" attrs="{'readonly': [('state', '=', 'done')]}" options="{'no_open': True, 'no_create': True}" invisible="not context.get('show_purchase_fields')"/>
+                <field name="exchange_rate" attrs="{'readonly': [('state', '=', 'done')]}" invisible="not context.get('show_purchase_fields')"/>
+                <field name="price_unit" invisible="not context.get('show_purchase_fields')"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

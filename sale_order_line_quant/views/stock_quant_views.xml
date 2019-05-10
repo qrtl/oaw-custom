@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="view_stock_quant_form">
+        <field name="name">stock.quant.form</field>
+        <field name="model">stock.quant</field>
+        <field name="inherit_id" ref="stock.view_stock_quant_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//label[@for='quantity']" position="before">
+                <field name="usage"/>
+                <field name="reservation_id"/>
+                <field name="actual_qty"/>
+            </xpath>
+            <xpath expr="//field[@name='in_date']" position="after">
+                <field name='currency_id'/>
+                <field name='purchase_price_unit'/>
+                <field name='exchange_rate'/>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_stock_quant_tree">
+        <field name="name">stock.quant.tree</field>
+        <field name="model">stock.quant</field>
+        <field name="inherit_id" ref="stock.view_stock_quant_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='quantity']" position="after">
+                <field name="reservation_id"/>
+                <field name='currency_id' string='Purch Curr'/>
+                <field name='purchase_price_unit' string='Curr Price'/>
+                <field name='exchange_rate'/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
