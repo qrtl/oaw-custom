@@ -18,9 +18,9 @@ class StockQuant(models.Model):
     )
 
     @api.model
-    def _update_product_last_in_date(self, quant):
-        quant.product_id.product_tmpl_id.last_in_date = quant.in_date
-        return
+    def _update_product_last_in_date(self):
+        for quant in self:
+            quant.product_id.product_tmpl_id.last_in_date = quant.in_date
 
     @api.multi
     def _update_prod_tmpl_reserved_qty(self):
