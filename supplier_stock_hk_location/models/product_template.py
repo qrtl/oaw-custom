@@ -46,3 +46,22 @@ class ProductTemplate(models.Model):
                     supplier_local_qty += ss.quantity
             pt.qty_local_own_stock = pt.qty_local_stock - supplier_local_qty
             pt.qty_local_supplier_stock = supplier_local_qty
+
+    @api.multi
+    def _get_stock_location(self):
+        for pt in self:
+            prod_ids = [p.id for p in pt.product_variant_ids]
+            pt.stock_leadtime = '/'
+            if pt.overseas_stock == 'Yes' or pt.qty_local_supplier_stock > 0:
+                pt.stock_location, supp_lt, pt.partner_note2,\
+                pt.retail_of_cheapest, pt.curr_of_cheapest = \
+                    self._get_overseas_location_name(prod_ids)
+                pt.stock_leadtime = str(supp_lt) + ' day(s)'
+            if pt.local_stock == 'Yes' and pt.qty_local_own_stock > 0:
+                local_location_name = self._get_local_location_name(prod_ids)
+                if pt.overseas_stock == 'Yes' or pt.qty_local_supplier_stock > 0:
+                    if local_location_name:
+                        pt.stock_location += ', ' + local_location_name
+                else:
+                    pt.stock_location = local_location_name
+                    pt.stock_leadtime = '0 day(s)'
