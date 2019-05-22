@@ -18,7 +18,7 @@ class SaleOrderLine(models.Model):
         string='Case No.',
     )
     stock_owner_id = fields.Many2one(
-        related='quant_id.owner_id'
+        related='quant_id.owner_id',
         string='Stock Owner',
     )
     mto = fields.Boolean(

@@ -29,6 +29,7 @@ class StockMove(models.Model):
             if move.quant_id and not move.move_line_ids:
                 values = {
                     'move_id': move.id,
+                    'picking_id': move.picking_id.id,
                     'product_id': move.product_id.id,
                     'product_uom_id': move.product_uom.id,
                     'location_id': move.location_id.id,
@@ -39,4 +40,5 @@ class StockMove(models.Model):
                     'qty_done': 1.0,
                 }
                 self.env['stock.move.line'].create(values)
+                move.quant_id.reserved_quantity += 1
         return res
