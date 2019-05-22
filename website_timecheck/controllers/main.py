@@ -9,6 +9,7 @@ from openerp import http
 from openerp.tools.translate import _
 from openerp import SUPERUSER_ID
 from openerp.addons.website_sale.controllers.main import website_sale
+from openerp.addons.website.controllers.main import Website
 from openerp.addons.web.controllers.main import Home
 from openerp.addons.web.controllers.main import ensure_db
 
@@ -213,10 +214,14 @@ class Home(Home):
                                                request.params['password'])
             if uid is not False:
                 user = request.env['res.users'].browse(uid)
+                # << QTL ADD
+                #    If user belongs to the timecheck group, redirect them
+                #    to the "Special Offer" page.
                 if user.has_group('website_timecheck.group_timecheck_trial'):
                     base_url = request.env['ir.config_parameter'].get_param(
                         'web.base.url')
                     redirect = base_url + '/shop/special_offer'
+                # >> QTL ADD
                 return http.redirect_with_hash(redirect)
             request.uid = old_uid
             values['error'] = _("Wrong login/password")
@@ -227,3 +232,24 @@ class Home(Home):
             error = 'Unable to login on database %s' % request.session.db
             return werkzeug.utils.redirect(
                 '/web/database/selector?error=%s' % error, 303)
+
+
+class Website(Website):
+
+    @http.route('/', type='http', auth="public", website=True)
+    def index(self, **kw):
+        # << QTL Set the homepage as the shop page
+        return request.redirect('/shop')
+        # page = 'homepage'
+        # try:
+        #     main_menu = request.registry['ir.model.data'].get_object(request.cr, request.uid, 'website', 'main_menu')
+        # except Exception:
+        #     pass
+        # else:
+        #     first_menu = main_menu.child_id and main_menu.child_id[0]
+        #     if first_menu:
+        #         if first_menu.url and (not (first_menu.url.startswith(('/page/', '/?', '/#')) or (first_menu.url == '/'))):
+        #             return request.redirect(first_menu.url)
+        #         if first_menu.url and first_menu.url.startswith('/page/'):
+        #             return request.registry['ir.http'].reroute(first_menu.url)
+        # return self.page(page)
