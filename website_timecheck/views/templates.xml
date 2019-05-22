@@ -58,10 +58,10 @@
                     Internal Code: <span t-field="product.default_code"/><br/>
                 </div>
                 <div>Stock:
-                    <span t-if="product.qty_local_stock and product.qty_overseas">HK<span groups="website_timecheck.group_timecheck_light" t-if="product.qty_local_supplier_stock != 0">(R)</span>, Overseas</span>
-                    <span t-if="product.qty_local_stock and not product.qty_overseas">HK<span groups="website_timecheck.group_timecheck_light" t-if="product.qty_local_supplier_stock != 0">(R)</span></span>
-                    <span t-if="not product.qty_local_stock and product.qty_overseas">Overseas</span>
-                    <span t-if="not product.qty_local_stock and not product.qty_overseas">N/A</span>
+                    <span t-if="product.local_stock_not_reserved and product.qty_overseas">HK<span groups="website_timecheck.group_timecheck_light" t-if="product.qty_local_supplier_stock != 0">(R)</span>, Overseas</span>
+                    <span t-if="product.local_stock_not_reserved and not product.qty_overseas">HK<span groups="website_timecheck.group_timecheck_light" t-if="product.qty_local_supplier_stock != 0">(R)</span></span>
+                    <span t-if="not product.local_stock_not_reserved and product.qty_overseas">Overseas</span>
+                    <span t-if="not product.local_stock_not_reserved and not product.qty_overseas">N/A</span>
                 </div>
             </xpath>
             <xpath expr="//img" position="attributes">
@@ -220,10 +220,10 @@
                 <div>
                     <h4>
                         Stock:
-                        <span t-if="product.qty_local_stock and product.qty_overseas">HK<span groups="website_timecheck.group_timecheck_light" t-if="product.qty_local_supplier_stock != 0">(R)</span>, Overseas</span>
-                        <span t-if="product.qty_local_stock and not product.qty_overseas">HK<span groups="website_timecheck.group_timecheck_light" t-if="product.qty_local_supplier_stock != 0">(R)</span></span>
-                        <span t-if="not product.qty_local_stock and product.qty_overseas">Overseas</span>
-                        <span t-if="not product.qty_local_stock and not product.qty_overseas">N/A</span>
+                        <span t-if="product.local_stock_not_reserved and product.qty_overseas">HK<span groups="website_timecheck.group_timecheck_light" t-if="product.qty_local_supplier_stock != 0">(R)</span>, Overseas</span>
+                        <span t-if="product.local_stock_not_reserved and not product.qty_overseas">HK<span groups="website_timecheck.group_timecheck_light" t-if="product.qty_local_supplier_stock != 0">(R)</span></span>
+                        <span t-if="not product.local_stock_not_reserved and product.qty_overseas">Overseas</span>
+                        <span t-if="not product.local_stock_not_reserved and not product.qty_overseas">N/A</span>
                     </h4>
                 </div>
             </xpath>
@@ -534,39 +534,49 @@
         </template>
 
         <template id="layout" inherit_id="website.layout" name="Layout">
-            <xpath expr="//ul[@id='top_menu']" position="replace">
-                <ul class="nav navbar-nav navbar-right" id="top_menu">
-                    <t t-foreach="website.menu_id.child_id" t-as="submenu">
-                        <t t-call="website.submenu"/>
-                    </t>
-                    <li class="divider hidden-xs" t-ignore="true" t-if="website.user_id != user_id"/>
-                    <div style="display: none;"></div>
-                    <li class="dropdown hidden-xs" t-ignore="true" t-if="website.user_id != user_id">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <b>
-                                <span t-esc="user_id.name"/>
-                                <span class="caret"/>
-                            </b>
-                        </a>
-                        <ul class="dropdown-menu js_usermenu" role="menu">
-                            <li><a href="/web" role="menuitem">My Account</a></li>
-                            <li class="divider"/>
-                            <li><a t-attf-href="/web/session/logout?redirect=/" role="menuitem">Logout</a></li>
+            <xpath expr="//div[@class='container']" position="replace">
+                <div class="container">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-top-collapse">
+                            <i class="fa fa-user" style="font-size: 18px !important"/>
+                        </button>
+                        <a class="navbar-brand" href="/" t-field="res_company.name"/>
+                    </div>
+                    <div class="collapse navbar-collapse navbar-top-collapse">
+                        <ul class="nav navbar-nav navbar-right" id="top_menu">
+                            <t t-foreach="website.menu_id.child_id" t-as="submenu">
+                                <t t-call="website.submenu"/>
+                            </t>
+                            <li class="divider hidden-xs" t-ignore="true" t-if="website.user_id != user_id"/>
+                            <div style="display: none;"></div>
+                            <li class="dropdown hidden-xs" t-ignore="true" t-if="website.user_id != user_id">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <b>
+                                        <span t-esc="user_id.name"/>
+                                        <span class="caret"/>
+                                    </b>
+                                </a>
+                                <ul class="dropdown-menu js_usermenu" role="menu">
+                                    <li><a href="/web" role="menuitem">My Account</a></li>
+                                    <li class="divider"/>
+                                    <li><a t-attf-href="/web/session/logout?redirect=/" role="menuitem">Logout</a></li>
+                                </ul>
+                            </li>
+                            <li class="visible-xs" t-ignore="true" t-if="website.user_id != user_id">
+                                <a href="#" class="dropdown">
+                                    <b>
+                                        <span t-esc="user_id.name"/>
+                                        <span class="caret"/>
+                                    </b>
+                                </a>
+                                <ul class="dropdown">
+                                    <li><a href="/web">My Account</a></li>
+                                    <li><a t-attf-href="/web/session/logout?redirect=/">Logout</a></li>
+                                </ul>
+                            </li>
                         </ul>
-                    </li>
-                    <li class="visible-xs" t-ignore="true" t-if="website.user_id != user_id">
-                        <a href="#" class="dropdown">
-                            <b>
-                                <span t-esc="user_id.name"/>
-                                <span class="caret"/>
-                            </b>
-                        </a>
-                        <ul class="dropdown">
-                            <li><a href="/web">My Account</a></li>
-                            <li><a t-attf-href="/web/session/logout?redirect=/">Logout</a></li>
-                        </ul>
-                    </li>
-                </ul>
+                    </div>
+                </div>
             </xpath>
         </template>
 
