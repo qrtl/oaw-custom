@@ -533,5 +533,42 @@
             </xpath>
         </template>
 
+        <template id="layout" inherit_id="website.layout" name="Layout">
+            <xpath expr="//ul[@id='top_menu']" position="replace">
+                <ul class="nav navbar-nav navbar-right" id="top_menu">
+                    <t t-foreach="website.menu_id.child_id" t-as="submenu">
+                        <t t-call="website.submenu"/>
+                    </t>
+                    <li class="divider hidden-xs" t-ignore="true" t-if="website.user_id != user_id"/>
+                    <div></div>
+                    <li class="dropdown hidden-xs" t-ignore="true" t-if="website.user_id != user_id">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <b>
+                                <span t-esc="user_id.name"/>
+                                <span class="caret"/>
+                            </b>
+                        </a>
+                        <ul class="dropdown-menu js_usermenu" role="menu">
+                            <li><a href="/web" role="menuitem">My Account</a></li>
+                            <li class="divider"/>
+                            <li><a t-attf-href="/web/session/logout?redirect=/" role="menuitem">Logout</a></li>
+                        </ul>
+                    </li>
+                    <li class="visible-xs" t-ignore="true" t-if="website.user_id != user_id">
+                        <a href="#" class="dropdown">
+                            <b>
+                                <span t-esc="user_id.name"/>
+                                <span class="caret"/>
+                            </b>
+                        </a>
+                        <ul class="dropdown">
+                            <li><a href="/web">My Account</a></li>
+                            <li><a t-attf-href="/web/session/logout?redirect=/">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </xpath>
+        </template>
+
     </data>
 </openerp>
