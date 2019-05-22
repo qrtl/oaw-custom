@@ -33,7 +33,7 @@ class website(models.Model):
                 )
         if request.session.get('hk_stock'):
             domain.append(
-                ('qty_local_stock', '>', 0)
+                ('local_stock_not_reserved', '>', 0)
             )
         elif request.session.get('oversea_stock'):
             domain.append(
