@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-# Copyright 2017-2018 Quartile Limted
+# Copyright 2019 Quartile Limted
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from odoo import models, fields
