@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
 
-        <record id="action_run_ir_action_sequence_purchase_order_line"
-                model="ir.actions.server">
-            <field name="name">Update line sequence</field>
-            <field name="condition">True</field>
-            <field name="type">ir.actions.server</field>
-            <field name="model_id" ref="purchase.model_purchase_order"/>
-            <field name="state">code</field>
-            <field name="code">
-orders = self.browse(cr, uid, context.get('active_ids', []), context=context)
-for order in orders:
-    order._update_order_line_sequence()
-            </field>
-        </record>
+    <record id="action_run_ir_action_sequence_purchase_order_line" model="ir.actions.server">
+        <field name="name">Update line sequence</field>
+        <field name="model_id" ref="purchase.model_purchase_order"/>
+        <field name="binding_model_id" ref="purchase.model_purchase_order"/>
+        <field name="state">code</field>
+        <field name="code">records._update_order_line_sequence()</field>
+    </record>
 
-    </data>
-</openerp>
+</odoo>

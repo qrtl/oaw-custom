@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data>
+<odoo>
 
     <record id="purchase_order_form" model="ir.ui.view">
         <field name="name">purchase.order.form</field>
@@ -11,27 +10,20 @@
                 <field name="line_sequence"/>
             </xpath>
             <xpath expr="//tree/field[@name='product_qty']" position="before">
-                <field name="image_small" widget="image" height="64px"/>
+                <field name="image_small" widget="image"/>
             </xpath>
         </field>
     </record>
 
-    <record id="view_purchase_order_filter_160507" model="ir.ui.view">
-        <field name="name">view_purchase_order_filter_160507</field>
+    <record id="view_purchase_order_filter" model="ir.ui.view">
+        <field name="name">request.quotation.select</field>
         <field name="model">purchase.order</field>
         <field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
         <field name="arch" type="xml">
             <field name="name" position="after">
                 <field name="origin"/>
             </field>
-            <field name="product_id" position="after">
-                <field name="lot_id"/>
-            </field>
-            <filter name="draft" position="after">
-                <filter name="is_mto" string="MTO" domain="[('is_mto', '=', True)]"/>
-            </filter>
         </field>
     </record>
 
-</data>
-</openerp>
+</odoo>
