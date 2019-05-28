@@ -13,7 +13,7 @@
                 <div class="navbar navbar-default navbar-static-top">
                     <div class="navbar-header navbar_header">
                         <button type="button" class="navbar-toggle pull-left navbar_toggle" data-toggle="collapse" data-target=".navbar-cate-collapse">
-                            <i class="fa fa-filter" style="font-size: 18px !important"/>
+                            <i class="fa fa-chevron-down" style="font-size: 18px !important"/>
                         </button>
                     </div>
                     <div class="collapse navbar-collapse navbar-cate-collapse navbar_collapse">

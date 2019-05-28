@@ -185,6 +185,52 @@ class WebsiteSale(website_sale):
         return 'website_published desc, partner_offer_checked desc,' \
                'website_product_seq_date desc, id desc'
 
+    def _get_search_domain(self, search, category, attrib_values):
+        domain = request.website.sale_product_domain()
+
+        # >>> QTL Modified
+        # if search:
+        #     for srch in search.split(" "):
+        #         domain += [
+        #             '|', '|', '|', ('name', 'ilike', srch), ('description', 'ilike', srch),
+        #             ('description_sale', 'ilike', srch), ('product_variant_ids.default_code', 'ilike', srch)]
+        if search:
+            condition_list = []
+            operator_list = []
+            for srch in search.split(" "):
+                condition_list += [
+                    ('name', 'ilike', srch), ('description', 'ilike', srch),
+                    ('description_sale', 'ilike', srch), ('product_variant_ids.default_code', 'ilike', srch)
+                ]
+            # Add '|' to the operator_list, as the search conditions will be joined with OR but not AND
+            condition_list_length = len(condition_list)
+            while condition_list_length - 1 > 0:
+                operator_list += ['|']
+                condition_list_length -= 1
+            domain += operator_list + condition_list
+        # <<< QTL Modified
+
+        if category:
+            domain += [('public_categ_ids', 'child_of', int(category))]
+
+        if attrib_values:
+            attrib = None
+            ids = []
+            for value in attrib_values:
+                if not attrib:
+                    attrib = value[0]
+                    ids.append(value[1])
+                elif value[0] == attrib:
+                    ids.append(value[1])
+                else:
+                    domain += [('attribute_line_ids.value_ids', 'in', ids)]
+                    attrib = value[0]
+                    ids = [value[1]]
+            if attrib:
+                domain += [('attribute_line_ids.value_ids', 'in', ids)]
+
+        return domain
+
 
 class Home(Home):
 
