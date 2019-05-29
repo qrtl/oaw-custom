@@ -37,8 +37,8 @@
                 <field name="product_uom_qty" readonly="1"/>
                 <field name="product_uom" readonly="1" string="Unit of Measure" groups="product.group_uom"/>
                 <field name="price_unit" readonly="1"/>
-                <field name="location_id" readonly="1" groups="stock.group_locations"/>
-                <field name="location_dest_id" readonly="1" groups="stock.group_locations"/>
+                <field name="location_id" readonly="1" groups="stock.group_stock_multi_locations"/>
+                <field name="location_dest_id" readonly="1" groups="stock.group_stock_multi_locations"/>
                 <field name="date" readonly="1"/>
                 <field name="date_expected" invisible="1" readonly="1"/>
                 <field name="state" readonly="1"/>
@@ -53,29 +53,29 @@
             <search string="Stock Moves">
                 <field name="origin" filter_domain="['|', '|', ('origin', 'ilike', self), ('name', 'ilike', self), ('picking_id', 'ilike', self)]" string="Reference"/>
                 <field name="date" groups="base.group_no_one"/>
-                <filter icon="terp-stock" string="To Do (Customers)" name="future_customers" domain="[('picking_code','=','outgoing'),('state','in',('assigned','confirmed','waiting'))]" help="Unprocessed stock moves related to customers"/>
-                <filter icon="terp-stock" string="To Do (Suppliers)" name="future_suppliers" domain="[('picking_code','=','incoming'),('state','in',('assigned','confirmed','waiting'))]" help="Unprocessed stock moves related to suppliers"/>
-                <filter icon="terp-camera_test" string="Ready" name="ready" domain="[('state','=','assigned')]" help="Stock moves that are Available (Ready to process)"/>
-                <filter icon="terp-stock" string="To Do" name="future" domain="[('state','in',('assigned','confirmed','waiting'))]" help="Stock moves that are Confirmed, Available or Waiting"/>
-                <filter icon="terp-dialog-close" string="Done" name="done" domain="[('state','=','done')]" help="Stock moves that have been processed"/>
+                <filter string="To Do (Customers)" name="future_customers" domain="[('picking_code','=','outgoing'),('state','in',('assigned','confirmed','waiting'))]" help="Unprocessed stock moves related to customers"/>
+                <filter string="To Do (Suppliers)" name="future_suppliers" domain="[('picking_code','=','incoming'),('state','in',('assigned','confirmed','waiting'))]" help="Unprocessed stock moves related to suppliers"/>
+                <filter string="Ready" name="ready" domain="[('state','=','assigned')]" help="Stock moves that are Available (Ready to process)"/>
+                <filter string="To Do" name="future" domain="[('state','in',('assigned','confirmed','waiting'))]" help="Stock moves that are Confirmed, Available or Waiting"/>
+                <filter string="Done" name="done" domain="[('state','=','done')]" help="Stock moves that have been processed"/>
                 <separator/>
-                <filter icon="terp-go-today" name="today" string="Today" domain="[('date','&lt;=',time.strftime('%%Y-%%m-%%d 23:59:59')),('date','&gt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]" help="Orders processed Today or planned for Today"/>
-                <field name="quant_lot_id"/>
+                <filter name="today" string="Today" domain="[('date','&lt;=',time.strftime('%%Y-%%m-%%d 23:59:59')),('date','&gt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]" help="Orders processed Today or planned for Today"/>
+                <field name="lot_id"/>
                 <field name="product_id"/>
-                <field name="so_id"/>
-                <field name="po_id"/>
+                <field name="sale_line_id"/>
+                <field name="purchase_line_id"/>
                 <field name="group_id"/>
                 <field name="name" string="Location" filter_domain="['|',('location_id','ilike',self),('location_dest_id','ilike',self)]"/>
                 <field name="partner_id" string="Partner" filter_domain="[('picking_id.partner_id','child_of',self)]"/>
                 <group expand="0" string="Group By">
                     <filter string="Case No." name="by_lot" domain="[]" context="{'group_by':'lot_id'}"/>
-                    <filter string="Product" name="by_product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
-                    <filter string="Picking" name="groupby_picking_id" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'picking_id'}"/>
-                    <filter string="Source" name="groupby_location_id" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'location_id'}" groups="stock.group_locations"/>
-                    <filter string="Destination" name="groupby_dest_location_id" icon="terp-gtk-jump-to-ltr" domain="[]" context="{'group_by':'location_dest_id'}" groups="stock.group_locations"/>
-                    <filter icon="terp-stock_effects-object-colorize" string="Status" domain="[]" context="{'group_by':'state'}"/>
-                    <filter string="Creation" name="groupby_create_date" icon="terp-go-month" domain="[]" context="{'group_by':'create_date'}" groups="base.group_no_one"/>
-                    <filter string="Scheduled" name="groupby_date" icon="terp-go-month" domain="[]" context="{'group_by':'date_expected'}"/>
+                    <filter string="Product" name="by_product" domain="[]" context="{'group_by':'product_id'}"/>
+                    <filter string="Picking" name="groupby_picking_id" domain="[]" context="{'group_by':'picking_id'}"/>
+                    <filter string="Source" name="groupby_location_id" domain="[]" context="{'group_by':'location_id'}" groups="stock.group_stock_multi_locations"/>
+                    <filter string="Destination" name="groupby_dest_location_id" domain="[]" context="{'group_by':'location_dest_id'}" groups="stock.group_stock_multi_locations"/>
+                    <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
+                    <filter string="Creation" name="groupby_create_date" domain="[]" context="{'group_by':'create_date'}" groups="base.group_no_one"/>
+                    <filter string="Scheduled" name="groupby_date" domain="[]" context="{'group_by':'date_expected'}"/>
                     <filter string="Pick Partner" name="by_pick_partner" domain="[]" context="{'group_by':'picking_partner_id'}"/>
                     <filter string="Owner" name="by_quant_owner" domain="[]" context="{'group_by':'quant_owner_id'}"/>
                 </group>
@@ -91,6 +91,6 @@
         <field name="search_view_id" ref="stock_move_search"/>
     </record>
 
-    <menuitem id="menu_action_move_extended" parent="stock.menu_traceability" action="action_move_extended" sequence="5" groups="stock.group_locations"/>
+    <menuitem id="menu_action_move_extended" parent="stock.menu_warehouse_report" action="action_move_extended" sequence="5" groups="stock.group_stock_multi_locations"/>
 
 </odoo>

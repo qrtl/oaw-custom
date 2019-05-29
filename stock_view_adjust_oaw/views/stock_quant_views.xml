@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="sale_order_line_quant.view_stock_quant_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='reservation_id']" position="after">
-                <field name="sale_line_id"/>
+                <field name="sale_order_id"/>
             </xpath>
         </field>
     </record>
@@ -18,7 +18,7 @@
         <field name="inherit_id" ref="sale_order_line_quant.view_stock_quant_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='reservation_id']" position="after">
-                <field name="sale_line_id"/>
+                <field name="sale_order_id"/>
             </xpath>
         </field>
     </record>
