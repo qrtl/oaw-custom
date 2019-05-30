@@ -1,6 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+     <record id="pt_listprice_list_view_search" model="ir.ui.view">
+        <field name="name">pt.listprice.list.view.search</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_search_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='categ_id']" position="after">
+                <group expand="0" name='available_checked' string="Available&amp;Checked ">
+                    <filter name="overseas_checked" string="Checked Overseas"
+                            domain="[('overseas_stock','=','Yes'),('partner_offer_checked','=','True')]"/>
+                    <filter name="local_overseas_w_res_checked" string=" Checked Local&amp;overseas w R"
+                            domain="['|',('qty_local_stock','&gt;',0),('overseas_stock','=','Yes'),('partner_offer_checked','=','True')]"/>
+                    <filter name="local_overseas_wo_res_checked" string=" CheckedLocal&amp;overseas w/o R"
+                            domain="['|',('local_stock_not_reserved','&gt;',0),('overseas_stock','=','Yes'),('partner_offer_checked','=','True')]"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
     <record id="product_product_internal_tree" model="ir.ui.view">
         <field name="name">product.product.internal.view</field>
         <field name="model">product.product</field>
@@ -15,6 +33,9 @@
                 <field name="sale_hkd_aa_so" string="Sale HKD AA Special Offer"/>
                 <field name="sale_hkd_ac" string="Sale HKD AC"/>
                 <field name="sale_hkd_ac_so" string="Sale HKD AC Special Offer"/>
+                <field name="additional_info" string="Note Internal"/>
+                <!-- special_offer_limit               -->
+                <field name="partner_offer_checked"/>
                 <field name="stock_location"/>
                 <field name="stock_leadtime"/>
                 <field name="stock_cost" string="Cost HKD"/>
@@ -59,15 +80,15 @@
                     <field name="sale_hkd_ac" string="Sale HKD AC"/>
                     <field name="sale_hkd_ac_so" string="Sale HKD AC Special Offer"/>
                     <field name="additional_info" string="Note Internal"/>
-<!--                    <field name="partner_offer_checked"/>-->
+                    <field name="partner_offer_checked"/>
                     <field name="stock_leadtime"/>
                     <field name="stock_cost" string="Cost HKD"/>
                     <field name="net_profit" string="Net Profit"/>
-<!--                    <field name="net_profit_pct" string="Net Profit %"/>-->
+                    <field name="net_profit_pct" string="Net Profit %"/>
                     <field name="qty_reserved" string="Qty Reserved"/>
                     <field name="qty_local_stock" widget="integer" string="HK Stock"/>
                     <field name="qty_overseas" string="Qty Overseas"/>
-<!--                    <field name="partner_note2" string="Partner Note"/>-->
+                    <field name="partner_note" string="Partner Note"/>
                 </tree>
             </field>
         </record>
@@ -125,5 +146,4 @@
                     action="action_plu_external_external_view"
                     sequence="10"
                     groups=""/>
-
 </odoo>
