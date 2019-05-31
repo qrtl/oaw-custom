@@ -16,8 +16,6 @@
             </xpath>
             <xpath expr="//field[@name='lot_name']" position="after">
                 <field name="purchase_price_unit" attrs="{'readonly': [('state', '=', 'done')]}" invisible="not context.get('show_purchase_information')"/>
-                <field name="currency_id" attrs="{'readonly': [('state', '=', 'done')]}" options="{'no_open': True, 'no_create': True}" invisible="not context.get('show_purchase_information')"/>
-                <field name="exchange_rate" attrs="{'readonly': [('state', '=', 'done')]}" invisible="not context.get('show_purchase_information')"/>
                 <field name="price_unit" invisible="not context.get('show_purchase_information')"/>
             </xpath>
         </field>

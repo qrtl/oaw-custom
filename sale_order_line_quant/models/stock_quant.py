@@ -51,6 +51,11 @@ class StockQuant(models.Model):
         string='Reserved for Move',
         readonly=True,
     )
+    sale_order_id = fields.Many2one(
+        'sale.order',
+        string='Related Sale Order',
+        readonly=True,
+    )
 
     @api.multi
     @api.depends('reserved_quantity', 'quantity')
