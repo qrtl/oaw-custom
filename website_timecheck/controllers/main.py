@@ -197,7 +197,7 @@ class WebsiteSale(website_sale):
         if search:
             condition_list = []
             operator_list = []
-            for srch in search.split(" "):
+            for srch in search.split(","):
                 condition_list += [
                     ('name', 'ilike', srch), ('description', 'ilike', srch),
                     ('description_sale', 'ilike', srch), ('product_variant_ids.default_code', 'ilike', srch)
