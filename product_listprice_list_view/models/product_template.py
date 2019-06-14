@@ -130,6 +130,7 @@ class ProductTemplate(models.Model):
     def _get_stock_location(self):
         for pt in self:
             prod_ids = [p.id for p in pt.product_variant_ids]
+            pt.stock_location = False
             pt.stock_leadtime = '/'
             if pt.overseas_stock == 'Yes':
                 pt.stock_location, supp_lt, pt.partner_note2,\
