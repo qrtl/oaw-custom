@@ -9,6 +9,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='sale_hkd_ac_so']" position="after">
                     <field name="special_offer_limit"/>
+                    <field name="website_product_seq_date"/>
                 </xpath>
             </field>
         </record>

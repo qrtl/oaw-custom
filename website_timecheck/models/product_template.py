@@ -102,3 +102,8 @@ class ProductTemplate(models.Model):
                     product.last_in_date:
                 product.website_product_seq_date = \
                     product.partner_stock_last_modified
+
+    @api.multi
+    def _update_website_product_seq_date(self):
+        for product in self:
+            product.website_product_seq_date = fields.Datetime.now()
