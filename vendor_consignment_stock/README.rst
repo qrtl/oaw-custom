@@ -54,6 +54,7 @@ Contributors
 ------------
 
 * Leonardo Pistone <leonardo.pistone@camptocamp.com>
+* Tim Lai <tl@quartile.co>
 
 Maintainer
 ----------
