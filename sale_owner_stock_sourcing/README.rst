@@ -24,3 +24,4 @@ Contributors
 
 * Yannick Vaucher <yannick.vaucher@camptocamp.com>
 * Leonardo Pistone <leonardo.pistone@camptocamp.com>
+* Tim Lai <tl@quartile.co>
