@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
-# Copyright 2018 Quartile Limited
-# Copyright 2017 eHanse
+# Copyright 2019 Quartile Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from openerp import models, fields, api
-import openerp.addons.decimal_precision as dp
+from odoo import models, fields, api
+import odoo.addons.decimal_precision as dp
 
 
 class AccountInvoice(models.Model):
@@ -25,4 +23,3 @@ class AccountInvoice(models.Model):
                     payment_ref.append(line.ref)
             invoice.payment_ref = ','.join(payment_ref) if len(
                 payment_ref) > 0 else False
-            
