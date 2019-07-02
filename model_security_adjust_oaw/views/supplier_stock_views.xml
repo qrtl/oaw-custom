@@ -162,6 +162,9 @@
                         <filter name="cost_price_down" string="Cost Price Down" domain="[('product_id.product_tmpl_id.costprice_down','=',True)]"/>
                         <filter name="note_updated" string="Note Updated" domain="[('product_id.product_tmpl_id.note_updated','=',True)]"/>
                     </group>
+                    <group expand="0" name='supplier_stock_group_by' string="Group By">
+                        <filter string="Partner Location" name="by_partner_location" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'partner_loc_id'}"/>
+                    </group>
                 </search>
             </field>
         </record>
