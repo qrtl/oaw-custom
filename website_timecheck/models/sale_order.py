@@ -10,7 +10,6 @@ class SaleOrder(models.Model):
 
     payment_method = fields.Selection(
         selection=[
-            ('cash', 'Cash'),
             ('china_bank_transfer', 'China Bank Transfer'),
             ('hk_bank_cheque', 'Hong Kong Banks\' Cheque'),
             ('direct_bank_transfer', 'Bank Transfer to our HK company'),
