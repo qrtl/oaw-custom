@@ -295,7 +295,6 @@
                         <div class="form-group col-lg-6">
                             <label class="control-label" for="payment_method">Payment Method</label>
                             <select name="payment_method" class="form-control">
-                                <option value="cash" t-att-selected="'cash' == website_sale_order.payment_method">Cash</option>
                                 <option value="china_bank_transfer" t-att-selected="'china_bank_transfer' == website_sale_order.payment_method">China Bank Transfer</option>
                                 <option value="hk_bank_cheque" t-att-selected="'hk_bank_cheque' == website_sale_order.payment_method">Hong Kong Banks' Cheque</option>
                                 <option value="direct_bank_transfer" t-att-selected="'direct_bank_transfer' == website_sale_order.payment_method">Bank Transfer to our HK company</option>
