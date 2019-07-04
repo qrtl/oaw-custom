@@ -8,6 +8,18 @@ import odoo.addons.decimal_precision as dp
 class StockQuant(models.Model):
     _inherit = "stock.quant"
 
+    usage = fields.Selection( 
+        related='location_id.usage',
+        string='Type of Location',
+        readonly=True,
+        store=True,
+    )
+    actual_qty = fields.Float(
+        compute='_get_actual_qty',
+        string='Actual Quantity',
+        readonly=True,
+        store=True,
+    )
     currency_id = fields.Many2one(
         related='lot_id.currency_id',
         string='Purchase Currency',
@@ -34,3 +46,28 @@ class StockQuant(models.Model):
         store=True,
         readonly=True,
     )
+    reservation_id = fields.Many2one(
+        'stock.move',
+        string='Reserved for Move',
+        readonly=True,
+    )
+
+    @api.multi
+    @api.depends('reserved_quantity', 'quantity')
+    def _get_actual_qty(self):
+        for quant in self:
+            quant.actual_qty = quant.quantity - quant.reserved_quantity
+
+    @api.multi
+    def name_get(self):
+        res = []
+        for quant in self:
+            name = quant.product_id.code or ''
+            if quant.lot_id:
+                name = quant.lot_id.name
+            name += ': %s %s' % (
+                str(quant.quantity),
+                quant.product_id.uom_id.name
+            ) 
+            res += [(quant.id, name)]
+        return res
