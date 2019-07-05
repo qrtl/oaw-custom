@@ -1,19 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-     <record id="pt_listprice_list_view_search" model="ir.ui.view">
-        <field name="name">pt.listprice.list.view.search</field>
+    <record id="product_template_search_view" model="ir.ui.view">
+        <field name="name">product.template.search.view</field>
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_search_view"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='categ_id']" position="after">
                 <group expand="0" name='available_checked' string="Available&amp;Checked ">
-                    <filter name="overseas_checked" string="Checked Overseas"
-                            domain="[('overseas_stock','=','Yes'),('partner_offer_checked','=','True')]"/>
-                    <filter name="local_overseas_w_res_checked" string=" Checked Local&amp;overseas w R"
-                            domain="['|',('qty_local_stock','&gt;',0),('overseas_stock','=','Yes'),('partner_offer_checked','=','True')]"/>
-                    <filter name="local_overseas_wo_res_checked" string=" CheckedLocal&amp;overseas w/o R"
-                            domain="['|',('local_stock_not_reserved','&gt;',0),('overseas_stock','=','Yes'),('partner_offer_checked','=','True')]"/>
+                    <filter name="overseas_checked" string="Checked Overseas" domain="[('overseas_stock','=','Yes'),('partner_offer_checked','=','True')]"/>
+                    <filter name="local_overseas_w_res_checked" string=" Checked Local&amp;overseas w R" domain="['|',('qty_local_stock','&gt;',0),('overseas_stock','=','Yes'),('partner_offer_checked','=','True')]"/>
+                    <filter name="local_overseas_wo_res_checked" string=" CheckedLocal&amp;overseas w/o R" domain="['|',('local_stock_not_reserved','&gt;',0),('overseas_stock','=','Yes'),('partner_offer_checked','=','True')]"/>
                 </group>
             </xpath>
         </field>
@@ -34,7 +31,7 @@
                 <field name="sale_hkd_ac" string="Sale HKD AC"/>
                 <field name="sale_hkd_ac_so" string="Sale HKD AC Special Offer"/>
                 <field name="additional_info" string="Note Internal"/>
-                <!-- special_offer_limit               -->
+                <!-- special_offer_limit -->
                 <field name="partner_offer_checked"/>
                 <field name="stock_location"/>
                 <field name="stock_leadtime"/>
@@ -61,89 +58,81 @@
         <field name="context">{"search_default_warehouse_internal_location":1}</field>
     </record>
 
-    <menuitem action="product_product_internal_tree_action"
-              id="menu_product_product_internal_tree_action"
+    <menuitem action="product_product_internal_tree_action" id="menu_product_product_internal_tree_action"
               parent="sale.product_menu_catalog" sequence="11"/>
 
-     <record id="product_plu_external_tree" model="ir.ui.view">
-            <field name="name">product_plu_short_internal_tree</field>
-            <field name="model">product.product</field>
-            <field name="arch" type="xml">
-                    <tree string="Product List Price Update" delete="false">
-                    <field name="default_code" string="Code" readonly="1"/>
-                    <field name="name" string="Product Ref" readonly="1"/>
-                    <field name="image_small" string="Image" widget="image" height="64px"/>
-                    <field name="list_price" string="Retail HKD"/>
-                    <field name="discount" string="Discount %"/>
-                    <field name="net_price" string="Sale HKD AA"/>
-                    <field name="sale_hkd_aa_so" string="Sale HKD AA Special Offer"/>
-                    <field name="sale_hkd_ac" string="Sale HKD AC"/>
-                    <field name="sale_hkd_ac_so" string="Sale HKD AC Special Offer"/>
-                    <field name="additional_info" string="Note Internal"/>
-                    <field name="partner_offer_checked"/>
-                    <field name="stock_leadtime"/>
-                    <field name="stock_cost" string="Cost HKD"/>
-                    <field name="net_profit" string="Net Profit"/>
-                    <field name="net_profit_pct" string="Net Profit %"/>
-                    <field name="qty_reserved" string="Qty Reserved"/>
-                    <field name="qty_local_stock" widget="integer" string="HK Stock"/>
-                    <field name="qty_overseas" string="Qty Overseas"/>
-                    <field name="partner_note" string="Partner Note"/>
-                </tree>
-            </field>
-        </record>
+    <record id="product_plu_short_internal_tree" model="ir.ui.view">
+        <field name="name">product.plu.short.internal.tree</field>
+        <field name="model">product.product</field>
+        <field name="arch" type="xml">
+            <tree string="Product List Price Update" delete="false">
+                <field name="default_code" string="Code" readonly="1"/>
+                <field name="name" string="Product Ref" readonly="1"/>
+                <field name="image_small" string="Image" widget="image" height="64px"/>
+                <field name="list_price" string="Retail HKD"/>
+                <field name="discount" string="Discount %"/>
+                <field name="net_price" string="Sale HKD AA"/>
+                <field name="sale_hkd_aa_so" string="Sale HKD AA Special Offer"/>
+                <field name="sale_hkd_ac" string="Sale HKD AC"/>
+                <field name="sale_hkd_ac_so" string="Sale HKD AC Special Offer"/>
+                <field name="additional_info" string="Note Internal"/>
+                <field name="partner_offer_checked"/>
+                <field name="stock_leadtime"/>
+                <field name="stock_cost" string="Cost HKD"/>
+                <field name="net_profit" string="Net Profit"/>
+                <field name="net_profit_pct" string="Net Profit %"/>
+                <field name="qty_reserved" string="Qty Reserved"/>
+                <field name="qty_local_stock" widget="integer" string="HK Stock"/>
+                <field name="qty_overseas" string="Qty Overseas"/>
+                <field name="partner_note" string="Partner Note"/>
+            </tree>
+        </field>
+    </record>
 
-        <!--The action-->
-        <record id="action_plu_external_view" model="ir.actions.act_window">
-            <field name="name">PLU Int. Sales</field>
-            <field name="res_model">product.product</field>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="product_plu_external_tree"/>
-            <field name="context">{"search_default_warehouse_internal_location":1}</field>
-            <field name="limit">80</field>
-        </record>
-         <menuitem id="plu_external"
-                    parent="sale.product_menu_catalog"
-                    action="action_plu_external_view"
-                    sequence="10"
-                    groups=""/>
+    <record id="action_product_plu_short_internal_tree" model="ir.actions.act_window">
+        <field name="name">PLU Int. Sales</field>
+        <field name="res_model">product.product</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="product_plu_short_internal_tree"/>
+        <field name="context">{"search_default_warehouse_internal_location":1}</field>
+        <field name="limit">80</field>
+    </record>
+    
+    <menuitem id="menu_product_plu_short_internal_tree" parent="sale.product_menu_catalog"
+              action="action_product_plu_short_internal_tree" sequence="10"/>
 
+    <record id="product_plu_short_external_tree" model="ir.ui.view">
+        <field name="name">product.plu.short.external.tree</field>
+        <field name="model">product.product</field>
+        <field name="arch" type="xml">
+            <tree string="Product List Price Update" delete="false">
+                <field name="default_code" string="Code" readonly="1"/>
+                <field name="name" string="Product Ref" readonly="1"/>
+                <field name="image_small" string="Image" widget="image" height="64px"/>
+                <field name="list_price" string="Retail HKD" readonly="1"/>
+                <field name="discount" string="Discount %" readonly="1"/>
+                <field name="net_price" string="Sale HKD AA" readonly="1"/>
+                <field name="sale_hkd_aa_so" string="Sale HKD AA Special Offer" readonly="1"/>
+                <field name="sale_hkd_ac" string="Sale HKD AC" readonly="1"/>
+                <field name="sale_hkd_ac_so" string="Sale HKD AC Special Offer" readonly="1"/>
+                <field name="stock_leadtime"/>
+                <field name="qty_reserved" string="Qty Reserved"/>
+                <field name="qty_local_stock" widget="integer" string="HK Stock"/>
+                <field name="qty_overseas" string="Qty Overseas"/>
+            </tree>
+        </field>
+    </record>
 
+    <record id="action_product_plu_short_external_tree" model="ir.actions.act_window">
+        <field name="name">PLU Ext. Sales</field>
+        <field name="res_model">product.product</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="product_plu_short_external_tree"/>
+        <field name="context">{"search_default_warehouse_internal_location":1}</field>
+        <field name="limit">80</field>
+    </record>
 
+    <menuitem id="menu_product_plu_short_external_tree" parent="sale.product_menu_catalog" 
+              action="action_product_plu_short_external_tree" sequence="10"/>
 
-         <record id="product_plu_external_external_tree" model="ir.ui.view">
-            <field name="name">product_plu_short_external_tree</field>
-            <field name="model">product.product</field>
-            <field name="arch" type="xml">
-                    <tree string="Product List Price Update" delete="false">
-                    <field name="default_code" string="Code" readonly="1"/>
-                    <field name="name" string="Product Ref" readonly="1"/>
-                    <field name="image_small" string="Image" widget="image" height="64px"/>
-                    <field name="list_price" string="Retail HKD" readonly="1"/>
-                    <field name="discount" string="Discount %" readonly="1"/>
-                    <field name="net_price" string="Sale HKD AA" readonly="1"/>
-                    <field name="sale_hkd_aa_so" string="Sale HKD AA Special Offer" readonly="1"/>
-                    <field name="sale_hkd_ac" string="Sale HKD AC" readonly="1"/>
-                    <field name="sale_hkd_ac_so" string="Sale HKD AC Special Offer" readonly="1"/>
-                    <field name="stock_leadtime"/>
-                    <field name="qty_reserved" string="Qty Reserved"/>
-                    <field name="qty_local_stock" widget="integer" string="HK Stock"/>
-                    <field name="qty_overseas" string="Qty Overseas"/>
-                </tree>
-            </field>
-        </record>
-         <!--The action-->
-        <record id="action_plu_external_external_view" model="ir.actions.act_window">
-            <field name="name">PLU Ext. Sales</field>
-            <field name="res_model">product.product</field>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="product_plu_external_external_tree"/>
-            <field name="context">{"search_default_warehouse_internal_location":1}</field>
-            <field name="limit">80</field>
-        </record>
-         <menuitem id="plu_external_external"
-                    parent="sale.product_menu_catalog"
-                    action="action_plu_external_external_view"
-                    sequence="10"
-                    groups=""/>
 </odoo>
