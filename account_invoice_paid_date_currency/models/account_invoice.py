@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
-# Copyright 2018 Quartile Limited
+# Copyright 2019 Quartile Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from openerp import models, fields, api
+from odoo import models, fields, api
 
 
 class AccountInvoice(models.Model):
@@ -29,8 +28,8 @@ class AccountInvoice(models.Model):
                 paid_date = False
                 for payment_id in account_invoice.payment_ids:
                     if not paid_date or\
-                            (paid_date and payment_id.move_id.date > paid_date):
-                        paid_date = payment_id.move_id.date
+                            (paid_date and payment_id.payment_date > paid_date):
+                        paid_date = payment_id.payment_date
                 if paid_date:
                     account_invoice.paid_date = paid_date
                     if account_invoice.currency_id == \
