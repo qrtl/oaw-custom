@@ -9,6 +9,7 @@
             <xpath expr="//label[@for='quantity']" position="before">
                 <field name="usage"/>
                 <field name="reservation_id"/>
+                <field name="sale_order_id"/>
                 <field name="actual_qty"/>
             </xpath>
             <xpath expr="//field[@name='in_date']" position="after">
@@ -26,6 +27,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='quantity']" position="after">
                 <field name="reservation_id"/>
+                <field name="sale_order_id"/>
                 <field name='currency_id' string='Purch Curr'/>
                 <field name='purchase_price_unit' string='Curr Price'/>
                 <field name='exchange_rate'/>

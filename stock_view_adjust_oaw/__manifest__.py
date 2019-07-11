@@ -10,12 +10,12 @@
     """,
     "license": "AGPL-3",
     'depends': [
+        'purchase_stock',
         'sale_order_line_quant',
         'stock_picking_menu',
     ],
     'data': [
         'data/ir_actions.xml',
         'views/stock_move_views.xml',
-        'views/stock_quant_views.xml',
     ],
 }
