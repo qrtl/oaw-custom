@@ -17,6 +17,8 @@ Modification on sales order line by adding quant and serial number selection.
     """,
     'data': [
         'views/sale_order_views.xml',
+        'views/stock_quant_views.xml',
+        'views/stock_move_line_views.xml',
     ],
     'installable': True,
 }

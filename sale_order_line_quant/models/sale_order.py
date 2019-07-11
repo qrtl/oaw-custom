@@ -24,7 +24,7 @@ class SaleOrder(models.Model):
                 if order_line.quant_id.reservation_id:
                     raise UserError(_('There is an invalid quant (pending '
                                       'move exists for the quant).'))
-                order_line.quant_id.sudo().update({
+                order_line.quant_id.update({
                     'sale_order_id': sale_order.id
                 })
         return super(SaleOrder, self).action_confirm()

@@ -21,11 +21,26 @@ class SaleOrderLine(models.Model):
         related='quant_id.owner_id',
         string='Stock Owner',
     )
-    is_mto = fields.Boolean(
-        related='order_id.is_mto',
+    mto = fields.Boolean(
+        compute='_compute_route',
         store=True,
         string='Is MTO?',
     )
+
+    @api.multi
+    @api.depends('order_id.is_mto')
+    def _compute_route(self):
+        for line in self:
+            model, res_id = self.env['ir.model.data'].get_object_reference(
+                'stock', 'route_warehouse0_mto')
+            if line.order_id.is_mto:
+                line.route_id = res_id
+                line.mto = True
+                line.quant_id = False
+                line.stock_owner_id = False
+            else:
+                line.route_id = False
+                line.mto = False
 
     @api.onchange('quant_id')
     def _onchange_quant_id(self):

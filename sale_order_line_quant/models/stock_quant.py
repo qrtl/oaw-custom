@@ -53,7 +53,7 @@ class StockQuant(models.Model):
     )
     sale_order_id = fields.Many2one(
         'sale.order',
-        string='Related Sale Order',
+        string='Reserved for SO',
         readonly=True,
     )
 

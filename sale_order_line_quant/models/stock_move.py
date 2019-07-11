@@ -11,13 +11,15 @@ class StockMove(models.Model):
         'stock.quant',
         string='Stock Quant',
     )
-    quant_owner_id = fields.Many2one(
-        related='quant_id.owner_id',
-        string='Quant Owner',
-    )
     lot_id = fields.Many2one(
         'stock.production.lot',
         string='Case No.',
+    )
+    quant_owner_id = fields.Many2one(
+        related='quant_id.owner_id',
+        store=True,
+        readonly=True,
+        string='Owner',
     )
 
     def action_show_details(self):

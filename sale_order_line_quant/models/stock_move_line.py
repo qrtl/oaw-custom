@@ -10,12 +10,11 @@ class StockMoveLine(models.Model):
     _inherit = "stock.move.line"
 
     currency_id = fields.Many2one(
-        related='picking_id.currency_id',
+        'res.currency',
         string='Purchase Currency',
     )
     exchange_rate = fields.Float(
         'FX Rate',
-        related='picking_id.exchange_rate',
         digits=(12, 6),
     )
     purchase_price_unit = fields.Float(
@@ -38,28 +37,33 @@ class StockMoveLine(models.Model):
         string='Stock Quant',
     )
 
+    @api.onchange('currency_id')
+    def _onchange_currency_id(self):
+        if self.currency_id:
+            self.exchange_rate = self.currency_id.rate
+
     @api.onchange('quant_id')
     def _onchange_quant_id(self):
         if self.quant_id:
             self.lot_id = self.quant_id.lot_id
 
     @api.multi
-    @api.depends('purchase_price_unit', 'picking_id.currency_id', 'picking_id.exchange_rate')
+    @api.depends('purchase_price_unit', 'currency_id', 'exchange_rate')
     def _compute_price_unit(self):
         for move_line in self:
-            if move_line.purchase_price_unit and move_line.picking_id.exchange_rate:
+            if move_line.purchase_price_unit and move_line.exchange_rate:
                 move_line.price_unit = move_line.purchase_price_unit / \
-                                       move_line.picking_id.exchange_rate
+                                       move_line.exchange_rate
 
     def _action_done(self):
         res = super(StockMoveLine, self)._action_done()
         for move_line in self:
             if move_line.lot_id:
                 move_line.lot_id.sudo().update({
-                    'currency_id': move_line.picking_id.currency_id.id,
+                    'currency_id': move_line.currency_id.id,
                     'purchase_price_unit': move_line.purchase_price_unit,
                     'original_owner_id': move_line.owner_id.id or False,
-                    'exchange_rate': move_line.picking_id.exchange_rate,
+                    'exchange_rate': move_line.exchange_rate,
                 })
         return res
 
