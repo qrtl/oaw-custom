@@ -15,6 +15,10 @@ class StockMove(models.Model):
         'stock.production.lot',
         string='Case No.',
     )
+    quant_owner_id = fields.Many2one(
+        related='quant_id.owner_id',
+        string='Quant Owner',
+    )
 
     def action_show_details(self):
         res = super(StockMove, self).action_show_details()
