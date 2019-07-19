@@ -21,7 +21,6 @@
                 <field name="so_id"/>
                 <field name="po_id"/>
                 <field name="date_invoice"/>
-                <field name="period_id" invisible='1'/>
                 <field name="date_due" invisible='1'/>
                 <field name="user_id"/>
                 <field name="reviewed" string="Reviewed"/>

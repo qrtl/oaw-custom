@@ -18,12 +18,11 @@ Main Features
     "license": "AGPL-3",
     'depends': [
         'account',
-        'sale',
-        'purchase',
-        'sale_order_line_quant'
+        'sale_order_line_quant',
+        'account_invoice_line_quant',
     ],
     'data': [
-         'views/account_invoice_line_views.xml',
+        'views/account_invoice_line_views.xml',
     ],
     'application': False,
 }

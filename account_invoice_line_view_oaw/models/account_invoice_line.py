@@ -4,7 +4,7 @@
 from odoo import models, fields, api, _
 import odoo.addons.decimal_precision as dp
 from datetime import datetime
- 
+
 
 class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'
@@ -39,11 +39,6 @@ class AccountInvoiceLine(models.Model):
         store=True,
         readonly=True,
         string='Partner Ref'
-    )
-    period_id = fields.Many2one(
-        related='invoice_id.period_id',
-        readonly=True,
-        string='Period'
     )
     reference = fields.Char(
         related='invoice_id.reference',
@@ -100,7 +95,7 @@ class AccountInvoiceLine(models.Model):
     )
     payment_reference = fields.Char(
         'Payment Reference',
-        related = 'invoice_id.payment_ref',
+        related='invoice_id.payment_ref',
         store=True,
         readonly=True,
     )
@@ -112,17 +107,17 @@ class AccountInvoiceLine(models.Model):
         PO = self.env['purchase.order']
         if inv_ln.invoice_id.origin:
             if inv_ln.invoice_id.type == 'out_invoice' and \
-                SO.search([('name','=',inv_ln.invoice_id.origin)]):
+                    SO.search([('name', '=', inv_ln.invoice_id.origin)]):
                 so_id = \
-                    SO.search([('name','=',inv_ln.invoice_id.origin)])[0].id
+                    SO.search([('name', '=', inv_ln.invoice_id.origin)])[0].id
             if inv_ln.invoice_id.type == 'in_invoice' and \
-                PO.search([('name','=',inv_ln.invoice_id.origin)]):
+                    PO.search([('name', '=', inv_ln.invoice_id.origin)]):
                 po_id = \
-                    PO.search([('name','=',inv_ln.invoice_id.origin)])[0].id
+                    PO.search([('name', '=', inv_ln.invoice_id.origin)])[0].id
         return so_id, po_id
-         
+
     @api.multi
-    @api.depends('invoice_id.state','invoice_id.origin')
+    @api.depends('invoice_id.state', 'invoice_id.origin')
     def _get_vals(self):
         for inv_ln in self:
             inv_ln.so_id, inv_ln.po_id = self._get_org_vals(inv_ln)
@@ -142,6 +137,6 @@ class AccountInvoiceLine(models.Model):
                 rate = Rate.search([
                     ('currency_id', '=', inv_ln.currency_id.id),
                     ('name', '<=', invoice_date),
-                    ], order='name desc', limit=1).rate or 1.0
+                ], order='name desc', limit=1).rate or 1.0
             inv_ln.rate = rate
             inv_ln.base_amt = curr_amt / rate

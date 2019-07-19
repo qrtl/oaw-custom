@@ -7,10 +7,10 @@ import odoo.addons.decimal_precision as dp
 
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
-    
-    payment_ref= fields.Char(
+
+    payment_ref = fields.Char(
         string='Payment Reference',
-        compute = '_get_payment_reference',
+        compute='_get_payment_reference',
     )
 
     @api.multi
@@ -19,7 +19,7 @@ class AccountInvoice(models.Model):
         for invoice in self:
             payment_ref = []
             for line in invoice.payment_ids:
-                if line.ref not in payment_ref:
-                    payment_ref.append(line.ref)
-            invoice.payment_ref = ','.join(payment_ref) if len(
-                payment_ref) > 0 else False
+                if line.payment_reference and line.payment_reference not in payment_ref:
+                    payment_ref.append(line.payment_reference)
+            invoice.payment_ref = ','.join(
+                payment_ref) if len(payment_ref) > 0 else False
