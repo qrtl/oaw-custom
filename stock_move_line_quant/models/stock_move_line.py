@@ -53,7 +53,7 @@ class StockMoveLine(models.Model):
         for move_line in self:
             if move_line.purchase_price_unit and move_line.exchange_rate:
                 move_line.price_unit = move_line.purchase_price_unit / \
-                                       move_line.exchange_rate
+                    move_line.exchange_rate
 
     def _action_done(self):
         res = super(StockMoveLine, self)._action_done()
