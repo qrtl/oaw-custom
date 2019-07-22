@@ -8,7 +8,7 @@ import odoo.addons.decimal_precision as dp
 class StockQuant(models.Model):
     _inherit = "stock.quant"
 
-    usage = fields.Selection( 
+    usage = fields.Selection(
         related='location_id.usage',
         string='Type of Location',
         readonly=True,
@@ -51,6 +51,10 @@ class StockQuant(models.Model):
         string='Reserved for Move',
         readonly=True,
     )
+    cost = fields.Float(
+        related='lot_id.price_unit',
+        string='Unit Cost',
+    )
 
     @api.multi
     @api.depends('reserved_quantity', 'quantity')
@@ -68,6 +72,6 @@ class StockQuant(models.Model):
             name += ': %s %s' % (
                 str(quant.quantity),
                 quant.product_id.uom_id.name
-            ) 
+            )
             res += [(quant.id, name)]
         return res

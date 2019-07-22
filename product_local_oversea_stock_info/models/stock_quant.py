@@ -13,9 +13,6 @@ class StockQuant(models.Model):
         readonly=True,
         store=True,
     )
-    cost = fields.Float(
-        string='Unit Cost',
-    )
 
     @api.model
     def _update_product_last_in_date(self):

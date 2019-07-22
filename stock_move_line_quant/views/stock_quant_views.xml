@@ -12,6 +12,7 @@
                 <field name="actual_qty"/>
             </xpath>
             <xpath expr="//field[@name='in_date']" position="after">
+                <field name='cost'/>
                 <field name='currency_id'/>
                 <field name='purchase_price_unit'/>
                 <field name='exchange_rate'/>
@@ -26,6 +27,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='quantity']" position="after">
                 <field name="reservation_id"/>
+                <field name='cost'/>
                 <field name='currency_id' string='Purch Curr'/>
                 <field name='purchase_price_unit' string='Curr Price'/>
                 <field name='exchange_rate'/>
@@ -34,16 +36,15 @@
     </record>
 
     <record id="action_stock_quant" model="ir.actions.act_window">
-         <field name="name">Stock Quant</field>
-         <field name="res_model">stock.quant</field>
-         <field name="type">ir.actions.act_window</field>
-         <field name="view_type">form</field>
-         <field name="view_id" ref="view_stock_quant_tree"/>
-         <field name="context">{'search_default_internal_loc': 1, 'search_default_stockable': 1}</field>
-         <field name="search_view_id" ref="stock.quant_search_view"/>
+        <field name="name">Stock Quant</field>
+        <field name="res_model">stock.quant</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="view_stock_quant_tree"/>
+        <field name="context">{'search_default_internal_loc': 1, 'search_default_stockable': 1}</field>
+        <field name="search_view_id" ref="stock.quant_search_view"/>
     </record>
 
-    <menuitem action="action_stock_quant" id="menu_stock_quant"
-              parent="stock.menu_warehouse_report" sequence="10"/>
+    <menuitem action="action_stock_quant" id="menu_stock_quant" parent="stock.menu_warehouse_report" sequence="10"/>
 
 </odoo>

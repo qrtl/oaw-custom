@@ -27,3 +27,16 @@ class StockProductionLot(models.Model):
         'FX Rate',
         digits=(12, 6),
     )
+    price_unit = fields.Float(
+        'Unit Price',
+        digits=dp.get_precision('Product Price'),
+        compute='_compute_price_unit',
+        store=True,
+    )
+
+    @api.multi
+    @api.depends('purchase_price_unit', 'exchange_rate')
+    def _compute_price_unit(self):
+        for lot in self:
+            if lot.purchase_price_unit and lot.exchange_rate:
+                lot.price_unit = lot.purchase_price_unit / lot.exchange_rate
