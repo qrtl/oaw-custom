@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id='action_move_extended' model='ir.actions.act_window'>
+        <field name="name">Stock Moves (Ext.)</field>
+        <field name="res_model">stock.move</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="stock_view_adjust_oaw.view_move_tree_extended"/>
+        <field name="search_view_id" ref="stock_view_adjust_oaw.view_move_search_z1"/>
+        <field name="domain">
+                [('quant_owner_related_user_id', '=', uid)]
+        </field>
+    </record>
+
+    <menuitem name="Warehouse" id="stock.menu_stock_root" groups="stock.group_stock_manager,stock.group_stock_user" sequence="70"/>
+
+    <menuitem action="stock.action_picking_type_form" id="stock.menu_action_picking_type_form" parent="stock.menu_stock_warehouse_mgmt" sequence="1" groups="stock.group_stock_manager,stock.group_stock_user"/>
+
+    <menuitem action="product.product_template_action" id="stock.menu_stock_products_menu" parent="stock.menu_stock_product" sequence="1" groups="stock.group_stock_manager,stock.group_stock_user"/>
+
+    <!--Reporting/Stock Valuation-->
+    <record id="stock_account.menu_action_wizard_valuation_history" model="ir.ui.menu">
+        <field name="groups_id" eval="[(6,0, [ref('stock.group_stock_manager')])]">
+        </field>
+    </record>
+
+    <!--Reporting/Stock Offer Report-->
+    <record id="stock_offer_report.menu_offer_report_wizard" model="ir.ui.menu">
+        <field name="groups_id" eval="[(6,0, [ref('stock.group_stock_manager')])]">
+        </field>
+    </record>
+
+    <!--Reporting/(Internal) Stock Consignment Report-->
+    <record id="stock_consignment_report.menu_consignment_report_wizard" model="ir.ui.menu">
+        <field name="groups_id" eval="[(6,0, [ref('stock.group_stock_manager')])]">
+        </field>
+    </record>
+
+    <!--Reporting/Latest Inventories & Moves -->
+    <menuitem parent="stock.next_id_61" action="stock.action_stock_line_date" id="stock.menu_report_stock_line_date" sequence="2" groups="stock.group_stock_manager"/>
+
+    <!--Reporting/(Internal) Partner Statement Report -->
+    <record id="partner_statement_report.menu_partner_statement_report_wizard" model="ir.ui.menu">
+        <field name="groups_id" eval="[(6,0, [ref('account.group_account_manager')])]">
+        </field>
+    </record>
+
+    <!--Reporting/Warehouse-->
+    <menuitem id="stock.next_id_61" name="Warehouse" sequence="15" parent="base.menu_reporting" groups="group_supplier"/>
+
+    <!--Quants-->
+    <menuitem id="stock.menu_quants" name="Quants" parent="stock.menu_traceability" sequence="20" action="stock.quantsact" groups="base.group_no_one,model_security_adjust_oaw.group_supplier_fm"/>
+
+    <menuitem action="stock_picking_menu.action_picking_tree_incoming" id="stock_picking_menu.menu_action_picking_tree_incoming" parent="stock.menu_stock_warehouse_mgmt" sequence="5" groups="stock.group_stock_manager"/>
+
+    <menuitem action="stock_picking_menu.action_picking_tree_internal" id="stock_picking_menu.menu_action_picking_tree_internal" parent="stock.menu_stock_warehouse_mgmt" sequence="10" groups="stock.group_stock_manager"/>
+
+    <menuitem action="stock_picking_menu.action_picking_tree_outgoing" id="stock_picking_menu.menu_action_picking_tree_outgoing" parent="stock.menu_stock_warehouse_mgmt" sequence="15" groups="stock.group_stock_manager"/>
+
+    <!--Inventor Controle Menu -->
+    <menuitem action="supplier_stock.action_supplier_stock" id="supplier_stock.menu_supplier_stock" parent="stock.menu_stock_inventory_control" sequence="10" groups="stock.group_stock_manager"/>
+
+    <menuitem action="stock.action_inventory_form" id="stock.menu_action_inventory_form" parent="stock.menu_stock_inventory_control" sequence="30" groups="stock.group_stock_manager"/>
+
+    <menuitem id="menu_action_move_extended" parent="stock.menu_traceability" action="action_move_extended" sequence="5" groups="model_security_adjust_oaw.group_supplier_fm"/>
+
+    <!--Serial Numbers-->
+    <record id="stock_view_adjust_oaw.menu_action_move_extended" model="ir.ui.menu">
+        <field name="groups_id" eval="[(6,0, [ref('stock.group_stock_manager')])]">
+        </field>
+    </record>
+
+    <!--Stock Moves: Elevate access lvl of Stock Moves (removing all existing access groups, adding new group-->
+    <record id="stock.menu_action_move_form2" model="ir.ui.menu">
+        <field name="groups_id" eval="[(6,0, [ref('stock.group_stock_manager')])]">
+        </field>
+    </record>
+
+    <!--Serial Numbers-->
+    <record id="stock.menu_action_production_lot_form" model="ir.ui.menu">
+        <field name="groups_id" eval="[(6,0, [ref('stock.group_stock_manager')])]">
+        </field>
+    </record>
+
+    <!--All operations-->
+    <record id="stock.menu_action_picking_type_form" model="ir.ui.menu">
+        <field name="groups_id" eval="[(6,0, [ref('stock.group_stock_manager')])]">
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_move_tree_extended" model="ir.ui.view">
+        <field name="name">stock.move.ext.description.adjust</field>
+        <field name="model">stock.move</field>
+        <field name="groups_id" eval="[(6, 0, [ref('group_supplier')])]"/>
+        <field name="inherit_id" ref="stock_view_adjust_oaw.view_move_tree_extended"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='picking_id']" position="attributes">
+                <attribute name="options">{'no_open': True}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='so_id']" position="attributes">
+                <attribute name="options">{'no_open': True}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='po_id']" position="attributes">
+                <attribute name="options">{'no_open': True}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='group_id']" position="attributes">
+                <attribute name="options">{'no_open': True}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='pick_partner_id']" position="attributes">
+                <attribute name="groups">stock.group_stock_manager</attribute>
+            </xpath>
+            <xpath expr="//field[@name='pick_partner_id']" position="after">
+                <field name="supplier_pick_partner" readonly="1" groups="model_security_adjust_oaw.group_supplier"/>
+            </xpath>
+            <xpath expr="//field[@name='product_id']" position="attributes">
+                <attribute name="options">{'no_open': True}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='quant_lot_id']" position="attributes">
+                <attribute name="options">{'no_open': True}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='location_id']" position="attributes">
+                <attribute name="options">{'no_open': True}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='location_dest_id']" position="attributes">
+                <attribute name="options">{'no_open': True}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_move_search_z1" model="ir.ui.view">
+        <field name="name">stock.move.ext.description.adjust</field>
+        <field name="model">stock.move</field>
+        <field name="groups_id" eval="[(6, 0, [ref('group_supplier')])]"/>
+        <field name="inherit_id" ref="stock_view_adjust_oaw.view_move_search_z1"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="groups">stock.group_stock_manager</attribute>
+            </xpath>
+            <xpath expr="//filter[@name='by_pick_partner']" position="attributes">
+                <attribute name="groups">stock.group_stock_manager</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

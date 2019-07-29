@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <template id="assets_backend_advance_search" name="model_security_adjust_oaw assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <!-- <script type="text/javascript" src="/model_security_adjust_oaw/static/src/js/advance_search_enable.js"/> -->
+        </xpath>
+    </template>
+
+</odoo>

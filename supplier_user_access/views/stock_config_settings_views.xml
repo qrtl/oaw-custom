@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_stock_config_settings" model="ir.ui.view">
+        <field name="name">stock settings</field>
+        <field name="model">stock.config.settings</field>
+        <field name="inherit_id" ref="stock.view_stock_config_settings"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <separator name="stock_move_visibility" string="Stock Move Visibility"/>
+                <group name="stock_move_visibility">
+                    <label for="default_supplier_pick_partner"/>
+                    <div>
+                        <field name="default_supplier_pick_partner" class="oe_inline"/>
+                    </div>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
