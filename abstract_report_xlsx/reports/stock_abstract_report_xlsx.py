@@ -1,9 +1,6 @@
 # Copyright 2019 Quartile Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from cStringIO import StringIO
-import xlsxwriter
-from xlsxwriter.utility import xl_col_to_name  # QTL
 from odoo.addons.report_xlsx.report.report_xlsx import ReportXlsxAbstract
 from io import BytesIO
 import base64
@@ -11,10 +8,8 @@ import base64
 
 class ReportXlsxAbstract(ReportXlsxAbstract):
 
-    def __init__(self, name, table, rml=False, parser=False, header=True,
-                 store=False):
-        super(ReportXlsxAbstract, self).__init__(
-            name, table, rml, parser, header, store)
+    def __init__(self, pool, cr):
+        super(ReportXlsxAbstract, self).__init__(pool, cr)
 
         # main sheet which will contains report
         self.sheet = None
@@ -27,6 +22,7 @@ class ReportXlsxAbstract(ReportXlsxAbstract):
 
         # Formats
         self.format_right = None
+        self.format_left = None
         self.format_right_bold_italic = None
         self.format_bold = None
         self.format_header_left = None
@@ -50,10 +46,11 @@ class ReportXlsxAbstract(ReportXlsxAbstract):
 
         self._define_formats(workbook)
 
-        report_name = self._get_report_name()
+        report_name = self._get_report_name(report)
+        report_footer = self._get_report_footer()
         filters = self._get_report_filters(report)
         self.columns = self._get_report_columns(report)
-
+        self.workbook = workbook
         self.sheet = workbook.add_worksheet(report_name[:31])
 
         self._set_column_width()
@@ -63,6 +60,8 @@ class ReportXlsxAbstract(ReportXlsxAbstract):
         self._write_filters(filters)
 
         self._generate_report_content(workbook, report)
+
+        self._write_report_footer(report_footer)
 
     def _define_formats(self, workbook):
         """ Add cell formats to current workbook.
@@ -85,6 +84,7 @@ class ReportXlsxAbstract(ReportXlsxAbstract):
         """
         self.format_bold = workbook.add_format({'bold': True})
         self.format_right = workbook.add_format({'align': 'right'})
+        self.format_left = workbook.add_format({'align': 'left'})
         self.format_right_bold_italic = workbook.add_format(
             {'align': 'right', 'bold': True, 'italic': True}
         )
@@ -109,7 +109,9 @@ class ReportXlsxAbstract(ReportXlsxAbstract):
             {'bold': True,
              'border': True,
              'bg_color': '#FFFFCC'})
-        self.format_header_amount.set_num_format('#,##0.00')
+        currency_id = self.env['res.company']._get_user_currency()
+        self.format_header_amount.set_num_format(
+            '#,##0.'+'0'*currency_id.decimal_places)
         self.format_amount = workbook.add_format()
         self.format_amount.set_num_format('#,##0.00')
         self.format_number = workbook.add_format()  # added by QTL
@@ -129,7 +131,7 @@ class ReportXlsxAbstract(ReportXlsxAbstract):
         """Set width for all defined columns.
         Columns are defined with `_get_report_columns` method.
         """
-        for position, column in self.columns.iteritems():
+        for position, column in self.columns.items():
             self.sheet.set_column(position, position, column['width'])
 
     def _write_report_title(self, title):
@@ -141,6 +143,18 @@ class ReportXlsxAbstract(ReportXlsxAbstract):
             title, self.format_bold
         )
         self.row_pos += 3
+
+    def _write_report_footer(self, footer):
+        """Write report footer .
+        Columns are defined with `_get_report_columns` method.
+        """
+        if footer:
+            self.row_pos += 1
+            self.sheet.merge_range(
+                self.row_pos, 0, self.row_pos, len(self.columns) - 1,
+                footer, self.format_left
+            )
+            self.row_pos += 1
 
     def _write_filters(self, filters):
         """Write one line per filters on starting on current line.
@@ -175,25 +189,20 @@ class ReportXlsxAbstract(ReportXlsxAbstract):
         )
         self.row_pos += 1
 
-    # def write_array_header(self):
-    def write_array_header(self, adj_col=False):  # QTL
+    def write_array_header(self):
         """Write array header on current line using all defined columns name.
         Columns are defined with `_get_report_columns` method.
         """
-        for col_pos, column in self.columns.iteritems():
-            if adj_col and col_pos in adj_col:
-                self.sheet.write(self.row_pos, col_pos, adj_col[col_pos],
-                                 self.format_header_center)
-            else:
-                self.sheet.write(self.row_pos, col_pos, column['header'],
-                                 self.format_header_center)
+        for col_pos, column in self.columns.items():
+            self.sheet.write(self.row_pos, col_pos, column['header'],
+                             self.format_header_center)
         self.row_pos += 1
 
     def write_line(self, line_object, height=False):  # QTL
         """Write a line on current line using all defined columns field name.
         Columns are defined with `_get_report_columns` method.
         """
-        for col_pos, column in self.columns.iteritems():
+        for col_pos, column in self.columns.items():
             # >>> added by QTL
             if height:
                 self.sheet.set_row(self.row_pos, height)
@@ -229,21 +238,14 @@ class ReportXlsxAbstract(ReportXlsxAbstract):
     def _generate_report_content(self, workbook, report):
         pass
 
-    def _apply_conditional_format(self, params):
-        for param in params:
-            # has to convert the column to 'A1:A999' notation
-            column = xl_col_to_name(param['col'])
-            column += '1:' + column + str(self.row_pos)
-            for val in param['vals']:
-                self.sheet.conditional_format(
-                    column, {
-                        'type': 'text',
-                        'criteria': 'containing',
-                        'value': val,
-                        'format': self.format_emphasis
-                    })
+    def _get_report_complete_name(self, report, prefix):
+        if report.company_id:
+            suffix = ' - %s - %s' % (
+                report.company_id.name, report.company_id.currency_id.name)
+            return prefix + suffix
+        return prefix
 
-    def _get_report_name(self):
+    def _get_report_name(self, report):
         """
             Allow to define the report name.
             Report name will be used as sheet name and as report title.
@@ -251,6 +253,13 @@ class ReportXlsxAbstract(ReportXlsxAbstract):
             :return: the report name
         """
         raise NotImplementedError()
+
+    def _get_report_footer(self):
+        """
+            Allow to define the report footer.
+            :return: the report footer
+        """
+        return False
 
     def _get_report_columns(self, report):
         """
