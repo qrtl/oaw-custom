@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <template id="website_sale.search" name="Search hidden fields">
+            <form t-if="not request.session.supplier_page" t-att-action="keep('/shop'+ ('/category/'+slug(category)) if category else '', search=0)" method="get" t-att-class="search_class">
+
+                <t t-if="attrib_values">
+                    <t t-foreach="attrib_values" t-as="a">
+                        <input type="hidden" name="attrib" t-att-value="'%s-%s' % (a[0], a[1])"/>
+                    </t>
+                </t>
+                <div class="input-group">
+                    <input type="text" name="search" class="search-query form-control" placeholder="Search..." t-att-value="search"/>
+                    <span class="input-group-btn">
+                        <a class="btn btn-default a-submit">
+                            <i class="fa fa-search"/>
+                        </a>
+                    </span>
+                </div>
+
+            </form>
+            <t t-if="request.session.supplier_page">
+                <form t-att-action="keep('/%s' % slug(supplier) + ('/category/'+slug(category)) if category else '/%s' % slug(supplier), search=0)" method="get" t-att-class="search_class">
+
+                    <t t-if="attrib_values">
+                        <t t-foreach="attrib_values" t-as="a">
+                            <input type="hidden" name="attrib" t-att-value="'%s-%s' % (a[0], a[1])"/>
+                        </t>
+                    </t>
+                    <div class="input-group">
+                        <input type="text" name="search" class="search-query form-control" placeholder="Search..." t-att-value="search"/>
+                        <span class="input-group-btn">
+                            <a class="btn btn-default a-submit">
+                                <i class="fa fa-search"/>
+                            </a>
+                        </span>
+                    </div>
+
+                </form>
+            </t>
+        </template>
+
+        <template id="website_category_responsive.products_categories_inherit_category_responsive" inherit_id="website_sale.products_categories">
+            <xpath expr="//ul[@class='nav nav-pills nav-stacked mt16']" position="replace">
+                <div class="navbar navbar-default navbar-static-top">
+                    <div class="navbar-header navbar_header">
+                        <button type="button" class="navbar-toggle pull-left navbar_toggle" data-toggle="collapse" data-target=".navbar-cate-collapse">
+                            <i class="fa fa-chevron-down" style="font-size: 18px !important"/>
+                        </button>
+                    </div>
+                    <div t-if="not request.session.supplier_page" class="collapse navbar-collapse navbar-cate-collapse navbar_collapse">
+                        <ul class="nav nav-pills nav-stacked mt16">
+                            <li t-att-class=" '' if request.session.new_arrival or request.session.special_offer else 'active' ">
+                                <a href="/shop/all_products">All Products</a>
+                            </li>
+                            <li t-att-class=" '' if not request.session.new_arrival else 'active' " groups="website_timecheck.group_timecheck_light">
+                                <a href="/shop/new_arrival">New Arrival</a>
+                            </li>
+                            <li t-att-class=" '' if not request.session.special_offer else 'active' " groups="website_timecheck.group_timecheck_trial">
+                                <a href="/shop/special_offer">Special Offer</a>
+                            </li>
+                            <br/>
+                            <br/>
+                            <li t-att-class=" '' if request.session.hk_stock or request.session.oversea_stock else 'active' ">
+                                <a href="/shop/all_stock">All Locations</a>
+                            </li>
+                            <li t-att-class=" '' if not request.session.hk_stock else 'active' ">
+                                <a href="/shop/hk_stock">HK Stock</a>
+                            </li>
+                            <li t-att-class=" '' if not request.session.oversea_stock else 'active' ">
+                                <a href="/shop/oversea_stock">Oversea Stock</a>
+                            </li>
+                            <br/>
+                            <br/>
+                            <li t-att-class=" '' if category else 'active' ">
+                                <a t-att-href="keep('/shop',category=0)">All Categories</a>
+                            </li>
+                            <t t-foreach="categories" t-as="c">
+                                <t t-call="website_sale.categories_recursive"/>
+                            </t>
+                        </ul>
+                    </div>
+                    <div t-if="request.session.supplier_page" class="collapse navbar-collapse navbar-cate-collapse navbar_collapse">
+                        <ul class="nav nav-pills nav-stacked mt16">
+                            <li t-att-class="'active'">
+                                <a href="#">All Products</a>
+                            </li>
+                            <br/>
+                            <br/>
+                            <li t-att-class=" '' if category else 'active' ">
+                                <a t-att-href="keep('/%s' % slug(supplier),category=0)">All Categories</a>
+                            </li>
+                            <t t-foreach="categories" t-as="c">
+                                <t t-call="website_timecheck_supplier.categories_recursive"/>
+                            </t>
+                        </ul>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//div[@id='products_grid_before']" position="attributes">
+                <attribute name="class">col-md-3</attribute>
+            </xpath>
+        </template>
+
+        <template id="categories_recursive" name="Category list">
+            <li t-att-class="'active' if c.id == int(category or 0) else ''">
+                <a t-att-href="keep('/%s/category/' % slug(supplier) + slug(c), category=0)" t-field="c.name"></a>
+                <ul t-if="c.child_id" class="nav nav-pills nav-stacked nav-hierarchy">
+                    <t t-foreach="c.child_id" t-as="c">
+                        <t t-call="website_timecheck_supplier.categories_recursive"/>
+                    </t>
+                </ul>
+            </li>
+        </template>
+
+    </data>
+</openerp>
