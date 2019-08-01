@@ -16,7 +16,7 @@
                 <li t-att-class=" '' if not request.session.new_arrival else 'active' " groups="website_timecheck.group_timecheck_light">
                     <a href="/shop/new_arrival">New Arrival</a>
                 </li>
-                <li t-att-class=" '' if not request.session.special_offer else 'active' ">
+                <li t-att-class=" '' if not request.session.special_offer else 'active' " groups="website_timecheck.group_timecheck_trial">
                     <a href="/shop/special_offer">Special Offer</a>
                 </li>
                 <br/>
@@ -83,30 +83,60 @@
                      t-if="product.product_variant_ids" style="position: static !important; padding: unset !important;">
                     <div t-if="product.qty_overseas != 0 and product.oversea_retail_currency_id != product.company_id.currency_id">
                         <span>Retail in <span t-field="product.oversea_retail_currency_id.name"/>:</span>
-                        <span t-esc="'{:,.0f}'.format(product.oversea_retail_price)" style="white-space: nowrap;"/>
+                        <t t-if="product.oversea_retail_price != 0">
+                            <span t-esc="'{:,.0f}'.format(product.oversea_retail_price)" style="white-space: nowrap;"/>
+                        </t>
+                        <t t-if="product.oversea_retail_price == 0">
+                            <span style="white-space: nowrap;">N/A</span>
+                        </t>
                     </div>
                     <div>
                         <span>HKD Retail:</span>
                         <t t-if="product.qty_overseas != 0 and product.oversea_retail_currency_id == product.company_id.currency_id and product.price &gt; product.oversea_retail_price">
-                            <span t-esc="'{:,.0f}'.format(product.oversea_retail_price)" style="white-space: nowrap;"/>
+                            <t t-if="product.oversea_retail_price != 0">
+                                <span t-esc="'{:,.0f}'.format(product.oversea_retail_price)" style="white-space: nowrap;"/>
+                            </t>
+                            <t t-if="product.oversea_retail_price == 0">
+                                <span style="white-space: nowrap;">N/A</span>
+                            </t>
                         </t>
                         <t t-if="product.qty_overseas == 0 or
                                  product.qty_overseas != 0 and product.oversea_retail_currency_id != product.company_id.currency_id or
                                  product.qty_overseas != 0 and product.oversea_retail_currency_id == product.company_id.currency_id and product.price &lt;= product.oversea_retail_price">
-                            <span t-esc="'{:,.0f}'.format(product.list_price)" style="white-space: nowrap;"/>
+                            <t t-if="product.list_price != 0">
+                                <span t-esc="'{:,.0f}'.format(product.list_price)" style="white-space: nowrap;"/>
+                            </t>
+                            <t t-if="product.list_price == 0">
+                                <span style="white-space: nowrap;">N/A</span>
+                            </t>
                         </t>
                     </div>
                     <div t-if="not product.sale_hkd_ac_so" groups="website_timecheck.group_timecheck_light">
                         <span>Sale HKD:</span>
-                        <span t-esc="'{:,.0f}'.format(product.sale_hkd_ac)" style="white-space: nowrap;"/>
+                        <t t-if="product.sale_hkd_ac != 0">
+                            <span t-esc="'{:,.0f}'.format(product.sale_hkd_ac)" style="white-space: nowrap;"/>
+                        </t>
+                        <t t-if="product.sale_hkd_ac == 0">
+                            <span style="white-space: nowrap;">N/A</span>
+                        </t>
                     </div>
                     <div t-if="product.sale_hkd_ac_so" groups="website_timecheck.group_timecheck_light">
                         <span style="color: DarkGrey;">Sale HKD:</span>
-                        <span t-esc="'{:,.0f}'.format(product.sale_hkd_ac)" style="white-space: nowrap; color: DarkGrey;"/>
+                        <t t-if="product.sale_hkd_ac != 0">
+                            <span t-esc="'{:,.0f}'.format(product.sale_hkd_ac)" style="white-space: nowrap; color: DarkGrey;"/>
+                        </t>
+                        <t t-if="product.sale_hkd_ac == 0">
+                            <span t-if="product.sale_hkd_ac == 0" style="white-space: nowrap; color: DarkGrey;">N/A</span>
+                        </t>
                     </div>
                     <div t-if="product.sale_hkd_ac_so and not product.in_special_offer_limit">
                         <span style="color: red; font-weight:bold;">Special Offer:</span>
-                        <span t-esc="'{:,.0f}'.format(product.sale_hkd_ac_so)" style="white-space: nowrap; color: red; font-weight:bold;"/>
+                        <t t-if="product.sale_hkd_ac_so != 0">
+                            <span t-if="product.sale_hkd_ac_so != 0" t-esc="'{:,.0f}'.format(product.sale_hkd_ac_so)" style="white-space: nowrap; color: red; font-weight:bold;"/>
+                        </t>
+                        <t t-if="product.sale_hkd_ac_so == 0">
+                            <span t-if="product.sale_hkd_ac_so == 0" style="white-space: nowrap; color: red; font-weight:bold;">N/A</span>
+                        </t>
                         <span style="color: red; font-weight:bold;">HKD</span>
                     </div>
                     <input name="product_id" t-att-value="product.product_variant_ids[0].id" type="hidden"/>
@@ -235,34 +265,64 @@
             </xpath>
 
             <xpath expr="//h4[@class='oe_price_h4 css_editable_mode_hidden decimal_precision']" position="replace">
-                <h4 class="oe_price_h4 css_editable_mode_hidden decimal_precision"
-                    t-att-data-precision="user_id.partner_id.property_product_pricelist.currency_id.rounding">
+                <h4 class="oe_price_h4 css_editable_mode_hidden decimal_precision" t-att-data-precision="user_id.partner_id.property_product_pricelist.currency_id.rounding">
                     <div t-if="product.qty_overseas != 0 and product.oversea_retail_currency_id != product.company_id.currency_id">
-                        <span>Retail in <span t-field="product.oversea_retail_currency_id.name"/>:</span>
-                        <span t-esc="'{:,.0f}'.format(product.oversea_retail_price)" style="white-space: nowrap;"/>
+                        <span>Retail in <span t-field="product.oversea_retail_currency_id.name"/>
+:</span>
+                        <t t-if="product.oversea_retail_price != 0">
+                            <span t-esc="'{:,.0f}'.format(product.oversea_retail_price)" style="white-space: nowrap;"/>
+                        </t>
+                        <t t-if="product.oversea_retail_price == 0">
+                            <span style="white-space: nowrap;">N/A</span>
+                        </t>
                     </div>
                     <div>
                         <span>HKD Retail:</span>
                         <t t-if="product.qty_overseas != 0 and product.oversea_retail_currency_id == product.company_id.currency_id and product.price &gt; product.oversea_retail_price">
-                            <span t-esc="'{:,.0f}'.format(product.oversea_retail_price)" style="white-space: nowrap;"/>
+                            <t t-if="product.oversea_retail_price != 0">
+                                <span t-esc="'{:,.0f}'.format(product.oversea_retail_price)" style="white-space: nowrap;"/>
+                            </t>
+                            <t t-if="product.oversea_retail_price == 0">
+                                <span style="white-space: nowrap;">N/A</span>
+                            </t>
                         </t>
                         <t t-if="product.qty_overseas == 0 or
                                  product.qty_overseas != 0 and product.oversea_retail_currency_id != product.company_id.currency_id or
                                  product.qty_overseas != 0 and product.oversea_retail_currency_id == product.company_id.currency_id and product.price &lt;= product.oversea_retail_price">
-                            <span t-esc="'{:,.0f}'.format(product.list_price)" style="white-space: nowrap;"/>
+                            <t t-if="product.list_price != 0">
+                                <span t-esc="'{:,.0f}'.format(product.list_price)" style="white-space: nowrap;"/>
+                            </t>
+                            <t t-if="product.list_price == 0">
+                                <span style="white-space: nowrap;">N/A</span>
+                            </t>
                         </t>
                     </div>
                     <div t-if="not product.sale_hkd_ac_so" groups="website_timecheck.group_timecheck_light">
                         <span>Sale HKD:</span>
-                        <span t-esc="'{:,.0f}'.format(product.sale_hkd_ac)" style="white-space: nowrap;"/>
+                        <t t-if="product.sale_hkd_ac != 0">
+                            <span t-esc="'{:,.0f}'.format(product.sale_hkd_ac)" style="white-space: nowrap;"/>
+                        </t>
+                        <t t-if="product.sale_hkd_ac == 0">
+                            <span style="white-space: nowrap;">N/A</span>
+                        </t>
                     </div>
                     <div t-if="product.sale_hkd_ac_so" groups="website_timecheck.group_timecheck_light">
                         <span style="color: DarkGrey;">Sale HKD:</span>
-                        <span t-esc="'{:,.0f}'.format(product.sale_hkd_ac)" style="white-space: nowrap; color: DarkGrey;"/>
+                        <t t-if="product.sale_hkd_ac != 0">
+                            <span t-esc="'{:,.0f}'.format(product.sale_hkd_ac)" style="white-space: nowrap; color: DarkGrey;"/>
+                        </t>
+                        <t t-if="product.sale_hkd_ac == 0">
+                            <span t-if="product.sale_hkd_ac == 0" style="white-space: nowrap; color: DarkGrey;">N/A</span>
+                        </t>
                     </div>
                     <div t-if="product.sale_hkd_ac_so and not product.in_special_offer_limit">
                         <span style="color: red; font-weight:bold;">Special Offer:</span>
-                        <span t-esc="'{:,.0f}'.format(product.sale_hkd_ac_so)" style="white-space: nowrap; color: red; font-weight:bold;"/>
+                        <t t-if="product.sale_hkd_ac_so != 0">
+                            <span t-if="product.sale_hkd_ac_so != 0" t-esc="'{:,.0f}'.format(product.sale_hkd_ac_so)" style="white-space: nowrap; color: red; font-weight:bold;"/>
+                        </t>
+                        <t t-if="product.sale_hkd_ac_so == 0">
+                            <span t-if="product.sale_hkd_ac_so == 0" style="white-space: nowrap; color: red; font-weight:bold;">N/A</span>
+                        </t>
                         <span style="color: red; font-weight:bold;">HKD</span>
                     </div>
                 </h4>
