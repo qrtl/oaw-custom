@@ -285,7 +285,6 @@ class Website(Website):
     @http.route('/', type='http', auth="public", website=True)
     def index(self, **kw):
         # << QTL Set the homepage as the shop page
-        print("redirect")
         return request.redirect('/shop')
         # page = 'homepage'
         # try:
