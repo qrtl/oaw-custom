@@ -28,7 +28,7 @@ class WebsiteSale(website_sale):
         })
         return request.redirect('/shop')
 
-    @http.route('/shop/special_offer', type='http', auth="public",
+    @http.route('/shop/special_offer', type='http', auth="user",
                 website=True)
     def shop_special_offer(self):
         request.session.update({
@@ -131,7 +131,7 @@ class WebsiteSale(website_sale):
         '/shop/page/<int:page>',
         '/shop/category/<model("product.public.category"):category>',
         '/shop/category/<model("product.public.category"):category>/page/<int:page>'
-    ], type='http', auth="user", website=True)
+    ], type='http', auth="public", website=True)
     def shop(self, page=0, category=None, search='', **post):
         access_check = self.check_timecheck_access()
         if access_check:
@@ -150,7 +150,7 @@ class WebsiteSale(website_sale):
         return res
 
     @http.route(['/shop/product/<model("product.template"):product>'],
-                type='http', auth="user", website=True)
+                type='http', auth="public", website=True)
     def product(self, product, category='', search='', **kwargs):
         access_check = self.check_timecheck_access()
         if access_check:
@@ -160,7 +160,7 @@ class WebsiteSale(website_sale):
                                                 search=search,
                                                 **kwargs)
 
-    @http.route(['/shop/cart'], type='http', auth="user", website=True)
+    @http.route(['/shop/cart'], type='http', auth="public", website=True)
     def cart(self, **post):
         access_check = self.check_timecheck_access()
         if access_check:
@@ -169,8 +169,7 @@ class WebsiteSale(website_sale):
 
     def check_timecheck_access(self):
         user = request.env['res.users'].sudo().browse(request.uid)
-        if not (user.sudo().has_group('website_timecheck.group_timecheck_trial')
-                or user.sudo().has_group('base.group_website_publisher')):
+        if user.sudo().has_group('model_security_adjust_oaw.group_supplier'):
             base_url = request.env['ir.config_parameter'].get_param(
                 'web.base.url')
             redirect = base_url + '/web'
@@ -200,7 +199,8 @@ class WebsiteSale(website_sale):
             for srch in search.split(","):
                 condition_list += [
                     ('name', 'ilike', srch), ('description', 'ilike', srch),
-                    ('description_sale', 'ilike', srch), ('product_variant_ids.default_code', 'ilike', srch)
+                    ('description_sale', 'ilike',
+                     srch), ('product_variant_ids.default_code', 'ilike', srch)
                 ]
             # Add '|' to the operator_list, as the search conditions will be joined with OR but not AND
             condition_list_length = len(condition_list)

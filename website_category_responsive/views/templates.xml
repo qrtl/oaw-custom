@@ -24,7 +24,7 @@
                             <li t-att-class=" '' if not request.session.new_arrival else 'active' " groups="website_timecheck.group_timecheck_light">
                                 <a href="/shop/new_arrival">New Arrival</a>
                             </li>
-                            <li t-att-class=" '' if not request.session.special_offer else 'active' ">
+                            <li t-att-class=" '' if not request.session.special_offer else 'active' " groups="website_timecheck.group_timecheck_trial">
                                 <a href="/shop/special_offer">Special Offer</a>
                             </li>
                             <br/>
@@ -54,6 +54,6 @@
                 <attribute name="class">col-md-3</attribute>
             </xpath>
         </template>
-    </data>
 
+    </data>
 </openerp>
