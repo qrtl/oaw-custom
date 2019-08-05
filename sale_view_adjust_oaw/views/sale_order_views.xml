@@ -2,8 +2,7 @@
 <openerp>
     <data>
 
-        <template id="assets_backend" name="sale_view_adjust_oaw assets"
-                  inherit_id="web.assets_backend">
+        <template id="assets_backend" name="sale_view_adjust_oaw assets" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">
                 <link rel="stylesheet" href="/sale_view_adjust_oaw/static/src/css/base.css"/>
             </xpath>
@@ -23,34 +22,23 @@
         <record id="view_order_form_tree_adjust" model="ir.ui.view">
             <field name="name">view.order.form.tree.adjust</field>
             <field name="model">sale.order</field>
-            <field name="inherit_id"
-                   ref="sale_line_quant.sale_order_line_quant_view"/>
+            <field name="inherit_id" ref="sale_line_quant.sale_order_line_quant_view"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/sheet/notebook/page[@string='Order Lines']/field[@name='order_line']/tree[@string='Sales Order Lines']/field[@name='product_id']"
-                       position="before">
+                <xpath expr="/form/sheet/notebook/page[@string='Order Lines']/field[@name='order_line']/tree[@string='Sales Order Lines']/field[@name='product_id']" position="before">
                     <field name="line_sequence"/>
                     <field name="image_small" widget="image" height="64px"/>
                 </xpath>
-                <xpath expr="/form/sheet/notebook/page[@string='Order Lines']/field[@name='order_line']/tree[@string='Sales Order Lines']/field[@name='lot_id']"
-                       position="attributes">
-                        <attribute name="invisible">True</attribute>
+                <xpath expr="/form/sheet/notebook/page[@string='Order Lines']/field[@name='order_line']/tree[@string='Sales Order Lines']/field[@name='lot_id']" position="attributes">
+                    <attribute name="invisible">True</attribute>
                 </xpath>
-                <xpath expr="/form/sheet/notebook/page[@string='Order Lines']/field[@name='order_line']/tree[@string='Sales Order Lines']/field[@name='product_uom_qty']"
-                       position="replace"/>
-                <xpath expr="/form/sheet/notebook/page[@string='Order Lines']/field[@name='order_line']/tree[@string='Sales Order Lines']/field[@name='price_unit']"
-                       position="replace"/>
-                <xpath expr="/form/sheet/notebook/page[@string='Order Lines']/field[@name='order_line']/tree[@string='Sales Order Lines']/field[@name='discount']"
-                       position="replace"/>
-                <xpath expr="/form/sheet/notebook/page[@string='Order Lines']/field[@name='order_line']/tree[@string='Sales Order Lines']/field[@name='price_subtotal']"
-                       position="replace"/>
-                <xpath expr="/form/sheet/notebook/page[@string='Order Lines']/field[@name='order_line']/tree[@string='Sales Order Lines']/field[@name='quant_id']"
-                       position="after">
-                    <field name="product_uom_qty"
-                           context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}"
-                           on_change="product_id_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, product_uos_qty, product_uos, name, parent.partner_id, False, False, parent.date_order, False, parent.fiscal_position, True, context)"/>
+                <xpath expr="/form/sheet/notebook/page[@string='Order Lines']/field[@name='order_line']/tree[@string='Sales Order Lines']/field[@name='product_uom_qty']" position="replace"/>
+                <xpath expr="/form/sheet/notebook/page[@string='Order Lines']/field[@name='order_line']/tree[@string='Sales Order Lines']/field[@name='price_unit']" position="replace"/>
+                <xpath expr="/form/sheet/notebook/page[@string='Order Lines']/field[@name='order_line']/tree[@string='Sales Order Lines']/field[@name='discount']" position="replace"/>
+                <xpath expr="/form/sheet/notebook/page[@string='Order Lines']/field[@name='order_line']/tree[@string='Sales Order Lines']/field[@name='price_subtotal']" position="replace"/>
+                <xpath expr="/form/sheet/notebook/page[@string='Order Lines']/field[@name='order_line']/tree[@string='Sales Order Lines']/field[@name='quant_id']" position="after">
+                    <field name="product_uom_qty" context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}" on_change="product_id_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, product_uos_qty, product_uos, name, parent.partner_id, False, False, parent.date_order, False, parent.fiscal_position, True, context)"/>
                     <field name="price_unit" string="Retail"/>
-                    <field name="discount"
-                           groups="sale.group_discount_per_so_line"/>
+                    <field name="discount" groups="sale.group_discount_per_so_line"/>
                     <field name="price_subtotal"/>
                     <field name="note_client_name"/>
                     <field name="note_client_price"/>
@@ -66,6 +54,20 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='date_order']" position="after">
                     <field name="pricelist_id"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_quotation_tree" model="ir.ui.view">
+            <field name="name">sale.order.tree</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_quotation_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="colors">blue:online_quotation==True; grey:state=='cancel';blue:state in ('waiting_date','manual');red:state in ('invoice_except','shipping_except')</attribute>
+                </xpath>
+                <xpath expr="//field[@name='user_id']" position="after">
+                    <field name="online_quotation" invisible="1"/>
                 </xpath>
             </field>
         </record>

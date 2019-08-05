@@ -14,15 +14,17 @@
     'application': False,
     'installable': True,
     'auto_install': False,
-    'images' : [],
+    'images': [],
     'depends': [
         'sale',
         'web_tree_image',
         'sale_line_quant',
-        'sale_margin'
+        'sale_margin',
+        'website',
     ],
     'data': [
         'data/ir_actions.xml',
         'views/sale_order_views.xml',
+        'views/website_config_settings_views.xml',
     ],
 }
