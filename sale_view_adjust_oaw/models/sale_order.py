@@ -8,6 +8,18 @@ from openerp import models, fields, api
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
+    online_quotation = fields.Boolean(
+        string="Is Online Quotation?",
+        compute="_compute_online_quotation",
+    )
+
+    @api.multi
+    def _compute_online_quotation(self):
+        online_salesperson = self.env['website'].get_current_website().user_id
+        for order in self:
+            order.online_quotation = True if order.state != 'cancel' and \
+                order.user_id == online_salesperson else False
+
     @api.multi
     def write(self, vals):
         res = super(SaleOrder, self).write(vals)
