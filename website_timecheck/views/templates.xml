@@ -129,7 +129,7 @@
                             <span t-if="product.sale_hkd_ac == 0" style="white-space: nowrap; color: DarkGrey;">N/A</span>
                         </t>
                     </div>
-                    <div t-if="product.sale_hkd_ac_so and not product.in_special_offer_limit">
+                    <div t-if="product.sale_hkd_ac_so and not product.in_special_offer_limit" groups="website_timecheck.group_timecheck_trial">
                         <span style="color: red; font-weight:bold;">Special Offer:</span>
                         <t t-if="product.sale_hkd_ac_so != 0">
                             <span t-if="product.sale_hkd_ac_so != 0" t-esc="'{:,.0f}'.format(product.sale_hkd_ac_so)" style="white-space: nowrap; color: red; font-weight:bold;"/>
@@ -315,7 +315,7 @@
                             <span t-if="product.sale_hkd_ac == 0" style="white-space: nowrap; color: DarkGrey;">N/A</span>
                         </t>
                     </div>
-                    <div t-if="product.sale_hkd_ac_so and not product.in_special_offer_limit">
+                    <div t-if="product.sale_hkd_ac_so and not product.in_special_offer_limit" groups="website_timecheck.group_timecheck_trial">
                         <span style="color: red; font-weight:bold;">Special Offer:</span>
                         <t t-if="product.sale_hkd_ac_so != 0">
                             <span t-if="product.sale_hkd_ac_so != 0" t-esc="'{:,.0f}'.format(product.sale_hkd_ac_so)" style="white-space: nowrap; color: red; font-weight:bold;"/>
