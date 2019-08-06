@@ -27,17 +27,19 @@
                             <li t-att-class=" '' if not request.session.special_offer else 'active' " groups="website_timecheck.group_timecheck_trial">
                                 <a href="/shop/special_offer">Special Offer</a>
                             </li>
-                            <br/>
-                            <br/>
-                            <li t-att-class=" '' if request.session.hk_stock or request.session.oversea_stock else 'active' ">
-                                <a href="/shop/all_stock">All Locations</a>
-                            </li>
-                            <li t-att-class=" '' if not request.session.hk_stock else 'active' ">
-                                <a href="/shop/hk_stock">HK Stock</a>
-                            </li>
-                            <li t-att-class=" '' if not request.session.oversea_stock else 'active' ">
-                                <a href="/shop/oversea_stock">Oversea Stock</a>
-                            </li>
+                            <t groups="website_timecheck.group_timecheck_trial">
+                                <br/>
+                                <br/>
+                                <li t-att-class=" '' if request.session.hk_stock or request.session.oversea_stock else 'active' ">
+                                    <a href="/shop/all_stock">All Locations</a>
+                                </li>
+                                <li t-att-class=" '' if not request.session.hk_stock else 'active' ">
+                                    <a href="/shop/hk_stock">HK Stock</a>
+                                </li>
+                                <li t-att-class=" '' if not request.session.oversea_stock else 'active' ">
+                                    <a href="/shop/oversea_stock">Oversea Stock</a>
+                                </li>
+                            </t>
                             <br/>
                             <br/>
                             <li t-att-class=" '' if category else 'active' ">
