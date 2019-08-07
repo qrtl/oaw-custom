@@ -3,6 +3,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from openerp import models, fields, api
+from openerp.exceptions import Warning as UserError
 import logging
 _logger = logging.getLogger(__name__)
 
@@ -20,11 +21,14 @@ class SaleOrderLine(models.Model):
     def create_update_consignment_partner_stock(self):
         for order_line in self:
             supplier_location = self.env['supplier.location'].search([
-                ('owner_id', '=', order_line.order_id.partner_id.id),
+                ('owner_id', '=', order_line.order_id.partner_id.commercial_partner_id.id),
                 ('active', '=', True)
             ], limit=1)
+            if not supplier_location:
+                raise UserError('Unable to create partner stock records since there is not supplier location related to %s' %
+                                order_line.order_id.partner_id.commercial_partner_id.name)
             vals = {
-                'partner_id': order_line.order_id.partner_id.id,
+                'partner_id': order_line.order_id.partner_id.commercial_partner_id.id,
                 'partner_loc_id': supplier_location.id,
                 'product_id': order_line.product_id.id,
                 'prod_cat_selection': order_line.product_id.categ_id.id,
