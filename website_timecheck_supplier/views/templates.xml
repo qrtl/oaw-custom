@@ -2,6 +2,172 @@
 <openerp>
     <data>
 
+        <template id="products" name="Products">
+            <t t-call="website.layout">
+                <t t-set="additional_title">Shop</t>
+                <div id="wrap" class="js_sale">
+                    <div class="oe_structure"/>
+                    <div class="container oe_website_sale">
+                        <div class="products_pager">
+                            <div class="row" style="width: 100%;">
+                                <t t-call="website_sale.search">
+                                    <t t-set="search_class">pagination form-inline col-md-3</t>
+                                </t>
+                                <t t-call="website.pager"/>
+                            </div>
+                        </div>
+                        <div class='row'>
+                            <div id="products_grid_before" class="col-md-3 hidden-xs">
+                                <ul class="nav nav-pills nav-stacked mt16">
+                                    <li t-att-class=" '' if category else 'active' ">
+                                        <a t-att-href="keep('/supplier/%s' % supplier_url,category=0)">All Categories</a>
+                                    </li>
+                                    <t t-foreach="categories" t-as="c">
+                                        <t t-call="website_timecheck_supplier.categories_recursive"/>
+                                    </t>
+                                </ul>
+                            </div>
+                            <div class="col-md-9" id="products_grid">
+                                <table width="100%">
+                                    <tbody>
+                                        <tr t-ignore="true">
+                                            <td t-foreach="range(0,rows)" t-as="row" t-attf-width="#{100/rows}%"></td>
+                                        </tr>
+                                        <tr t-foreach="bins" t-as="tr_product">
+                                            <t t-foreach="tr_product" t-as="td_product">
+                                                <t t-if="td_product">
+                                                    <t t-set="product" t-value="td_product['product']"/>
+                                                    <td t-att-colspan="td_product['x'] != 1 and td_product['x']" t-att-rowspan="td_product['y'] != 1 and td_product['y']" t-attf-class="oe_product oe_grid oe-height-#{td_product['y']*2} #{ td_product['class'] }">
+
+                                                        <div class="oe_product_cart">
+                                                            <t t-set="product_image_big" t-value="td_product['x']+td_product['y'] > 2"/>
+                                                            <t t-call="website_timecheck_supplier.products_item"/>
+                                                        </div>
+
+                                                    </td>
+                                                </t>
+                                                <td t-if="not td_product" class="oe-height-2"/>
+                                            </t>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="products_pager">
+                            <t t-call="website.pager"/>
+                        </div>
+                    </div>
+                    <div class="oe_structure mb32"/>
+                </div>
+            </t>
+        </template>
+
+        <template id="products_item" name="Product item">
+            <form action="/shop/cart/update" method="post">
+                <div itemscope="itemscope" itemtype="http://schema.org/Product">
+                    <div class="ribbon-wrapper">
+                        <div class="ribbon btn btn-danger">Sale</div>
+                    </div>
+                    <div class="oe_product_image">
+                        <t t-set='image' t-value="'custom_image' if product.custom_image else 'image_medium'"/>
+                        <a itemprop="url" t-att-href="keep('/supplier/product/%s' % slug(product), page=(pager['page']['num'] if pager['page']['num']>1 else None))">
+                            <img style="position: static !important; padding: 10px; float: left;" itemprop="image" class="hidden-xs img img-responsive" t-att-src="website.image_url(product, image, None if product_image_big else '300x300')" t-att-alt="product.name"/>
+                        </a>
+                    </div>
+                    <section>
+                        <h5>
+                            <strong>
+                                <a itemprop="name" t-att-href="keep('/supplier/product/%s' % slug(product), page=(pager['page']['num'] if pager['page']['num']>1 else None))">
+                                    <span t-field="product.category_name"/>
+                                    <br/>
+                                    <span t-field="product.name"/>
+                                </a>
+                            </strong>
+                        </h5>
+                        <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" class="product_price">
+                            <b>
+                                <span t-field="product.retail_in_currency" style="white-space: nowrap;" t-field-options='{
+                                    "widget": "monetary",
+                                    "display_currency": "product.currency_id"
+                                }'>
+                                </span>
+                                <span itemprop="price_unit" style="display:none;" t-esc="product.retail_in_currency"/>
+                                <span itemprop="priceCurrency" style="display:none;" t-esc="product.currency_id.name" class='decimal_precision' t-att-data-precision="website.pricelist_id.currency_id.rounding"/>
+                            </b>
+                        </div>
+                    </section>
+                </div>
+            </form>
+        </template>
+
+        <template id="product" name="Product">
+            <t t-call="website.layout">
+                <t t-set="additional_title" t-value="product.name"/>
+                <div itemscope="itemscope" itemtype="http://schema.org/Product" id="wrap" class="js_sale">
+                    <section t-attf-class="container mt8 oe_website_sale" id="product_detail">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <ol class="breadcrumb">
+                                    <li>
+                                        <a t-att-href="keep('/supplier/%s' % supplier_url, category=0)" onclick="history.go(-1); return false;">Products</a>
+                                    </li>
+                                    <li t-if="category">
+                                        <a t-att-href="keep('/supplier/%s' % supplier_url + '/category/%s' % slug(category), category=0)" t-field="category.name"/>
+                                    </li>
+                                    <li class="active">
+                                        <span t-field="product.name"/>
+                                    </li>
+                                </ol>
+                            </div>
+                            <div class="col-sm-3">
+                                <t t-call="website_sale.search">
+                                    <t t-set="search_class">pull-right</t>
+                                </t>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-7 col-md-7 col-lg-7">
+                                <div class="image_bigsize">
+                                    <div id="ex1" onclick='full_img(this)'>
+                                        <t t-if="product.custom_image">
+                                            <span itemprop="image" t-field="product.custom_image" t-field-options='{"widget": "image", "class": "img_set"}' />
+                                        </t>
+                                        <t t-if="not product.custom_image">
+                                            <span itemprop="image" t-field="product.image_medium" t-field-options='{"widget": "image", "class": "img_set"}' />
+                                        </t>
+                                    </div>
+                                </div>
+                                <div class="modal fade" tabindex="-1" role="dialog" id="img_modal" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="padding:5px;margin-bottom:-8%;color:red;">x
+                                            </button>
+                                            <img class="img img-responsive" id="modal_img" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr></hr>
+                            </div>
+                            <div class="col-sm-5 col-md-5 col-lg-4 col-lg-offset-1">
+                                <h1 itemprop="name" t-field="product.name">Product Name</h1>
+                                <span itemprop="url" style="display:none;" t-esc="'/supplier/product/%s' % slug(product)"/>
+                                <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" class="product_price mt16">
+                                    <h4 class="oe_price_h4 css_editable_mode_hidden decimal_precision" t-att-data-precision="user_id.partner_id.property_product_pricelist.currency_id.rounding">
+                                        <b class="oe_price" style="white-space: nowrap;" t-field="product.retail_in_currency" t-field-options='{
+                                            "widget": "monetary",
+                                            "display_currency": "product.currency_id"
+                                        }'/>
+                                    </h4>
+                                </div>
+                                <hr/>
+                                <a t-att-href="keep('/supplier/%s' % supplier_url, category=0)" onclick="history.go(-1); return false;" class="btn btn-default mb32">Back to Shop</a>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </t>
+        </template>
+
         <template id="website_sale.search" name="Search hidden fields">
             <form t-if="not request.session.supplier_page" t-att-action="keep('/shop'+ ('/category/'+slug(category)) if category else '', search=0)" method="get" t-att-class="search_class">
 
@@ -21,7 +187,7 @@
 
             </form>
             <t t-if="request.session.supplier_page">
-                <form t-att-action="keep('/%s' % slug(supplier) + ('/category/'+slug(category)) if category else '/%s' % slug(supplier), search=0)" method="get" t-att-class="search_class">
+                <form t-att-action="keep('/supplier/%s' % supplier_url + ('/category/'+slug(category)) if category else '/supplier/%s' % supplier_url, search=0)" method="get" t-att-class="search_class">
 
                     <t t-if="attrib_values">
                         <t t-foreach="attrib_values" t-as="a">
@@ -41,71 +207,9 @@
             </t>
         </template>
 
-        <template id="website_category_responsive.products_categories_inherit_category_responsive" inherit_id="website_sale.products_categories">
-            <xpath expr="//ul[@class='nav nav-pills nav-stacked mt16']" position="replace">
-                <div class="navbar navbar-default navbar-static-top">
-                    <div class="navbar-header navbar_header">
-                        <button type="button" class="navbar-toggle pull-left navbar_toggle" data-toggle="collapse" data-target=".navbar-cate-collapse">
-                            <i class="fa fa-chevron-down" style="font-size: 18px !important"/>
-                        </button>
-                    </div>
-                    <div t-if="not request.session.supplier_page" class="collapse navbar-collapse navbar-cate-collapse navbar_collapse">
-                        <ul class="nav nav-pills nav-stacked mt16">
-                            <li t-att-class=" '' if request.session.new_arrival or request.session.special_offer else 'active' ">
-                                <a href="/shop/all_products">All Products</a>
-                            </li>
-                            <li t-att-class=" '' if not request.session.new_arrival else 'active' " groups="website_timecheck.group_timecheck_light">
-                                <a href="/shop/new_arrival">New Arrival</a>
-                            </li>
-                            <li t-att-class=" '' if not request.session.special_offer else 'active' " groups="website_timecheck.group_timecheck_trial">
-                                <a href="/shop/special_offer">Special Offer</a>
-                            </li>
-                            <br/>
-                            <br/>
-                            <li t-att-class=" '' if request.session.hk_stock or request.session.oversea_stock else 'active' ">
-                                <a href="/shop/all_stock">All Locations</a>
-                            </li>
-                            <li t-att-class=" '' if not request.session.hk_stock else 'active' ">
-                                <a href="/shop/hk_stock">HK Stock</a>
-                            </li>
-                            <li t-att-class=" '' if not request.session.oversea_stock else 'active' ">
-                                <a href="/shop/oversea_stock">Oversea Stock</a>
-                            </li>
-                            <br/>
-                            <br/>
-                            <li t-att-class=" '' if category else 'active' ">
-                                <a t-att-href="keep('/shop',category=0)">All Categories</a>
-                            </li>
-                            <t t-foreach="categories" t-as="c">
-                                <t t-call="website_sale.categories_recursive"/>
-                            </t>
-                        </ul>
-                    </div>
-                    <div t-if="request.session.supplier_page" class="collapse navbar-collapse navbar-cate-collapse navbar_collapse">
-                        <ul class="nav nav-pills nav-stacked mt16">
-                            <li t-att-class="'active'">
-                                <a href="#">All Products</a>
-                            </li>
-                            <br/>
-                            <br/>
-                            <li t-att-class=" '' if category else 'active' ">
-                                <a t-att-href="keep('/%s' % slug(supplier),category=0)">All Categories</a>
-                            </li>
-                            <t t-foreach="categories" t-as="c">
-                                <t t-call="website_timecheck_supplier.categories_recursive"/>
-                            </t>
-                        </ul>
-                    </div>
-                </div>
-            </xpath>
-            <xpath expr="//div[@id='products_grid_before']" position="attributes">
-                <attribute name="class">col-md-3</attribute>
-            </xpath>
-        </template>
-
         <template id="categories_recursive" name="Category list">
             <li t-att-class="'active' if c.id == int(category or 0) else ''">
-                <a t-att-href="keep('/%s/category/' % slug(supplier) + slug(c), category=0)" t-field="c.name"></a>
+                <a t-att-href="keep('/supplier/%s/category/' % supplier_url + slug(c), category=0)" t-field="c.name"></a>
                 <ul t-if="c.child_id" class="nav nav-pills nav-stacked nav-hierarchy">
                     <t t-foreach="c.child_id" t-as="c">
                         <t t-call="website_timecheck_supplier.categories_recursive"/>

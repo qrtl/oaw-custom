@@ -109,81 +109,100 @@ class table_compute(object):
 
 class WebsiteSale(website_sale):
 
-    @http.route([
-        '/<model("res.partner"):supplier>',
-        '/<model("res.partner"):supplier>/page/<int:page>',
-        '/<model("res.partner"):supplier>/category/<model("product.public.category"):category>',
-        '/<model("res.partner"):supplier>/category/<model("product.public.category"):category>/page/<int:page>',
-    ], type='http', auth="user", website=True)
-    def supplier_shop(self, supplier, page=0, category=None, search='', **post):
+    @http.route(['/supplier/product/<model("supplier.stock"):product>'], type='http', auth="public", website=True)
+    def supplier_product(self, product, category='', search='', **kwargs):
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
+        category_obj = pool['product.public.category']
 
-        # Retrieve the product list of the supplier
-        supplier_partner = pool.get('res.partner').browse(
-            cr, SUPERUSER_ID, int(supplier), context=context)
-        supplier_stock_ids = pool.get('supplier.stock').search(
-            cr, SUPERUSER_ID, [('partner_id', '=', supplier_partner.id)], context=context)
-        supplier_stock_list = pool.get('supplier.stock').browse(
-            cr, SUPERUSER_ID, supplier_stock_ids, context=context)
-        supplier_stock_product_ids = supplier_stock_list.mapped(
-            'product_id').mapped('product_tmpl_id').ids
-        supplier_stock_product_ids = list(set(supplier_stock_product_ids))
+        context.update(active_id=product.id)
+
+        if category:
+            category = category_obj.browse(
+                cr, uid, int(category), context=context)
+            category = category if category.exists() else False
 
         attrib_list = request.httprequest.args.getlist('attrib')
         attrib_values = [map(int, v.split("-")) for v in attrib_list if v]
         attrib_set = set([v[1] for v in attrib_values])
 
-        domain = self._get_search_domain(search, category, attrib_values)
-        domain += [('id', 'in', supplier_stock_product_ids)]
+        keep = QueryURL('/supplier/%s' % product.partner_id.sudo().website_url, category=category and category.id,
+                        search=search, attrib=attrib_list)
+
+        category_ids = category_obj.search(cr, uid, [], context=context)
+        category_list = category_obj.name_get(
+            cr, uid, category_ids, context=context)
+        category_list = sorted(category_list, key=lambda category: category[1])
+
+        values = {
+            'search': search,
+            'supplier_url': product.partner_id.sudo().website_url,
+            'category': category,
+            'attrib_values': attrib_values,
+            'attrib_set': attrib_set,
+            'keep': keep,
+            'category_list': category_list,
+            'main_object': product,
+            'product': product,
+        }
+        return request.website.render("website_timecheck_supplier.product", values)
+
+    @http.route([
+        '/supplier/<supplier_url>',
+        '/supplier/<supplier_url>/page/<int:page>',
+        '/supplier/<supplier_url>/category/<model("product.public.category"):category>',
+        '/supplier/<supplier_url>/category/<model("product.public.category"):category>/page/<int:page>',
+    ], type='http', auth="user", website=True)
+    def supplier_shop(self, supplier_url, page=0, category=None, search='', **post):
+        cr, uid, context, pool = request.cr, SUPERUSER_ID, request.context, request.registry
+
+        supplier = pool.get('res.partner').search(
+            cr, uid, [('website_url', '=', supplier_url)], context=context)
+        if not supplier:
+            return request.website.render("website.403")
+        else:
+            supplier = supplier[0]
+
+        attrib_list = request.httprequest.args.getlist('attrib')
+        attrib_values = [map(int, v.split("-")) for v in attrib_list if v]
+        attrib_set = set([v[1] for v in attrib_values])
+
+        domain = self._get_supplier_stock_search_domain(
+            search, int(supplier), category, attrib_values)
 
         keep = QueryURL('/', category=category and int(category),
                         search=search, attrib=attrib_list)
 
-        if not context.get('pricelist'):
-            pricelist = self.get_pricelist()
-            context['pricelist'] = int(pricelist)
-        else:
-            pricelist = pool.get('product.pricelist').browse(
-                cr, uid, context['pricelist'], context)
+        supplier_stock_obj = pool.get('supplier.stock')
 
-        product_obj = pool.get('product.template')
-
-        url = "/%s" % slug(supplier)
-        product_count = product_obj.search_count(
+        url = "/supplier/%s" % supplier_url
+        product_count = supplier_stock_obj.search_count(
             cr, uid, domain, context=context)
         if search:
             post["search"] = search
         if category:
             category = pool['product.public.category'].browse(
                 cr, uid, int(category), context=context)
-            url = "/%s/category/%s" % (slug(supplier), slug(category))
+            url = "/supplier/%s/category/%s" % (supplier_url, slug(category))
         if attrib_list:
             post['attrib'] = attrib_list
         pager = request.website.pager(
             url=url, total=product_count, page=page, step=PPG, scope=7, url_args=post)
-        product_ids = product_obj.search(
-            cr, uid, domain, limit=PPG, offset=pager['offset'], order=self._get_search_order(post), context=context)
-        products = product_obj.browse(cr, uid, product_ids, context=context)
+        product_ids = supplier_stock_obj.search(
+            cr, uid, domain, limit=PPG, offset=pager['offset'], order=self._get_supplier_stock_search_order(post), context=context)
+        products = supplier_stock_obj.browse(
+            cr, uid, product_ids, context=context)
+
+        categs = products.mapped('product_id').mapped(
+            'product_tmpl_id').mapped('public_categ_ids')
 
         style_obj = pool['product.style']
         style_ids = style_obj.search(cr, uid, [], context=context)
         styles = style_obj.browse(cr, uid, style_ids, context=context)
 
-        category_obj = pool['product.public.category']
-        category_ids = category_obj.search(
-            cr, uid, [('parent_id', '=', False)], context=context)
-        categs = category_obj.browse(cr, uid, category_ids, context=context)
-
         attributes_obj = request.registry['product.attribute']
         attributes_ids = attributes_obj.search(cr, uid, [], context=context)
         attributes = attributes_obj.browse(
             cr, uid, attributes_ids, context=context)
-
-        from_currency = pool.get('product.price.type')._get_field_currency(
-            cr, uid, 'list_price', context)
-        to_currency = pricelist.currency_id
-        def compute_currency(price): return pool['res.currency']._compute(
-            cr, uid, from_currency, to_currency, price, context=context)
 
         # Update session
         request.session.update({
@@ -199,23 +218,66 @@ class WebsiteSale(website_sale):
         values = {
             'search': search,
             'category': category,
-            'supplier': supplier,
+            'supplier_url': supplier_url,
             'attrib_values': attrib_values,
             'attrib_set': attrib_set,
             'pager': pager,
-            'pricelist': pricelist,
             'products': products,
             'bins': table_compute().process(products),
             'rows': PPR,
             'styles': styles,
             'categories': categs,
             'attributes': attributes,
-            'compute_currency': compute_currency,
             'keep': keep,
             'style_in_product': lambda style, product: style.id in [s.id for s in product.website_style_ids],
             'attrib_encode': lambda attribs: werkzeug.url_encode([('attrib', i) for i in attribs]),
         }
-        return request.website.render("website_sale.products", values)
+        return request.website.render("website_timecheck_supplier.products", values)
+
+    def _get_supplier_stock_search_order(self, post):
+        return ''
+
+    def _get_supplier_stock_search_domain(self, search, supplier, category, attrib_values):
+        domain = [("quantity", ">", 0), ("partner_id", "=", supplier)]
+
+        if search:
+            condition_list = []
+            operator_list = []
+            for srch in search.split(","):
+                condition_list += [
+                    ('product_id.name', 'ilike', srch),
+                    ('product_id.description', 'ilike', srch),
+                    ('product_id.description_sale', 'ilike', srch),
+                    ('product_id.default_code', 'ilike', srch)
+                ]
+            # Add '|' to the operator_list, as the search conditions will be joined with OR but not AND
+            condition_list_length = len(condition_list)
+            while condition_list_length - 1 > 0:
+                operator_list += ['|']
+                condition_list_length -= 1
+            domain += operator_list + condition_list
+
+        if category:
+            domain += [('product_id.public_categ_ids',
+                        'child_of', int(category))]
+
+        if attrib_values:
+            attrib = None
+            ids = []
+            for value in attrib_values:
+                if not attrib:
+                    attrib = value[0]
+                    ids.append(value[1])
+                elif value[0] == attrib:
+                    ids.append(value[1])
+                else:
+                    domain += [('product_id.attribute_line_ids.value_ids', 'in', ids)]
+                    attrib = value[0]
+                    ids = [value[1]]
+            if attrib:
+                domain += [('product_id.attribute_line_ids.value_ids', 'in', ids)]
+
+        return domain
 
     @http.route([
         '/shop',
