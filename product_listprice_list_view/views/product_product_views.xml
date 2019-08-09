@@ -23,9 +23,11 @@
                     <field name="qty_reserved" string="Qty Reserved"/>
                     <field name="qty_local_stock" widget="integer" string="HK Stock"/>
                     <field name="qty_overseas" string="Qty Overseas"/>
-                    <field name="partner_stock_last_modified" string="Last Modified Overseas"/>
                     <field name="last_in_date" string="Quants Incoming Day" widget="date"/>
+                    <field name="partner_stock_last_modified" string="Last Modified Overseas"/>
                     <field name="partner_note2" string="Partner Note"/>
+
+
                  </tree>
             </field>
         </record>

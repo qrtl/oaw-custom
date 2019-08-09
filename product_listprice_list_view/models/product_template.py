@@ -56,6 +56,7 @@ class ProductTemplate(models.Model):
 
 
 
+
     
     def _get_quant_cost(self, prod_ids):
         quant_obj = self.env['stock.quant']
@@ -83,15 +84,18 @@ class ProductTemplate(models.Model):
     def _get_stock_cost(self):
         for pt in self:
             prod_ids = [p.id for p in pt.product_variant_ids]
-            quant_cost = self._get_quant_cost(prod_ids)
-            if quant_cost:
-                pt.stock_cost = quant_cost
-                continue
+            # print(prod_ids)
             supp_stock_cost = self._get_supp_stock_cost(prod_ids)
             if supp_stock_cost:
                 pt.stock_cost = supp_stock_cost
                 continue
+            quant_cost = self._get_quant_cost(prod_ids)
+            if quant_cost:
+                pt.stock_cost = quant_cost
+                continue
             pt.stock_cost = pt.standard_price
+
+
 
     def _get_local_location_name(self, prod_ids):
         quant_obj = self.env['stock.quant']
