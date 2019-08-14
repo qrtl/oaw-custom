@@ -9,6 +9,7 @@
     'category': 'Product',
     'depends': [
         "product_listprice_list_view",
+        "oa_product_update_filter"
     ],
     'description': """
     """,
