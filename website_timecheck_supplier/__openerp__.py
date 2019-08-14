@@ -10,11 +10,15 @@
     'depends': [
         'website_timecheck',
         'website_category_responsive',
+        'website_multi_image_zoom',
     ],
     'summary': """""",
     'description': """
     """,
     'data': [
+        'security/ir.model.access.csv',
+        'views/res_partner_views.xml',
+        'views/supplier_stock_views.xml',
         'views/templates.xml',
     ],
     'installable': True,
