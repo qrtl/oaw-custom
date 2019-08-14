@@ -147,10 +147,10 @@ class WebsiteSale(website_sale):
         return request.website.render("website_timecheck_supplier.product", values)
 
     @http.route([
-        '/supplier/<supplier_url>',
-        '/supplier/<supplier_url>/page/<int:page>',
-        '/supplier/<supplier_url>/category/<model("product.public.category"):category>',
-        '/supplier/<supplier_url>/category/<model("product.public.category"):category>/page/<int:page>',
+        '/<supplier_url>',
+        '/<supplier_url>/page/<int:page>',
+        '/<supplier_url>/category/<model("product.public.category"):category>',
+        '/<supplier_url>/category/<model("product.public.category"):category>/page/<int:page>',
     ], type='http', auth="user", website=True)
     def supplier_shop(self, supplier_url, page=0, category=None, search='', **post):
         cr, uid, context, pool = request.cr, SUPERUSER_ID, request.context, request.registry
@@ -174,7 +174,7 @@ class WebsiteSale(website_sale):
 
         supplier_stock_obj = pool.get('supplier.stock')
 
-        url = "/supplier/%s" % supplier_url
+        url = "/%s" % supplier_url
         product_count = supplier_stock_obj.search_count(
             cr, uid, domain, context=context)
         if search:
@@ -182,7 +182,7 @@ class WebsiteSale(website_sale):
         if category:
             category = pool['product.public.category'].browse(
                 cr, uid, int(category), context=context)
-            url = "/supplier/%s/category/%s" % (supplier_url, slug(category))
+            url = "/%s/category/%s" % (supplier_url, slug(category))
         if attrib_list:
             post['attrib'] = attrib_list
         pager = request.website.pager(
@@ -192,7 +192,7 @@ class WebsiteSale(website_sale):
         products = supplier_stock_obj.browse(
             cr, uid, product_ids, context=context)
 
-        categs = supplier_stock_obj.search(cr, uid, domain, context=context).mapped(
+        categs = supplier_stock_obj.browse(cr, uid, supplier_stock_obj.search(cr, uid, domain, context=context), context=context).mapped(
             'product_id').mapped('product_tmpl_id').mapped('public_categ_ids')
 
         style_obj = pool['product.style']
