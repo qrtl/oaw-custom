@@ -17,15 +17,24 @@
                             </div>
                         </div>
                         <div class='row'>
-                            <div id="products_grid_before" class="col-md-3 hidden-xs">
-                                <ul class="nav nav-pills nav-stacked mt16">
-                                    <li t-att-class=" '' if category else 'active' ">
-                                        <a t-att-href="keep('/supplier/%s' % supplier_url,category=0)">All Categories</a>
-                                    </li>
-                                    <t t-foreach="categories" t-as="c">
-                                        <t t-call="website_timecheck_supplier.categories_recursive"/>
-                                    </t>
-                                </ul>
+                            <div id="products_grid_before" class="col-md-3">
+                                <div class="navbar navbar-default navbar-static-top">
+                                    <div class="navbar-header navbar_header">
+                                        <button type="button" class="navbar-toggle pull-left navbar_toggle" data-toggle="collapse" data-target=".navbar-cate-collapse">
+                                            <i class="fa fa-chevron-down" style="font-size: 18px !important"/>
+                                        </button>
+                                    </div>
+                                    <div class="collapse navbar-collapse navbar-cate-collapse navbar_collapse">
+                                        <ul class="nav nav-pills nav-stacked mt16">
+                                            <li t-att-class=" '' if category else 'active' ">
+                                                <a t-att-href="keep('/supplier/%s' % supplier_url,category=0)">All Categories</a>
+                                            </li>
+                                            <t t-foreach="categories" t-as="c">
+                                                <t t-call="website_timecheck_supplier.categories_recursive"/>
+                                            </t>
+                                        </ul>
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-md-9" id="products_grid">
                                 <table width="100%">
@@ -68,13 +77,14 @@
                     <div class="ribbon-wrapper">
                         <div class="ribbon btn btn-danger">Sale</div>
                     </div>
-                    <div class="oe_product_image">
+                    <div class="oe_product_image" style="position: static !important; float: left;">
                         <t t-set='image' t-value="'custom_image' if product.custom_image else 'image_medium'"/>
                         <a itemprop="url" t-att-href="keep('/supplier/product/%s' % slug(product), page=(pager['page']['num'] if pager['page']['num']>1 else None))">
-                            <img style="position: static !important; padding: 10px; float: left;" itemprop="image" class="hidden-xs img img-responsive" t-att-src="website.image_url(product, image, None if product_image_big else '300x300')" t-att-alt="product.name"/>
+                            <img style="position: static !important; padding: 10px; float: left; width: 200px !important; height: 200px !important;" itemprop="image" class="hidden-xs img img-responsive" t-att-src="website.image_url(product, image, None if product_image_big else '300x300')" t-att-alt="product.name"/>
+                            <img itemprop="image" class="img img-responsive visible-xs-inline" style="position: static !important; float: left; width: 150px !important; height: 150px !important;" t-att-src="website.image_url(product, image, None if product_image_big else '300x300')" t-att-alt="product.name"/>
                         </a>
                     </div>
-                    <section>
+                    <section style="position: static !important; float: left; background: none !important;">
                         <h5>
                             <strong>
                                 <a itemprop="name" t-att-href="keep('/supplier/product/%s' % slug(product), page=(pager['page']['num'] if pager['page']['num']>1 else None))">
@@ -83,8 +93,7 @@
                                     <span t-field="product.name"/>
                                 </a>
                             </strong>
-                        </h5>
-                        <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" class="product_price">
+                            <br/>
                             <b>
                                 <span t-field="product.retail_in_currency" style="white-space: nowrap;" t-field-options='{
                                     "widget": "monetary",
@@ -94,7 +103,7 @@
                                 <span itemprop="price_unit" style="display:none;" t-esc="product.retail_in_currency"/>
                                 <span itemprop="priceCurrency" style="display:none;" t-esc="product.currency_id.name" class='decimal_precision' t-att-data-precision="website.pricelist_id.currency_id.rounding"/>
                             </b>
-                        </div>
+                        </h5>
                     </section>
                 </div>
             </form>

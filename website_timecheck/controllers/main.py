@@ -28,7 +28,7 @@ class WebsiteSale(website_sale):
         })
         return request.redirect('/shop')
 
-    @http.route('/shop/special_offer', type='http', auth="user",
+    @http.route('/shop/special_offer', type='http', auth="public",
                 website=True)
     def shop_special_offer(self):
         request.session.update({

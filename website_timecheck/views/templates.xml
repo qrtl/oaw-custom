@@ -13,25 +13,23 @@
                 <li t-att-class=" '' if request.session.new_arrival or request.session.special_offer else 'active' ">
                     <a href="/shop/all_products">All Products</a>
                 </li>
-                <li t-att-class=" '' if not request.session.new_arrival else 'active' " groups="website_timecheck.group_timecheck_light">
+                <li t-att-class=" '' if not request.session.new_arrival else 'active' ">
                     <a href="/shop/new_arrival">New Arrival</a>
                 </li>
-                <li t-att-class=" '' if not request.session.special_offer else 'active' " groups="website_timecheck.group_timecheck_trial">
+                <li t-att-class=" '' if not request.session.special_offer else 'active' ">
                     <a href="/shop/special_offer">Special Offer</a>
                 </li>
-                <t groups="website_timecheck.group_timecheck_trial">
-                    <br/>
-                    <br/>
-                    <li t-att-class=" '' if request.session.hk_stock or request.session.oversea_stock else 'active' ">
-                        <a href="/shop/all_stock">All Locations</a>
-                    </li>
-                    <li t-att-class=" '' if not request.session.hk_stock else 'active' ">
-                        <a href="/shop/hk_stock">HK Stock</a>
-                    </li>
-                    <li t-att-class=" '' if not request.session.oversea_stock else 'active' ">
-                        <a href="/shop/oversea_stock">Oversea Stock</a>
-                    </li>
-                </t>
+                <br/>
+                <br/>
+                <li t-att-class=" '' if request.session.hk_stock or request.session.oversea_stock else 'active' ">
+                    <a href="/shop/all_stock">All Locations</a>
+                </li>
+                <li t-att-class=" '' if not request.session.hk_stock else 'active' ">
+                    <a href="/shop/hk_stock">HK Stock</a>
+                </li>
+                <li t-att-class=" '' if not request.session.oversea_stock else 'active' ">
+                    <a href="/shop/oversea_stock">Oversea Stock</a>
+                </li>
                 <br/>
                 <br/>
                 <li t-att-class=" '' if category else 'active' ">
@@ -67,11 +65,11 @@
                 </div>
             </xpath>
             <xpath expr="//img" position="attributes">
-                <attribute name="style">position: static !important; padding: 10px; float: left;</attribute>
+                <attribute name="style">position: static !important; padding: 10px; float: left; width: 200px !important; height: 200px !important;</attribute>
                 <attribute name="class">hidden-xs img img-responsive</attribute>
             </xpath>
             <xpath expr="//img" position="after">
-                <img itemprop="image" class="img img-responsive visible-xs-inline" style="position: static !important; float: left;"
+                <img itemprop="image" class="img img-responsive visible-xs-inline" style="position: static !important; float: left; width: 150px !important; height: 150px !important;"
                      t-att-src="website.image_url(product, 'image', None if product_image_big else '300x300')" t-att-alt="product.name"/>
             </xpath>
             <xpath expr="//div[@class='oe_product_image']" position="attributes">
