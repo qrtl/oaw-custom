@@ -192,8 +192,8 @@ class WebsiteSale(website_sale):
         products = supplier_stock_obj.browse(
             cr, uid, product_ids, context=context)
 
-        categs = products.mapped('product_id').mapped(
-            'product_tmpl_id').mapped('public_categ_ids')
+        categs = supplier_stock_obj.search(cr, uid, domain, context=context).mapped(
+            'product_id').mapped('product_tmpl_id').mapped('public_categ_ids')
 
         style_obj = pool['product.style']
         style_ids = style_obj.search(cr, uid, [], context=context)
