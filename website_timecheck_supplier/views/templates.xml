@@ -27,7 +27,7 @@
                                     <div class="collapse navbar-collapse navbar-cate-collapse navbar_collapse">
                                         <ul class="nav nav-pills nav-stacked mt16">
                                             <li t-att-class=" '' if category else 'active' ">
-                                                <a t-att-href="keep('/supplier/%s' % supplier_url,category=0)">All Categories</a>
+                                                <a t-att-href="keep('/%s' % supplier_url,category=0)">All Categories</a>
                                             </li>
                                             <t t-foreach="categories" t-as="c">
                                                 <t t-call="website_timecheck_supplier.categories_recursive"/>
@@ -118,10 +118,10 @@
                             <div class="col-sm-4">
                                 <ol class="breadcrumb">
                                     <li>
-                                        <a t-att-href="keep('/supplier/%s' % supplier_url, category=0)" onclick="history.go(-1); return false;">Products</a>
+                                        <a t-att-href="keep('/%s' % supplier_url, category=0)" onclick="history.go(-1); return false;">Products</a>
                                     </li>
                                     <li t-if="category">
-                                        <a t-att-href="keep('/supplier/%s' % supplier_url + '/category/%s' % slug(category), category=0)" t-field="category.name"/>
+                                        <a t-att-href="keep('/%s' % supplier_url + '/category/%s' % slug(category), category=0)" t-field="category.name"/>
                                     </li>
                                     <li class="active">
                                         <span t-field="product.name"/>
@@ -169,7 +169,7 @@
                                     </h4>
                                 </div>
                                 <hr/>
-                                <a t-att-href="keep('/supplier/%s' % supplier_url, category=0)" onclick="history.go(-1); return false;" class="btn btn-default mb32">Back to Shop</a>
+                                <a t-att-href="keep('/%s' % supplier_url, category=0)" onclick="history.go(-1); return false;" class="btn btn-default mb32">Back to Shop</a>
                             </div>
                         </div>
                     </section>
@@ -196,7 +196,7 @@
 
             </form>
             <t t-if="request.session.supplier_page">
-                <form t-att-action="keep('/supplier/%s' % supplier_url + ('/category/'+slug(category)) if category else '/supplier/%s' % supplier_url, search=0)" method="get" t-att-class="search_class">
+                <form t-att-action="keep('/%s' % supplier_url + ('/category/'+slug(category)) if category else '/%s' % supplier_url, search=0)" method="get" t-att-class="search_class">
 
                     <t t-if="attrib_values">
                         <t t-foreach="attrib_values" t-as="a">
@@ -218,7 +218,7 @@
 
         <template id="categories_recursive" name="Category list">
             <li t-att-class="'active' if c.id == int(category or 0) else ''">
-                <a t-att-href="keep('/supplier/%s/category/' % supplier_url + slug(c), category=0)" t-field="c.name"></a>
+                <a t-att-href="keep('/%s/category/' % supplier_url + slug(c), category=0)" t-field="c.name"></a>
                 <ul t-if="c.child_id" class="nav nav-pills nav-stacked nav-hierarchy">
                     <t t-foreach="c.child_id" t-as="c">
                         <t t-call="website_timecheck_supplier.categories_recursive"/>
