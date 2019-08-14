@@ -80,8 +80,8 @@
                     <div class="oe_product_image" style="position: static !important; float: left;">
                         <t t-set='image' t-value="'custom_image' if product.custom_image else 'image_medium'"/>
                         <a itemprop="url" t-att-href="keep('/supplier/product/%s' % slug(product), page=(pager['page']['num'] if pager['page']['num']>1 else None))">
-                            <img style="position: static !important; padding: 10px; float: left; width: 200px !important; height: 200px !important;" itemprop="image" class="hidden-xs img img-responsive" t-att-src="website.image_url(product, image, None if product_image_big else '300x300')" t-att-alt="product.name"/>
-                            <img itemprop="image" class="img img-responsive visible-xs-inline" style="position: static !important; float: left; width: 150px !important; height: 150px !important;" t-att-src="website.image_url(product, image, None if product_image_big else '300x300')" t-att-alt="product.name"/>
+                            <img style="position: static !important; padding: 10px; float: left; height: 200px !important;" itemprop="image" class="hidden-xs img img-responsive" t-att-src="website.image_url(product, image, None if product_image_big else '300x300')" t-att-alt="product.name"/>
+                            <img itemprop="image" class="img img-responsive visible-xs-inline" style="position: static !important; float: left; height: 150px !important;" t-att-src="website.image_url(product, image, None if product_image_big else '300x300')" t-att-alt="product.name"/>
                         </a>
                     </div>
                     <section style="position: static !important; float: left; background: none !important;">
