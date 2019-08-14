@@ -14,7 +14,6 @@ class ProductTemplate(models.Model):
         string="Updated Date",
     )
 
-
     @api.multi
     @api.depends('list_price', 'net_price', 'qty_reserved', 'qty_local_stock',
                  'qty_overseas')
@@ -32,16 +31,13 @@ class ProductTemplate(models.Model):
         string='Website Update By',
     )
 
-
-
     @api.multi
     def write(self, vals):
         if 'sale_hkd_ac' in vals or 'sale_hkd_ac_so' in vals \
-        or 'public_categ_ids' in vals or 'retail_rmb' in vals \
-        or ('partner_offer_checked' in vals and vals['partner_offer_checked']):
+                or 'public_categ_ids' in vals or 'retail_rmb' in vals \
+                or ('partner_offer_checked' in vals and vals['partner_offer_checked']):
             vals.update({
                 'pt_update_date': fields.Datetime.now(),
                 'pt_update_date_user_id': self.env.user.id
             })
         return super(ProductTemplate, self).write(vals)
-

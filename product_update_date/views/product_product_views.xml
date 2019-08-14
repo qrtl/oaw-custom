@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-<data>
+    <data>
 
-    <record id="update_product_updated_date_action" model="ir.actions.server">
-        <field name="name">Update Updated Date</field>
-        <field name="model_id" ref="product.model_product_product"/>
-        <field name="state">code</field>
-        <field name="code">action = self.update_updated_date(cr, uid, context.get('active_ids', []), context=context)</field>
-    </record>
+        <record id="update_product_updated_date_action" model="ir.actions.server">
+            <field name="name">Update Updated Date</field>
+            <field name="model_id" ref="product.model_product_product"/>
+            <field name="state">code</field>
+            <field name="code">action = self.update_updated_date(cr, uid, context.get('active_ids', []), context=context)</field>
+        </record>
 
-    <record id="update_product_updated_date" model="ir.values">
-        <field eval="'client_action_multi'" name="key2"/>
-        <field eval="'product.product'" name="model"/>
-        <field name="name">update.product.updated.date</field>
-        <field eval="'ir.actions.server,%d'%update_product_updated_date_action" name="value"/>
-    </record>
+        <record id="update_product_updated_date" model="ir.values">
+            <field eval="'client_action_multi'" name="key2"/>
+            <field eval="'product.product'" name="model"/>
+            <field name="name">update.product.updated.date</field>
+            <field eval="'ir.actions.server,%d'%update_product_updated_date_action" name="value"/>
+        </record>
 
-     <record id="view_sales_order_pt_update" model="ir.ui.view">
+        <record id="view_sales_order_pt_update" model="ir.ui.view">
             <field name="name">view_sales_order_pt_update</field>
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product_listprice_list_view.product_product_tree_view_z1"/>
             <field name="arch" type="xml">
-               <xpath expr="//field[@name='partner_offer_checked']" position="after">
-                <field name="pt_update_date"/>
-                <field name="pt_update_date_user_id"/>
-            </xpath>
-        </field>
-    </record>
+                <xpath expr="//field[@name='partner_offer_checked']" position="after">
+                    <field name="pt_update_date"/>
+                    <field name="pt_update_date_user_id"/>
+                </xpath>
+            </field>
+        </record>
 
-</data>
+    </data>
 </openerp>

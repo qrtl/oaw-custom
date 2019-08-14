@@ -9,7 +9,6 @@ import openerp.addons.decimal_precision as dp
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
-
     advertise = fields.Boolean(
         default=False
     )
@@ -41,10 +40,10 @@ class ProductTemplate(models.Model):
         compute='_get_stock_location',
     )
     partner_note2 = fields.Text(
-        string = 'Partner Note',
+        string='Partner Note',
         compute='_get_stock_location',
     )
-    retail_of_cheapest =  fields.Float(
+    retail_of_cheapest = fields.Float(
         string="Stock Cost",
         compute='_get_stock_location',
         digits=dp.get_precision('Product Price'),
@@ -54,10 +53,6 @@ class ProductTemplate(models.Model):
         compute='_get_stock_location',
     )
 
-
-
-
-    
     def _get_quant_cost(self, prod_ids):
         quant_obj = self.env['stock.quant']
         quant = quant_obj.search(
@@ -84,7 +79,6 @@ class ProductTemplate(models.Model):
     def _get_stock_cost(self):
         for pt in self:
             prod_ids = [p.id for p in pt.product_variant_ids]
-            # print(prod_ids)
             supp_stock_cost = self._get_supp_stock_cost(prod_ids)
             if supp_stock_cost:
                 pt.stock_cost = supp_stock_cost
@@ -94,8 +88,6 @@ class ProductTemplate(models.Model):
                 pt.stock_cost = quant_cost
                 continue
             pt.stock_cost = pt.standard_price
-
-
 
     def _get_local_location_name(self, prod_ids):
         quant_obj = self.env['stock.quant']
@@ -138,7 +130,7 @@ class ProductTemplate(models.Model):
             pt.stock_leadtime = '/'
             if pt.overseas_stock == 'Yes':
                 pt.stock_location, supp_lt, pt.partner_note2,\
-                pt.retail_of_cheapest, pt.curr_of_cheapest = \
+                    pt.retail_of_cheapest, pt.curr_of_cheapest = \
                     self._get_overseas_location_name(prod_ids)
                 pt.stock_leadtime = str(supp_lt) + ' day(s)'
             if pt.local_stock == 'Yes':
