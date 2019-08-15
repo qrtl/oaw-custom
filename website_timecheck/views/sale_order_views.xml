@@ -12,11 +12,11 @@
                         <filter name="cancelled" string="Cancelled Quotations"
                                 domain="[('state','=','cancel')]"/>
                         <filter name="not_cancelled" string="Current Quotations"
-                                domain="[('state','=','draft')]"/>                    </group>
+                                domain="[('state','=','draft')]"/>
+                    </group>
                 </search>
             </field>
         </record>
-
 
         <record id="portal_sale.action_quotations_portal" model="ir.actions.act_window">
             <field name="name">Quotations</field>
