@@ -15,7 +15,7 @@ class ProductProduct(models.Model):
             prod_tmpls.add(pp.product_tmpl_id)
         for prod_tmpl in prod_tmpls:
             ovrs_qty = 0.0
-            for prod in prod_tmpl.sudo().product_variant_ids:
+            for prod in prod_tmpl.product_variant_ids:
                 records = self.env['supplier.stock'].sudo().search([
                     ('product_id', '=', prod.id),
                     ('hk_location', '=', False)
@@ -35,7 +35,7 @@ class ProductProduct(models.Model):
         for prod_tmpl in prod_tmpls:
             local_qty = 0.0
             ovrs_qty = 0.0
-            for prod in prod_tmpl.sudo().product_variant_ids:
+            for prod in prod_tmpl.product_variant_ids:
                 records = self.env['supplier.stock'].sudo().search([
                     ('product_id', '=', prod.id)
                 ])
