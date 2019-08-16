@@ -15,7 +15,8 @@ class SaleOrder(models.Model):
 
     @api.multi
     def _compute_online_quotation(self):
-        online_salesperson = self.env['website'].get_current_website().user_id
+        online_salesperson = self.env['website'].get_current_website(
+        ).sale_user_id
         for order in self:
             order.online_quotation = True if order.state != 'cancel' and \
                 order.user_id == online_salesperson else False
