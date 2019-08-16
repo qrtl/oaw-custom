@@ -8,7 +8,7 @@ from openerp import models, fields, api
 class WebsiteConfigSettings(models.Model):
     _inherit = 'website.config.settings'
 
-    user_id = fields.Many2one(
-        related='website_id.user_id',
+    sale_user_id = fields.Many2one(
+        related='website_id.sale_user_id',
         string='Online Salesperson',
     )
