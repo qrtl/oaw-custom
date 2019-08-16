@@ -15,4 +15,4 @@ class SupplierStock(models.Model):
     @api.multi
     def _update_prod_tmpl_qty(self):
         for ss in self:
-            ss.product_id._update_prod_tmpl_qty()
+            ss.product_id.sudo()._update_prod_tmpl_qty()
