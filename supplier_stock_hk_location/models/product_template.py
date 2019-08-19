@@ -51,11 +51,11 @@ class ProductTemplate(models.Model):
     def _get_stock_location(self):
         for pt in self:
             prod_ids = [p.id for p in pt.product_variant_ids]
-            pt.stock_location = False
+            pt.stock_location = ''
             pt.stock_leadtime = '/'
             if pt.overseas_stock == 'Yes' or pt.qty_local_supplier_stock > 0:
                 pt.stock_location, supp_lt, pt.partner_note2,\
-                pt.retail_of_cheapest, pt.curr_of_cheapest = \
+                    pt.retail_of_cheapest, pt.curr_of_cheapest = \
                     self._get_overseas_location_name(prod_ids)
                 pt.stock_leadtime = str(supp_lt) + ' day(s)'
             if pt.local_stock == 'Yes' and pt.qty_local_own_stock > 0:
