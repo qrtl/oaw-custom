@@ -51,6 +51,7 @@ class SaleOrderLine(models.Model):
     @api.multi
     def unlink_consignment_partner_stock(self):
         for order_line in self:
-            _logger.info(
-                'Deleted Partner Stock Record: %s' % order_line.consignment_supplier_stock_ids.ids)
-            order_line.consignment_supplier_stock_ids.unlink()
+            if order_line.order_line.consignment_supplier_stock_ids:
+                _logger.info(
+                    'Deleted Partner Stock Record: %s' % order_line.consignment_supplier_stock_ids.ids)
+                order_line.consignment_supplier_stock_ids.unlink()
