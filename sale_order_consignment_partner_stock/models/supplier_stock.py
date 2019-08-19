@@ -14,3 +14,8 @@ class SupplierStock(models.Model):
         ondelete='cascade',
         readonly=True,
     )
+    order_id = fields.Many2one(
+        related='order_line_id.order_id',
+        string='Order Reference',
+        readonly=True,
+    )

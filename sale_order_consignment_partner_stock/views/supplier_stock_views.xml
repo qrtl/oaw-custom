@@ -8,10 +8,23 @@
             <field name="inherit_id" ref="supplier_stock.view_supplier_stock_tree"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='partner_note']" position="after">
-                    <field name="order_line_id"/>
+                    <field name="order_id"/>
                 </xpath>
             </field>
         </record>
+
+        <record id="action_consignment_stock" model="ir.actions.act_window">
+            <field name="name">Consignment Partner Stock</field>
+            <field name="res_model">supplier.stock</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="domain">[('order_id', '!=', False)]</field>
+            <field name="view_id" ref="supplier_stock.view_supplier_stock_tree"/>
+            <field name="search_view_id" ref="supplier_stock.supplier_stock_search"/>
+        </record>
+
+        <menuitem action="action_consignment_stock" id="menu_consignment_stock" parent="base.menu_sales" sequence="10"/>
 
     </data>
 </openerp>
