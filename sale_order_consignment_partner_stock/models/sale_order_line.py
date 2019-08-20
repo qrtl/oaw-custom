@@ -45,13 +45,13 @@ class SaleOrderLine(models.Model):
             else:
                 created_supplier_stock = self.env['supplier.stock'].create(
                     vals)
-                _logger.info(
-                    'Created Partner Stock Record: %s' % created_supplier_stock.id)
+                _logger.info('Created Partner Stock Record: %s' %
+                             created_supplier_stock.id)
 
     @api.multi
     def unlink_consignment_partner_stock(self):
         for order_line in self:
-            if order_line.order_line.consignment_supplier_stock_ids:
+            if order_line.consignment_supplier_stock_ids:
                 _logger.info(
                     'Deleted Partner Stock Record: %s' % order_line.consignment_supplier_stock_ids.ids)
                 order_line.consignment_supplier_stock_ids.unlink()
