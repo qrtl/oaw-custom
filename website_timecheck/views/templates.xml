@@ -69,14 +69,14 @@
                 <attribute name="class">hidden-xs img img-responsive</attribute>
             </xpath>
             <xpath expr="//img" position="after">
-                <img itemprop="image" class="img img-responsive visible-xs-inline" style="position: static !important; float: left; height: 150px !important;"
+                <img itemprop="image" class="img img-responsive visible-xs-inline" style="position: static !important; float: left; width: 150px !important;"
                      t-att-src="website.image_url(product, 'image', None if product_image_big else '300x300')" t-att-alt="product.name"/>
             </xpath>
             <xpath expr="//div[@class='oe_product_image']" position="attributes">
                 <attribute name="style">position: static !important; float: left;</attribute>
             </xpath>
             <xpath expr="//section" position="attributes">
-                <attribute name="style">position: static !important; float: left; background: none !important;</attribute>
+                <attribute name="class">product_item</attribute>
             </xpath>
             <xpath expr="//div[@itemprop='offers']" position="replace">
                 <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" class="product_price"
