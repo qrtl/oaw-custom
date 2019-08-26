@@ -109,6 +109,39 @@ class table_compute(object):
 
 class WebsiteSale(website_sale):
 
+    @http.route('/supplier/all_products', type='http', auth="public", website=True)
+    def supplier_all_products(self):
+        request.session.update({
+            'supplier_new_arrival': False,
+            'supplier_special_offer': False,
+        })
+        redirect = '/shop/%s' % request.session.supplier \
+            if request.session.supplier else \
+                request.httprequest.headers['Referer']
+        return request.redirect(redirect)
+
+    @http.route('/supplier/special_offer', type='http', auth="public", website=True)
+    def supplier_special_offer(self):
+        request.session.update({
+            'supplier_new_arrival': False,
+            'supplier_special_offer': True,
+        })
+        redirect = '/shop/%s' % request.session.supplier \
+            if request.session.supplier else \
+                request.httprequest.headers['Referer']
+        return request.redirect(redirect)
+
+    @http.route('/supplier/new_arrival', type='http', auth="public", website=True)
+    def supplier_new_arrival(self):
+        request.session.update({
+            'supplier_new_arrival': True,
+            'supplier_special_offer': False,
+        })
+        redirect = '/shop/%s' % request.session.supplier \
+            if request.session.supplier else \
+                request.httprequest.headers['Referer']
+        return request.redirect(redirect)
+
     @http.route(['/supplier/product/<model("supplier.stock"):product>'], type='http', auth="public", website=True)
     def supplier_product(self, product, category='', search='', **kwargs):
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
@@ -147,11 +180,11 @@ class WebsiteSale(website_sale):
         return request.website.render("website_timecheck_supplier.product", values)
 
     @http.route([
-        '/<supplier_url>',
-        '/<supplier_url>/page/<int:page>',
-        '/<supplier_url>/category/<model("product.public.category"):category>',
-        '/<supplier_url>/category/<model("product.public.category"):category>/page/<int:page>',
-    ], type='http', auth="user", website=True)
+        '/shop/<supplier_url>',
+        '/shop/<supplier_url>/page/<int:page>',
+        '/shop/<supplier_url>/category/<model("product.public.category"):category>',
+        '/shop/<supplier_url>/category/<model("product.public.category"):category>/page/<int:page>',
+    ], type='http', auth="public", website=True)
     def supplier_shop(self, supplier_url, page=0, category=None, search='', **post):
         cr, uid, context, pool = request.cr, SUPERUSER_ID, request.context, request.registry
 
@@ -169,12 +202,12 @@ class WebsiteSale(website_sale):
         domain = self._get_supplier_stock_search_domain(
             search, int(supplier), category, attrib_values)
 
-        keep = QueryURL('/', category=category and int(category),
+        keep = QueryURL("/shop/%s" % supplier_url, category=category and int(category),
                         search=search, attrib=attrib_list)
 
         supplier_stock_obj = pool.get('supplier.stock')
 
-        url = "/%s" % supplier_url
+        url = "/shop/%s" % supplier_url
         product_count = supplier_stock_obj.search_count(
             cr, uid, domain, context=context)
         if search:
@@ -182,7 +215,7 @@ class WebsiteSale(website_sale):
         if category:
             category = pool['product.public.category'].browse(
                 cr, uid, int(category), context=context)
-            url = "/%s/category/%s" % (supplier_url, slug(category))
+            url = "/shop/%s/category/%s" % (supplier_url, slug(category))
         if attrib_list:
             post['attrib'] = attrib_list
         pager = request.website.pager(
@@ -192,8 +225,10 @@ class WebsiteSale(website_sale):
         products = supplier_stock_obj.browse(
             cr, uid, product_ids, context=context)
 
-        categs = supplier_stock_obj.browse(cr, uid, supplier_stock_obj.search(cr, uid, domain, context=context), context=context).mapped(
-            'product_id').mapped('product_tmpl_id').mapped('public_categ_ids')
+        categs = supplier_stock_obj.browse(cr, uid, supplier_stock_obj.search(
+            cr, uid, [("quantity", ">", 0), ("partner_id", "=", supplier)],
+            context=context), context=context).mapped('product_id').mapped(
+                'product_tmpl_id').mapped('public_categ_ids')
 
         style_obj = pool['product.style']
         style_ids = style_obj.search(cr, uid, [], context=context)
@@ -206,7 +241,7 @@ class WebsiteSale(website_sale):
 
         # Update session
         request.session.update({
-            'supplier_page': True,
+            'supplier': supplier_url,
             'all_products': True,
             'new_arrival': False,
             'special_offer': False,
@@ -277,6 +312,11 @@ class WebsiteSale(website_sale):
             if attrib:
                 domain += [('product_id.attribute_line_ids.value_ids', 'in', ids)]
 
+        if request.session.get('supplier_new_arrival'):
+            domain += [('new_arrival', '=', True)]
+        if request.session.get('supplier_special_offer'):
+            domain += [('special_offer', '>', 0)]
+        
         return domain
 
     @http.route([
@@ -288,7 +328,7 @@ class WebsiteSale(website_sale):
     def shop(self, page=0, category=None, search='', **post):
         # Update session
         request.session.update({
-            'supplier_page': False,
+            'supplier': False,
         })
         return super(WebsiteSale, self).shop(page=page, category=category,
                                              search=search, **post)

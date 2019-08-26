@@ -13,16 +13,18 @@ class SupplierStock(models.Model):
     website_style_ids = fields.Many2many('product.style', string='Styles')
     name = fields.Char(
         related='product_id.product_tmpl_id.name',
-        store=True
+        store=True,
     )
     category_name = fields.Char(
         related='product_id.product_tmpl_id.category_name',
-        store=True
+        store=True,
     )
     default_code = fields.Char(
         related='product_id.product_tmpl_id.default_code',
         store=True,
     )
+    special_offer = fields.Float(string='Special Offer')
+    new_arrival = fields.Boolean(string='New Arrival')
     custom_image = fields.Binary(string='Custom Image')
 
     # Overwriting display_name's method for Supplier Access User
