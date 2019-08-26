@@ -65,7 +65,7 @@
                 </div>
             </xpath>
             <xpath expr="//img" position="attributes">
-                <attribute name="style">position: static !important; padding: 10px; float: left; height: 200px !important;</attribute>
+                <attribute name="style">max-width: none !important; position: static !important; padding: 10px; float: left; height: 200px !important;</attribute>
                 <attribute name="class">hidden-xs img img-responsive</attribute>
             </xpath>
             <xpath expr="//img" position="after">
