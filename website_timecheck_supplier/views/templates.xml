@@ -88,7 +88,7 @@
                         <div class="ribbon btn btn-danger">Sale</div>
                     </div>
                     <div class="oe_product_image" style="position: static !important; float: left;">
-                        <t t-set='image' t-value="'custom_image' if product.custom_image else 'image_medium'"/>
+                        <t t-set='image' t-value="'custom_image' if product.custom_image else 'image'"/>
                         <a itemprop="url" t-att-href="keep('/supplier/product/%s' % slug(product), page=(pager['page']['num'] if pager['page']['num']>1 else None))">
                             <img style="position: static !important; padding: 10px; float: left; height: 200px !important;" itemprop="image" class="hidden-xs img img-responsive" t-att-src="website.image_url(product, image, None if product_image_big else '300x300')" t-att-alt="product.name"/>
                             <img itemprop="image" class="img img-responsive visible-xs-inline" style="position: static !important; float: left; width: 150px !important;" t-att-src="website.image_url(product, image, None if product_image_big else '300x300')" t-att-alt="product.name"/>
@@ -104,14 +104,15 @@
                                 </a>
                             </strong>
                             <br/>
+                            <br/>
+                            <span>Retail in <span t-field="product.currency_id.name"/>:</span>
+                            <t t-if="product.retail_in_currency != 0">
+                                <span t-esc="'{:,.0f}'.format(product.retail_in_currency)"/>
+                            </t>
+                            <t t-if="product.retail_in_currency == 0">
+                                <span>N/A</span>
+                            </t>
                             <b groups="base.group_portal">
-                                <span>Retail in <span t-field="product.currency_id.name"/>:</span>
-                                <t t-if="product.retail_in_currency != 0">
-                                    <span t-esc="'{:,.0f}'.format(product.retail_in_currency)"/>
-                                </t>
-                                <t t-if="product.retail_in_currency == 0">
-                                    <span>N/A</span>
-                                </t>
                                 <br/>
                                 <t t-if="product.special_offer != 0">
                                     <span style="color: red; font-weight:bold;">Special Offer: </span>
@@ -158,7 +159,7 @@
                                             <span itemprop="image" t-field="product.custom_image" t-field-options='{"widget": "image", "class": "img_set"}' />
                                         </t>
                                         <t t-if="not product.custom_image">
-                                            <span itemprop="image" t-field="product.image_medium" t-field-options='{"widget": "image", "class": "img_set"}' />
+                                            <span itemprop="image" t-field="product.image" t-field-options='{"widget": "image", "class": "img_set"}' />
                                         </t>
                                     </div>
                                 </div>
@@ -182,15 +183,15 @@
                                 <span itemprop="url" style="display:none;" t-esc="'/supplier/product/%s' % slug(product)"/>
                                 <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" class="product_price mt16">
                                     <h4 class="oe_price_h4 css_editable_mode_hidden decimal_precision" t-att-data-precision="user_id.partner_id.property_product_pricelist.currency_id.rounding">
+                                        <span>Retail in 
+                                            <span t-field="product.currency_id.name"/>:</span>
+                                        <t t-if="product.retail_in_currency != 0">
+                                            <span t-esc="'{:,.0f}'.format(product.retail_in_currency)"/>
+                                        </t>
+                                        <t t-if="product.retail_in_currency == 0">
+                                            <span>N/A</span>
+                                        </t>
                                         <b groups="base.group_portal">
-                                            <span>Retail in 
-                                                <span t-field="product.currency_id.name"/>:</span>
-                                            <t t-if="product.retail_in_currency != 0">
-                                                <span t-esc="'{:,.0f}'.format(product.retail_in_currency)"/>
-                                            </t>
-                                            <t t-if="product.retail_in_currency == 0">
-                                                <span>N/A</span>
-                                            </t>
                                             <br/>
                                             <t t-if="product.special_offer != 0">
                                                 <span style="color: red; font-weight:bold;">Special Offer: </span>
