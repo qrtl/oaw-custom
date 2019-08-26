@@ -41,3 +41,30 @@ a:hover, a:focus {
 .btn-default {
     color: #105656;
 }
+/* section mobile */
+@media (max-width: 768px) and (min-width: 362px) {
+  .product_item {
+    position: static !important;
+    float: left;
+    left: 150px !important;
+    background: none !important;
+    width: 180px !important;
+  }
+}
+/* section desktop */
+@media (min-width: 769px) {
+  .product_item {
+    position: static !important;
+    float: left;
+    background: none !important;
+  }
+}
+/* section small device */
+@media (max-width: 362px) {
+  .product_item {
+    position: static !important;
+    float: left;
+    background: none !important;
+    width: 180px !important;
+  }
+}
