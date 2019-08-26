@@ -23,6 +23,9 @@ class SupplierStock(models.Model):
         related='product_id.product_tmpl_id.default_code',
         store=True,
     )
+    image = fields.Binary(
+        related='product_id.product_tmpl_id.image',
+    )
     special_offer = fields.Float(string='Special Offer')
     new_arrival = fields.Boolean(string='New Arrival')
     custom_image = fields.Binary(string='Custom Image')
