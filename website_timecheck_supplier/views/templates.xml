@@ -26,8 +26,18 @@
                                     </div>
                                     <div class="collapse navbar-collapse navbar-cate-collapse navbar_collapse">
                                         <ul class="nav nav-pills nav-stacked mt16">
+                                            <li t-att-class=" '' if request.session.supplier_new_arrival or request.session.supplier_special_offer else 'active' ">
+                                                <a href="/supplier/all_products">All Products</a>
+                                            </li>
+                                            <li t-att-class=" '' if not request.session.supplier_new_arrival else 'active' ">
+                                                <a href="/supplier/new_arrival">New Arrival</a>
+                                            </li>
+                                            <li t-att-class=" '' if not request.session.supplier_special_offer else 'active' ">
+                                                <a href="/supplier/special_offer">Special Offer</a>
+                                            </li>
+                                            <br/>
                                             <li t-att-class=" '' if category else 'active' ">
-                                                <a t-att-href="keep('/%s' % supplier_url,category=0)">All Categories</a>
+                                                <a t-att-href="keep('/shop/%s' % supplier_url,category=0)">All Categories</a>
                                             </li>
                                             <t t-foreach="categories" t-as="c">
                                                 <t t-call="website_timecheck_supplier.categories_recursive"/>
@@ -81,10 +91,10 @@
                         <t t-set='image' t-value="'custom_image' if product.custom_image else 'image_medium'"/>
                         <a itemprop="url" t-att-href="keep('/supplier/product/%s' % slug(product), page=(pager['page']['num'] if pager['page']['num']>1 else None))">
                             <img style="position: static !important; padding: 10px; float: left; height: 200px !important;" itemprop="image" class="hidden-xs img img-responsive" t-att-src="website.image_url(product, image, None if product_image_big else '300x300')" t-att-alt="product.name"/>
-                            <img itemprop="image" class="img img-responsive visible-xs-inline" style="position: static !important; float: left; height: 150px !important;" t-att-src="website.image_url(product, image, None if product_image_big else '300x300')" t-att-alt="product.name"/>
+                            <img itemprop="image" class="img img-responsive visible-xs-inline" style="position: static !important; float: left; width: 150px !important;" t-att-src="website.image_url(product, image, None if product_image_big else '300x300')" t-att-alt="product.name"/>
                         </a>
                     </div>
-                    <section style="position: static !important; float: left; background: none !important;">
+                    <section class="product_item">
                         <h5>
                             <strong>
                                 <a itemprop="name" t-att-href="keep('/supplier/product/%s' % slug(product), page=(pager['page']['num'] if pager['page']['num']>1 else None))">
@@ -94,14 +104,20 @@
                                 </a>
                             </strong>
                             <br/>
-                            <b>
-                                <span t-field="product.retail_in_currency" style="white-space: nowrap;" t-field-options='{
-                                    "widget": "monetary",
-                                    "display_currency": "product.currency_id"
-                                }'>
-                                </span>
-                                <span itemprop="price_unit" style="display:none;" t-esc="product.retail_in_currency"/>
-                                <span itemprop="priceCurrency" style="display:none;" t-esc="product.currency_id.name" class='decimal_precision' t-att-data-precision="website.pricelist_id.currency_id.rounding"/>
+                            <b groups="base.group_portal">
+                                <span>Retail in <span t-field="product.currency_id.name"/>:</span>
+                                <t t-if="product.retail_in_currency != 0">
+                                    <span t-esc="'{:,.0f}'.format(product.retail_in_currency)"/>
+                                </t>
+                                <t t-if="product.retail_in_currency == 0">
+                                    <span>N/A</span>
+                                </t>
+                                <br/>
+                                <t t-if="product.special_offer != 0">
+                                    <span style="color: red; font-weight:bold;">Special Offer: </span>
+                                    <span t-esc="'{:,.0f}'.format(product.special_offer)" style="white-space: nowrap; color: red; font-weight:bold;"/>
+                                    <span style="color: red; font-weight:bold;" t-field="product.currency_id.name"/>
+                                </t>
                             </b>
                         </h5>
                     </section>
@@ -118,10 +134,10 @@
                             <div class="col-sm-4">
                                 <ol class="breadcrumb">
                                     <li>
-                                        <a t-att-href="keep('/%s' % supplier_url, category=0)" onclick="history.go(-1); return false;">Products</a>
+                                        <a t-att-href="keep('/shop/%s' % supplier_url, category=0)" onclick="history.go(-1); return false;">Products</a>
                                     </li>
                                     <li t-if="category">
-                                        <a t-att-href="keep('/%s' % supplier_url + '/category/%s' % slug(category), category=0)" t-field="category.name"/>
+                                        <a t-att-href="keep('/shop/%s' % supplier_url + '/category/%s' % slug(category), category=0)" t-field="category.name"/>
                                     </li>
                                     <li class="active">
                                         <span t-field="product.name"/>
@@ -158,18 +174,34 @@
                                 <hr></hr>
                             </div>
                             <div class="col-sm-5 col-md-5 col-lg-4 col-lg-offset-1">
-                                <h1 itemprop="name" t-field="product.name">Product Name</h1>
+                                <h2 style="color: #105656;">
+                                    <span t-field="product.category_name"/>
+                                    <br/>
+                                    <span itemprop="name" t-field="product.name">Product Name</span>
+                                </h2>
                                 <span itemprop="url" style="display:none;" t-esc="'/supplier/product/%s' % slug(product)"/>
                                 <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" class="product_price mt16">
                                     <h4 class="oe_price_h4 css_editable_mode_hidden decimal_precision" t-att-data-precision="user_id.partner_id.property_product_pricelist.currency_id.rounding">
-                                        <b class="oe_price" style="white-space: nowrap;" t-field="product.retail_in_currency" t-field-options='{
-                                            "widget": "monetary",
-                                            "display_currency": "product.currency_id"
-                                        }'/>
+                                        <b groups="base.group_portal">
+                                            <span>Retail in 
+                                                <span t-field="product.currency_id.name"/>:</span>
+                                            <t t-if="product.retail_in_currency != 0">
+                                                <span t-esc="'{:,.0f}'.format(product.retail_in_currency)"/>
+                                            </t>
+                                            <t t-if="product.retail_in_currency == 0">
+                                                <span>N/A</span>
+                                            </t>
+                                            <br/>
+                                            <t t-if="product.special_offer != 0">
+                                                <span style="color: red; font-weight:bold;">Special Offer: </span>
+                                                <span t-esc="'{:,.0f}'.format(product.special_offer)" style="white-space: nowrap; color: red; font-weight:bold;"/>
+                                                <span style="color: red; font-weight:bold;" t-field="product.currency_id.name"/>
+                                            </t>
+                                        </b>
                                     </h4>
                                 </div>
                                 <hr/>
-                                <a t-att-href="keep('/%s' % supplier_url, category=0)" onclick="history.go(-1); return false;" class="btn btn-default mb32">Back to Shop</a>
+                                <a t-att-href="keep('/shop/%s' % supplier_url, category=0)" onclick="history.go(-1); return false;" class="btn btn-default mb32">Back to Shop</a>
                             </div>
                         </div>
                     </section>
@@ -178,7 +210,7 @@
         </template>
 
         <template id="website_sale.search" name="Search hidden fields">
-            <form t-if="not request.session.supplier_page" t-att-action="keep('/shop'+ ('/category/'+slug(category)) if category else '', search=0)" method="get" t-att-class="search_class">
+            <form t-if="not request.session.supplier" t-att-action="keep('/shop'+ ('/category/'+slug(category)) if category else '', search=0)" method="get" t-att-class="search_class">
 
                 <t t-if="attrib_values">
                     <t t-foreach="attrib_values" t-as="a">
@@ -195,8 +227,8 @@
                 </div>
 
             </form>
-            <t t-if="request.session.supplier_page">
-                <form t-att-action="keep('/%s' % supplier_url + ('/category/'+slug(category)) if category else '/%s' % supplier_url, search=0)" method="get" t-att-class="search_class">
+            <t t-if="request.session.supplier">
+                <form t-att-action="keep('/shop/%s' % supplier_url + ('/category/'+slug(category)) if category else '/shop/%s' % supplier_url, search=0)" method="get" t-att-class="search_class">
 
                     <t t-if="attrib_values">
                         <t t-foreach="attrib_values" t-as="a">
@@ -218,13 +250,23 @@
 
         <template id="categories_recursive" name="Category list">
             <li t-att-class="'active' if c.id == int(category or 0) else ''">
-                <a t-att-href="keep('/%s/category/' % supplier_url + slug(c), category=0)" t-field="c.name"></a>
+                <a t-att-href="keep('/shop/%s/category/' % supplier_url + slug(c), category=0)" t-field="c.name"></a>
                 <ul t-if="c.child_id" class="nav nav-pills nav-stacked nav-hierarchy">
                     <t t-foreach="c.child_id" t-as="c">
                         <t t-call="website_timecheck_supplier.categories_recursive"/>
                     </t>
                 </ul>
             </li>
+        </template>
+
+        <template id="layout_logo_show" inherit_id="website.layout_logo_show" name="Show Logo">
+            <xpath expr="//a[@class='navbar-brand logo']" position="replace">
+                <t t-if="not request.session.supplier">
+                    <a href="/" class="navbar-brand logo">
+                        <img src="/logo.png" t-att-alt="'Logo of %s' % res_company.name" t-att-title="res_company.name"/>
+                    </a>
+                </t>
+            </xpath>
         </template>
 
     </data>
