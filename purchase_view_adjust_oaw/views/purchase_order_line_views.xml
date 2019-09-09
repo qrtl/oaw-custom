@@ -11,7 +11,7 @@
                 <field name="mto" string="MTO"/>
                 <field name="vci" string="VCI"/>
             </xpath>
-            <xpath expr="//field[@name='product_id']" position="after">
+            <xpath expr="//field[@name='price_unit']" position="before">
                 <field name="lot_id"/>
                 <field name="move_state"/>
             </xpath>
