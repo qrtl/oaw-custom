@@ -19,7 +19,7 @@
         <field name="inherit_id" ref="sale_line_quant.view_stock_quant_tree_z6"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='lot_id']" position="replace"/>
-            <xpath expr="//field[@name='product_id']" position="after">
+            <xpath expr="//field[@name='qty']" position="before">
                 <field name="lot_id"/>
             </xpath>
             <xpath expr="//field[@name='reservation_id']" position="after">
