@@ -51,6 +51,11 @@ class StockQuant(models.Model):
         string='Reserved for Move',
         readonly=True,
     )
+    reservation_picking_id = fields.Many2one(
+        related='reservation_id.picking_id',
+        string='Reserved for Picking',
+        readonly=True,
+    )
     cost = fields.Float(
         related='lot_id.price_unit',
         string='Unit Cost',
