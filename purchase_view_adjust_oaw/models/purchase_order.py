@@ -8,6 +8,12 @@ from openerp import models, fields, api
 class PurchaseOrder(models.Model):
     _inherit = "purchase.order"
 
+    sale_order_customer_id = fields.Many2one(
+        'res.partner',
+        readonly=True,
+        string='Sales Order Customer',
+    )
+
     @api.multi
     def write(self, vals):
         res = super(PurchaseOrder, self).write(vals)

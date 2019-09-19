@@ -8,6 +8,12 @@ from openerp import models, fields
 class PurchaseOrderLine(models.Model):
     _inherit = "purchase.order.line"
 
+    sale_order_customer_id = fields.Many2one(
+        related='order_id.sale_order_customer_id',
+        readonly=True,
+        string='Sales Order Customer',
+    )
+
     image_small = fields.Binary(
         'Image',
         related='product_id.product_tmpl_id.image_small',

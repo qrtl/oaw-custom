@@ -2,6 +2,7 @@
 <openerp>
 <data>
 
+
     <record id="purchase_order_line_tree_z160422" model="ir.ui.view">
         <field name="name">purchase.order.line.tree.z160422</field>
         <field name="model">purchase.order.line</field>
@@ -13,6 +14,7 @@
             </xpath>
             <xpath expr="//field[@name='price_unit']" position="before">
                 <field name="lot_id"/>
+                <field name="sale_order_customer_id"/>
                 <field name="move_state"/>
             </xpath>
         </field>
