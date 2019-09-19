@@ -66,9 +66,13 @@ class StockMoveLine(models.Model):
     @api.model
     def create(self, vals):
         res = super(StockMoveLine, self).create(vals)
-        if res.quant_id and res.move_id:
+        if res.quant_id and res.move_id and picking_type_id.code == 'outgoing':
             res.quant_id.sudo().update({
                 'reservation_id': res.move_id.id
+            })
+        else:
+            res.quant_id.sudo().update({
+                'reservation_id': False
             })
         return res
 
