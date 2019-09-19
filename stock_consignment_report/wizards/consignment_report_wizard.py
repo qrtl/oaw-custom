@@ -1,15 +1,14 @@
-# -*- coding: utf-8 -*-
-# Copyright 2016 Rooms For (Hong Kong) Limited T/A OSCG
+# Copyright 2019 Quartile Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from openerp import api, models, fields
+from odoo import api, models, fields
 
 
-class ConsignmentReportWizard(models.TransientModel):
-    _name = "consignment.report.wizard"
-    _description = 'Consignment Report Wizard'
+class StockConsignmentReportWizard(models.TransientModel):
+    _name = "stock.consignment.report.wizard"
+    _description = 'Stock Consignment Report Wizard'
 
     partner_id = fields.Many2one(
         comodel_name='res.partner',

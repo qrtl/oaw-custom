@@ -1,28 +1,17 @@
-# -*- coding: utf-8 -*-
-# Copyright 2018 Quartile Limited
+# Copyright 2019 Quartile Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from openerp import api, models, fields, _
-from openerp.addons.abstract_report_xlsx.reports import stock_abstract_report_xlsx
-from openerp.report import report_sxw
-from openerp import SUPERUSER_ID
+from odoo import models, fields, api, _
+from odoo.addons.abstract_report_xlsx.reports import stock_abstract_report_xlsx
+from odoo.report import report_sxw
 
 
-class ConsignmentReport(models.TransientModel):
-    """ Here, we just define class fields.
-    For methods, go more bottom at this file.
-
-    The class hierarchy is :
-    * ConsignmentReport
-    ** ConsignmentReportSection
-    *** ConsignmentReportQuant
-    """
-
-    _name = 'consignment_report'
+class StockConsignmentReport(models.TransientModel):
+    _name = 'stock.consignment.report'
 
     # Filters fields, used for data computation
     filter_partner_id = fields.Many2one(comodel_name='res.partner')
-    threshold_date= fields.Date()
+    threshold_date = fields.Date()
     current_date = fields.Date(
         default=fields.Date.context_today
     )

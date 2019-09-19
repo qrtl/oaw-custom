@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data>
+<odoo>
 
     <record id="action_consignment_report_xlsx" model="ir.actions.report.xml">
       <field name="name">Consignment Report</field>
@@ -11,5 +10,4 @@
       <field name="auto" eval="False"/>
     </record>
 
-</data>
-</openerp>
+</odoo>
