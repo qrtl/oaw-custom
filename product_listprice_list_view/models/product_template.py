@@ -1,17 +1,11 @@
-
-# Copyright 2019 chrono123 & Quartile
+# Copyright 2019 chrono123 & Quartile Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
-
 from odoo import models, fields, api
-import odoo.addons.decimal_precision as dp
-
-
 
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
     additional_info = fields.Char(
-
         String= 'Additional Info'
     )
 
@@ -30,14 +24,11 @@ class ProductTemplate(models.Model):
         store=True,
         compute="update_list_price_change_date"
     )
-
     # Trigger: stock_quant.create(), supplier_stock.create()
     new_entry_date = fields.Datetime(
         string="New Entry",
         store=True,
     )
-
-
     # Resetting Offer Checked Button
     partner_offer_checked = fields.Boolean(
         string='Offer Checked',
@@ -47,13 +38,11 @@ class ProductTemplate(models.Model):
     qty_up = fields.Boolean(
         string='Partner Quantity increased',
         store=True
-
     )
     qty_down = fields.Boolean(
         string='Partner Quantity decreased',
         store=True
     )
-
     costprice_up = fields.Boolean(
         string='Partner Sale Price inc.',
         readonly=True,
@@ -68,7 +57,6 @@ class ProductTemplate(models.Model):
         string='Partner Note updated',
         store=True
     )
-
     # For a filter in Product and Product Offer
     # Trigger: product_template.write(),
     # Trigger: product_product.price_up_date
@@ -108,4 +96,4 @@ class ProductTemplate(models.Model):
             elif 'qty_local_stock' in vals:
                 if vals['qty_local_stock'] - pt.qty_reserved == 0:
                     vals['partner_offer_checked'] = False
-        return super().write(vals)
+        return super(ProductTemplate, self).write(vals)

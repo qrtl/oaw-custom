@@ -1,15 +1,9 @@
-
-# -*- coding: utf-8 -*-
-# Copyright 2017 Quartile Limted
+# Copyright 2019 chrono123 & Quartile Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
-
-from openerp import models, fields, api
-
-
+from odoo import models, fields, api
 
 class ProductProduct(models.Model):
     _inherit = "product.product"
-
 
     @api.onchange('partner_offer_checked')
     def _onchange_partner_offer_checked(self):
