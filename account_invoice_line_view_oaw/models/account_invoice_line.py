@@ -5,32 +5,33 @@
 from openerp import models, fields, api, _
 from datetime import datetime
 import openerp.addons.decimal_precision as dp
- 
+
 
 class InvoiceLine(models.Model):
     _inherit = 'account.invoice.line'
 
     @api.model
     def _get_org_vals(self, inv_ln):
-        so_id, po_id = 0, 0
+        so_id, po_id, so_remark = 0, 0, 0
         SO = self.env['sale.order']
         PO = self.env['purchase.order']
         if inv_ln.invoice_id.origin:
             if inv_ln.invoice_id.type == 'out_invoice' and \
-                SO.search([('name','=',inv_ln.invoice_id.origin)]):
+                    SO.search([('name', '=', inv_ln.invoice_id.origin)]):
                 so_id = \
-                    SO.search([('name','=',inv_ln.invoice_id.origin)])[0].id
+                    SO.search([('name', '=', inv_ln.invoice_id.origin)])[0].id
+                so_remark = SO.search([('name', '=', inv_ln.invoice_id.origin)])[0].client_order_ref
             if inv_ln.invoice_id.type == 'in_invoice' and \
-                PO.search([('name','=',inv_ln.invoice_id.origin)]):
+                    PO.search([('name', '=', inv_ln.invoice_id.origin)]):
                 po_id = \
-                    PO.search([('name','=',inv_ln.invoice_id.origin)])[0].id
-        return so_id, po_id
-         
+                    PO.search([('name', '=', inv_ln.invoice_id.origin)])[0].id
+        return so_id, po_id, so_remark
+
     @api.multi
-    @api.depends('invoice_id.state','invoice_id.origin')
+    @api.depends('invoice_id.state', 'invoice_id.origin')
     def _get_vals(self):
         for inv_ln in self:
-            inv_ln.so_id, inv_ln.po_id = self._get_org_vals(inv_ln)
+            inv_ln.so_id, inv_ln.po_id, inv_ln.so_remark = self._get_org_vals(inv_ln)
 
     @api.multi
     def _get_base_amt(self):
@@ -43,14 +44,20 @@ class InvoiceLine(models.Model):
                 rate = 1.0
             else:
                 invoice_date = Invoice.browse([inv_ln.invoice_id.id])[0].date_invoice \
-                    or inv_ln.env.context.get('date', datetime.today().strftime('%Y-%m-%d'))
+                               or inv_ln.env.context.get('date', datetime.today().strftime('%Y-%m-%d'))
                 rate = Rate.search([
                     ('currency_id', '=', inv_ln.currency_id.id),
                     ('name', '<=', invoice_date),
-                    ], order='name desc', limit=1).rate or 1.0
+                ], order='name desc', limit=1).rate or 1.0
             inv_ln.rate = rate
             inv_ln.base_amt = curr_amt / rate
 
+    so_remark = fields.Char(
+        compute='_get_vals',
+        store=True,
+        readonly=True,
+        string='SO Remark'
+    )
 
     user_id = fields.Many2one(
         'res.users',
@@ -144,7 +151,7 @@ class InvoiceLine(models.Model):
     )
     payment_reference = fields.Char(
         'Payment Reference',
-        related = 'invoice_id.payment_ref',
+        related='invoice_id.payment_ref',
         store=True,
         readonly=True,
     )

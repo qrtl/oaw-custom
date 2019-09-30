@@ -22,6 +22,7 @@
                     <field name="name" invisible="1"/>
                     <field name="reference" invisible="1"/>
                     <field name="so_id"/>
+                    <field name="so_remark"/>
                     <field name="po_id"/>
                     <field name="date_invoice"/>
                     <field name="period_id" invisible='1'/>
