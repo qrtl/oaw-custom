@@ -20,6 +20,12 @@
                             <field name="contact_description"/>
                         </div>
                     </div>
+                    <label for="empty_page_message"/>
+                    <div name="empty_page_message">
+                        <div class="oe_inline">
+                            <field name="empty_page_message" widget='html'/>
+                        </div>
+                    </div>
                 </xpath>
 
             </field>

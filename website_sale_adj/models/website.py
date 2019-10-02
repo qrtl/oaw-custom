@@ -14,3 +14,6 @@ class Website(models.Model):
     contact_description = fields.Text(
         string='Contact Information',
     )
+    empty_page_message = fields.Text(
+        string='Empty Shop Display Message',
+    )

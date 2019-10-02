@@ -16,3 +16,7 @@ class WebsiteConfigSettings(models.Model):
         related='website_id.contact_description',
         string='Contact Information',
     )
+    empty_page_message = fields.Text(
+        related='website_id.empty_page_message',
+        string='Empty Shop Display Message',
+    )

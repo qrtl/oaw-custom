@@ -100,5 +100,11 @@
             </xpath>
         </template>
 
+        <template id="products" inherit_id="website_sale.products" name="Products">
+            <xpath expr="//t[@t-if='not bins']" position="inside">
+                <div class="alert alert-info" style="text-align: center;" t-raw="website.empty_page_message"/>
+            </xpath>
+        </template>
+
     </data>
 </openerp>
