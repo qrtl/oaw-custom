@@ -1,20 +1,20 @@
 # Copyright 2019 chrono123 & Quartile Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+
 from odoo import models, fields, api
+
 
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
     additional_info = fields.Char(
-        String= 'Additional Info'
+        string='Additional Info'
     )
-
     # For a filter in Product and Product Offer views.
     # Trigger: VCI Receipt (stock.quant (stock_move.purchase_price_unit)),
     # Supplier Stock Creation/Modification (supplier_stock.price_unit)
     currency_price_change_date = fields.Datetime(
         string="Currency Amount Price Change Date",
-        store=True,
     )
     # For Filter Retail Changed 24H
     # Effective in Product and Product Offer
@@ -27,49 +27,40 @@ class ProductTemplate(models.Model):
     # Trigger: stock_quant.create(), supplier_stock.create()
     new_entry_date = fields.Datetime(
         string="New Entry",
-        store=True,
     )
     # Resetting Offer Checked Button
     partner_offer_checked = fields.Boolean(
         string='Offer Checked',
         default=False,
-        store=True
     )
     qty_up = fields.Boolean(
         string='Partner Quantity increased',
-        store=True
     )
     qty_down = fields.Boolean(
         string='Partner Quantity decreased',
-        store=True
     )
     costprice_up = fields.Boolean(
         string='Partner Sale Price inc.',
         readonly=True,
-        store=True
     )
     costprice_down = fields.Boolean(
         string='Partner Sale Price dec.',
         readonly=True,
-        store=True
     )
     note_updated = fields.Boolean(
         string='Partner Note updated',
-        store=True
     )
     # For a filter in Product and Product Offer
     # Trigger: product_template.write(),
     # Trigger: product_product.price_up_date
     price_up_date = fields.Datetime(
         string="Sale HKD Price Up Date",
-        store=True,
     )
     # For a filter in Product and Product Offer
     # Trigger: product_template.write(),
     # Trigger: product_product.price_up_date
     price_down_date = fields.Datetime(
         string="Sale HKD Price Down Date",
-        store=True,
     )
 
     @api.multi
