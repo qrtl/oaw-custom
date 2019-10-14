@@ -31,15 +31,19 @@ class SupplierStock(models.Model):
     )
     order_price_unit = fields.Float(
         related='order_line_id.price_unit',
-        string='Sales Retail',
+        string='Quotation Retail',
+        store=True,
+        readonly=False,
+    )
+    order_discount = fields.Float(
+        related='order_line_id.discount',
+        string='Quotation Discount',
+        store=True,
+        readonly=False,
     )
     order_line_product_uom_qty = fields.Float(
         related='order_line_id.product_uom_qty',
         string='Qty',
-    )
-    order_price_base_unit = fields.Float(
-        compute='_compute_order_price_base_unit',
-        string='Sales HKD Retail',
     )
     order_line_margin = fields.Float(
         compute='_compute_order_line_margin',
@@ -47,16 +51,20 @@ class SupplierStock(models.Model):
     )
 
     @api.multi
-    def _compute_order_price_base_unit(self):
-        company_curr = self.env.user.company_id.currency_id                
-        for supplier_stock in self:
-            if supplier_stock.order_price_base_unit and supplier_stock.pricelist_id:
-                supplier_stock.order_price_base_unit = supplier_stock.pricelist_id.currency_id.compute(
-                    supplier_stock.order_price_base_unit, company_curr)
-
-    @api.multi
     def _compute_order_line_margin(self):
         for supplier_stock in self:
             if supplier_stock.order_line_id:
                 supplier_stock.order_line_margin = supplier_stock.order_line_id.price_subtotal - \
                     supplier_stock.order_line_id.purchase_price
+
+    @api.multi
+    def write(self, vals):
+        res = super(SupplierStock, self).write(vals)
+        if 'order_price_unit' in vals or 'order_discount' in vals:
+            for supplier_stock in self:
+                if supplier_stock.order_line_id:
+                    supplier_stock.order_line_id.sudo().write({
+                        'price_unit': vals['order_price_unit'] if 'order_price_unit' in vals else supplier_stock.order_line_id.price_unit,
+                        'discount': vals['order_discount'] if 'order_discount' in vals else supplier_stock.order_line_id.discount,
+                    })
+        return res
