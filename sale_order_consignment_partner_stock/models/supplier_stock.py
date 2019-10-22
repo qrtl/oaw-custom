@@ -35,12 +35,6 @@ class SupplierStock(models.Model):
         store=True,
         readonly=False,
     )
-    order_discount = fields.Float(
-        related='order_line_id.discount',
-        string='Quotation Discount',
-        store=True,
-        readonly=False,
-    )
     order_line_product_uom_qty = fields.Float(
         related='order_line_id.product_uom_qty',
         string='Qty',
@@ -60,11 +54,10 @@ class SupplierStock(models.Model):
     @api.multi
     def write(self, vals):
         res = super(SupplierStock, self).write(vals)
-        if 'order_price_unit' in vals or 'order_discount' in vals:
+        if 'order_price_unit' in vals:
             for supplier_stock in self:
                 if supplier_stock.order_line_id:
                     supplier_stock.order_line_id.sudo().write({
                         'price_unit': vals['order_price_unit'] if 'order_price_unit' in vals else supplier_stock.order_line_id.price_unit,
-                        'discount': vals['order_discount'] if 'order_discount' in vals else supplier_stock.order_line_id.discount,
                     })
         return res
