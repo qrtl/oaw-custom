@@ -26,11 +26,8 @@
                     <field name="order_partner_id"/>
                     <field name="pricelist_id"/>
                     <field name="order_line_product_uom_qty"/>
-                    <field name="retail_in_currency"/>
                     <field name="order_price_unit" readonly="0"/>
-                    <field name="order_discount" readonly="0"/>
                     <field name="partner_id" readonly="1"/>
-                    <field name="currency_id"/>
                     <field name="product_list_price"/>
                     <field name="price_unit_base"/>
                     <field name="order_line_margin"/>
