@@ -30,7 +30,7 @@
                     <field name="partner_id" readonly="1"/>
                     <field name="product_list_price"/>
                     <field name="price_unit_base"/>
-                    <field name="order_line_margin"/>
+                    <field name="order_line_margin" widget="integer"/>
                     <field name="partner_note"/>
                     <field name="last_update_date"/>
                     <field name="last_update_user_id"/>
