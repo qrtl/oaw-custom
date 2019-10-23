@@ -73,6 +73,6 @@ class StockQuant(models.Model):
             name += ': %s %s' % (
                 str(quant.quantity),
                 quant.product_id.uom_id.name
-            ) 
+            )
             res += [(quant.id, name)]
         return res

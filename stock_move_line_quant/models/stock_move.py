@@ -44,5 +44,7 @@ class StockMove(models.Model):
                     'qty_done': 1.0,
                 }
                 self.env['stock.move.line'].create(values)
-                move.quant_id.reserved_quantity += 1
+                move.quant_id.sudo().update({
+                    'reserved_quantity': 1
+                })
         return res

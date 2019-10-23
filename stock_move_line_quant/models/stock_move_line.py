@@ -46,6 +46,7 @@ class StockMoveLine(models.Model):
     def _onchange_quant_id(self):
         if self.quant_id:
             self.lot_id = self.quant_id.lot_id
+            self.owner_id = self.quant_id.owner_id
 
     @api.multi
     @api.depends('purchase_price_unit', 'currency_id', 'exchange_rate')

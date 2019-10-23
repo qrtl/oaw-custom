@@ -9,6 +9,6 @@ class StockQuant(models.Model):
 
     repair = fields.Boolean(
         string='Repair',
-        related='location_id.repair_location',
+        related='location_id.return_location',
         store=True,
     )
