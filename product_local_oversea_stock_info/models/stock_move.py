@@ -15,7 +15,7 @@ class StockMove(models.Model):
             ('state', '=', 'assigned'),
         ])
         for m in moves:
-            if not m.location_dest_id.is_repair_location:
+            if not m.location_dest_id.return_location:
                 res += m.product_uom_qty
         return res
 
