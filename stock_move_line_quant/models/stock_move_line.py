@@ -59,7 +59,8 @@ class StockMoveLine(models.Model):
     def _action_done(self):
         res = super(StockMoveLine, self)._action_done()
         for move_line in self:
-            if move_line.lot_id:
+            if move_line.lot_id and move_line.move_id.picking_type_id.code == \
+                    'incoming' and not move_line.move_id.location_id.is_repair_location:
                 move_line.lot_id.sudo().update({
                     'currency_id': move_line.currency_id.id,
                     'purchase_price_unit': move_line.purchase_price_unit,
