@@ -2,6 +2,7 @@
 # Copyright 2019 Quartile Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
+from openerp import SUPERUSER_ID
 from openerp import models, fields, api
 
 
@@ -60,4 +61,6 @@ class SupplierStock(models.Model):
                     supplier_stock.order_line_id.sudo().write({
                         'price_unit': vals['order_price_unit'] if 'order_price_unit' in vals else supplier_stock.order_line_id.price_unit,
                     })
+                    self.pool.get('sale.order')._store_set_values(
+                        self.env.cr, SUPERUSER_ID, [supplier_stock.order_id.id], ['margin'], self.env.context)
         return res
