@@ -45,6 +45,9 @@
                         <field name="other_inquiry"/>
                     </group>
                 </field>
+                <xpath expr="//div[@class='oe_chatter']" position="attributes">
+                    <attribute name="groups">stock.group_stock_manager</attribute>
+                </xpath>
             </field>
         </record>
 
