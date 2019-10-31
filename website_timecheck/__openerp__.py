@@ -24,6 +24,7 @@
         'reports/sale_order_reports.xml',
         'security/timecheck_security.xml',
         'security/website_sale_security.xml',
+        'views/account_invoice_views.xml',
         'views/product_product_views.xml',
         'views/sale_order_views.xml',
         'views/templates.xml',
