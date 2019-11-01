@@ -12,6 +12,8 @@
             <xpath expr="//tree/field[@name='product_qty']" position="before">
                 <field name="image_small" widget="image"/>
             </xpath>
+            <xpath expr="//button[@name='action_rfq_send']" position="replace"/>
+            <xpath expr="//button[@name='print_quotation']" position="replace"/>
         </field>
     </record>
 
