@@ -1,20 +1,19 @@
 # Copyright 2019 Quartile Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 {
-    'name': 'Split Sales Order Lines',
-    'category': 'Sale',
+    'name': 'Split Purchase Order Lines',
+    'category': 'Purchase',
+    'summary': """""",
     'version': '12.0.1.0.0',
     'author': 'Quartile Limited',
     'website': 'https://www.quartile.co',
     'depends': [
-        'sale_view_adjust_oaw',
+        'purchase_view_adjust_oaw',
     ],
-    'summary': "",
     'description': """
-Provide a button to split the sale order lines into qty 1.
+Adds a button in RFQ to split order lines so that each line has 1 for quantity.
     """,
     'data': [
-        'views/sale_order_views.xml',
+        'views/purchase_order_views.xml',
     ],
-    'installable': True,
 }
