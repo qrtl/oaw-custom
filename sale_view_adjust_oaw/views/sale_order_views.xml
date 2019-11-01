@@ -28,15 +28,26 @@
         </field>
     </record>
 
-    <record id="view_sales_order_filter" model="ir.ui.view">
-        <field name="name">sale.order.list.select</field>
+    <record id="sale_order_view_search_inherit_quotation" model="ir.ui.view">
+        <field name="name">sale.order.search.inherit.quotation</field>
         <field name="model">sale.order</field>
-        <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+        <field name="inherit_id" ref="sale.sale_order_view_search_inherit_quotation"/>
         <field name="arch" type="xml">
+            <xpath expr="//filter[@name='sales']" position="after">
+                <filter string="Not Cancelled" name="not_cancelled" domain="[('state','!=','cancel')]" help="Sales orders that haven't been cancelled"/>
+            </xpath>
             <xpath expr="//field[@name='name']" position="after">
                 <field name="pricelist_id"/>
             </xpath>
         </field>
+    </record>
+
+    <record id="sale.action_quotations_with_onboarding" model="ir.actions.act_window">
+        <field name="context">{'search_default_my_quotation': 1, 'search_default_not_cancelled': 1}</field>
+    </record>
+
+    <record id="sale.action_quotations" model="ir.actions.act_window">
+        <field name="context">{'search_default_my_quotation': 1, 'search_default_not_cancelled': 1}</field>
     </record>
 
 </odoo>
