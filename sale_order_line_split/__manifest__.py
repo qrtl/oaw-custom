@@ -7,10 +7,10 @@
     'author': 'Quartile Limited',
     'website': 'https://www.quartile.co',
     'depends': [
-        'sale',
+        'sale_view_adjust_oaw',
     ],
     'summary': "",
-    'description': """ 
+    'description': """
 Provide a button to split the sale order lines into qty 1.
     """,
     'data': [
