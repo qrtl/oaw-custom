@@ -34,7 +34,7 @@ class SaleOrderLine(models.Model):
                 'prod_cat_selection': order_line.product_id.categ_id.id,
                 'quantity': order_line.product_uom_qty,
                 'price_unit': order_line.purchase_price,
-                'retail_in_currency': order_line.price_unit,
+                'retail_in_currency': 0,
                 'currency_id': order_line.order_id.pricelist_id.currency_id.id,
                 'order_line_id': order_line.id,
             }
