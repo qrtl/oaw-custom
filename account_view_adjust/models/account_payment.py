@@ -1,4 +1,4 @@
-# Copyright 2019 Quartile Limted, Timeware Limited
+# Copyright 2019 Quartile Limited, Timeware Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from odoo import models, fields, api
@@ -30,9 +30,7 @@ class AccountPayment(models.Model):
     @api.multi
     def _get_sale_order_ref(self):
         for payment in self:
-            sale_order_ids = payment.mapped('reconciled_invoice_ids').mapped('invoice_line_ids').mapped('sale_line_ids').mapped('order_id')
-            if len(sale_order_ids) == 1:
-                payment.sale_order_ids = sale_order_ids
+            payment.sale_order_ids = payment.mapped('reconciled_invoice_ids').mapped('invoice_line_ids').mapped('sale_line_ids').mapped('order_id')
 
     @api.multi
     def open_payment(self):
