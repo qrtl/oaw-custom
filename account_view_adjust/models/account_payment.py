@@ -37,14 +37,13 @@ class AccountPayment(models.Model):
     @api.multi
     def open_payment(self):
         view_id = self.env.ref('account.view_account_payment_form').id
-        id = self.id
         return {
             'name': 'Customer Payments',
             'view_mode': 'form',
             'view_type': 'form',
             'res_model': 'account.payment',
             'view_id': view_id,
-            'res_id': id,
+            'res_id': self.id,
             'target': 'current',
             'type': 'ir.actions.act_window',
         }
