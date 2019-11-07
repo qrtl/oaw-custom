@@ -35,7 +35,7 @@ class AccountPayment(models.Model):
                 payment.sale_order_ids = sale_order_ids
 
     @api.multi
-    def action_orders_2(self):
+    def open_payment(self):
         view_id = self.env.ref('account.view_account_payment_form').id
         id = self.id
         return {
