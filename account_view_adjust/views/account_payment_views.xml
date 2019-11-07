@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="view_customer_payments_tree" model="ir.ui.view">
-        <field name="name">view.customer.payments.tree</field>
+    <record id="view_account_payment_tree" model="ir.ui.view">
+        <field name="name">view.customer.payment.tree</field>
         <field name="model">account.payment</field>
         <field name="inherit_id" ref="account.view_account_payment_tree"/>
         <field name="arch" type="xml">
@@ -17,8 +17,8 @@
         </field>
     </record>
 
-    <record id="view_account_payment_invoice_form_e1" model="ir.ui.view">
-        <field name="name">view.account.payment.invoice.form.e1</field>
+    <record id="view_account_payment_invoice_form" model="ir.ui.view">
+        <field name="name">view.account.payment.invoice.form</field>
         <field name="model">account.payment</field>
         <field name="inherit_id" ref="account.view_account_payment_invoice_form"/>
         <field name="arch" type="xml">
@@ -28,8 +28,8 @@
         </field>
     </record>
 
-    <record id="view_customer_payments_search" model="ir.ui.view">
-        <field name="name">view.customer.payments.search</field>
+    <record id="view_account_payment_search" model="ir.ui.view">
+        <field name="name">view.customer.payment.search</field>
         <field name="model">account.payment</field>
         <field name="inherit_id" ref="account.view_account_payment_search"/>
         <field name="arch" type="xml">
