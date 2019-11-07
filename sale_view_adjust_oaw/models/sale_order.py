@@ -7,6 +7,18 @@ from odoo import models, fields, api
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
+    sub_consigned = fields.Boolean(
+        'Sub Consigned',
+    )
+    # For communication with warehouse group
+    prepare = fields.Boolean(
+        'To Be Checked'
+    )
+    # Field for communication with Delivery Group
+    open_issue = fields.Boolean(
+        'Open Issue'
+    )
+
     @api.multi
     def write(self, vals):
         res = super(SaleOrder, self).write(vals)

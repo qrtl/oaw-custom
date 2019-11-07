@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
     <record id="view_order_form" model="ir.ui.view">
         <field name="name">view.order.form</field>
         <field name="model">sale.order</field>
@@ -14,6 +13,39 @@
                 <field name="note_client_name"/>
                 <field name="note_client_price"/>
             </xpath>
+             <xpath expr="//field[@name='is_mto']" position="after">
+                <field name="sub_consigned"/>
+                <field name="prepare"/>
+                <field name="open_issue"/>
+            </xpath>
+            <xpath expr="//field[@name='payment_term_id']" position="after">
+                <field name="client_order_ref" string="Remark"/>
+                <field name="invoice_status"/>
+                <field name="origin"/>
+            </xpath>
+            <xpath expr="//field[@name='payment_term_id']" position="attributes">
+                <attribute name='invisible'>1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='note']" position="attributes">
+                <attribute name="placeholder">Internal Notes</attribute>
+            </xpath>
+        </field>
+    </record>
+
+     <record id="view_quot_tree" model="ir.ui.view">
+        <field name="name">sale.order.tree</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_quotation_tree_with_onboarding"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="is_mto"/>
+                <field name="sub_consigned"/>
+                <field name="prepare"/>
+                <field name="client_order_ref" string="Remark"/>
+            </xpath>
+            <xpath expr="//field[@name='expected_date']" position="after">
+                <field name="pricelist_id"/>
+            </xpath>
         </field>
     </record>
 
@@ -22,6 +54,10 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_tree"/>
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="open_issue"/>
+                <field name="client_order_ref" string="Remark"/>
+            </xpath>
             <xpath expr="//field[@name='expected_date']" position="after">
                 <field name="pricelist_id"/>
             </xpath>
@@ -35,6 +71,7 @@
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='sales']" position="after">
                 <filter string="Not Cancelled" name="not_cancelled" domain="[('state','!=','cancel')]" help="Sales orders that haven't been cancelled"/>
+                <filter name="sub_consigned" string="Sub Consigned" domain="[('sub_consigned','=',True)]"/>
             </xpath>
             <xpath expr="//field[@name='name']" position="after">
                 <field name="pricelist_id"/>
@@ -43,11 +80,10 @@
     </record>
 
     <record id="sale.action_quotations_with_onboarding" model="ir.actions.act_window">
-        <field name="context">{'search_default_my_quotation': 1, 'search_default_not_cancelled': 1}</field>
+        <field name="context">{'search_default_not_cancelled': 1}</field>
     </record>
 
     <record id="sale.action_quotations" model="ir.actions.act_window">
-        <field name="context">{'search_default_my_quotation': 1, 'search_default_not_cancelled': 1}</field>
+        <field name="context">{'search_default_not_cancelled': 1}</field>
     </record>
-
 </odoo>
