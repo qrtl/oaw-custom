@@ -7,11 +7,12 @@
     'version': '12.0.1.0.0',
     'website': 'https://www.ehanse.de',
     'category': 'Accounting',
-    'depends': ["sale",
-                "account",
-                ],
+    'depends': [
+        "sale",
+        "account",
+    ],
     'description': """
-* UI improvements in accounting
+- Adjust account payment views.
     """,
     'data': [
         'views/account_payment_views.xml',
