@@ -1,4 +1,4 @@
-# Copyright 2019 Quartile Limted
+# Copyright 2019 Quartile Limted, Timeware Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 {
     'name': 'Stock View Adjust',
@@ -17,5 +17,6 @@
     'data': [
         'data/ir_actions.xml',
         'views/stock_move_views.xml',
+        'views/stock_quant.xml',
     ],
 }
