@@ -5,6 +5,8 @@ __pycache__/
 
 # C extensions
 *.so
+# licensed modules
+falcon_material_backend_theme/
 
 # Distribution / packaging
 .Python
