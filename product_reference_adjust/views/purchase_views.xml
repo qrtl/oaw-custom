@@ -1,18 +1,4 @@
 <odoo>
-    <!--       &lt;!&ndash;Replaces description field in On Purchase Order Line tree view&ndash;&gt;-->
-    <!--        <record id="opol_tree_description_adj" model="ir.ui.view">-->
-    <!--            <field name="name">opol.tree.sup.ref</field>-->
-    <!--            <field name="model">purchase.order.line</field>-->
-    <!--            <field name="inherit_id" ref="purchase.purchase_order_line_tree"/>-->
-    <!--            <field name="arch" type="xml">-->
-    <!--                <xpath expr="//field[@name='name']" position="attributes">-->
-    <!--                     <attribute name="invisible">1</attribute>-->
-    <!--                </xpath>-->
-    <!--                <xpath expr="//field[@name='product_id']" position="after">-->
-    <!--                            <field name="new_description" String="New Description"></field>-->
-    <!--                </xpath>-->
-    <!--            </field>-->
-    <!--        </record>-->
     <record id="purchase_order_form" model="ir.ui.view">
         <field name="name">purchase.order.form</field>
         <field name="model">purchase.order</field>
@@ -31,16 +17,3 @@
         </field>
     </record>
 </odoo>
-
-
-
-
-
-
-
-
-
-
-
-
-

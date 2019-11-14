@@ -1,4 +1,4 @@
-# Copyright 2019 Quartile Limited
+# Copyright 2019 Timeware Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 {
     'name': "Product representation by name and code",
@@ -28,7 +28,6 @@
             "views/account_invoice_line_view.xml",
             "views/stock_move_views.xml",
             "views/stock_quant.xml",
-            #  "views/stock_transfer_details.xml",
              ],
     'installable': True,
 }

@@ -1,5 +1,4 @@
 <odoo>
-    <!--Replaces description field in stock move ext tree view-->
     <record id="view_move_tree_extended" model="ir.ui.view">
         <field name="name">stock.move.tree.ext</field>
         <field name="model">stock.move</field>
@@ -41,5 +40,4 @@
             </xpath>
         </field>
     </record>
-
 </odoo>
