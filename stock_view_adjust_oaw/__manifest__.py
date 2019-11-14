@@ -17,6 +17,6 @@
     'data': [
         'data/ir_actions.xml',
         'views/stock_move_views.xml',
-        'views/stock_quant.xml',
+        'views/stock_quant_views.xml',
     ],
 }

@@ -12,7 +12,6 @@ class StockQuant(models.Model):
         string='Remark Of SO',
         compute='_get_ref',
         store=True
-
     )
     quant_note = fields.Text(
         'Note'
@@ -23,5 +22,4 @@ class StockQuant(models.Model):
     def _get_ref(self):
         for q in self:
             if q.sale_order_id:
-                print(self.sale_order_id)
                 q.client_order_ref = q.sale_order_id.client_order_ref
