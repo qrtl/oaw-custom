@@ -3,7 +3,7 @@
 {
     'name': "Product representation by name and code",
     'summary': """
-          Redefines product representation in various views 
+        Redefines product representation in various views 
     """,
     'description': """
       Field adjusted
@@ -17,17 +17,17 @@
         in 'Profit & Loss Report' behind Reference field \n
     """,
     'author': 'Timeware Limited',
-    'category': 'Uncategorized',
+    'category': 'Products',
     'version': '12.0.1.0.0',
     'depends': [
-                'account_invoice_line_view_oaw',
-                'stock_view_adjust_oaw'
-                ],
+        'account_invoice_line_view_oaw',
+        'stock_view_adjust_oaw',
+    ],
     'data': [
-            "views/purchase_views.xml",
-            "views/account_invoice_line_view.xml",
-            "views/stock_move_views.xml",
-            "views/stock_quant.xml",
-             ],
+        "views/purchase_views.xml",
+        "views/account_invoice_line_view.xml",
+        "views/stock_move_views.xml",
+        "views/stock_quant.xml",
+    ],
     'installable': True,
 }
