@@ -1,4 +1,4 @@
-# Copyright 2019 Quartile Limted, Timeware Limited
+# Copyright 2019 Quartile Limited, Timeware Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from odoo import models, fields, api
@@ -9,11 +9,11 @@ class StockMove(models.Model):
 
     prod_ref = fields.Char(
         related='product_id.product_tmpl_id.name',
-        string="Product Reference",
-        store=True
+        string='Product Reference',
+        store=True,
     )
     prod_code = fields.Char(
         related='product_id.product_tmpl_id.default_code',
-        string="Code",
-        store=True
+        string='Code',
+        store=True,
     )
