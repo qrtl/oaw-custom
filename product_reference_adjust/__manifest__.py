@@ -3,7 +3,7 @@
 {
     'name': "Product representation by name and code",
     'summary': """
-        Redefines product representation in various views 
+        Redefines product representation in various views.
     """,
     'description': """
       Field adjusted
@@ -21,13 +21,16 @@
     'version': '12.0.1.0.0',
     'depends': [
         'account_invoice_line_view_oaw',
+        'purchase',
         'stock_view_adjust_oaw',
     ],
     'data': [
-        "views/purchase_views.xml",
-        "views/account_invoice_line_view.xml",
+        "views/account_invoice_line_views.xml",
+        "views/account_invoice_views.xml",
+        "views/purchase_order_views.xml",
         "views/stock_move_views.xml",
-        "views/stock_quant.xml",
+        "views/stock_picking_views.xml",
+        "views/stock_quant_views.xml",
     ],
     'installable': True,
 }
