@@ -14,6 +14,30 @@
                             <field name="about_us"/>
                         </div>
                     </div>
+                    <label for="whatsapp_link"/>
+                    <div name="whatsapp_link">
+                        <div class="oe_inline">
+                            <field name="whatsapp_link"/>
+                        </div>
+                    </div>
+                    <label for="whatsapp_qr_image"/>
+                    <div name="whatsapp_qr_image">
+                        <div class="oe_inline">
+                            <field name="whatsapp_qr_image" widget="image"/>
+                        </div>
+                    </div>
+                    <label for="wechat_link"/>
+                    <div name="wechat_link">
+                        <div class="oe_inline">
+                            <field name="wechat_link"/>
+                        </div>
+                    </div>
+                    <label for="wechat_qr_image"/>
+                    <div name="wechat_qr_image">
+                        <div class="oe_inline">
+                            <field name="wechat_qr_image" widget="image"/>
+                        </div>
+                    </div>
                     <label for="contact_description"/>
                     <div name="contact_description">
                         <div class="oe_inline">
