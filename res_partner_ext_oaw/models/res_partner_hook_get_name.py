@@ -19,8 +19,7 @@ def _get_name(self):
             name = dict(self.fields_get(["type"])["type"]["selection"])[partner.type]
         if not partner.is_company:
             name = "{}, {}".format(
-                partner.commercial_company_name or partner.parent_id.name,
-                name,
+                partner.commercial_company_name or partner.parent_id.name, name
             )
     if self._context.get("show_address_only"):
         name = partner._display_address(without_company=True)
