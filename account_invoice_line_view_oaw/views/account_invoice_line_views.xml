@@ -80,4 +80,5 @@
     </record>
 
     <menuitem id="invoice_lines" name="Invoice Lines" parent="menu_finance_invoices" action="action_invoice_line" sequence="10"/>
+
 </odoo>
