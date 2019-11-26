@@ -260,12 +260,35 @@
             </li>
         </template>
 
-        <template id="layout_logo_show" inherit_id="website.layout_logo_show" name="Show Logo">
+        <template id="website_sale_adj.layout_logo_show" inherit_id="website.layout_logo_show" name="Show Logo">
             <xpath expr="//a[@class='navbar-brand logo']" position="replace">
                 <t t-if="not request.session.supplier">
-                    <a href="/" class="navbar-brand logo">
-                        <img src="/logo.png" t-att-alt="'Logo of %s' % res_company.name" t-att-title="res_company.name"/>
+                    <a href="/" class="navbar-brand logo visible-xs-inline" style="padding: 0 5px;">
+                        <img style="max-height: 80px;" src="/logo.png" t-att-alt="'Logo of %s' % res_company.name" t-att-title="res_company.name"/>
                     </a>
+                    <t t-if="website.whatsapp_link and website.whatsapp_qr_image">
+                        <a t-att-href="website.whatsapp_link" class="navbar-brand logo visible-xs-inline" style="padding: 0 5px;">
+                            <img style="height: 80px; width: 80px; max-height: 80px;" t-att-src="website.image_url(website, 'whatsapp_qr_image', '100x100')"/>
+                        </a>
+                    </t>
+                    <t t-if="website.wechat_link and website.wechat_qr_image">
+                        <a t-att-href="website.wechat_link" class="navbar-brand logo visible-xs-inline" style="padding: 0 5px;">
+                            <img style="height: 80px; width: 80px; max-height: 80px;" t-att-src="website.image_url(website, 'wechat_qr_image', '100x100')"/>
+                        </a>
+                    </t>
+                    <a href="/" class="navbar-brand logo hidden-xs" style="padding: 0 15px;">
+                        <img style="max-height: 80px;" src="/logo.png" t-att-alt="'Logo of %s' % res_company.name" t-att-title="res_company.name"/>
+                    </a>
+                    <t t-if="website.whatsapp_link and website.whatsapp_qr_image">
+                        <a t-att-href="website.whatsapp_link" class="navbar-brand logo hidden-xs" style="padding: 0 15px;">
+                            <img style="height: 80px; width: 80px; max-height: 80px;" t-att-src="website.image_url(website, 'whatsapp_qr_image', '100x100')"/>
+                        </a>
+                    </t>
+                    <t t-if="website.wechat_link and website.wechat_qr_image">
+                        <a t-att-href="website.wechat_link" class="navbar-brand logo hidden-xs" style="padding: 0 15px;">
+                            <img style="height: 80px; width: 80px; max-height: 80px;" t-att-src="website.image_url(website, 'wechat_qr_image', '100x100')"/>
+                        </a>
+                    </t>
                 </t>
             </xpath>
         </template>
