@@ -11,7 +11,7 @@
 	        </xpath>
 	    </field>
 	</record>
-	
+
 	<record model="ir.ui.view" id="invoice_form">
 	    <field name="name">account.invoice.form</field>
 	    <field name="model">account.invoice</field>
@@ -22,7 +22,7 @@
 	        </xpath>
 	    </field>
 	</record>
-	
+
 	<record model="ir.ui.view" id="view_account_invoice_filter">
         <field name="name">account.invoice.search.inherit</field>
         <field name="model">account.invoice</field>
@@ -33,5 +33,5 @@
         	</field>
        	</field>
     </record>
-    
+
 </odoo>

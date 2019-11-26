@@ -1,17 +1,14 @@
 # Copyright 2019 Quartile Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from odoo import models, fields, api
+from odoo import api, fields, models
 
 
 class StockQuant(models.Model):
     _inherit = "stock.quant"
 
     usage = fields.Selection(
-        related='location_id.usage',
-        string='Location Type',
-        readonly=True,
-        store=True,
+        related="location_id.usage", string="Location Type", readonly=True, store=True
     )
 
     @api.model
@@ -29,10 +26,9 @@ class StockQuant(models.Model):
         for prod_tmpl in prod_tmpls:
             rsvd_qty = 0.0
             for prod in prod_tmpl.product_variant_ids:
-                quants = self.search([
-                    ('product_id', '=', prod.id),
-                    ('usage', '=', 'internal')
-                ])
+                quants = self.search(
+                    [("product_id", "=", prod.id), ("usage", "=", "internal")]
+                )
                 for q in quants:
                     rsvd_qty += q.reserved_quantity
             if prod_tmpl.qty_reserved != int(rsvd_qty):
@@ -43,7 +39,7 @@ class StockQuant(models.Model):
     def write(self, vals):
         res = super(StockQuant, self).write(vals)
         self._update_prod_tmpl_reserved_qty()
-        if 'location_id' in vals or 'product_id' in vals or 'usage' in vals:
+        if "location_id" in vals or "product_id" in vals or "usage" in vals:
             for sq in self:
                 sq.product_id.product_tmpl_id.sudo()._get_stock_location()
         return res
@@ -52,7 +48,7 @@ class StockQuant(models.Model):
     def create(self, vals):
         res = super(StockQuant, self).create(vals)
         self._update_product_last_in_date()
-        if 'location_id' in vals or 'product_id' in vals or 'usage' in vals:
+        if "location_id" in vals or "product_id" in vals or "usage" in vals:
             res.product_id.product_tmpl_id.sudo()._get_stock_location()
         return res
 

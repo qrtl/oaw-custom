@@ -1,7 +1,7 @@
 # Copyright 2019 Quartile Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import models, fields, api
+from odoo import api, fields, models
 
 
 class SaleOrder(models.Model):
@@ -9,7 +9,7 @@ class SaleOrder(models.Model):
 
     @api.multi
     def unlink(self):
-        quant_ids = self.env['stock.quant'].browse()
+        quant_ids = self.env["stock.quant"].browse()
         for order in self:
             for line in order.order_line:
                 if line.quant_id:

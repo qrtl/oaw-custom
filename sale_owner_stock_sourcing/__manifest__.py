@@ -5,20 +5,15 @@
     "name": "Sale Owner Stock Sourcing",
     "summary": "Manage stock ownership on sale order lines",
     "version": "12.0.1.0.0",
-    "author": 'Camptocamp,'
-              'Quartile Limited,'
-              'Odoo Community Association (OCA),',
+    "author": "Camptocamp," "Quartile Limited," "Odoo Community Association (OCA),",
     "license": "AGPL-3",
     "category": "Purchase Management",
     "website": "http://www.camptocamp.com",
-    "depends": [
-        'sale_stock',
-        'stock_ownership_availability_rules',
-    ],
+    "depends": ["sale_stock", "stock_ownership_availability_rules"],
     "data": [
-        'security/sale_owner_stock_sourcing_security.xml',
-        'views/sale_order_views.xml',
+        "security/sale_owner_stock_sourcing_security.xml",
+        "views/sale_order_views.xml",
     ],
-    'installable': True,
+    "installable": True,
     "auto_install": False,
 }

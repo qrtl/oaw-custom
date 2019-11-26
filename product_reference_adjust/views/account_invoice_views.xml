@@ -18,7 +18,7 @@
             </xpath>
         </field>
     </record>
-    
+
     <record id="invoice_supplier_form" model="ir.ui.view">
         <field name="name">invoice.supplier.form</field>
         <field name="model">account.invoice</field>
@@ -36,5 +36,5 @@
             </xpath>
         </field>
     </record>
-    
+
 </odoo>

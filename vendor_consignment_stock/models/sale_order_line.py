@@ -6,7 +6,7 @@ from odoo import models
 
 
 class SaleOrderLine(models.Model):
-    _inherit = 'sale.order.line'
+    _inherit = "sale.order.line"
 
     def _prepare_procurement_values(self, group_id=False):
         """ Prepare specific key for moves or other components that will be created from a stock rule
@@ -17,10 +17,9 @@ class SaleOrderLine(models.Model):
         self.ensure_one()
         if self.stock_owner_id and self.stock_owner_id != self.order_id.partner_id:
             routes = (
-                self.route_id |
-                self.env.ref('stock.route_warehouse0_mto') |
-                self.env.ref(
-                    'vendor_consignment_stock.route_warehouse0_buy_vci')
+                self.route_id
+                | self.env.ref("stock.route_warehouse0_mto")
+                | self.env.ref("vendor_consignment_stock.route_warehouse0_buy_vci")
             )
-            values['route_ids'] = routes
+            values["route_ids"] = routes
         return values
