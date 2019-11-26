@@ -10,6 +10,14 @@
     "description": """
 * Adds a menu item 'Product List Price Update' to facilitate list price update
     """,
+<<<<<<< Updated upstream
     "data": ["views/product_product_views.xml"],
     "installable": True,
+=======
+    'data': [
+        'views/product_product_views.xml',
+        'views/supplier_stock_views.xml',
+    ],
+    'installable': True,
+>>>>>>> Stashed changes
 }
