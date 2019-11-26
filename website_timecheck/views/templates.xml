@@ -150,7 +150,7 @@
         <template id="website_sale.product" name="Product">
             <t t-call="website.layout">
                 <t t-set="additional_title" t-value="product.name"/>
-                <div itemscope="itemscope" itemtype="http://schema.org/Product" id="wrap" class="js_sale">
+                <div itemscope="itemscope" itemtype="http://schema.org/Product" id="wrap" class="js_sale" style="margin-top: 120px;">
                     <section
                             t-attf-class="container mt8 oe_website_sale #{(compute_currency(product.lst_price) - product.price) &gt; 0.1 and 'discount'}"
                             id="product_detail">
@@ -330,6 +330,12 @@
         </template>
 
         <template id="cart" name="Shopping Cart" inherit_id="website_sale.cart">
+            <xpath expr="//div[@class='row']" position="attributes">
+                <attribute name="style">padding: 10px;</attribute>
+            </xpath>
+            <xpath expr="//div[@class='container oe_website_sale']" position="attributes">
+                <attribute name="style">margin-top: 120px;</attribute>
+            </xpath>
             <xpath expr="//th[@t-att-data-precision='website_sale_order.pricelist_id.currency_id.rounding']" position="attributes">
                 <attribute name="t-if">not website_sale_order.is_mto</attribute>
             </xpath>
@@ -348,7 +354,6 @@
                 <span t-field="line.product_id.image_medium"
                       t-field-options='{"widget": "image", "class": "img-rounded", "style": "width: auto;"}'/>
             </xpath>
-
             <xpath expr="//table[@id='cart_products']" position="after">
                 <form action="/cart/update_payment_delivery_info" method="post" t-if="website_sale_order">
                     <div class="row">
@@ -402,7 +407,7 @@
             <t t-call="website.layout">
                 <t t-set="additional_title">Order - Submitted</t>
                 <div id="wrap">
-                    <div class="container oe_website_sale">
+                    <div class="container oe_website_sale" style="margin-top: 120px;">
                         <h1 class="mb32">Order
                             <em t-field="order.name"/>
                             Submitted
@@ -428,7 +433,7 @@
                 <t t-set="additional_title">Shop</t>
                 <div id="wrap" class="js_sale">
                     <div class="oe_structure"/>
-                    <div class="container oe_website_sale">
+                    <div class="container oe_website_sale" style="margin-top: 100px;">
                         <div class="products_pager">
                             <div class="row" style="width: 100%;">
                                 <t t-call="website_sale.search">
