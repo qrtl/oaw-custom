@@ -1,7 +1,7 @@
 # Copyright 2019 Quartile Limted
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from odoo import models, fields, api
+from odoo import api, fields, models
 
 
 class StockPicking(models.Model):
@@ -22,8 +22,7 @@ class StockPicking(models.Model):
         return res
 
     def _update_move_line_sequence(self):
-        move_lines = sorted(self.move_lines, key=lambda r: (
-            r.line_sequence, r.id))
+        move_lines = sorted(self.move_lines, key=lambda r: (r.line_sequence, r.id))
         sequence = 1
         for move_line in move_lines:
             move_line.line_sequence = sequence

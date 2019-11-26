@@ -1,7 +1,7 @@
 # Copyright 2019 Quartile Limted
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from odoo import models, fields, api
+from odoo import api, fields, models
 
 
 class PurchaseOrder(models.Model):
@@ -22,8 +22,7 @@ class PurchaseOrder(models.Model):
         return res
 
     def _update_order_line_sequence(self):
-        order_lines = sorted(self.order_line, key=lambda r: (
-            r.line_sequence, r.id))
+        order_lines = sorted(self.order_line, key=lambda r: (r.line_sequence, r.id))
         sequence = 1
         for order_line in order_lines:
             order_line.line_sequence = sequence

@@ -6,13 +6,13 @@ from odoo import models
 
 
 class ProductTemplate(models.Model):
-    _inherit = 'product.template'
+    _inherit = "product.template"
 
     def action_open_quants(self):
         result = super(Product, self).action_open_quants()
-        result['context'] = {
-            'search_default_locationgroup': 1,
-            'search_default_ownergroup': 1,
-            'search_default_internal_loc': 1
+        result["context"] = {
+            "search_default_locationgroup": 1,
+            "search_default_ownergroup": 1,
+            "search_default_internal_loc": 1,
         }
         return result

@@ -15,7 +15,7 @@
             </xpath>
         </field>
     </record>
-    
+
     <record id="stock_move_search" model="ir.ui.view">
         <field name="name">stock.move.search</field>
         <field name="model">stock.move</field>

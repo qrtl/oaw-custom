@@ -15,7 +15,7 @@
             </xpath>
         </field>
     </record>
-    
+
     <record id="quant_search_view" model="ir.ui.view">
         <field name="name">quant.search.view</field>
         <field name="model">stock.quant</field>
@@ -27,5 +27,5 @@
             </xpath>
         </field>
     </record>
-    
+
 </odoo>

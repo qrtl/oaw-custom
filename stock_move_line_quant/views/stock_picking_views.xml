@@ -16,7 +16,7 @@
                 <field name="picking_id" invisible="1"/>
                 <field name="package_level_id" invisible="1"/>
                 <field name="quant_id" attrs="{'column_invisible': [('parent.show_lots_text', '=', True)], 'invisible': [('lots_visible', '=', False)]}"
-                       domain="[('product_id', '=', product_id)]" groups="stock.group_production_lot" context="{'default_product_id': product_id, 'active_picking_id': picking_id}"/>   
+                       domain="[('product_id', '=', product_id)]" groups="stock.group_production_lot" context="{'default_product_id': product_id, 'active_picking_id': picking_id}"/>
             </xpath>
             <xpath expr="//field[@name='move_line_ids_without_package']//field[@name='lot_name']" position="after">
                 <field name="purchase_price_unit" attrs="{'readonly': [('state', '=', 'done')], 'invisible': [('lots_visible', '=', False)]}"/>

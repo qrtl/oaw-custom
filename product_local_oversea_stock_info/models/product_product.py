@@ -1,7 +1,7 @@
 # Copyright 2019 Quartile Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from odoo import models, fields, api
+from odoo import api, fields, models
 
 
 class ProductProduct(models.Model):
@@ -16,15 +16,19 @@ class ProductProduct(models.Model):
             local_qty = 0.0
             ovrs_qty = 0.0
             for prod in prod_tmpl.product_variant_ids:
-                records = self.env['supplier.stock'].sudo().search([
-                    ('product_id', '=', prod.id)
-                ])
+                records = (
+                    self.env["supplier.stock"]
+                    .sudo()
+                    .search([("product_id", "=", prod.id)])
+                )
                 for r in records:
                     if r.hk_location:
                         local_qty += r.quantity
                     else:
                         ovrs_qty += r.quantity
-            prod_tmpl.sudo().write({
-                'qty_local_stock': int(local_qty) + prod_tmpl.qty_available,
-                'qty_overseas': int(ovrs_qty)
-            })
+            prod_tmpl.sudo().write(
+                {
+                    "qty_local_stock": int(local_qty) + prod_tmpl.qty_available,
+                    "qty_overseas": int(ovrs_qty),
+                }
+            )
