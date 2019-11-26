@@ -7,7 +7,7 @@
                 <t t-set="additional_title">Shop</t>
                 <div id="wrap" class="js_sale">
                     <div class="oe_structure"/>
-                    <div class="container oe_website_sale">
+                    <div class="container oe_website_sale"  style="margin-top: 100px;">
                         <div class="products_pager">
                             <div class="row" style="width: 100%;">
                                 <t t-call="website_sale.search">
@@ -83,7 +83,7 @@
 
         <template id="products_item" name="Product item">
             <form action="/shop/cart/update" method="post">
-                <div itemscope="itemscope" itemtype="http://schema.org/Product">
+                <div itemscope="itemscope" itemtype="http://schema.org/Product" style="margin-top: 120px;">
                     <div class="ribbon-wrapper">
                         <div class="ribbon btn btn-danger">Sale</div>
                     </div>
@@ -129,7 +129,7 @@
         <template id="product" name="Product">
             <t t-call="website.layout">
                 <t t-set="additional_title" t-value="product.name"/>
-                <div itemscope="itemscope" itemtype="http://schema.org/Product" id="wrap" class="js_sale">
+                <div itemscope="itemscope" itemtype="http://schema.org/Product" id="wrap" class="js_sale" style="margin-top: 120px;">
                     <section t-attf-class="container mt8 oe_website_sale" id="product_detail">
                         <div class="row">
                             <div class="col-sm-4">

@@ -20,3 +20,19 @@ class WebsiteConfigSettings(models.Model):
         related='website_id.empty_page_message',
         string='Empty Shop Display Message',
     )
+    whatsapp_link = fields.Char(
+        related='website_id.whatsapp_link',
+        string='Whatsapp Link',
+    )
+    whatsapp_qr_image = fields.Binary(
+        related='website_id.whatsapp_qr_image',
+        string='Whatsapp QR Code',
+    )
+    wechat_link = fields.Char(
+        related='website_id.wechat_link',
+        string='Wechat Link',
+    )
+    wechat_qr_image = fields.Binary(
+        related='website_id.wechat_qr_image',
+        string='Wechat QR Code',
+    )
