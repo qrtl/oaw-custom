@@ -67,4 +67,3 @@ repos:
   hooks:
   - id: eslint
     verbose: true
-
