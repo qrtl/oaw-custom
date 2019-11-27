@@ -58,6 +58,7 @@
                                         <field name="qty_reserved"/>
                                         <field name="uom_id"/>
                                     </li>
+                                    <li t-if="record.overseas_stock.raw_value != 'No'"> Overseas Retail in <field name="curr_of_cheapest"/>: <field name="retail_of_cheapest"/></li>
                                     <li id="hk-retail1">HK Retail:
                                         <field name="list_price_integer"/>
                                     </li>
@@ -129,6 +130,7 @@
                                         <field name="qty_reserved"/>
                                         <field name="uom_id"/>
                                     </li>
+                                    <li t-if="record.overseas_stock.raw_value != 'No'"> 公價 <field name="curr_of_cheapest"/>: <field name="retail_of_cheapest"/></li>
                                     <li id="hk-retail1">港幣公價:
                                         <field name="list_price_integer"/>
                                     </li>
@@ -198,6 +200,7 @@
                                     <li t-if="record.type.raw_value != 'service'">Overseas Stock:
                                         <field name="overseas_stock"/>
                                     </li>
+                                    <li t-if="record.overseas_stock.raw_value != 'No'"> Overseas Retail in <field name="curr_of_cheapest"/>: <field name="retail_of_cheapest"/></li>
                                     <li id="hk-retail1">HK Retail:
                                         <field name="list_price_integer"/>
                                     </li>
@@ -315,6 +318,7 @@
                                     <li t-if="record.type.raw_value != 'service'">歐洲期貨:
                                         <field name="overseas_stock"/>
                                     </li>
+                                    <li t-if="record.overseas_stock.raw_value != 'No'"> 公價 <field name="curr_of_cheapest"/>: <field name="retail_of_cheapest"/></li>
                                     <li id="hk-retail1">港幣公價:
                                         <field name="list_price_integer"/>
                                     </li>
@@ -432,6 +436,7 @@
                                     <li t-if="record.type.raw_value != 'service'">Overseas Stock:
                                         <field name="overseas_stock"/>
                                     </li>
+                                    <li t-if="record.overseas_stock.raw_value != 'No'"> Overseas Retail in <field name="curr_of_cheapest"/>: <field name="retail_of_cheapest"/></li>
                                     <li id="hk-retail1">HK Retail:
                                         <field name="list_price_integer"/>
                                     </li>
@@ -511,6 +516,7 @@
                                     <li t-if="record.type.raw_value != 'service'">歐洲期貨:
                                         <field name="overseas_stock"/>
                                     </li>
+                                    <li t-if="record.overseas_stock.raw_value != 'No'"> 公價 <field name="curr_of_cheapest"/>: <field name="retail_of_cheapest"/></li>
                                     <li id="hk-retail1">港幣公價:
                                         <field name="list_price_integer"/>
                                     </li>
@@ -593,6 +599,7 @@
                                     <li t-if="record.type.raw_value != 'service'">Overseas Stock:
                                         <field name="overseas_stock"/>
                                     </li>
+                                    <li t-if="record.overseas_stock.raw_value != 'No'"> Overseas Retail in <field name="curr_of_cheapest"/>: <field name="retail_of_cheapest"/></li>
                                     <li id="hk-retail1">HK Retail:
                                         <field name="list_price_integer"/>
                                     </li>
@@ -676,6 +683,7 @@
                                     <li t-if="record.type.raw_value != 'service'">歐洲期貨:
                                         <field name="overseas_stock"/>
                                     </li>
+                                    <li t-if="record.overseas_stock.raw_value != 'No'"> 公價 <field name="curr_of_cheapest"/>: <field name="retail_of_cheapest"/></li>
                                     <li id="hk-retail1">港幣公價:
                                         <field name="list_price_integer"/>
                                     </li>
@@ -754,6 +762,7 @@
                                     <li>Brand:
                                         <field name="brand"/>
                                     </li>
+                                    <li t-if="record.overseas_stock.raw_value != 'No'"> Overseas Retail in <field name="curr_of_cheapest"/>: <field name="retail_of_cheapest"/></li>
                                     <li id="hk-retail1">HK Retail:
                                         <field name="list_price_integer"/>
                                     </li>
@@ -817,6 +826,7 @@
                                     <li>品牌:
                                         <field name="brand"/>
                                     </li>
+                                    <li t-if="record.overseas_stock.raw_value != 'No'"> 公價 <field name="curr_of_cheapest"/>: <field name="retail_of_cheapest"/></li>
                                     <li id="hk-retail1">港幣公價:
                                         <field name="list_price_integer"/>
                                     </li>
@@ -880,6 +890,4 @@
             </xpath>
         </field>
     </record>
-
-
 </odoo>
