@@ -11,8 +11,6 @@
     "description": """
 - Adjust account payment views.
     """,
-    "data": ["views/account_payment_views.xml",
-             "views/account_move_views.xml"
-             ],
+    "data": ["views/account_payment_views.xml", "views/account_move_views.xml"],
     "installable": True,
 }

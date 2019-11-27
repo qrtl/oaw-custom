@@ -40,9 +40,7 @@ class TestIntSaleToReservation(TransactionCase):
         picking.action_assign()
         self.assertEqual("assigned", picking.state)
 
-        quant_owners = {
-            move.reserved_quant_ids.owner_id for move in picking.move_lines
-        }
+        quant_owners = {move.reserved_quant_ids.owner_id for move in picking.move_lines}
 
         self.assertEqual({self.my_partner, self.owner1}, quant_owners)
 
