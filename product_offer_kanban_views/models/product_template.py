@@ -153,36 +153,61 @@ class ProductTemplate(models.Model):
 
     @api.multi
     def _get_sale_price_currency(self):
-        usd_rec = self.env["res.currency"].search([("name", "=", "USD")])[0]
-        eur_rec = self.env["res.currency"].search([("name", "=", "EUR")])[0]
-        chf_rec = self.env["res.currency"].search([("name", "=", "CHF")])[0]
-        rmb_rec = self.env["res.currency"].search([("name", "=", "CNY")])[0]
+        usd_rec = 0
+        eur_rec = 0
+        chf_rec = 0
+        rmb_rec = 0
+        if self.env["res.currency"].search([("name", "=", "USD")]):
+            usd_rec = self.env["res.currency"].search([("name", "=", "USD")])
+        if self.env["res.currency"].search([("name", "=", "EUR")]):
+            eur_rec = self.env["res.currency"].search([("name", "=", "EUR")])
+        if self.env["res.currency"].search([("name", "=", "CHF")]):
+            chf_rec = self.env["res.currency"].search([("name", "=", "CHF")])
+        if self.env["res.currency"].search([("name", "=", "CNY")]):
+            rmb_rec = self.env["res.currency"].search([("name", "=", "CNY")])
         if usd_rec and eur_rec and chf_rec and rmb_rec:
             for pt in self:
-                pt.sale_in_usd = pt.net_price * usd_rec.rate
-                pt.sale_in_eur = pt.net_price * eur_rec.rate
-                pt.sale_in_chf = pt.net_price * chf_rec.rate
-                pt.sale_in_rmb = pt.net_price * rmb_rec.rate
+                if usd_rec:
+                    pt.sale_in_usd = pt.net_price * usd_rec.rate
+                if eur_rec:
+                    pt.sale_in_eur = pt.net_price * eur_rec.rate
+                if chf_rec:
+                    pt.sale_in_chf = pt.net_price * chf_rec.rate
+                if rmb_rec:
+                    pt.sale_in_rmb = pt.net_price * rmb_rec.rate
 
     @api.multi
     @api.depends("discount_aa_so")
     def _get_sale_price_currency_discounted(self):
-        usd_rec = self.env["res.currency"].search([("name", "=", "USD")])[0]
-        eur_rec = self.env["res.currency"].search([("name", "=", "EUR")])[0]
-        chf_rec = self.env["res.currency"].search([("name", "=", "CHF")])[0]
-        rmb_rec = self.env["res.currency"].search([("name", "=", "CNY")])[0]
-        if usd_rec and eur_rec and chf_rec and rmb_rec:
-            for pt in self:
+        usd_rec = 0
+        eur_rec = 0
+        chf_rec = 0
+        rmb_rec = 0
+        if self.env["res.currency"].search([("name", "=", "USD")]):
+            usd_rec = self.env["res.currency"].search([("name", "=", "USD")])
+        if self.env["res.currency"].search([("name", "=", "USD")]):
+            eur_rec = self.env["res.currency"].search([("name", "=", "EUR")])
+        if self.env["res.currency"].search([("name", "=", "USD")]):
+            chf_rec = self.env["res.currency"].search([("name", "=", "CHF")])
+        if self.env["res.currency"].search([("name", "=", "USD")]):
+            rmb_rec = self.env["res.currency"].search([("name", "=", "CNY")])
+        for pt in self:
+            if usd_rec:
                 pt.sale_in_usd_so = pt.sale_hkd_aa_so * usd_rec.rate
+            if eur_rec:
                 pt.sale_in_eur_so = pt.sale_hkd_aa_so * eur_rec.rate
+            if chf_rec:
                 pt.sale_in_chf_so = pt.sale_hkd_aa_so * chf_rec.rate
+            if rmb_rec:
                 pt.sale_in_rmb_so = pt.sale_hkd_aa_so * rmb_rec.rate
 
     @api.multi
     def _get_net_price_cny(self):
-        cny_rec = self.env["res.currency"].search([("name", "=", "CNY")])[0]
-        if cny_rec:
-            for pt in self:
+        cny_rec = 0
+        if self.env["res.currency"].search([("name", "=", "CNY")]):
+            cny_rec = self.env["res.currency"].search([("name", "=", "CNY")])
+        for pt in self:
+            if cny_rec:
                 pt.net_price_cny = pt.net_price * cny_rec.rate
                 pt.sale_hkd_aa_so_cn = pt.sale_hkd_aa_so * cny_rec.rate
                 pt.sale_hkd_ac_cn = pt.sale_hkd_ac * cny_rec.rate
