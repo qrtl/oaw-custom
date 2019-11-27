@@ -9,16 +9,16 @@
             <xpath expr="//field[@name='categ_id']" position="after">
                     <separator/>
                     <filter name="list_price_change_date" string="Retail change 24h"
-                            domain="[('list_price_change_date','&gt;', (context_today() - datetime.timedelta(minutes=1)).strftime('%Y-%m-%d') )]"/>
+                            domain="[('list_price_change_date','&gt;', (context_today()+relativedelta(hours=-24)).strftime('%Y-%m-%d %H:%M:%S'))]"/>
                      <!-- For filter New Stock Entry 24-->
                     <filter name="new_entry_date" string="New Entry - Partner stock &amp; VCI"
-                            domain="[('new_entry_date','&gt;', (context_today() - datetime.timedelta(minutes=1)).strftime('%Y-%m-%d') )]"/>
+                            domain="[('new_entry_date','&gt;', (context_today()+relativedelta(hours=-24)).strftime('%Y-%m-%d %H:%M:%S'))]"/>
                     <!-- Overseas and VCI Currency Amount Price Change in 24h -->
                     <filter name="currency_price_change_date" string="Costprice in currency change 24h"
-                            domain="[('currency_price_change_date','&gt;', (context_today() - datetime.timedelta(minutes=1)).strftime('%Y-%m-%d' ))]"/>
-                    <filter name="sales_hkd_price_up" string="Sale Price UP" domain="[('price_up_date','&gt;=',(context_today()-datetime.timedelta(minutes=1)).strftime('%Y-%m-%d'))]"/>
+                            domain="[('currency_price_change_date','&gt;', (context_today()+relativedelta(hours=-24)).strftime('%Y-%m-%d %H:%M:%S'))]"/>
+                    <filter name="sales_hkd_price_up" string="Sale Price UP" domain="[('price_up_date','&gt;=',(context_today()+relativedelta(hours=-24)).strftime('%Y-%m-%d %H:%M:%S'))]"/>
                     <!-- For filter Sales HKD Price Down -->
-                    <filter name="sales_hkd_price_down" string="Sale Price DOWN" domain="[('price_down_date','&gt;=',(context_today()-datetime.timedelta(minutes=1)).strftime('%Y-%m-%d'))]"/>
+                    <filter name="sales_hkd_price_down" string="Sale Price DOWN" domain="[('price_down_date','&gt;=',(context_today()+relativedelta(hours=-24)).strftime('%Y-%m-%d %H:%M:%S'))]"/>
                     <!-- Overseas and VCI Currency Amount Price Change in 24h -->
                     <filter name="qty_up" string="Supplier Stock Up" domain="[('qty_up','=',True)]"/>
                     <filter name="qty_down" string="Supplier Stock Down" domain="[('qty_down','=',True)]"/>
