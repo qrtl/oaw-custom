@@ -108,13 +108,13 @@
 
         <template id="layout" inherit_id="website.layout">
             <xpath expr="//div[@class='navbar navbar-default navbar-static-top']" position="attributes">
-                <attribute name="style">position: fixed; width: -webkit-fill-available; min-height: 100px; z-index: 1500;</attribute>
+                <attribute name="style">position: fixed; width: -webkit-fill-available; min-height: 100px; z-index: 1000;</attribute>
             </xpath>
         </template>
 
         <template id="login_layout" inherit_id="website.login_layout">
             <xpath expr="//div[@class='oe_website_login_container']" position="attributes">
-                <attribute name="style">margin-top: 120px; padding: 10px; width: unset;</attribute>
+                <attribute name="style">margin-top: 120px; padding: 10px;</attribute>
             </xpath>
         </template>
 
