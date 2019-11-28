@@ -18,7 +18,7 @@
                         </div>
                         <div class='row'>
                             <div id="products_grid_before" class="col-md-3">
-                                <div class="navbar navbar-default navbar-static-top">
+                                <div class="navbar navbar-default navbar-static-top" style="z-index: 900;">
                                     <div class="navbar-header navbar_header">
                                         <button type="button" class="navbar-toggle pull-left navbar_toggle" data-toggle="collapse" data-target=".navbar-cate-collapse">
                                             <i class="fa fa-chevron-down" style="font-size: 18px !important"/>
