@@ -1,3 +1,4 @@
+from . import supplier_stock
 from . import account_invoice_line
 from . import purchase_order_line
 from . import stock_move
