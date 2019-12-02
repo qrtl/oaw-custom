@@ -19,7 +19,12 @@
     "author": "Timeware Limited",
     "category": "Products",
     "version": "12.0.1.0.0",
-    "depends": ["account_invoice_line_view_oaw", "purchase", "stock_view_adjust_oaw", "supplier_stock"],
+    "depends": [
+        "account_invoice_line_view_oaw",
+        "purchase",
+        "stock_view_adjust_oaw",
+        "supplier_stock",
+    ],
     "data": [
         "views/account_invoice_line_views.xml",
         "views/account_invoice_views.xml",

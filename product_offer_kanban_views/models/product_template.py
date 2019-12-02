@@ -151,9 +151,7 @@ class ProductTemplate(models.Model):
         digits=dp.get_precision("Product Price"),
     )
     partner_stock_last_modified = fields.Datetime(
-        string="Last Modified",
-        readonly=True,
-        store=True,
+        string="Last Modified", readonly=True, store=True
     )
 
     @api.multi
