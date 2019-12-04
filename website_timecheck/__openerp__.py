@@ -31,4 +31,7 @@
         'views/website_views.xml',
     ],
     'installable': True,
+    'qweb': [
+        'static/src/xml/base.xml',
+    ],
 }
