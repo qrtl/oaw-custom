@@ -51,7 +51,7 @@ class StockMoveLine(models.Model):
             if (
                 move_line.lot_id
                 and move_line.move_id.picking_type_id.code == "incoming"
-                and not move_line.move_id.location_id.is_repair_location
+                and not move_line.move_id.location_id.return_location
             ):
                 move_line.lot_id.sudo().update(
                     {

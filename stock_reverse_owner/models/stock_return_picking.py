@@ -26,14 +26,15 @@ class StockReturnPicking(models.TransientModel):
 
     @api.multi
     def _create_returns(self):
-        new_picking_id, pick_type_id = super(StockReturnPicking, self)._create_returns()
+        new_picking_id, pick_type_id = super(
+            StockReturnPicking, self)._create_returns()
         new_picking = self.env["stock.picking"].browse(new_picking_id)
         for rec in self:
-            picking.return_category = rec.return_category
+            new_picking.return_category = rec.return_category
             if rec.return_category == "repair":
-                picking.owner_id = new_picking.partner_id.id
+                new_picking.owner_id = new_picking.partner_id.id
             elif rec.return_category == "return_company":
-                picking.owner_id = new_picking.company_id.partner_id.id
+                new_picking.owner_id = new_picking.company_id.partner_id.id
             # elif rec.return_category == 'return_vci':
             #     picking.owner_id = rec.supplier_id.id
             else:
