@@ -1,19 +1,18 @@
-# -*- coding: utf-8 -*-
-# Copyright 2017 Quartile Limited
+# Copyright 2019 Quartile Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 {
     "name": "Stock VCI Revaluation",
-    "version": "8.0.1.1.0",
+    "version": "12.0.1.0.0",
     "category": "Stock",
-    "website": "https://www.odoo-asia.com/",
+    "website": "https://www.quartile.co",
     "author": "Quartile Limited",
     "license": "AGPL-3",
     "installable": True,
     "depends": [
-        "sale_line_quant_extended",
+        "sale_order_line_quant",
     ],
     "data": [
-        "wizards/stock_vci_revaluation_wizard_view.xml",
         "data/stock_vci_revaluation_data.xml",
+        "wizards/stock_vci_revaluation_wizard_views.xml",
     ],
 }
