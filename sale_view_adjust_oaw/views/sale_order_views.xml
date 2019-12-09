@@ -5,6 +5,23 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']//tree//control" position="replace">
+                <control>
+                    <create string="Add a product"/>
+                </control>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="replace">
+                <field name="partner_id" widget="res_partner_many2one" domain="[('customer','=',True)]"
+                       context="{'search_default_customer':1, 'show_address': 1, 'show_vat': True}"
+                       options='{"always_reload":True, "no_create_edit":True,"no_quick_create":True}'/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']//tree//field[@name='product_id']" position="replace">
+                <field name="product_id"
+                       context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}"
+                       attrs="{'readonly': [('product_updatable', '=', False)],'required': [('display_type', '=', False)],                                                }"
+                       options='{"no_create_edit":True,"no_quick_create":True}'
+                       force_save="1"/>
+            </xpath>
             <xpath expr="//field[@name='order_line']//tree//field[@name='product_id']" position="before">
                 <field name="line_sequence"/>
                 <field name="image_small" widget="image"/>
@@ -13,7 +30,7 @@
                 <field name="note_client_name"/>
                 <field name="note_client_price"/>
             </xpath>
-             <xpath expr="//field[@name='is_mto']" position="after">
+            <xpath expr="//field[@name='is_mto']" position="after">
                 <field name="sub_consigned"/>
                 <field name="prepare"/>
                 <field name="open_issue"/>
@@ -29,10 +46,17 @@
             <xpath expr="//field[@name='note']" position="attributes">
                 <attribute name="placeholder">Internal Notes</attribute>
             </xpath>
+            <xpath expr="//page[@name='other_information']" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
         </field>
     </record>
 
-     <record id="view_quotation_tree_with_onboarding_e1" model="ir.ui.view">
+    <record id="sale_management.sale_order_form_quote" model="ir.ui.view">
+        <field name="active">False</field>
+    </record>
+
+    <record id="view_quotation_tree_with_onboarding_e1" model="ir.ui.view">
         <field name="name">view.quotation.tree.with.onboarding.e1</field>
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_quotation_tree_with_onboarding"/>
@@ -45,6 +69,8 @@
             </xpath>
             <xpath expr="//field[@name='expected_date']" position="after">
                 <field name="pricelist_id"/>
+                <field name="invoice_status" states="sale,done" invisible="1"/>
+                <field groups="base.group_no_one" name="origin"/>
             </xpath>
         </field>
     </record>
@@ -70,7 +96,8 @@
         <field name="inherit_id" ref="sale.sale_order_view_search_inherit_quotation"/>
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='sales']" position="after">
-                <filter string="Not Cancelled" name="not_cancelled" domain="[('state','!=','cancel')]" help="Sales orders that haven't been cancelled"/>
+                <filter string="Not Cancelled" name="not_cancelled" domain="[('state','!=','cancel')]"
+                        help="Sales orders that haven't been cancelled"/>
                 <filter name="sub_consigned" string="Sub Consigned" domain="[('sub_consigned','=',True)]"/>
             </xpath>
             <xpath expr="//field[@name='name']" position="after">
