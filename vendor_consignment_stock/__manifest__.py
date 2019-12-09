@@ -12,6 +12,7 @@
         "stock_ownership_availability_rules",
         "sale_owner_stock_sourcing",
         "sale_stock",
+        "purchase_order_line_quant",
         "purchase_stock",
     ],
     "data": [
