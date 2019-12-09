@@ -14,6 +14,7 @@
         # 'web_tree_image',
         "sale_order_line_quant",
         "sale_margin",
+        'sale_management',
     ],
     "data": ["data/ir_actions.xml", "views/sale_order_views.xml"],
 }

@@ -39,7 +39,7 @@
                                 ('usage', '=', 'internal')]"
                        attrs="{'readonly': [('is_mto','=',True)], 'required': [('is_mto','!=',True)]}"/>
                 <field name="lot_id" invisible="1" attrs="{'readonly': [('is_mto','=',True)]}"/>
-                <field name="stock_owner_id" attrs="{'readonly': [('is_mto','=',True)]}"/>
+                <field name="stock_owner_id" attrs="{'readonly': [('is_mto','=',True)]}" options='{"no_create_edit":True,"no_quick_create":True}'/>
                 <field name="route_id" groups="sale_stock.group_route_so_lines"
                        attrs="{'readonly': [('quant_id','!=',False)]}" invisible="1"/>
                 <field name="is_mto" invisible="1"/>

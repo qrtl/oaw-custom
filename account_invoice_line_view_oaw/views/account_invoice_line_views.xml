@@ -32,7 +32,7 @@
                 <field name="quantity" readonly="1"/>
                 <field name="price_unit" readonly="1"/>
                 <field name="discount" readonly="1"/>
-                <field name="invoice_line_tax_id" readonly="1" invisible='1'/>
+                <field name="invoice_line_tax_ids" readonly="1" invisible='1'/>
                 <field name="price_subtotal" readonly="1"/>
                 <field name="currency_id"/>
                 <field name="rate"/>
