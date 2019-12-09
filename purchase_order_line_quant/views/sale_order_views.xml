@@ -8,6 +8,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='order_line']/tree/field[@name='note_client_price']" position="after">
                 <field name="purchase_order_id" string="Purchase Order"/>
+                <button name="action_view_purchase_open" type="object" icon="fa-sign-in" string="Open PO" attrs="{'invisible':[('purchase_order_id','=',False)]}"/>
             </xpath>
         </field>
     </record>
