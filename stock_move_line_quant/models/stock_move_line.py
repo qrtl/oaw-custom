@@ -67,7 +67,7 @@ class StockMoveLine(models.Model):
     def create(self, vals):
         if "picking_id" in vals:
             picking = self.env["stock.picking"].browse(vals["picking_id"])
-            if picking.owner_id:
+            if picking.owner_id and "owner_id" not in vals:
                 vals["owner_id"] = picking.owner_id.id
             if picking.purchase_currency_id:
                 vals["currency_id"] = picking.purchase_currency_id.id
