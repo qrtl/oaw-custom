@@ -9,8 +9,7 @@ class StockMove(models.Model):
 
     quant_id = fields.Many2one("stock.quant", string="Stock Quant")
     lot_id = fields.Many2one("stock.production.lot", string="Case No.")
-    quant_owner_id = fields.Many2one(
-        related="quant_id.owner_id", string="Quant Owner")
+    quant_owner_id = fields.Many2one(related="quant_id.owner_id", string="Quant Owner")
 
     def action_show_details(self):
         res = super(StockMove, self).action_show_details()
@@ -23,7 +22,6 @@ class StockMove(models.Model):
         res = super(StockMove, self)._action_confirm()
         for move in self:
             if move.quant_id and not move.move_line_ids:
-                print(move.quant_owner_id)
                 values = {
                     "move_id": move.id,
                     "picking_id": move.picking_id.id,
