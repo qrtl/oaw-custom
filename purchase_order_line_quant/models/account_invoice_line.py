@@ -4,8 +4,8 @@
 from odoo import api, fields, models
 
 
-class PurchaseOrderLine(models.Model):
-    _inherit = "purchase.order.line"
+class AccountInvoiceLine(models.Model):
+    _inherit = "account.invoice.line"
 
     quant_id = fields.Many2one("stock.quant", string="Stock Quant", copy=False)
     lot_id = fields.Many2one(related="quant_id.lot_id", string="Case No.")
