@@ -1,5 +1,5 @@
 # Add OCA module in the exclude param, extend it with "|$MODULE"
-exclude: "^setup/|/static/lib/|/static/src/lib/|account_financial_report/|base_technical_features/|date_range/|partner_statement/|report_xlsx/|stock_picking_show_return/|sec_disable_jsonrpc/|sec_disable_xmlrpc/"
+exclude: "^setup/|/static/lib/|/static/src/lib/|account_financial_report/|base_technical_features/|date_range/|partner_statement/|report_xlsx/|stock_picking_show_return/|sec_disable_jsonrpc/|sec_disable_xmlrpc/|web_listview_sticky_header/"
 default_language_version:
   python: python3
 repos:
