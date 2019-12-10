@@ -23,6 +23,7 @@ class StockMove(models.Model):
         res = super(StockMove, self)._action_confirm()
         for move in self:
             if move.quant_id and not move.move_line_ids:
+                print(move.quant_owner_id)
                 values = {
                     "move_id": move.id,
                     "picking_id": move.picking_id.id,
