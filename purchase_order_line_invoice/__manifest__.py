@@ -7,7 +7,7 @@
     "version": "12.0.1.0.0",
     "author": "Quartile Limited",
     "website": "https://www.quartile.co",
-    "depends": ["account", "purchase_view_adjust_oaw"],
+    "depends": ["account", "purchase_view_adjust_oaw", "purchase_order_line_quant"],
     "description": """
 Add a view for invoicable purchase order line to create invoice.
     """,

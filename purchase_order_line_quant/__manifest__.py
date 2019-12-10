@@ -13,5 +13,9 @@
 - Overwrite _run_buy logic to create purhcase order based on supplier and
 purchase currency.
     """,
-    "data": ["views/purchase_order_views.xml", "views/sale_order_views.xml"],
+    "data": [
+        "views/purchase_order_views.xml",
+        "views/sale_order_views.xml",
+        "views/account_invoice_views.xml",
+    ],
 }
