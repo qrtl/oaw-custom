@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
-# Copyright 2018 Quartile Limited
+# Copyright 2019 Quartile Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from openerp import models, fields, api
+from odoo import models, fields, api
 
 
 class SaleOrder(models.Model):
@@ -15,4 +14,5 @@ class SaleOrder(models.Model):
                 if order_line.purchase_order_id and \
                         order_line.purchase_order_id.is_vci and \
                         order_line.purchase_order_id.state == 'draft':
-                    order_line.purchase_order_id.signal_workflow('purchase_confirm')
+                    order_line.purchase_order_id.button_confirm()
+            order.picking_ids.mapped('move_lines')._recompute_state()
