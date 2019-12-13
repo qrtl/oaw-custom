@@ -1,19 +1,20 @@
 # Copyright 2019 Quartile Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from odoo import models, fields, api
+from odoo import api, fields, models
 
 
 class SaleOrder(models.Model):
-    _inherit = 'sale.order'
+    _inherit = "sale.order"
 
     @api.multi
     def write(self, vals):
         res = super(SaleOrder, self).write(vals)
         for order in self:
-            if order.sub_consigned and order.state not in 'cancel':
+            if order.sub_consigned and order.state not in "cancel":
                 order.order_line.filtered(
-                    lambda l: l.product_id.categ_id.enforce_qty_1).create_update_consignment_partner_stock()
+                    lambda l: l.product_id.categ_id.enforce_qty_1
+                ).create_update_consignment_partner_stock()
             else:
                 order.order_line.unlink_consignment_partner_stock()
         return res
@@ -24,5 +25,6 @@ class SaleOrder(models.Model):
         for order in res:
             if order.sub_consigned:
                 order.order_line.filtered(
-                    lambda l: l.product_id.categ_id.enforce_qty_1).create_update_consignment_partner_stock()
+                    lambda l: l.product_id.categ_id.enforce_qty_1
+                ).create_update_consignment_partner_stock()
         return res
