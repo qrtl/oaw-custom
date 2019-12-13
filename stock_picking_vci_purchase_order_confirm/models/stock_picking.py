@@ -5,11 +5,11 @@ from odoo import api, fields, models
 
 
 class StockPicking(models.Model):
-    _inherit = 'stock.picking'
+    _inherit = "stock.picking"
 
     @api.multi
     def action_assign(self):
         for picking in self:
-            if picking.sale_id and self.env.context.get('button_assign'):
+            if picking.sale_id and self.env.context.get("button_assign"):
                 picking.sale_id.confirm_vci_purhcase_order()
         return super(StockPicking, self).action_assign()
