@@ -13,7 +13,7 @@ class SaleOrder(models.Model):
         for order in self:
             if order.sub_consigned and order.state not in "cancel":
                 order.order_line.filtered(
-                    lambda l: l.product_id.categ_id.enforce_qty_1
+                    lambda l: l.product_id.tracking != "none"
                 ).create_update_consignment_partner_stock()
             else:
                 order.order_line.unlink_consignment_partner_stock()
@@ -25,6 +25,6 @@ class SaleOrder(models.Model):
         for order in res:
             if order.sub_consigned:
                 order.order_line.filtered(
-                    lambda l: l.product_id.categ_id.enforce_qty_1
+                    lambda l: l.product_id.tracking != "none"
                 ).create_update_consignment_partner_stock()
         return res
