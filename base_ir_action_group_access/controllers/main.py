@@ -23,7 +23,7 @@ class Action(Action):
             else:
                 action_access = True
         if not action_access:
-            raise Warning(_("Sorry, you are not allowed to access this " "document."))
+            raise Warning(_("Sorry, you are not allowed to access this document."))
         else:
             return super(Action, self).load(
                 action_id, additional_context=additional_context
