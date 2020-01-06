@@ -1,4 +1,4 @@
-# Copyright 2019 Quartile Limited
+# Copyright 2019-2020 Quartile Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import models, fields, api
@@ -8,15 +8,15 @@ class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     product_category_ids = fields.Many2many(
-        comodel_name='product.category',
+        'product.category',
         string='Accessible Product Category',
     )
     related_partner = fields.Many2one(
-        comodel_name='res.partner',
+        'res.partner',
         string='Related Partner',
     )
     product_all_category_ids = fields.Many2many(
-        comodel_name='product.category',
+        'product.category',
         compute='_compute_product_all_category_ids',
         readonly=True,
         store=True,
@@ -29,15 +29,6 @@ class ResPartner(models.Model):
                 'supplier_user_access.res_partner_supplier_fm_product_rule')
             ir_rule.clear_caches()
         return super(ResPartner, self).write(vals)
-
-    @api.model
-    def name_search(self, name='', args=None, operator='ilike', limit=100):
-        if self.env.user.has_group('supplier_user_access.group_supplier_fm')\
-                and self.env.context.get('partner_sudo_search', False):
-            return super(ResPartner, self).sudo().name_search(
-                name=name, args=args, operator=operator, limit=limit)
-        return super(ResPartner, self).name_search(
-            name=name, args=args, operator=operator, limit=limit)
 
     @api.multi
     @api.depends('product_category_ids')

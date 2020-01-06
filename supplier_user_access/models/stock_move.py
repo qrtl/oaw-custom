@@ -8,7 +8,7 @@ class StockMove(models.Model):
     _inherit = 'stock.move'
 
     quant_owner_related_user_id = fields.Many2one(
-        comodel_name="res.users",
+        "res.users",
         compute="get_quant_owner_related_user_id",
         store=True,
     )
@@ -37,5 +37,5 @@ class StockMove(models.Model):
                 move.supplier_pick_partner = move.picking_partner_id.sudo().name
             else:
                 move.supplier_pick_partner = \
-                    self.env['ir.config_parameter'].get_param(
-                        'default_supplier_pick_partner')
+                    self.env['ir.config_parameter'].sudo().get_param(
+                        'supplier_user_access.default_supplier_pick_partner')

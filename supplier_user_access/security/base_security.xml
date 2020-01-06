@@ -59,7 +59,6 @@
         <field name="perm_write" eval="False"/>
     </record>
 
-
     <record model="ir.rule" id="res_partner_supplier_sale_rule">
         <field name="name">sale_order: stock supplier: Access on own quotation; but no delete(no unlink)</field>
         <field name="model_id" ref="sale.model_sale_order"/>

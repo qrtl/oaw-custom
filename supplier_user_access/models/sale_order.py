@@ -2,7 +2,6 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import models, fields, api, _
-from odoo.exceptions import UserError
 
 
 class SaleOrder(models.Model):
@@ -18,15 +17,11 @@ class SaleOrder(models.Model):
         groups="sales_team.group_sale_manager",
     )
 
-    # def print_supplier_fm(self, cr, uid, ids, context=None):
-    #     '''
-    #     This function prints the the quotation  and mark it as sent, so that we can see more easily the next step of the workflow
-    #     '''
-    #     assert len(
-    #         ids) == 1, 'This option should only be used for a single id at a time'
-    #     self.signal_workflow(cr, uid, ids, 'quotation_sent')
-    #     return self.pool['report'].get_action(cr, uid, ids, 'model_security_adjust_oaw.report_sale_supplier_fm',
-    #                                           context=context)
+    @api.multi
+    def print_supplier_quotation(self):
+        self.filtered(lambda s: s.state == 'draft').write({'state': 'sent'})
+        return self.env.ref(
+            'supplier_user_access.report_sale_supplier_fm').report_action(self)
 
     @api.multi
     def write(self, vals):

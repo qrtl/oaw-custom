@@ -3,8 +3,7 @@
 
         <template id="assets_backend_chatter" name="supplier_user_access assets" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">
-                <link rel="stylesheet"
-                      href="/supplier_user_access/static/src/css/supplier_chatter_box.css"/>
+                <link rel="stylesheet" href="/supplier_user_access/static/src/css/supplier_chatter_box.css"/>
             </xpath>
         </template>
 
@@ -34,7 +33,7 @@
                            context="{'supplier_access_context':True}"/>
                     <field name="product_id" string="Reference"
                            options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"
-                           context="{'supplier_access_context':True, 'tree_view_ref':'model_security_adjust_oaw.view_supplier_access_search_more_tree'}"/>
+                           context="{'supplier_access_context':True, 'tree_view_ref':'supplier_user_access.view_supplier_access_search_more_tree'}"/>
                     <field name="internal_code"/>
                     <field name="image_small" string="Image" widget="image" height="64px"/>
                     <field name="quantity" string="Qty"/>
@@ -179,6 +178,7 @@
         <record id="view_supplier_access_tree_action"
                 model="ir.actions.act_window.view">
             <field name="view_mode">tree</field>
+            <field name="sequence">1</field>
             <field name="view_id" ref="view_supplier_access_tree"/>
             <field name="act_window_id" ref="view_supplier_access_action"/>
         </record>
@@ -186,6 +186,7 @@
         <record id="view_supplier_access_kanban_action"
                 model="ir.actions.act_window.view">
             <field name="view_mode">kanban</field>
+            <field name="sequence">2</field>
             <field name="view_id" ref="view_supplier_access_kanban"/>
             <field name="act_window_id" ref="view_supplier_access_action"/>
         </record>
@@ -193,6 +194,7 @@
         <record id="view_supplier_access_form_action"
                 model="ir.actions.act_window.view">
             <field name="view_mode">form</field>
+            <field name="sequence">3</field>
             <field name="view_id" ref="view_supplier_access_form"/>
             <field name="act_window_id" ref="view_supplier_access_action"/>
         </record>
@@ -201,20 +203,20 @@
         <menuitem
                 id="menu_base_products_supplier"
                 name="My Stock Offer"
-                groups="model_security_adjust_oaw.group_supplier"
+                groups="supplier_user_access.group_supplier"
                 sequence="15"/>
 
         <menuitem
                 id="menu_products_supplier"
                 name="Product Offer"
-                groups="model_security_adjust_oaw.group_supplier"
+                groups="supplier_user_access.group_supplier"
                 parent="menu_base_products_supplier"
                 sequence="15"/>
 
         <menuitem
                 id="products_supplier"
                 name="My Stock Offer"
-                groups="model_security_adjust_oaw.group_supplier"
+                groups="supplier_user_access.group_supplier"
                 parent="menu_products_supplier"
                 sequence="15"
                 action="view_supplier_access_action"/>

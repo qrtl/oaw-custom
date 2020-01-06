@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!--TREE FOR SEARCH MORE-->
     <record id="view_supplier_access_search_more_tree" model="ir.ui.view">
         <field name="name">product.product.tree</field>
         <field name="model">product.product</field>
@@ -11,7 +10,6 @@
                 <field name="image_small" string="Image" widget="image" height="64px"/>
                 <field name="default_code"/>
                 <field name="name"/>
-                <field name="state" invisible="1"/>
                 <field name="product_tmpl_id" invisible="1"/>
             </tree>
         </field>

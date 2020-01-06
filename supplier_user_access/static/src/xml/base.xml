@@ -1,6 +1,17 @@
 <templates>
-    <t t-extend="SearchViewDrawer">
-        <t t-jquery="div.col-md-5">
+    <!-- Hide advance search by default -->
+    <t t-extend="SearchView">
+        <t t-jquery="span">
+            this.attr('style', 'display: none;');
+        </t>
+    </t>
+    <t t-extend="ControlPanel">
+        <t t-jquery="div.o_cp_right">
+            this.attr('style', 'display: none;');
+        </t>
+    </t>
+    <t t-extend="SearchViewMobile">
+        <t t-jquery="div.o_mobile_search_filter">
             this.attr('style', 'display: none;');
         </t>
     </t>

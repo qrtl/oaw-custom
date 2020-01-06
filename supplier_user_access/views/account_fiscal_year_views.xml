@@ -6,7 +6,7 @@
         <field name="model">account.fiscal.year</field>
         <field name="inherit_id" ref="account.action_account_fiscal_year_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='date_start']" position="before">
+            <xpath expr="//field[@name='company_id']" position="before">
                 <field name="allow_supplier_access"/>
             </xpath>
         </field>
