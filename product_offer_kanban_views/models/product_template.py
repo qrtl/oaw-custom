@@ -150,6 +150,11 @@ class ProductTemplate(models.Model):
         compute="_get_stock_cost",
         digits=dp.get_precision("Product Price"),
     )
+    partner_stock_last_modified = fields.Datetime(
+        string="Last Modified",
+        readonly=True,
+        store=True,
+    )
 
     @api.multi
     def _get_sale_price_currency(self):

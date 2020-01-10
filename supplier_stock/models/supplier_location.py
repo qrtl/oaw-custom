@@ -1,7 +1,7 @@
-# Copyright 2019 Quartile Limited
+# Copyright 2019 Quartile Limited, Timeware Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import fields, models
+from odoo import fields, models, api
 
 
 class SupplierLocation(models.Model):
@@ -9,6 +9,10 @@ class SupplierLocation(models.Model):
     _description = "Partner Location"
     _order = "name"
 
+    short_loc = fields.Char(
+        'Location',
+        readonly=True,
+    )
     name = fields.Char(string="Name", required=True)
     active = fields.Boolean(string="Active", default=True)
     supplier_lead_time = fields.Integer(string="Partner Lead Time (Days)")
@@ -27,3 +31,18 @@ class SupplierLocation(models.Model):
             "The name of the supplier location must be unique!",
         )
     ]
+
+    @api.model
+    def create(self, vals):
+        to_shorten = vals['name']
+        splits = to_shorten.split(" ")
+        vals['short_loc'] = splits[1] if len(splits) > 1 else vals['name']
+        return super(SupplierLocation, self).create(vals)
+
+    @api.multi
+    def write(self, vals):
+        if 'name' in vals:
+            to_shorten = vals['name']
+            splits = to_shorten.split(" ")
+            vals['short_loc'] = splits[1] if len(splits) > 1 else vals['name']
+        return super(SupplierLocation, self).write(vals)

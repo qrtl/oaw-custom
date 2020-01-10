@@ -1,10 +1,10 @@
-# Copyright 2019 Quartile Limited
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+# Copyright 2018 Quartile Limited, Timeware Limited
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 {
     "name": "Supplier Stock",
     "category": "Stock",
     "version": "12.0.1.0.0",
-    "author": "Quartile Limited",
+    "author": "Quartile Limited, Timeware Limited",
     "website": "https://www.quartile.co",
     "depends": ["purchase", "mail", "stock"],
     "summary": """""",
