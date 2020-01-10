@@ -26,8 +26,7 @@ class StockReturnPicking(models.TransientModel):
 
     @api.multi
     def _create_returns(self):
-        new_picking_id, pick_type_id = super(
-            StockReturnPicking, self)._create_returns()
+        new_picking_id, pick_type_id = super(StockReturnPicking, self)._create_returns()
         new_picking = self.env["stock.picking"].browse(new_picking_id)
         for rec in self:
             new_picking.return_category = rec.return_category

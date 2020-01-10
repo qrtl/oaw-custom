@@ -8,9 +8,7 @@
     "author": "Quartile Limited",
     "license": "AGPL-3",
     "installable": True,
-    "depends": [
-        "sale_order_line_quant",
-    ],
+    "depends": ["sale_order_line_quant"],
     "data": [
         "data/stock_vci_revaluation_data.xml",
         "wizards/stock_vci_revaluation_wizard_views.xml",

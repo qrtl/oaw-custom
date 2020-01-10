@@ -7,7 +7,7 @@
     </record>
 
     <!--Reporting/Invoice Analysis-->
-    <menuitem action="account.action_account_invoice_report_all" id="account.menu_action_account_invoice_report_all" 
+    <menuitem action="account.action_account_invoice_report_all" id="account.menu_action_account_invoice_report_all"
               parent="account.menu_finance_reporting" sequence="0" groups="account.group_account_manager"/>
 
     <!--Reporting/Follow-Ups Analysis RESET-->
