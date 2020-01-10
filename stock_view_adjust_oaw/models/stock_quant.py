@@ -15,6 +15,7 @@ class StockQuant(models.Model):
     image_small = fields.Binary(
         "Image", related="product_id.product_tmpl_id.image_small", readonly=True
     )
+
     @api.multi
     @api.depends("sale_order_id.client_order_ref")
     def _get_ref(self):
