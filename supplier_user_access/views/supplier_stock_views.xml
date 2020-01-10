@@ -45,6 +45,8 @@
                     <field name="product_list_price_discount"/>
                     <field name="price_unit_base"/>
                     <field name="partner_note"/>
+                    <field name="last_update_date"/>
+                    <field name="last_update_user_id"/>
                 </tree>
             </field>
         </record>
@@ -72,6 +74,8 @@
                                     <ul>
                                         <li>Retail in <field name="currency_id"/>:
                                             <field name="retail_in_currency"></field>
+                                            <li t-if="record.currency_name.raw_value != 'HKD'"> Retail in HKD: <field name="product_list_price"/></li>
+                                            <li>Quantity: <field name="partner_qty"/></li>
                                         </li>
                                     </ul>
                                 </div>
@@ -131,6 +135,7 @@
             <field name="arch" type="xml">
                 <search>
                     <field name="product_id" string="Product"/>
+                    <field name="prod_cat_selection" string="Brand"/>
                     <!--originally "new entry" filter of supplier stock but renamed for partner-->
                     <filter name="new_entry" string="Last Stock Entry"
                             domain="[('create_date','&gt;=',(context_today()+datetime.timedelta(days=-1)).strftime('%Y-%m-%d'))]"/>
@@ -143,6 +148,8 @@
                     <!--Shows the owners duplicates-->
                     <filter name="owners_duplicates" string="Your duplicates"
                             domain="[('owners_duplicates','=', True)]"/>
+                    <!--Shows all products with qty above 0-->
+                    <filter name="qty_greate_zero" string="Qty > 0" domain="[('quantity','&gt;=',True)]"/>
                     <!--Shows products by brand-->
                     <filter name="available_prod_by_brand"
                             string="Available Products By Brand"
