@@ -1,7 +1,7 @@
 <templates>
     <!-- Hide advance search by default -->
     <t t-extend="SearchView">
-        <t t-jquery="span">
+        <t t-jquery="span.o_searchview_more">
             this.attr('style', 'display: none;');
         </t>
     </t>
