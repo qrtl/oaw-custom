@@ -11,7 +11,7 @@
 * Hide the "Return" button when there is already a returned picking.
 * Only Inventory Manager can access the "Return" button and "Is Returned" field.
     """,
-    "depends": ["stock","stock_picking_show_return"],
+    "depends": ["stock", "stock_picking_show_return"],
     "data": ["views/stock_picking_views.xml"],
     "installable": True,
 }
