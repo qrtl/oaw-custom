@@ -11,7 +11,7 @@
         "supplier_stock",
         "stock_view_adjust_oaw",
         "sale_order_line_quant",
-        "website"
+        "website",
     ],
     "summary": """""",
     "description": """
