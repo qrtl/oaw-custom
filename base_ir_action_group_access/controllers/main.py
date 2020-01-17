@@ -16,10 +16,10 @@ class Action(Action):
         except ValueError:
             try:
                 action = request.env.ref(action_id)
-                assert action._name.startswith('ir.actions.')
+                assert action._name.startswith("ir.actions.")
                 action_id = action.id
             except Exception:
-                action_id = 0   # force failed read
+                action_id = 0  # force failed read
         if action_id:
             action = request.env["ir.actions.act_window"].search(
                 [("id", "=", int(action_id))]
@@ -32,8 +32,7 @@ class Action(Action):
             else:
                 action_access = True
         if not action_access:
-            raise Warning(
-                _("Sorry, you are not allowed to access this document."))
+            raise Warning(_("Sorry, you are not allowed to access this document."))
         else:
             return super(Action, self).load(
                 action_id, additional_context=additional_context

@@ -66,4 +66,3 @@
         <menuitem id="users_external" parent="base.menu_users" action="action_view_timecheck_users" sequence="10"/>
         <menuitem id="supplier_user" parent="base.menu_users" action="action_view_supplier_users" sequence="11"/>
 </odoo>
-
