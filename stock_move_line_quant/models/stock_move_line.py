@@ -65,20 +65,26 @@ class StockMoveLine(models.Model):
 
     @api.model
     def create(self, vals):
-        if "picking_id" in vals:
+        # Pass owner and purchase currency to create stock.move.line when it
+        # is a receipt
+        if "picking_id" in vals and "move_id" in vals:
             picking = self.env["stock.picking"].browse(vals["picking_id"])
-            if picking.owner_id and "owner_id" not in vals:
-                vals["owner_id"] = picking.owner_id.id
-            if picking.purchase_currency_id:
-                vals["currency_id"] = picking.purchase_currency_id.id
-                vals["exchange_rate"] = picking.purchase_currency_id.rate
+            move = self.env["stock.move"].browse(vals["move_id"])
+            if move.picking_type_id.code == "incoming" and not move.location_id.return_location:
+                if picking.owner_id and "owner_id" not in vals:
+                    vals["owner_id"] = picking.owner_id.id
+                if move.currency_id:
+                    vals["currency_id"] = move.currency_id.id
+                    vals["exchange_rate"] = move.currency_id.rate
         res = super(StockMoveLine, self).create(vals)
+        # Update the reservation_id of the stock quant
         if res.quant_id and res.move_id:
             res.quant_id.sudo().update({"reservation_id": res.move_id.id})
         return res
 
     @api.multi
     def write(self, vals):
+        # Update the reservation_id of the stock quant
         if "quant_id" in vals:
             for move_line in self:
                 move_line.quant_id.sudo().update({"reservation_id": False})
@@ -106,11 +112,12 @@ class StockMoveLine(models.Model):
                     and move_line.purchase_price_unit == 0.0
                     and not move_line.move_id.origin_returned_move_id
                 ):
-                    raise UserError(_("Purchase price must be " "provided."))
+                    raise UserError(_("Purchase price must be provided."))
         return res
 
     @api.multi
     def unlink(self):
+        # Update the reservation_id of the stock quant
         for move_line in self:
             if move_line.quant_id:
                 move_line.quant_id.sudo().update({"reservation_id": False})

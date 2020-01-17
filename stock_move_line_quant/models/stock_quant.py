@@ -66,6 +66,8 @@ class StockQuant(models.Model):
             name = quant.product_id.code or ""
             if quant.lot_id:
                 name = quant.lot_id.name
-            name += ": {} {}".format(str(quant.quantity), quant.product_id.uom_id.name)
+            name += ": {} {}".format(str(quant.quantity),
+                                     quant.product_id.uom_id.name)
             res += [(quant.id, name)]
+        print(res)
         return res

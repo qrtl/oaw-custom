@@ -9,7 +9,9 @@ class StockMove(models.Model):
 
     quant_id = fields.Many2one("stock.quant", string="Stock Quant")
     lot_id = fields.Many2one("stock.production.lot", string="Case No.")
-    quant_owner_id = fields.Many2one(related="quant_id.owner_id", string="Quant Owner")
+    quant_owner_id = fields.Many2one(
+        related="quant_id.owner_id", string="Quant Owner")
+    currency_id = fields.Many2one("res.currency", string="Purchase Currency")
 
     def action_show_details(self):
         res = super(StockMove, self).action_show_details()
