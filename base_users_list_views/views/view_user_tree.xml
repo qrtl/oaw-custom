@@ -1,34 +1,34 @@
 <odoo>
-        <record id="view_user_supplier_tree" model="ir.ui.view">
-            <field name="name">view.users.tree</field>
+        <record id="view_timecheck_users_tree" model="ir.ui.view">
+            <field name="name">view.timecheck.users.tree</field>
             <field name="model">res.users</field>
             <field name="arch" type="xml">
-                <tree string="Supplier Users" editable="top">
-                    <field name="commercial_partner_id" string="Company"/>
-                    <field name="partner_id"/>
-                    <field name="timecheck_group"/>
-                    <field name="is_timecheck_light"/>
-                    <field name="is_timecheck_light_date"/>
-                    <button name="action_orders_3" type="object" icon="terp-gtk-jump-to-ltr" string="Open its Customer Payment"/>
+                <tree string="Timecheck Users" editable="top">
+                    <field name="commercial_partner_id" string="Company" />
+                    <field name="partner_id" options="{'no_create_edit': True,'no_open':True}"/>
+<!--                    <field name="timecheck_group"/>-->
+<!--                    <field name="is_timecheck_light"/>-->
+<!--                    <field name="is_timecheck_light_date"/>-->
+                    <button name="action_view_user_open" type="object" icon="fa-sign-in" string="Open its User Form"/>
                     <field name="login"/>
                     <field name="new_password"/>
-                    <field name="show_pw" readonly="True"/>
+                    <field name="show_password" readonly="True"/>
                     <field name="login_date"/>
                 </tree>
             </field>
         </record>
 
-        <record id="view_supplier_users" model="ir.ui.view">
-            <field name="name">view.supplier.users.tree</field>
+        <record id="view_supplier_users_tree" model="ir.ui.view">
+            <field name="name">view.supplier.user.tree</field>
             <field name="model">res.users</field>
             <field name="arch" type="xml">
                 <tree string="Supplier Users" editable="top">
-                    <field name="commercial_partner_id" string="Company"/>
-                    <field name="partner_id"/>
-                    <button name="open_user" type="object" icon="terp-gtk-jump-to-ltr" string="Open its Customer Payment"/>
+                    <field name="commercial_partner_id" string="Company" />
+                    <field name="partner_id" options="{'no_create_edit': True,'no_open':True}"/>
+                    <button name="action_view_user_open" type="object" icon="fa-sign-in" string="Open its User Form"/>
                     <field name="login"/>
                     <field name="new_password"/>
-                    <field name="show_pw" readonly="True"/>
+                    <field name="show_password" readonly="True"/>
                     <field name="login_date"/>
                 </tree>
             </field>
@@ -45,11 +45,11 @@
             </field>
         </record>
 
-        <record id="action_view_users_external" model="ir.actions.act_window">
+        <record id="action_view_timecheck_users" model="ir.actions.act_window">
             <field name="name">TimeCheck Users</field>
             <field name="res_model">res.users</field>
             <field name="view_mode">tree</field>
-            <field name="view_id" ref="view_users_external"/>
+            <field name="view_id" ref="view_timecheck_users_tree"/>
             <field name="domain">[('has_supplier_access', '=', False), '|', ('is_supplier', '=', True), ('is_customer', '=', True)]</field>
             <field name="limit">80</field>
         </record>
@@ -58,12 +58,12 @@
             <field name="name">Supplier Users</field>
             <field name="res_model">res.users</field>
             <field name="view_mode">tree</field>
-            <field name="view_id" ref="view_supplier_users"/>
+            <field name="view_id" ref="view_supplier_users_tree"/>
             <field name="domain">[('has_supplier_access', '=', True)]</field>
             <field name="limit">80</field>
         </record>
 
-        <menuitem id="users_external" parent="base.menu_users" action="action_view_users_external" sequence="10"/>
+        <menuitem id="users_external" parent="base.menu_users" action="action_view_timecheck_users" sequence="10"/>
         <menuitem id="supplier_user" parent="base.menu_users" action="action_view_supplier_users" sequence="11"/>
 </odoo>
 

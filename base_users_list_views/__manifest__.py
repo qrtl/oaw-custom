@@ -5,12 +5,11 @@
 {
     'name': 'User List Views',
     'version': '12.0.0.1',
-    'author': 'Timeware Ltd., Quartile Ltd.',
+    'author': 'Timeware Limited, Quartile Limited',
     'website': '',
     'category': '',
     'depends': [
-
-       
+        "supplier_user_access"
     ],
     'description': """
 * Adds further tree views for user belonging to "Supplier" or "Timecheck"
