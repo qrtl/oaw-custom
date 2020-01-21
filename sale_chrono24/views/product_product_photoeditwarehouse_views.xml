@@ -1,0 +1,54 @@
+<odoo>
+    <record id="product_product_chrono24_tree" model="ir.ui.view">
+        <field name="name">product_product_chrono24_tree</field>
+        <field name="model">product.product</field>
+        <field name="arch" type="xml">
+            <tree string="Chrono24 Offer" default_order="id desc" editable="top" delete="false">
+                <field name="default_code" strong="Code" readonly="1"/>
+                <field name="name" string="Product Ref" readonly="1"/>
+                <field name="image_small" string="Image" widget="image" height="64px" readonly="1"/>
+                <field name="list_price" string="Retail HKD" readonly="1"/>
+                <field name="qty_reserved" string="Qty Reserved"/>
+                <field name="qty_local_stock" widget="integer" string="HK Stock"/>
+                <field name="qty_overseas" string="Qty Overseas"/>
+                <field name="chrono24_price" string="Chrono 24 Price"/>
+                <field name="chrono24_updated" string="Chrono24 Updated"/>
+                <field name="chrono" string="Chrono24" readonly="1"/>
+                <field name="chronoNote"/>
+            </tree>
+        </field>
+    </record>
+    <!--Search View chrono24_view-->
+    <record id="photoedit_tree_search" model="ir.ui.view">
+        <field name="name">Partner Stock External Search</field>
+        <field name="model">product.template</field>
+        <field name="priority" eval="23"/>
+        <field name="arch" type="xml">
+            <search>
+                <filter name="updated_chrono24" string="Chrono24 updated" domain="[('chrono24_updated','=',True)]"/>
+                <filter name="c24_unset" string="Chrono24" domain="[('chrono', '=', True)]"/>
+                <filter name="chrono_deac" string="Chrono24 deactive"
+                        domain="[('chrono24_updated','=',True),('qty_local_stock','=',0)]"/>
+                <filter name="warehouse_internal_location" string="Local: internal"
+                        domain="[('product_tmpl_id.qty_available','&gt;',0)]"/>
+            </search>
+        </field>
+    </record>
+
+    <!--The action-->
+    <record id="action_photoedit_view" model="ir.actions.act_window">
+        <field name="name">Chrono24/Edit Photo</field>
+        <field name="res_model">product.product</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="product_product_chrono24_tree"/>
+        <field name="context">{"search_default_warehouse_internal_location":1}</field>
+        <field name="search_view_id" ref="action_photoedit_view"/>
+        <field name="limit">80</field>
+    </record>
+
+    <menuitem id="chron24_view"
+              parent="sale.menu_product_template_action"
+              action="action_photoedit_view"
+              sequence="2"
+              groups="group_photoedit"/>
+</odoo>
