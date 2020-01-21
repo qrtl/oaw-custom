@@ -8,10 +8,19 @@
     "website": "https://www.quartile.co",
     "depends": [
         "sale",
+        "sale_order_line_quant",
+        "supplier_user_access"
     ],
-    "summary": """ Treeview on all MTO sales orders""",
-    "description": """
+    "summary": """ Tree views displaying to internal user all MTO. 
+    Supplier can see MTO lines of SO where they are
+    the supplier and where the customer is related to the suppliers company.
+     The tree views exclude MTO that are is_shipment=True""",
 
+    "description": """
     """,
+    "data": [
+        "views/sale_order_views.xml",
+    ],
+
     "installable": True,
 }

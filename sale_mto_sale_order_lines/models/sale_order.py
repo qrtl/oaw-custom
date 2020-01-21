@@ -3,7 +3,7 @@
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
-from odoo import SUPERUSER_ID
+
 
 
 class SaleOrder(models.Model):
@@ -25,27 +25,19 @@ class SaleOrder(models.Model):
         'Shipment',
     )
 
+    @api.model
     def create(self, vals):
         if vals['is_mto']:
             user = self.env.user
             print("cheers")
+            # If Supplier creates a MTO, it will be declared as is_shipment
             if user.has_group('supplier_user_access.group_supplier'):
+                vals['is_shipment'] = True
                 print("cheers")
+            # If internal user creates MTO, user will required to set a Sales Supplier
+            if not user.has_group('supplier_user_access.group_supplier'):
+                if 'supplier_id' in vals:
+                    if not vals['supplier_id']:
+                        raise UserError('For MTO a Sales Supplier has to be selected!')
         res = super(SaleOrder, self).create(vals)
         return res
-        #         # Supplier creates MTO: it must be is_shipment (this field will also be invisible for supplier)
-        #         if user.has_group('model_security_adjust_oaw.group_supplier'):
-        #             vals['is_shipment'] = True
-        #             print "Suppliers mto and shipment"
-        #         # Internal MTO: supplier_id must be selected
-        #         if not user.has_group('model_security_adjust_oaw.group_supplier'):
-        #             if 'supplier_id' in vals:
-        #                 if not vals['supplier_id']:
-        #                     raise osv.except_osv(_('Error!'), _('For MTO, you must select "Sales Supplier"'))
-        #
-        #
-        # res = super(SaleOrderOsv, self).create(cr, uid, vals, context=context)
-        # rec = self.browse(cr, uid, res, context=context)
-        # if rec.supplier_id:
-        #     self.message_subscribe(cr, SUPERUSER_ID, [rec.id], [rec.supplier_id.id], context=context)
-        # return res
