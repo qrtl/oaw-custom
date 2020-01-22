@@ -1,4 +1,4 @@
-# Copyright 2019 Quartile Limited
+# Copyright 2019-2020 Quartile Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 {
     "name": "Create Invoice From Purchase Order Lines",
@@ -11,5 +11,10 @@
     "description": """
 Add a view for invoicable purchase order line to create invoice.
     """,
-    "data": ["data/ir_actions.xml", "views/purchase_order_line_views.xml"],
+    "data": [
+        "data/ir_actions.xml",
+        "views/account_invoice_views.xml",
+        "views/purchase_order_line_views.xml",
+        "views/purchase_order_views.xml",
+    ],
 }
