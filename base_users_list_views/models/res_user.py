@@ -57,7 +57,6 @@ class ResUser(models.Model):
     def _set_password(self):
         ctx = self._crypt_context()
         for user in self:
-            print(user.password)
             self._set_password_again(user.id, user.password)
             self._set_encrypted_password(user.id, ctx.encrypt(user.password))
 
