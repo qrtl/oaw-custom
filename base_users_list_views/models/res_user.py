@@ -1,4 +1,4 @@
-# Copyright 2019 Quartile Limited, Timeware Limited
+# Copyright 2020 Quartile Limited, Timeware Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from odoo import api, fields, models
@@ -39,8 +39,7 @@ class ResUser(models.Model):
                 True if user.has_group("supplier_user_access.group_supplier") else False
             )
 
-        # object action for chrono update button in sale order form view
-
+    # object action for chrono update button in sale order form view
     @api.multi
     def action_view_user_open(self):
         view_id = self.env.ref("base.view_users_form").id
@@ -63,7 +62,6 @@ class ResUser(models.Model):
             self._set_encrypted_password(user.id, ctx.encrypt(user.password))
 
     def _set_password_again(self, id, pwd):
-        print(pwd)
         self.env.cr.execute(
             "UPDATE res_users SET show_password=%s WHERE id=%s", [pwd, id]
         )
