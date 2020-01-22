@@ -1,4 +1,4 @@
-# Copyright 2019 Quartile Limited
+# Copyright 2020 Quartile Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 import odoo.addons.decimal_precision as dp
@@ -69,5 +69,4 @@ class StockQuant(models.Model):
             name += ": {} {}".format(str(quant.quantity),
                                      quant.product_id.uom_id.name)
             res += [(quant.id, name)]
-        print(res)
         return res
