@@ -1,4 +1,4 @@
-# Copyright 2019 Quartile Limited
+# Copyright 2020 Quartile Limited, Timeware Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from odoo import _, api, fields, models
@@ -21,11 +21,9 @@ class SaleOrder(models.Model):
     def create(self, vals):
         if vals["is_mto"]:
             user = self.env.user
-            print("cheers")
             # If Supplier creates a MTO, it will be declared as is_shipment
             if user.has_group("supplier_user_access.group_supplier"):
                 vals["is_shipment"] = True
-                print("cheers")
             # If internal user creates MTO, user will required to set a Sales Supplier
             if not user.has_group("supplier_user_access.group_supplier"):
                 if "supplier_id" in vals:
