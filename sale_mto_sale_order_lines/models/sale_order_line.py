@@ -1,4 +1,4 @@
-# Copyright 2019 Quartile Limited
+# Copyright 2020 Quartile Limited, Timeware Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from odoo import _, api, fields, models
