@@ -86,42 +86,10 @@ class SupplierStock(models.Model):
         for ps in self:
             if "quantity" in vals:
                 ps._get_owners_duplicates()
-        res = super(SupplierStock, self).write(vals)
-        for ps in self:
-            if self.env.user.has_group("supplier_user_access.group_supplier"):
-                server_actions = (
-                    self.env["base.action.rule"]
-                    .sudo()
-                    .search(
-                        [
-                            ("model", "=", "supplier.stock"),
-                            ("kind", "in", ("on_write", "on_create_or_write")),
-                            ("active", "=", True),
-                        ],
-                        order="sequence",
-                    )
-                )
-                for action in server_actions:
-                    action.sudo()._process(action, [ps.id])
-        return res
+        return super(SupplierStock, self).write(vals)
 
     @api.model
     def create(self, vals):
         res = super(SupplierStock, self).create(vals)
         res._get_owners_duplicates()
-        if self.env.user.has_group("supplier_user_access.group_supplier"):
-            server_actions = (
-                self.env["base.action.rule"]
-                .sudo()
-                .search(
-                    [
-                        ("model", "=", "supplier.stock"),
-                        ("kind", "in", ("on_create", "on_create_or_write")),
-                        ("active", "=", True),
-                    ],
-                    order="sequence",
-                )
-            )
-            for action in server_actions:
-                action.sudo()._process(action, [res.id])
         return res
