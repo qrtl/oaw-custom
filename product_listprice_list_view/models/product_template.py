@@ -26,14 +26,11 @@ class ProductTemplate(models.Model):
     # Trigger: stock_quant.create(), supplier_stock.create()
     new_entry_date = fields.Datetime(string="New Entry")
     # Resetting Offer Checked Button
-    partner_offer_checked = fields.Boolean(
-        string="Offer Checked", default=False)
+    partner_offer_checked = fields.Boolean(string="Offer Checked", default=False)
     qty_up = fields.Boolean(string="Partner Quantity increased")
     qty_down = fields.Boolean(string="Partner Quantity decreased")
-    costprice_up = fields.Boolean(
-        string="Partner Sale Price inc.", readonly=True)
-    costprice_down = fields.Boolean(
-        string="Partner Sale Price dec.", readonly=True)
+    costprice_up = fields.Boolean(string="Partner Sale Price inc.", readonly=True)
+    costprice_down = fields.Boolean(string="Partner Sale Price dec.", readonly=True)
     note_updated = fields.Boolean(string="Partner Note updated")
     # For a filter in Product and Product Offer
     # Trigger: product_template.write(),
