@@ -10,7 +10,6 @@
         'supplier_user_access',
         'product_listprice_list_view',
         'website_sale_adj',
-        'website_multi_image_zoom',
     ],
     'summary': """""",
     'description': """
@@ -21,7 +20,6 @@
         'security/timecheck_security.xml',
         'security/website_sale_security.xml',
         # 'views/product_product_views.xml',
-        # 'views/sale_order_views.xml',
         'views/templates.xml',
     ],
     'installable': True,

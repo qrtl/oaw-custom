@@ -37,12 +37,6 @@
         </xpath>
     </template>
 
-    <template id="product_extended" name="product_extended" inherit_id="website_multi_image_zoom.product_extended">
-        <xpath expr="//div[@id='thumb_img_add']" position="attributes">
-            <attribute name="groups">website_timecheck.group_timecheck_light</attribute>
-        </xpath>
-    </template>
-
     <template id="products_item" name="Products item" inherit_id="website_sale.products_item">
         <xpath expr="//h6" position="replace">
             <h6 class="product_info">
@@ -146,6 +140,10 @@
     </template>
 
     <template id="product" name="Product" inherit_id="website_sale.product">
+        <xpath expr="//t[@t-set='image_ids']" position="replace">
+            <t t-set="image_ids" t-value="[]"/>
+            <t t-set="image_ids" t-value="product.product_image_ids" groups="website_timecheck.group_timecheck_light,website.group_website_publisher"/>
+        </xpath>
         <xpath expr="//h1[@itemprop='name']" position="replace">
             <h4 itemprop="name" t-field="product.name">Product Name</h4>
             <h4>Internal Code: <span t-field="product.default_code"/></h4>
