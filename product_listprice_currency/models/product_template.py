@@ -8,7 +8,6 @@ from odoo import api, fields, models
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
-    category_name = fields.Char(string="Brand", related="categ_id.name")
     retail_chf = fields.Float(
         string="Retail CHF", digits=dp.get_precision("Product Price")
     )
