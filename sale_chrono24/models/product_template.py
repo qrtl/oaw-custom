@@ -7,10 +7,13 @@ from odoo import api, fields, models
 
 class ProductTemplate(models.Model):
     _inherit = "product.template"
+
     chrono = fields.Boolean(
+        string="Active In Chrono24",
         default=False
     )
     chrono24_updated = fields.Boolean(
+        string="Updated-Please Check",
         default=False
     )
     chronoNote = fields.Char(
@@ -23,7 +26,6 @@ class ProductTemplate(models.Model):
     )
     chrono24_price = fields.Float(
         string='Chrono24 Price',
-        digits=dp.get_precision('Product Price'),
         store=True,
     )
 

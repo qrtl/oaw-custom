@@ -1,5 +1,5 @@
 <odoo>
-    <!-- Separat view for sales manager     -->
+    <!--Tree View for sale_chr24_photoedit     -->
     <record id="chono24_view_tree" model="ir.ui.view">
         <field name="name">chono24.view.tree</field>
         <field name="model">product.product</field>
@@ -11,33 +11,15 @@
                 <field name="qty_reserved" string="Qty Reserved"/>
                 <field name="qty_local_stock" widget="integer" string="HK Stock"/>
                 <field name="qty_overseas" string="Qty Overseas"/>
-                <field name="chrono24_price" string="Chrono 24 Price"/>
+                <field name="chrono24_price" string="Chr24 Price"/>
                 <field name="chrono24_updated"/>
-                <field name="chrono"/>
+                <field name="chrono" readonly="1"/>
                 <field name="chronoNote"/>
             </tree>
         </field>
     </record>
-    <!--    Inserting chr24 fields into master PLV-->
-    <record id="product_product_tree_view_z2" model="ir.ui.view">
-        <field name="name">product.product.tree.view.z2</field>
-        <field name="model">product.product</field>
-        <field name="inherit_id" ref="product_listprice_list_view.product_product_internal_tree"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='partner_note']" position="after">
-                <field name="chrono24_updated" string="Chrono24 Updated"/>
-                <field name="chrono24_price" string="Chrono 24 Price"/>
-                <field name="chrono24_updated"/>
-                <field name="chrono"/>
-                <field name="chronoNote"/>
-            </xpath>
-            <xpath expr="//field[@name='discount']" position="after">
-                <field name="chrono24_price"/>
-            </xpath>
-        </field>
-    </record>
 
-    <!--Search View for separat chrono24_view-->
+    <!--Search View for sale_chr24_photoedit     -->
     <record id="chono24_view_search" model="ir.ui.view">
         <field name="name">chono24.view.search</field>
         <field name="model">product.product</field>
@@ -62,12 +44,25 @@
         <field name="limit">80</field>
     </record>
 
+    <menuitem id="menu_chron24_view_root"
+              name="Chrono24 and Products"
+              sequence="2"
+              groups="group_chr24_photoedit"/>
+    <menuitem id="menu_chron24_photoedit_view"
+              parent="menu_chron24_view_root"
+              name="Chrono24 and Products"
+              sequence="2"
+              groups="group_chr24_photoedit"/>
     <menuitem id="menu_chron24_view"
-              parent="sale.product_menu_catalog"
+              parent="menu_chron24_photoedit_view"
               action="action_chono24_view"
               sequence="2"
-              groups=""/>
-
+              groups="group_chr24_photoedit"/>
+    <menuitem id="menu_photoedit_view"
+              parent="menu_chron24_photoedit_view"
+              action="stock.product_template_action_product"
+              sequence="2"
+              groups="group_chr24_photoedit"/>
 </odoo>
 
 

@@ -2,7 +2,7 @@
 # Copyright 2020  Quartile Limited, Timeware Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 {
-    'name': 'Adds chrono24 management to Sales for advertisement',
+    'name': 'Adds chrono24 management to Sales ',
     'category': 'Security',
     'version': '12.0.0.1',
     'author': 'Quartile Limited, Timeware Limited.',
@@ -12,7 +12,7 @@
         'product_local_oversea_stock_info',
         'product_listprice_list_view'
     ],
-    'summary':"""Adds chrono24 to PLV. Adds a new tree views to Sales to manage chrono24 advertisement""",
+    'summary':"""Adds chrono24  fields to PLV. Adds a new tree views to Sales to manage chrono24""",
     'description': """    
     """,
     'data': [
