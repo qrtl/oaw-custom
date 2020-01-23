@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
-# Copyright 2019 Quartile Limited
+# Copyright 2020 Quartile Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from openerp import models, fields, api
+from odoo import models, fields, api
 
 
 class SaleOrder(models.Model):
@@ -31,12 +30,12 @@ class SaleOrder(models.Model):
 
     # According to the user group and price settings, update the price with
     # portal user adds product to cart.
-    def _cart_update(self, product_id=None, line_id=None, add_qty=0,
-                     set_qty=0):
+    def _cart_update(self, product_id=None, line_id=None, add_qty=0, set_qty=0, **kwargs):
         res = super(SaleOrder, self)._cart_update(product_id=product_id,
                                                   line_id=line_id,
                                                   add_qty=add_qty,
-                                                  set_qty=set_qty)
+                                                  set_qty=set_qty,
+                                                  **kwargs)
         if 'line_id' in res and res['line_id']:
             order_line = self.env['sale.order.line'].browse(res['line_id'])
             product = order_line.product_id
@@ -56,16 +55,3 @@ class SaleOrder(models.Model):
                 else:
                     order_line.price_unit = product.list_price
         return res
-
-
-from openerp.osv import osv, fields
-
-
-class SaleOrderOsv(osv.osv):
-    _inherit = "sale.order"
-
-    # print function for portal customer
-    def print_portal_quotation(self, cr, uid, ids, context=None):
-        return self.pool['report'].get_action(cr, uid, ids,
-                                              'website_timecheck.report_sale_order_website',
-                                              context=context)

@@ -1,64 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data>
+<odoo>
 
     <record id="publish_product_action" model="ir.actions.server">
         <field name="name">Publish Product(s)</field>
         <field name="model_id" ref="product.model_product_template"/>
+        <field name="binding_model_id" ref="product.model_product_template"/>
         <field name="state">code</field>
-        <field name="code">self.browse(cr,uid,context.get('active_ids', [])).write({'website_published': True})</field>
-    </record>
-
-    <record id="publish_product" model="ir.values">
-        <field eval="'client_action_multi'" name="key2"/>
-        <field eval="'product.template'" name="model"/>
-        <field name="name">publish.product</field>
-        <field eval="'ir.actions.server,%d'%publish_product_action" name="value"/>
+        <field name="code">records.write({'website_published': True})</field>
     </record>
 
     <record id="unpublish_product_action" model="ir.actions.server">
         <field name="name">Unpublish Product(s)</field>
         <field name="model_id" ref="product.model_product_template"/>
+        <field name="binding_model_id" ref="product.model_product_template"/>
         <field name="state">code</field>
-        <field name="code">self.browse(cr,uid,context.get('active_ids', [])).write({'website_published': False})</field>
-    </record>
-
-    <record id="unpublish_product" model="ir.values">
-        <field eval="'client_action_multi'" name="key2"/>
-        <field eval="'product.template'" name="model"/>
-        <field name="name">unpublish.product</field>
-        <field eval="'ir.actions.server,%d'%unpublish_product_action" name="value"/>
+        <field name="code">records.write({'website_published': False})</field>
     </record>
 
     <record id="publish_product_product_action" model="ir.actions.server">
         <field name="name">Publish Product(s)</field>
         <field name="model_id" ref="product.model_product_product"/>
+        <field name="binding_model_id" ref="product.model_product_product"/>
         <field name="state">code</field>
-        <field name="code">self.browse(cr,uid,context.get('active_ids', [])).mapped('product_tmpl_id').write({'website_published': True})</field>
-    </record>
-
-    <record id="publish_product_product" model="ir.values">
-        <field eval="'client_action_multi'" name="key2"/>
-        <field eval="'product.product'" name="model"/>
-        <field name="name">publish.product</field>
-        <field eval="'ir.actions.server,%d'%publish_product_product_action" name="value"/>
+        <field name="code">records.write({'website_published': True})</field>
     </record>
 
     <record id="unpublish_product_product_action" model="ir.actions.server">
         <field name="name">Unpublish Product(s)</field>
         <field name="model_id" ref="product.model_product_product"/>
+        <field name="binding_model_id" ref="product.model_product_product"/>
         <field name="state">code</field>
-        <field name="code">self.browse(cr,uid,context.get('active_ids', [])).mapped('product_tmpl_id').write({'website_published': False})</field>
+        <field name="code">records.write({'website_published': False})</field>
     </record>
 
-    <record id="unpublish_product_product" model="ir.values">
-        <field eval="'client_action_multi'" name="key2"/>
-        <field eval="'product.product'" name="model"/>
-        <field name="name">unpublish.product</field>
-        <field eval="'ir.actions.server,%d'%unpublish_product_product_action" name="value"/>
-    </record>
-
-    <record id="update_product_template_public_category_action" model="ir.actions.server">
+    <!-- <record id="update_product_template_public_category_action" model="ir.actions.server">
         <field name="name">Update Website Product Category</field>
         <field name="model_id" ref="product.model_product_template"/>
         <field name="state">code</field>
@@ -126,7 +101,6 @@
         <field eval="'product.product'" name="model"/>
         <field name="name">update.website.product.seq.date</field>
         <field eval="'ir.actions.server,%d'%update_website_product_seq_date_action" name="value"/>
-    </record>
+    </record> -->
 
-</data>
-</openerp>
+</odoo>
