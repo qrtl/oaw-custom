@@ -1,0 +1,16 @@
+# Copyright 2020 Quartile Limited
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+{
+    'name': 'Falcon Material Backend Theme',
+    'category': 'Theme/Backend',
+    'version': '12.0.1.0.1',
+    'author': 'Quartile Limited',
+    'website': 'https://www.quartile.co',
+    'depends': ['falcon_material_backend_theme'],
+    'description': """""",
+    'summary': 'Customizable Backend Theme Based on Material Design',
+    'data': [
+        'views/templates.xml',
+    ],
+    'installable': True,
+}
