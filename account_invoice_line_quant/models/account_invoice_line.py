@@ -7,4 +7,5 @@ from odoo import api, fields, models
 class AccountInvoiceLine(models.Model):
     _inherit = "account.invoice.line"
 
-    lot_id = fields.Many2one("stock.production.lot", string="Case No.")
+    quant_id = fields.Many2one("stock.quant", string="Stock Quant", copy=False)
+    lot_id = fields.Many2one(related="quant_id.lot_id", string="Case No.")
