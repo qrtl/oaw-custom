@@ -11,5 +11,6 @@ class SaleOrderLine(models.Model):
     def _prepare_invoice_line(self, qty):
         res = super(SaleOrderLine, self)._prepare_invoice_line(qty)
         self.ensure_one()
-        res.update({"lot_id": self.lot_id.id})
+        if self.quant_id:
+            res.update({"quant_id": self.quant_id.id})
         return res
