@@ -1,4 +1,4 @@
-# Copyright 2019 Quartile Limited
+# Copyright 2019-2020 Quartile Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 import odoo.addons.decimal_precision as dp
