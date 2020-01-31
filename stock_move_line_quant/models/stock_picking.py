@@ -7,7 +7,11 @@ from odoo import api, fields, models
 class StockPicking(models.Model):
     _inherit = "stock.picking"
 
-    @api.onchange('partner_id')
+    @api.onchange("partner_id")
     def _onchange_partner_id(self):
-        if self.partner_id and self.picking_type_id and self.picking_type_id.code == "incoming":
+        if (
+            self.partner_id
+            and self.picking_type_id
+            and self.picking_type_id.code == "incoming"
+        ):
             self.owner_id = self.partner_id

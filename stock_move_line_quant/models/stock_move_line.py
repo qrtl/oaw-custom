@@ -10,14 +10,10 @@ class StockMoveLine(models.Model):
     _inherit = "stock.move.line"
 
     currency_id = fields.Many2one(
-        "res.currency",
-        related="move_id.currency_id",
-        string="Purchase Currency"
+        "res.currency", related="move_id.currency_id", string="Purchase Currency"
     )
     exchange_rate = fields.Float(
-        related="move_id.exchange_rate",
-        string="FX Rate",
-        digits=(12, 6)
+        related="move_id.exchange_rate", string="FX Rate", digits=(12, 6)
     )
     purchase_price_unit = fields.Float(
         related="move_id.purchase_price_unit",
@@ -32,18 +28,10 @@ class StockMoveLine(models.Model):
         store=True,
     )
     code = fields.Selection(
-        related="move_id.picking_type_id.code",
-        string="Type of Operation",
-        store=True,
+        related="move_id.picking_type_id.code", string="Type of Operation", store=True
     )
-    quant_id = fields.Many2one(
-        "stock.quant",
-        string="Stock Quant"
-    )
-    quant_owner_id = fields.Many2one(
-        related="quant_id.owner_id",
-        string="Quant Owner"
-    )
+    quant_id = fields.Many2one("stock.quant", string="Stock Quant")
+    quant_owner_id = fields.Many2one(related="quant_id.owner_id", string="Quant Owner")
 
     @api.onchange("quant_id")
     def _onchange_quant_id(self):
@@ -74,12 +62,16 @@ class StockMoveLine(models.Model):
         # Pass owner to create stock.move.line when it is a receipt
         if "picking_id" in vals:
             picking = self.env["stock.picking"].browse(vals["picking_id"])
-            if picking.picking_type_id.code == "incoming" and not picking.location_id.return_location:
+            if (
+                picking.picking_type_id.code == "incoming"
+                and not picking.location_id.return_location
+            ):
                 if picking.owner_id and "owner_id" not in vals:
                     vals["owner_id"] = picking.owner_id.id
         if "lot_id" in vals:
-            vals["quant_id"] = self.env["stock.production.lot"].browse(
-                vals["lot_id"]).quant_ids[0].id
+            vals["quant_id"] = (
+                self.env["stock.production.lot"].browse(vals["lot_id"]).quant_ids[0].id
+            )
         res = super(StockMoveLine, self).create(vals)
         # Update the reservation_id of the stock quant
         if res.quant_id and res.move_id:

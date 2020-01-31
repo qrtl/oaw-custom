@@ -8,14 +8,8 @@ from odoo.addons import decimal_precision as dp
 class StockMove(models.Model):
     _inherit = "stock.move"
 
-    currency_id = fields.Many2one(
-        "res.currency",
-        string="Purchase Currency",
-    )
-    exchange_rate = fields.Float(
-        string="FX Rate",
-        digits=(12, 6),
-    )
+    currency_id = fields.Many2one("res.currency", string="Purchase Currency")
+    exchange_rate = fields.Float(string="FX Rate", digits=(12, 6))
     purchase_price_unit = fields.Float(
         string="Purchase Currency Price",
         digits_compute=dp.get_precision("Product Price"),
@@ -27,20 +21,11 @@ class StockMove(models.Model):
         compute="_compute_price_unit",
         store=True,
     )
-    quant_id = fields.Many2one(
-        "stock.quant",
-        string="Stock Quant",
-    )
+    quant_id = fields.Many2one("stock.quant", string="Stock Quant")
     lot_id = fields.Many2one(
-        "stock.production.lot",
-        related="quant_id.lot_id",
-        string="Case No.",
-        store=True,
+        "stock.production.lot", related="quant_id.lot_id", string="Case No.", store=True
     )
-    quant_owner_id = fields.Many2one(
-        related="quant_id.owner_id",
-        string="Quant Owner",
-    )
+    quant_owner_id = fields.Many2one(related="quant_id.owner_id", string="Quant Owner")
 
     @api.onchange("currency_id")
     def _onchange_currency_id(self):
