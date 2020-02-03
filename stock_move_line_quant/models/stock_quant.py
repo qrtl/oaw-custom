@@ -66,8 +66,7 @@ class StockQuant(models.Model):
             name = quant.product_id.code or ""
             if quant.lot_id:
                 name = quant.lot_id.name
-            name += ": {} {}".format(str(quant.quantity),
-                                     quant.product_id.uom_id.name)
+            name += ": {} {}".format(str(quant.quantity), quant.product_id.uom_id.name)
             res += [(quant.id, name)]
         return res
 
@@ -76,22 +75,11 @@ class StockQuant(models.Model):
         self, name, args=None, operator="ilike", limit=100, name_get_uid=None
     ):
         args = args or []
-        lot_ids = False
+        # FIXME Improve the performance by passing the limit to the _search
+        quant_ids = self.browse(self._search(args, access_rights_uid=name_get_uid))
         if name:
-            lot_args = [("name", operator, name)] + args
             lot_ids = self.env["stock.production.lot"]._search(
-                lot_args, limit=limit, access_rights_uid=name_get_uid
+                [("name", operator, name)], limit=limit, access_rights_uid=name_get_uid
             )
-        if lot_ids:
-            args = [("lot_id", "in", lot_ids)]
-            quant_ids = self._search(
-                args, limit=limit, access_rights_uid=name_get_uid)
-            return self.browse(quant_ids).name_get()
-        else:
-            return super(StockQuant, self)._name_search(
-                name,
-                args=args,
-                operator=operator,
-                limit=limit,
-                name_get_uid=name_get_uid,
-            )
+            quant_ids = quant_ids.filtered(lambda q: q.lot_id.id in lot_ids)
+        return quant_ids.name_get()
