@@ -16,10 +16,9 @@
     """,
     "data": [
         "data/ir_actions.xml",
-        # 'reports/sale_order_reports.xml',
         "security/timecheck_security.xml",
         "security/website_sale_security.xml",
-        # 'views/product_product_views.xml',
+        'views/product_product_views.xml',
         "views/templates.xml",
     ],
     "installable": True,
