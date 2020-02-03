@@ -17,4 +17,3 @@ class SaleOrder(models.Model):
                     and order_line.purchase_order_id.state == "draft"
                 ):
                     order_line.purchase_order_id.button_confirm()
-            order.picking_ids.mapped("move_lines")._recompute_state()
