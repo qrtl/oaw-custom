@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data>
+<odoo>
 
     <record id="profit_loss_report_tree_view" model="ir.ui.view">
         <field name="name">profit.loss.report.tree.view</field>
@@ -82,25 +81,25 @@
                             domain="[('supplier_payment_state','=','done')]"/>
                 </group>
                 <group expand="0" string="Group By">
-                    <filter string="Period" domain="[]"
+                    <filter string="Period" domain="[]" name="group_by_in_period_id"
                             context="{'group_by':'in_period_id'}"/>
-                    <filter string="Owner" domain="[]"
+                    <filter string="Owner" domain="[]" name="group_by_in_in_move_quant_owner_id"
                             context="{'group_by':'in_move_quant_owner_id'}"/>
-                    <filter string="Stock Type" domain="[]"
+                    <filter string="Stock Type" domain="[]" name="group_by_in_stock_type"
                             context="{'group_by':'stock_type'}"/>
-                    <filter string="Brand" domain="[]"
+                    <filter string="Brand" domain="[]" name="group_by_in_categ_name"
                             context="{'group_by':'categ_name'}"/>
-                    <filter string="Customer" domain="[]"
+                    <filter string="Customer" domain="[]" name="group_by_in_partner_id"
                             context="{'group_by':'partner_id'}"/>
-                    <filter string="Customer Payment Information." domain="[]"
+                    <filter string="Customer Payment Information." domain="[]" name="group_by_in_customer_payment_reference"
                             context="{'group_by':'customer_payment_reference'}"/>
-                    <filter string="Supplier" domain="[]"
+                    <filter string="Supplier" domain="[]" name="group_by_in_supplier_id"
                             context="{'group_by':'supplier_id'}"/>
-                    <filter string="Supplier Invoice No." domain="[]"
+                    <filter string="Supplier Invoice No." domain="[]" name="group_by_in_supplier_invoice_number"
                             context="{'group_by':'supplier_invoice_number'}"/>
-                    <filter string="Supplier Payment Status" domain="[]"
+                    <filter string="Supplier Payment Status" domain="[]" name="group_by_in_supplier_payment_state"
                             context="{'group_by':'supplier_payment_state'}"/>
-                    <filter string="Status" domain="[]"
+                    <filter string="Status" domain="[]" name="group_by_in_state"
                             context="{'group_by':'state'}"/>
                 </group>
             </search>
@@ -117,9 +116,10 @@
         <field name="context">{}</field>
     </record>
 
-    <menuitem action="profit_loss_report_action"
-              id="menu_profit_loss_report"
-              parent="base.next_id_64" sequence="5"/>
+    <menuitem id="menu_base_reporting" name="Reporting" groups="sales_team.group_sale_salesman" sequence="50"/>
+    
+    <menuitem id="profit_loss_report_menu" name="Profit &amp; Loss Report" parent="menu_base_reporting" sequence="10"/>
 
-</data>
-</openerp>
+    <menuitem id="menu_profit_loss_report" action="profit_loss_report_action" parent="profit_loss_report_menu" sequence="5"/>
+
+</odoo>

@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
-# Copyright 2017 Quartile Limited
+# Copyright 2020 Quartile Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from openerp import models, fields, api
-import openerp.addons.decimal_precision as dp
+from odoo import models, fields, api
+from odoo.addons import decimal_precision as dp
 
 
 class ProfitLossReport(models.TransientModel):
@@ -100,21 +99,31 @@ class ProfitLossReport(models.TransientModel):
          ('sale_purch_done', 'SO and PO Done'),
          ('out_refund', 'Customer Refund'),
          ('in_refund', 'Supplier Refund')
-        ],
+         ],
         string='Status',
         readonly=True,
     )
-    out_move_id = fields.Many2one(
-        comodel_name='stock.move',
+    out_move_line_id = fields.Many2one(
+        comodel_name='stock.move.line',
         string='Outgoing Move',
+        readonly=True,
+    )
+    out_move_id = fields.Many2one(
+        related="out_move_line_id.move_id",
+        string='Incoming Move',
         readonly=True,
     )
     out_move_date = fields.Date(
         string='Outgoing Move Date',
         readonly=True,
     )
+    in_move_line_id = fields.Many2one(
+        comodel_name='stock.move.line',
+        string='Incoming Move Line',
+        readonly=True,
+    )
     in_move_id = fields.Many2one(
-        comodel_name='stock.move',
+        related="in_move_line_id.move_id",
         string='Incoming Move',
         readonly=True,
     )
@@ -169,8 +178,8 @@ class ProfitLossReport(models.TransientModel):
     )
     purchase_base_price = fields.Float(
         string='Purchase Base Price',
-        digits= dp.get_precision('Account'),
-        readonly = True,
+        digits=dp.get_precision('Account'),
+        readonly=True,
     )
     purchase_invoice_id = fields.Many2one(
         comodel_name='account.invoice',
@@ -223,7 +232,7 @@ class ProfitLossReport(models.TransientModel):
     )
     customer_invoice_type = fields.Selection(
         [('out_invoice', 'Customer Invoice'),
-        ('out_refund', 'Customer Refund')],
+         ('out_refund', 'Customer Refund')],
         readonly=True,
     )
     supplier_invoice_type = fields.Selection(

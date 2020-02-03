@@ -1,11 +1,10 @@
-# -*- coding: utf-8 -*-
-# Copyright 2017-2018 Quartile Limited
+# Copyright 2020 Quartile Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import pytz
-from openerp import api, models, fields
+from odoo import api, models, fields
 
 report_filters = [
     'product_id',
@@ -14,6 +13,7 @@ report_filters = [
     'supplier_id',
     'supplier_invoice_number'
 ]
+
 
 class ProfitLossReportWizard(models.TransientModel):
     _name = "profit.loss.report.wizard"
@@ -72,9 +72,9 @@ class ProfitLossReportWizard(models.TransientModel):
                 partner_id,
                 partner_ref,
                 sale_order_note,
-                out_move_id,
+                out_move_line_id,
                 out_move_date,
-                in_move_id,
+                in_move_line_id,
                 in_move_date,
                 in_move_quant_owner_id,
                 purchase_order_id,
@@ -91,46 +91,42 @@ class ProfitLossReportWizard(models.TransientModel):
         WITH
             outgoing_moves AS (
                 SELECT DISTINCT ON (sq.lot_id)
-                    sm.id,
+                    sml.id,
                     sq.lot_id,
-                    sm.date
+                    sml.date
                 FROM
-                    stock_move sm
+                    stock_move_line sml
                 JOIN
-                    stock_location sl ON sm.location_dest_id = sl.id
+                    stock_location sl ON sml.location_dest_id = sl.id
                 JOIN
-                    stock_quant_move_rel qmr ON sm.id = qmr.move_id
-                JOIN
-                    stock_quant sq ON qmr.quant_id = sq.id
+                    stock_quant sq ON sml.quant_id = sq.id
                 WHERE
                     sl.usage = 'customer' AND
-                    sm.state = 'done' AND
-                    sm.company_id = %s
+                    sml.state = 'done' AND
+                    sml.company_id = %s
                 ORDER BY
                     sq.lot_id,
-                    sm.date desc
+                    sml.date desc
             ),
             incoming_moves AS (
                 SELECT DISTINCT ON (sq.lot_id)
-                    sm.id,
+                    sml.id,
                     sq.lot_id,
-                    sm.date,
-                    sm.quant_owner_id
+                    sml.date,
+                    sml.quant_owner_id
                 FROM
-                    stock_move sm
+                    stock_move_line sml
                 JOIN
-                    stock_location sl ON sm.location_id = sl.id
+                    stock_location sl ON sml.location_id = sl.id
                 JOIN
-                    stock_quant_move_rel qmr ON sm.id = qmr.move_id
-                JOIN
-                    stock_quant sq ON qmr.quant_id = sq.id
+                    stock_quant sq ON sml.quant_id = sq.id
                 WHERE
                     sl.usage = 'supplier' AND
-                    sm.state = 'done' AND
-                    sm.company_id = %s
+                    sml.state = 'done' AND
+                    sml.company_id = %s
                 ORDER BY
                     sq.lot_id,
-                    sm.date
+                    sml.date
             ),
             purchase_data AS (
                 SELECT DISTINCT ON (pol.lot_id)
@@ -269,9 +265,9 @@ class ProfitLossReportWizard(models.TransientModel):
                 partner_id,
                 partner_ref,
                 sale_order_note,
-                out_move_id,
+                out_move_line_id,
                 out_move_date,
-                in_move_id,
+                in_move_line_id,
                 in_move_date,
                 in_move_quant_owner_id,
                 purchase_order_id,
@@ -288,46 +284,42 @@ class ProfitLossReportWizard(models.TransientModel):
         WITH
             outgoing_moves AS (
                 SELECT DISTINCT ON (sq.lot_id)
-                    sm.id,
+                    sml.id,
                     sq.lot_id,
-                    sm.date
+                    sml.date
                 FROM
-                    stock_move sm
+                    stock_move_line sml
                 JOIN
-                    stock_location sl ON sm.location_dest_id = sl.id
+                    stock_location sl ON sml.location_dest_id = sl.id
                 JOIN
-                    stock_quant_move_rel qmr ON sm.id = qmr.move_id
-                JOIN
-                    stock_quant sq ON qmr.quant_id = sq.id
+                    stock_quant sq ON sml.quant_id = sq.id
                 WHERE
                     sl.usage = 'customer' AND
-                    sm.state = 'done' AND
-                    sm.company_id = %s
+                    sml.state = 'done' AND
+                    sml.company_id = %s
                 ORDER BY
                     sq.lot_id,
-                    sm.date desc
+                    sml.date desc
             ),
             incoming_moves AS (
                 SELECT DISTINCT ON (sq.lot_id)
-                    sm.id,
+                    sml.id,
                     sq.lot_id,
-                    sm.date,
-                    sm.quant_owner_id
+                    sml.date,
+                    sml.quant_owner_id
                 FROM
-                    stock_move sm
+                    stock_move_line sml
                 JOIN
-                    stock_location sl ON sm.location_id = sl.id
+                    stock_location sl ON sml.location_id = sl.id
                 JOIN
-                    stock_quant_move_rel qmr ON sm.id = qmr.move_id
-                JOIN
-                    stock_quant sq ON qmr.quant_id = sq.id
+                    stock_quant sq ON sml.quant_id = sq.id
                 WHERE
                     sl.usage = 'supplier' AND
-                    sm.state = 'done' AND
-                    sm.company_id = %s
+                    sml.state = 'done' AND
+                    sml.company_id = %s
                 ORDER BY
                     sq.lot_id,
-                    sm.date
+                    sml.date
             ),
             purchase_invoice_data AS (
                 SELECT
@@ -478,8 +470,8 @@ class ProfitLossReportWizard(models.TransientModel):
             if rec.purchase_invoice_line_id:
                 invoice_line = rec.purchase_invoice_line_id
                 rec.purchase_currency_price = invoice_line.price_unit * \
-                                              (1.0 - (invoice_line.discount
-                                                      or 0.0) / 100.0)
+                    (1.0 - (invoice_line.discount
+                            or 0.0) / 100.0)
                 rec.purchase_currency_id = invoice_line.invoice_id.currency_id
                 if invoice_line.invoice_id.paid_date:
                     rec.exchange_rate = \
@@ -530,7 +522,7 @@ class ProfitLossReportWizard(models.TransientModel):
                 rec.sudo().supplier_payment_ids.mapped('ref'))
             if rec.invoice_id.state == 'paid':
                 rec.customer_payment_reference, \
-                rec.customer_payment_currency_rate, rec.sale_base_price = \
+                    rec.customer_payment_currency_rate, rec.sale_base_price = \
                     self._get_payment_information(
                         rec.sudo().customer_payment_ids,
                         rec.net_price,
@@ -541,7 +533,7 @@ class ProfitLossReportWizard(models.TransientModel):
             # Calculate the base_profit
             if rec.invoice_id and rec.invoice_id.state == 'paid' and \
                     rec.purchase_invoice_id and \
-                            rec.purchase_invoice_id.state == 'paid':
+            rec.purchase_invoice_id.state == 'paid':
                 if rec.customer_invoice_type:
                     if rec.customer_invoice_type == "out_refund":
                         rec.base_profit = rec.purchase_base_price - base_net_price
@@ -549,7 +541,7 @@ class ProfitLossReportWizard(models.TransientModel):
                         if rec.supplier_invoice_type:
                             if rec.supplier_invoice_type == "in_invoice":
                                 rec.base_profit = base_net_price - \
-                                                  rec.purchase_base_price
+                                    rec.purchase_base_price
                             else:
                                 rec.base_profit = 0
                 elif rec.supplier_invoice_type:
