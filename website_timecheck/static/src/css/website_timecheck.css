@@ -1,0 +1,80 @@
+/* Avoid image from overlapping with section part in /shop */
+.oe_product .oe_product_image img {
+    position: static !important;
+    padding: 10px;
+}
+.oe_product .oe_product_image {
+    position: static;
+}
+/* Remove background of product information */
+.product_item {
+    background: none !important;
+}
+/* section desktop */
+@media (min-width: 769px) {
+  .product_item {
+    position: static !important;
+    float: left;
+  }
+  .hidden-xs img {
+    max-width: none !important;
+    height: 200px !important;
+  }
+  .visible-xs-inline img {
+    display: none;
+  }
+}
+/* section mobile */
+@media (max-width: 768px) and (min-width: 362px) {
+  .product_item {
+    position: absolute !important;
+    float: right;
+    left: 200px !important;
+    padding: 10px !important;
+    width: 180px !important;
+    top: 0;
+  }
+  .hidden-xs img {
+    display: none;
+  }
+  .oe_product_image{
+    width: 200px !important;
+    position: static !important;
+  }
+  #products_grid .oe_product.oe_grid {
+    height: fit-content;
+  }
+  /* Restrict the width of product information */
+  .product_info {
+    width: 100px !important;
+  }
+}
+/* section small device */
+@media (max-width: 362px) {
+  .product_item {
+    position: absolute !important;
+    float: right;
+    width: 130px !important;
+    padding: 10px !important;
+    left: 150px !important;
+    top: 0;
+  }
+  .hidden-xs img {
+    display: none;
+  }
+  .oe_product_image{
+    width: 150px !important;
+    position: static !important;
+  }
+  #products_grid .oe_product.oe_grid {
+    height: fit-content;
+  }
+  /* Restrict the width of product information */
+  .product_info {
+    width: 100px !important;
+  }
+}
+/* fix position of the page content for tablap device */
+/* .container {
+    margin-left: inherit;
+} */

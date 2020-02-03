@@ -36,6 +36,11 @@ class ProductTemplate(models.Model):
     qty_local_own_stock = fields.Integer(
         string="Quantity Local Stock", compute="_get_qty_local_own_stock", store=True
     )
+    qty_local_supplier_stock = fields.Integer(
+        string="Quantity Local Supplier Stock",
+        compute="_get_qty_local_own_stock",
+        store=True,
+    )
     stock_location = fields.Char(
         string="Stock Location", compute="_get_stock_location", store=True
     )
@@ -94,6 +99,7 @@ class ProductTemplate(models.Model):
                 for ss in supplier_stocks:
                     supplier_local_qty += ss.quantity
             pt.qty_local_own_stock = pt.qty_local_stock - supplier_local_qty
+            pt.qty_local_supplier_stock = supplier_local_qty
 
     def _get_local_location_name(self, prod_ids):
         quant = self.env["stock.quant"].search(

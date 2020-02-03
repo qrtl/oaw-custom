@@ -7,6 +7,7 @@ from odoo import api, fields, models
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
+    category_name = fields.Char(string="Brand", related="categ_id.name")
     additional_info = fields.Char(string="Additional Info")
     # For a filter in Product and Product Offer views.
     # Trigger: VCI Receipt (stock.quant (stock_move.purchase_price_unit)),
