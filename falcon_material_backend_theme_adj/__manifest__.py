@@ -10,5 +10,6 @@
     "description": """""",
     "summary": "Customizable Backend Theme Based on Material Design",
     "data": ["views/templates.xml"],
+    "qweb": ["static/src/xml/new_menu.xml"],
     "installable": True,
 }
