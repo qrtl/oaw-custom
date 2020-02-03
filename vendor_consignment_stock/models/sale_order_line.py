@@ -15,7 +15,11 @@ class SaleOrderLine(models.Model):
         """
         values = super(SaleOrderLine, self)._prepare_procurement_values(group_id)
         self.ensure_one()
-        if self.stock_owner_id and self.stock_owner_id != self.order_id.partner_id:
+        if (
+            self.stock_owner_id
+            and self.stock_owner_id != self.order_id.partner_id
+            and self.stock_owner_id != self.env.user.company_id.partner_id
+        ):
             routes = (
                 self.route_id
                 | self.env.ref("stock.route_warehouse0_mto")
