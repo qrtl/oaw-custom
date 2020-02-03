@@ -183,8 +183,7 @@ class WebsiteSale(WebsiteSale):
     def check_timecheck_access(self):
         user = request.env["res.users"].sudo().browse(request.uid)
         if user.sudo().has_group("supplier_user_access.group_supplier"):
-            base_url = request.env["ir.config_parameter"].get_param(
-                "web.base.url")
+            base_url = request.env["ir.config_parameter"].get_param("web.base.url")
             redirect = base_url + "/web"
             return http.redirect_with_hash(redirect)
         return False
@@ -272,8 +271,7 @@ class Website(Website):
 
     @http.route(website=True, auth="public")
     def web_login(self, redirect=None, *args, **kw):
-        response = super(Website, self).web_login(
-            redirect=redirect, *args, **kw)
+        response = super(Website, self).web_login(redirect=redirect, *args, **kw)
         if not redirect and request.params["login_success"]:
             if (
                 request.env["res.users"]
