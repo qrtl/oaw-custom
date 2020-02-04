@@ -13,22 +13,21 @@ class PurchaseOrderLine(models.Model):
     partner_ref = fields.Char(
         related="order_id.partner_ref", string="Vendor Reference", store=True
     )
-    image_medium = fields.Binary(
-        related="product_id.image_medium", string="image"
-    )
+    image_medium = fields.Binary(related="product_id.image_medium", string="image")
     supplier_reference = fields.Char(
-        string="Supplier Reference",
-        compute="_compute_supplier_reference",
-        store=True,
+        string="Supplier Reference", compute="_compute_supplier_reference", store=True
     )
 
     @api.multi
-    @api.depends("order_id.supplier_reference", "invoice_lines.invoice_id.supplier_reference")
+    @api.depends(
+        "order_id.supplier_reference", "invoice_lines.invoice_id.supplier_reference"
+    )
     def _compute_supplier_reference(self):
         for line in self:
-            if line.invoice_lines.filtered(lambda a: a.invoice_id.state != 'cancel'):
+            if line.invoice_lines.filtered(lambda a: a.invoice_id.state != "cancel"):
                 line.supplier_reference = line.invoice_lines.filtered(
-                    lambda a: a.invoice_id.state != 'cancel')[0].invoice_id.supplier_reference
+                    lambda a: a.invoice_id.state != "cancel"
+                )[0].invoice_id.supplier_reference
             else:
                 line.supplier_reference = line.order_id.supplier_reference
 
@@ -110,8 +109,9 @@ class PurchaseOrderLine(models.Model):
         account_journal_obj = self.env["account.journal"]
         invoice_obj = self.env["account.invoice"]
         name = orders and ",".join([order.name for order in orders]) or ""
-        supplier_reference = ",".join(
-            [order.supplier_reference for order in orders]) or ""
+        supplier_reference = (
+            ",".join([order.supplier_reference for order in orders]) or ""
+        )
         journal_id = account_journal_obj.search([("type", "=", "purchase")])
         journal_id = journal_id and journal_id[0].id or False
         account_id = partner.property_account_payable_id.id

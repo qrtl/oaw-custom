@@ -31,7 +31,6 @@ class SaleOrder(models.Model):
                         raise UserError("For MTO a Sales Supplier has to be selected!")
         res = super(SaleOrder, self).create(vals)
 
-
         # rec = self.browse(cr, uid, res, context=context)
         # if rec.supplier_id:
         #     self.message_subscribe(cr, SUPERUSER_ID, [rec.id], [rec.supplier_id.id], context=context)
@@ -49,7 +48,9 @@ class SaleOrder(models.Model):
                 if not user.has_group("supplier_user_access.group_supplier"):
                     if "supplier_id" in vals:
                         if not vals["supplier_id"]:
-                            raise UserError("For MTO a Sales Supplier has to be selected!")
+                            raise UserError(
+                                "For MTO a Sales Supplier has to be selected!"
+                            )
         res = super(SaleOrder, self).write(vals)
 
         # rec = self.browse(cr, uid, res, context=context)
