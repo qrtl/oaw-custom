@@ -58,9 +58,94 @@
               action="action_chono24_view"
               sequence="2"
               groups="group_chr24_photoedit"/>
-    <menuitem id="menu_photoedit_view"
+
+
+    <!-- base structure of product.template, common with product.product -->
+    <record id="chono24_view_form" model="ir.ui.view">
+        <field name="name">product.template.common.form</field>
+        <field name="model">product.template</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <form string="Product">
+                <header>
+
+                </header>
+                <sheet>
+                    <field name='product_variant_count' invisible='1'/>
+                    <field name='is_product_variant' invisible='1'/>
+                    <field name='attribute_line_ids' invisible='1'/>
+                    <field name="id" invisible="True"/>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object"
+                                class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button"
+                                options='{"terminology": "archive"}'/>
+                        </button>
+                    </div>
+                    <field name="image_medium" widget="image" class="oe_avatar"/>
+                    <div class="oe_title">
+                        <label class="oe_edit_only" for="name" string="Product Name"/>
+                        <h1><field name="name" placeholder="Product Name"/></h1>
+                        <div name="options" groups="base.group_user">
+                            <div>
+                                <field name="sale_ok"/>
+                                <label for="sale_ok"/>
+                            </div>
+                            <div>
+                                <field name="purchase_ok"/>
+                                <label for="purchase_ok"/>
+                            </div>
+                        </div>
+                    </div>
+                    <notebook>
+                        <page string="General Information" name="general_information">
+                            <group>
+                                <group name="group_general">
+                                    <field name="type"/>
+                                    <field name="categ_id" string="Product Category"/>
+                                </group>
+                                <group name="group_standard_price">
+                                    <field name="list_price" string="Sales Price" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                                    <label for="standard_price" groups="base.group_user" attrs="{'invisible': [('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}"/>
+                                    <div name="standard_price_uom" groups="base.group_user" attrs="{'invisible': [('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}">
+                                        <field name="standard_price" widget='monetary' options="{'currency_field': 'cost_currency_id'}"/>
+                                    </div>
+                                    <field name="company_id" groups="base.group_multi_company"
+                                        options="{'no_create': True}"/>
+                                    <field name="uom_id" groups="uom.group_uom" options="{'no_create': True}"/>
+                                    <field name="uom_po_id" groups="uom.group_uom" options="{'no_create': True}"/>
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="cost_currency_id" invisible="1"/>
+                                    <field name="product_variant_id" invisible="1"/>
+                                </group>
+                            </group>
+                            <group string="Internal Notes">
+                                <field name="description" nolabel="1" placeholder="This note is only for internal purposes."/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+     <!--The action-->
+    <record id="action_chono24_form_view" model="ir.actions.act_window">
+        <field name="name">Products</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="chono24_view_form"/>
+        <field name="context">{}</field>
+    </record>
+
+      <menuitem id="menu_photoedit_form_view"
               parent="menu_chron24_photoedit_view"
-              action="stock.product_template_action_product"
+              action="action_chono24_form_view"
               sequence="2"
-              groups="group_chr24_photoedit"/>
+              groups=""/>
 </odoo>
