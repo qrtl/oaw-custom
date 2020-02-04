@@ -7,6 +7,4 @@ from odoo import api, fields, models
 class AccountInvoice(models.Model):
     _inherit = "account.invoice"
 
-    supplier_reference = fields.Char(
-        string="Supplier Reference",
-    )
+    supplier_reference = fields.Char(string="Supplier Reference")
