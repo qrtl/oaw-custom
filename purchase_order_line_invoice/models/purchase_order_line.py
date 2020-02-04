@@ -13,16 +13,16 @@ class PurchaseOrderLine(models.Model):
     partner_ref = fields.Char(
         related="order_id.partner_ref", string="Vendor Reference", store=True
     )
-    image_medium = fields.Binary(
-        related="product_id.image_medium", string="image")
+    image_medium = fields.Binary(related="product_id.image_medium", string="image")
     supplier_reference = fields.Char(
         string="Supplier Reference", compute="_compute_supplier_reference", store=True
     )
 
     @api.multi
     @api.depends(
-        "order_id.supplier_reference", "invoice_lines.invoice_id.supplier_reference",
-        "invoice_lines.invoice_id.state"
+        "order_id.supplier_reference",
+        "invoice_lines.invoice_id.supplier_reference",
+        "invoice_lines.invoice_id.state",
     )
     def _compute_supplier_reference(self):
         for line in self:
@@ -32,7 +32,6 @@ class PurchaseOrderLine(models.Model):
                 )[0].invoice_id.supplier_reference
             else:
                 line.supplier_reference = line.order_id.supplier_reference
-                print(line.supplier_reference)
 
     @api.multi
     @api.depends("qty_invoiced", "product_qty")
@@ -71,8 +70,6 @@ class PurchaseOrderLine(models.Model):
             for result in invoices.values():
                 invoice_line_ids = list(map(lambda x: x[1].id, result))
                 orders = list(set(map(lambda x: x[0].order_id, result)))
-                print(orders)
-                print(invoice_line_ids)
                 res.append(
                     self._make_invoice_by_partner(
                         orders[0].partner_id, orders, invoice_line_ids
@@ -113,10 +110,18 @@ class PurchaseOrderLine(models.Model):
         purchase_obj = self.env["purchase.order"]
         account_journal_obj = self.env["account.journal"]
         invoice_obj = self.env["account.invoice"]
-        name = orders and ",".join(
-            [order.name for order in orders if order.name]) or ""
-        supplier_reference = orders and ",".join(
-            [order.supplier_reference for order in orders if order.supplier_reference]) or ""
+        name = orders and ",".join([order.name for order in orders if order.name]) or ""
+        supplier_reference = (
+            orders
+            and ",".join(
+                [
+                    order.supplier_reference
+                    for order in orders
+                    if order.supplier_reference
+                ]
+            )
+            or ""
+        )
         journal_id = account_journal_obj.search([("type", "=", "purchase")])
         journal_id = journal_id and journal_id[0].id or False
         account_id = partner.property_account_payable_id.id
@@ -130,8 +135,12 @@ class PurchaseOrderLine(models.Model):
             "account_id": account_id,
             "partner_id": partner.id,
             "invoice_line_ids": [(6, 0, lines_ids)],
-            "currency_id": orders and orders[0].currency_id.id or self.env.user.company_id.currency_id,
-            "comment": orders and " \n".join([order.notes for order in orders if order.notes]) or "",
+            "currency_id": orders
+            and orders[0].currency_id.id
+            or self.env.user.company_id.currency_id,
+            "comment": orders
+            and " \n".join([order.notes for order in orders if order.notes])
+            or "",
             "payment_term_id": orders and orders[0].payment_term_id.id or False,
             "fiscal_position_id": partner.property_account_position_id.id,
         }
