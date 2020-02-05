@@ -12,7 +12,7 @@
                 <field name="in_move_quant_owner_id"/>
                 <field name="stock_type"/>
                 <field name="product_id"/>
-                <field name="image_small" widget="image" height="64px"/>
+                <field name="image_medium" widget="image"/>
                 <field name="categ_id" invisible="1"/>
                 <field name="categ_name"/>
                 <field name="lot_id"/>
@@ -37,7 +37,7 @@
                 <field name="state"/>
                 <field name="supplier_id"/>
                 <field name="supplier_ref" invisible="1"/>
-                <field name="supplier_invoice_number"/>
+                <field name="reference"/>
                 <field name="supplier_payment_ref"/>
                 <field name="supplier_payment_dates"/>
                 <field name="supplier_payment_ids" widget="many2many_tags"/>
@@ -64,7 +64,7 @@
                 <field name="partner_id"/>
                 <field name="customer_payment_reference"/>
                 <field name="supplier_id"/>
-                <field name="supplier_invoice_number"/>
+                <field name="reference"/>
                 <group expand="0" name='state' string="Status">
                     <filter string="PO DONE" name="purch_done"
                             domain="[('state','=','purch_done')]"/>
@@ -95,8 +95,8 @@
                             context="{'group_by':'customer_payment_reference'}"/>
                     <filter string="Supplier" domain="[]" name="group_by_in_supplier_id"
                             context="{'group_by':'supplier_id'}"/>
-                    <filter string="Supplier Invoice No." domain="[]" name="group_by_in_supplier_invoice_number"
-                            context="{'group_by':'supplier_invoice_number'}"/>
+                    <filter string="Supplier Invoice No." domain="[]" name="group_by_in_reference"
+                            context="{'group_by':'reference'}"/>
                     <filter string="Supplier Payment Status" domain="[]" name="group_by_in_supplier_payment_state"
                             context="{'group_by':'supplier_payment_state'}"/>
                     <filter string="Status" domain="[]" name="group_by_in_state"

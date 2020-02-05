@@ -191,8 +191,8 @@ class ProfitLossReport(models.TransientModel):
         string='Purchase Invoice Line',
         readonly=True,
     )
-    supplier_invoice_number = fields.Char(
-        string='Supplier Invoice No.',
+    reference = fields.Char(
+        string='Vendor Reference',
         readonly=True,
     )
     base_profit = fields.Float(
@@ -206,13 +206,13 @@ class ProfitLossReport(models.TransientModel):
     )
     customer_payment_ids = fields.Many2many(
         string='Customer Payment',
-        comodel_name='account.move.line',
+        comodel_name='account.payment',
         related='invoice_id.payment_ids',
         readonly=True,
     )
     supplier_payment_ids = fields.Many2many(
         string='Supplier Payment',
-        comodel_name='account.move.line',
+        comodel_name='account.payment',
         related='purchase_invoice_id.payment_ids',
         readonly=True,
     )
@@ -240,9 +240,9 @@ class ProfitLossReport(models.TransientModel):
          ('in_refund', 'Supplier Refund')],
         readonly=True,
     )
-    image_small = fields.Binary(
+    image_medium = fields.Binary(
         'Image',
-        related='product_id.product_tmpl_id.image_small',
+        related='product_id.product_tmpl_id.image_medium',
         readonly=True,
     )
     customer_payment_reference = fields.Char(

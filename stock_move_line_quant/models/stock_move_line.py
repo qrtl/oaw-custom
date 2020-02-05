@@ -31,7 +31,8 @@ class StockMoveLine(models.Model):
         related="move_id.picking_type_id.code", string="Type of Operation", store=True
     )
     quant_id = fields.Many2one("stock.quant", string="Stock Quant")
-    quant_owner_id = fields.Many2one(related="quant_id.owner_id", string="Quant Owner")
+    quant_owner_id = fields.Many2one(
+        related="quant_id.owner_id", string="Quant Owner")
 
     @api.onchange("quant_id")
     def _onchange_quant_id(self):
@@ -70,7 +71,8 @@ class StockMoveLine(models.Model):
                     vals["owner_id"] = picking.owner_id.id
         if "lot_id" in vals:
             vals["quant_id"] = (
-                self.env["stock.production.lot"].browse(vals["lot_id"]).quant_ids[0].id
+                self.env["stock.production.lot"].browse(
+                    vals["lot_id"]).quant_ids[0].id
             )
         res = super(StockMoveLine, self).create(vals)
         # Update the reservation_id of the stock quant

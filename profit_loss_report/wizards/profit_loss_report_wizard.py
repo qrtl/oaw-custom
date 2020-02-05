@@ -5,13 +5,14 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import pytz
 from odoo import api, models, fields
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 
 report_filters = [
     'product_id',
     'lot_id',
     'partner_id',
     'supplier_id',
-    'supplier_invoice_number'
+    'reference'
 ]
 
 
@@ -48,8 +49,8 @@ class ProfitLossReportWizard(models.TransientModel):
         'profit_loss_report_supplier_id_filter',
         string='Supplier',
     )
-    supplier_invoice_number = fields.Char(
-        string='Supplier Invoice Number'
+    reference = fields.Char(
+        string='Vendor Reference'
     )
 
     def _inject_out_invoice_data(self, from_date, to_date):
@@ -84,7 +85,7 @@ class ProfitLossReportWizard(models.TransientModel):
                 purchase_currency_price,
                 purchase_invoice_id,
                 purchase_invoice_line_id,
-                supplier_invoice_number,
+                reference,
                 customer_invoice_type,
                 supplier_invoice_type
             )
@@ -100,10 +101,12 @@ class ProfitLossReportWizard(models.TransientModel):
                     stock_location sl ON sml.location_dest_id = sl.id
                 JOIN
                     stock_quant sq ON sml.quant_id = sq.id
+                JOIN
+                    stock_move sm ON sm.id = sml.move_id
                 WHERE
                     sl.usage = 'customer' AND
                     sml.state = 'done' AND
-                    sml.company_id = %s
+                    sm.company_id = %s
                 ORDER BY
                     sq.lot_id,
                     sml.date desc
@@ -113,17 +116,19 @@ class ProfitLossReportWizard(models.TransientModel):
                     sml.id,
                     sq.lot_id,
                     sml.date,
-                    sml.quant_owner_id
+                    sq.owner_id
                 FROM
                     stock_move_line sml
                 JOIN
                     stock_location sl ON sml.location_id = sl.id
                 JOIN
                     stock_quant sq ON sml.quant_id = sq.id
+                JOIN
+                    stock_move sm ON sm.id = sml.move_id
                 WHERE
                     sl.usage = 'supplier' AND
                     sml.state = 'done' AND
-                    sml.company_id = %s
+                    sm.company_id = %s
                 ORDER BY
                     sq.lot_id,
                     sml.date
@@ -154,7 +159,7 @@ class ProfitLossReportWizard(models.TransientModel):
                     ail.id as purchase_invoice_line_id,
                     ail.purchase_line_id,
                     ai.id AS supplier_invoice_id,
-                    ai.supplier_invoice_number,
+                    ai.reference,
                     ai.type AS supplier_invoice_type
                 FROM
                     account_invoice_line ail
@@ -189,7 +194,7 @@ class ProfitLossReportWizard(models.TransientModel):
             om.date,
             im.id,
             im.date,
-            im.quant_owner_id,
+            im.owner_id,
             pd.purchase_id,
             pd.partner_id,
             pd.ref,
@@ -197,7 +202,7 @@ class ProfitLossReportWizard(models.TransientModel):
             pd.price_unit,
             pid.supplier_invoice_id,
             pid.purchase_invoice_line_id,
-            pid.supplier_invoice_number,
+            pid.reference,
             ai.type,
             pid.supplier_invoice_type
         FROM
@@ -213,7 +218,11 @@ class ProfitLossReportWizard(models.TransientModel):
         JOIN
             res_partner rp ON ai.partner_id = rp.id
         LEFT JOIN
-            sale_order so ON ail.so_id = so.id
+            sale_order_line_invoice_rel soliv ON soliv.invoice_line_id = ail.id
+        LEFT JOIN
+            sale_order_line sol ON sol.id = soliv.order_line_id
+        LEFT JOIN
+            sale_order so ON so.id = sol.order_id
         LEFT JOIN
             outgoing_moves om ON ail.lot_id = om.lot_id
         LEFT JOIN
@@ -277,7 +286,7 @@ class ProfitLossReportWizard(models.TransientModel):
                 purchase_currency_price,
                 purchase_invoice_id,
                 purchase_invoice_line_id,
-                supplier_invoice_number,
+                reference,
                 customer_invoice_type,
                 supplier_invoice_type
             )
@@ -293,10 +302,12 @@ class ProfitLossReportWizard(models.TransientModel):
                     stock_location sl ON sml.location_dest_id = sl.id
                 JOIN
                     stock_quant sq ON sml.quant_id = sq.id
+                JOIN
+                    stock_move sm ON sm.id = sml.move_id
                 WHERE
                     sl.usage = 'customer' AND
                     sml.state = 'done' AND
-                    sml.company_id = %s
+                    sm.company_id = %s
                 ORDER BY
                     sq.lot_id,
                     sml.date desc
@@ -306,17 +317,19 @@ class ProfitLossReportWizard(models.TransientModel):
                     sml.id,
                     sq.lot_id,
                     sml.date,
-                    sml.quant_owner_id
+                    sq.owner_id
                 FROM
                     stock_move_line sml
                 JOIN
                     stock_location sl ON sml.location_id = sl.id
                 JOIN
                     stock_quant sq ON sml.quant_id = sq.id
+                JOIN
+                    stock_move sm ON sm.id = sml.move_id
                 WHERE
                     sl.usage = 'supplier' AND
                     sml.state = 'done' AND
-                    sml.company_id = %s
+                    sm.company_id = %s
                 ORDER BY
                     sq.lot_id,
                     sml.date
@@ -327,7 +340,7 @@ class ProfitLossReportWizard(models.TransientModel):
                     ail.purchase_line_id,
                     ail.id AS purchase_invoice_line_id,
                     ai.id AS supplier_invoice_id,
-                    ai.supplier_invoice_number,
+                    ai.reference,
                     ai.type AS supplier_invoice_type
                 FROM
                     account_invoice_line ail
@@ -383,7 +396,7 @@ class ProfitLossReportWizard(models.TransientModel):
             om.date,
             im.id,
             im.date,
-            im.quant_owner_id,
+            im.owner_id,
             po.id,
             po.partner_id,
             rp.ref,
@@ -391,7 +404,7 @@ class ProfitLossReportWizard(models.TransientModel):
             pol.price_unit,
             COALESCE(pid.supplier_invoice_id, pid2.supplier_invoice_id),
             COALESCE(pid.purchase_invoice_line_id, pid2.purchase_invoice_line_id),
-            COALESCE(pid.supplier_invoice_number, pid2.supplier_invoice_number),
+            COALESCE(pid.reference, pid2.reference),
             cid.customer_invoice_type,
             COALESCE(NULLIF(pid.supplier_invoice_type, ''), pid2.supplier_invoice_type)
         FROM
@@ -501,25 +514,34 @@ class ProfitLossReportWizard(models.TransientModel):
                     rec.exchange_rate = 1.0
                 elif ctx['date'] and rec.purchase_currency_id:
                     rec.exchange_rate = self.env['res.currency'].with_context(
-                        ctx)._get_conversion_rate(rec.purchase_currency_id,
-                                                  comp_currency_id)
+                        ctx)._get_conversion_rate(
+                            rec.purchase_currency_id,
+                            comp_currency_id,
+                            self.env.user.company_id,
+                            ctx['date']
+                    )
             # Handle the net price
             net_price_exchange_rate = 1.0
             if rec.net_price_currency_id == comp_currency_id:
                 net_price_exchange_rate = 1.0
             elif ctx['date'] and rec.net_price_currency_id:
                 net_price_exchange_rate = self.env['res.currency'].with_context(
-                    ctx)._get_conversion_rate(rec.net_price_currency_id,
-                                              comp_currency_id)
+                    ctx)._get_conversion_rate(
+                        rec.net_price_currency_id,
+                        comp_currency_id,
+                        self.env.user.company_id,
+                        ctx['date']
+                )
             base_net_price = rec.net_price * net_price_exchange_rate
             rec.purchase_base_price = \
                 rec.purchase_currency_price * rec.exchange_rate
 
             # Handle the display of multi-payments
-            rec.supplier_payment_dates = ', '.join(
-                rec.sudo().supplier_payment_ids.mapped('date'))
+
+            rec.supplier_payment_dates = ', '.join([fields.Date.to_string(
+                d) for d in rec.sudo().supplier_payment_ids.mapped('payment_date')])
             rec.supplier_payment_ref = ', '.join(
-                rec.sudo().supplier_payment_ids.mapped('ref'))
+                rec.sudo().supplier_payment_ids.mapped('communication'))
             if rec.invoice_id.state == 'paid':
                 rec.customer_payment_reference, \
                     rec.customer_payment_currency_rate, rec.sale_base_price = \
@@ -533,7 +555,7 @@ class ProfitLossReportWizard(models.TransientModel):
             # Calculate the base_profit
             if rec.invoice_id and rec.invoice_id.state == 'paid' and \
                     rec.purchase_invoice_id and \
-            rec.purchase_invoice_id.state == 'paid':
+                rec.purchase_invoice_id.state == 'paid':
                 if rec.customer_invoice_type:
                     if rec.customer_invoice_type == "out_refund":
                         rec.base_profit = rec.purchase_base_price - base_net_price
@@ -590,17 +612,18 @@ class ProfitLossReportWizard(models.TransientModel):
 
     def _get_utc_date(self, date_tz):
         tz = pytz.timezone(self.env.user.tz) or pytz.utc
-        date = datetime.strptime(date_tz, '%Y-%m-%d')
-        date_local = tz.localize(date, is_dst=None)
+        date_string = datetime.strftime(date_tz, DEFAULT_SERVER_DATE_FORMAT)
+        date_local = tz.localize(
+            fields.Datetime.from_string(date_string), is_dst=None)
         return date_local.astimezone(pytz.utc).strftime("%Y-%m-%d %H:%M:%S")
 
     def _get_payment_information(self, payment_ids, net_price, invoice_id):
-        payment_reference = ', '.join(payment_ids.mapped('ref'))
+        payment_reference = ', '.join(payment_ids.mapped('communication'))
         payment_currency_rate = False
         sale_base_price = False
         if len(payment_ids) == 1:
             payment = payment_ids[0]
-            payment_reference = payment.ref
+            payment_reference = payment.communication
             payment_currency_rate = invoice_id.paid_date_currency_rate
             sale_base_price = net_price / payment_currency_rate
         return payment_reference, payment_currency_rate, sale_base_price
@@ -609,7 +632,7 @@ class ProfitLossReportWizard(models.TransientModel):
         filters = []
         for filter in report_filters:
             if self[filter]:
-                if type(self[filter]) in (str, unicode):
+                if type(self[filter]) == str:
                     value = self[filter].strip()
                     filters.append("(%s NOT ILIKE '%%%s%%' OR %s IS NULL)" % (
                         filter,

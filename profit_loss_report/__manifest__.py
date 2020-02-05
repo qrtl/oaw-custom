@@ -7,8 +7,10 @@
     "website": "https://www.quartile.co",
     "category": "Report",
     "depends": [
+        "account_invoice_line_quant",
         "account_invoice_paid_date_currency",
         "sale_order_line_quant",
+        "purchase_order_line_quant",
     ],
     "description": """
     """,
