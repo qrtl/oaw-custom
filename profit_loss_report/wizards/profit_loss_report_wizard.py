@@ -2,56 +2,36 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from datetime import datetime
-from dateutil.relativedelta import relativedelta
+
 import pytz
-from odoo import api, models, fields
+from dateutil.relativedelta import relativedelta
+from odoo import api, fields, models
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 
-report_filters = [
-    'product_id',
-    'lot_id',
-    'partner_id',
-    'supplier_id',
-    'reference'
-]
+report_filters = ["product_id", "lot_id", "partner_id", "supplier_id", "reference"]
 
 
 class ProfitLossReportWizard(models.TransientModel):
     _name = "profit.loss.report.wizard"
-    _description = 'Profit & Loss Report Wizard'
+    _description = "Profit & Loss Report Wizard"
 
     from_date = fields.Date(
         required=True,
-        string='From Date',
-        default=fields.Date.to_string(
-            datetime.now().replace(day=1)),
+        string="From Date",
+        default=fields.Date.to_string(datetime.now().replace(day=1)),
     )
     to_date = fields.Date(
-        required=True,
-        string='To Date',
-        default=fields.Date.context_today,
+        required=True, string="To Date", default=fields.Date.context_today
     )
-    product_id = fields.Many2many(
-        'product.product',
-        string='Product',
-    )
-    lot_id = fields.Many2many(
-        'stock.production.lot',
-        string='Case No.',
-    )
+    product_id = fields.Many2many("product.product", string="Product")
+    lot_id = fields.Many2many("stock.production.lot", string="Case No.")
     partner_id = fields.Many2many(
-        'res.partner',
-        'profit_loss_report_partner_id_filter',
-        string='Customer',
+        "res.partner", "profit_loss_report_partner_id_filter", string="Customer"
     )
     supplier_id = fields.Many2many(
-        'res.partner',
-        'profit_loss_report_supplier_id_filter',
-        string='Supplier',
+        "res.partner", "profit_loss_report_supplier_id_filter", string="Supplier"
     )
-    reference = fields.Char(
-        string='Vendor Reference'
-    )
+    reference = fields.Char(string="Vendor Reference")
 
     def _inject_out_invoice_data(self, from_date, to_date):
         query = """
@@ -250,7 +230,7 @@ class ProfitLossReportWizard(models.TransientModel):
             self.env.uid,
             from_date,
             to_date,
-            company_id
+            company_id,
         )
         self.env.cr.execute(query, params)
 
@@ -455,7 +435,7 @@ class ProfitLossReportWizard(models.TransientModel):
             self.env.uid,
             from_date,
             to_date,
-            company_id
+            company_id,
         )
         self.env.cr.execute(query, params)
 
@@ -463,107 +443,119 @@ class ProfitLossReportWizard(models.TransientModel):
     def _update_records(self):
         self.ensure_one()
         ctx = dict(self._context)
-        ctx['company_id'] = self.env.user.company_id.id
-        recs = self.env['profit.loss.report'].search([])
+        ctx["company_id"] = self.env.user.company_id.id
+        recs = self.env["profit.loss.report"].search([])
         for rec in recs:
             # Get the period of the record
             if rec.in_move_date:
-                rec.in_period_id = self.env['account.period'].with_context(
-                    ctx).find(rec.in_move_date)[:1]
+                rec.in_period_id = (
+                    self.env["account.period"]
+                    .with_context(ctx)
+                    .find(rec.in_move_date)[:1]
+                )
 
             # Define quant type
             if rec.in_move_quant_owner_id:
-                if rec.in_move_quant_owner_id == \
-                        self.env.user.company_id.partner_id:
-                    rec.stock_type = 'own'
+                if rec.in_move_quant_owner_id == self.env.user.company_id.partner_id:
+                    rec.stock_type = "own"
                 else:
-                    rec.stock_type = 'vci'
+                    rec.stock_type = "vci"
 
             # Handle the purchase price
             if rec.purchase_invoice_line_id:
                 invoice_line = rec.purchase_invoice_line_id
-                rec.purchase_currency_price = invoice_line.price_unit * \
-                    (1.0 - (invoice_line.discount
-                            or 0.0) / 100.0)
+                rec.purchase_currency_price = invoice_line.price_unit * (
+                    1.0 - (invoice_line.discount or 0.0) / 100.0
+                )
                 rec.purchase_currency_id = invoice_line.invoice_id.currency_id
                 if invoice_line.invoice_id.paid_date:
-                    rec.exchange_rate = \
+                    rec.exchange_rate = (
                         1 / invoice_line.invoice_id.paid_date_currency_rate
+                    )
                 else:
                     rec.exchange_rate = 1 / invoice_line.rate
-            elif not rec.purchase_order_id and rec.stock_type == 'vci':
+            elif not rec.purchase_order_id and rec.stock_type == "vci":
                 if rec.supplier_id:
                     rec.supplier_ref = rec.in_move_quant_owner_id.ref
                 if rec.in_move_id:
-                    rec.purchase_order_id = \
-                        rec.in_move_id.purchase_line_id.order_id
+                    rec.purchase_order_id = rec.in_move_id.purchase_line_id.order_id
                     rec.purchase_currency_id = rec.in_move_id.currency_id
-                    rec.purchase_currency_price = \
-                        rec.in_move_id.purchase_price_unit
+                    rec.purchase_currency_price = rec.in_move_id.purchase_price_unit
 
             # Determine the purchase exchange rate
-            if rec.stock_type == 'vci':
-                ctx['date'] = rec.out_move_date or rec.invoice_id.date_invoice
+            if rec.stock_type == "vci":
+                ctx["date"] = rec.out_move_date or rec.invoice_id.date_invoice
             elif not rec.in_move_date and rec.purchase_order_id:
-                ctx['date'] = rec.purchase_order_id.date_order
+                ctx["date"] = rec.purchase_order_id.date_order
             else:
-                ctx['date'] = rec.in_move_date
+                ctx["date"] = rec.in_move_date
             comp_currency_id = self.env.user.company_id.currency_id
             if not rec.exchange_rate:
                 if rec.purchase_currency_id == comp_currency_id:
                     rec.exchange_rate = 1.0
-                elif ctx['date'] and rec.purchase_currency_id:
-                    rec.exchange_rate = self.env['res.currency'].with_context(
-                        ctx)._get_conversion_rate(
+                elif ctx["date"] and rec.purchase_currency_id:
+                    rec.exchange_rate = (
+                        self.env["res.currency"]
+                        .with_context(ctx)
+                        ._get_conversion_rate(
                             rec.purchase_currency_id,
                             comp_currency_id,
                             self.env.user.company_id,
-                            ctx['date']
+                            ctx["date"],
+                        )
                     )
             # Handle the net price
             net_price_exchange_rate = 1.0
             if rec.net_price_currency_id == comp_currency_id:
                 net_price_exchange_rate = 1.0
-            elif ctx['date'] and rec.net_price_currency_id:
-                net_price_exchange_rate = self.env['res.currency'].with_context(
-                    ctx)._get_conversion_rate(
+            elif ctx["date"] and rec.net_price_currency_id:
+                net_price_exchange_rate = (
+                    self.env["res.currency"]
+                    .with_context(ctx)
+                    ._get_conversion_rate(
                         rec.net_price_currency_id,
                         comp_currency_id,
                         self.env.user.company_id,
-                        ctx['date']
+                        ctx["date"],
+                    )
                 )
             base_net_price = rec.net_price * net_price_exchange_rate
-            rec.purchase_base_price = \
-                rec.purchase_currency_price * rec.exchange_rate
+            rec.purchase_base_price = rec.purchase_currency_price * rec.exchange_rate
 
             # Handle the display of multi-payments
 
-            rec.supplier_payment_dates = ', '.join([fields.Date.to_string(
-                d) for d in rec.sudo().supplier_payment_ids.mapped('payment_date')])
-            rec.supplier_payment_ref = ', '.join(
-                rec.sudo().supplier_payment_ids.mapped('communication'))
-            if rec.invoice_id.state == 'paid':
-                rec.customer_payment_reference, \
-                    rec.customer_payment_currency_rate, rec.sale_base_price = \
-                    self._get_payment_information(
-                        rec.sudo().customer_payment_ids,
-                        rec.net_price,
-                        rec.invoice_id)
+            rec.supplier_payment_dates = ", ".join(
+                [
+                    fields.Date.to_string(d)
+                    for d in rec.sudo().supplier_payment_ids.mapped("payment_date")
+                ]
+            )
+            rec.supplier_payment_ref = ", ".join(
+                rec.sudo().supplier_payment_ids.mapped("communication")
+            )
+            if rec.invoice_id.state == "paid":
+                rec.customer_payment_reference, rec.customer_payment_currency_rate, rec.sale_base_price = self._get_payment_information(
+                    rec.sudo().customer_payment_ids, rec.net_price, rec.invoice_id
+                )
                 if rec.sale_base_price:
                     base_net_price = rec.sale_base_price
 
             # Calculate the base_profit
-            if rec.invoice_id and rec.invoice_id.state == 'paid' and \
-                    rec.purchase_invoice_id and \
-                rec.purchase_invoice_id.state == 'paid':
+            if (
+                rec.invoice_id
+                and rec.invoice_id.state == "paid"
+                and rec.purchase_invoice_id
+                and rec.purchase_invoice_id.state == "paid"
+            ):
                 if rec.customer_invoice_type:
                     if rec.customer_invoice_type == "out_refund":
                         rec.base_profit = rec.purchase_base_price - base_net_price
                     elif rec.customer_invoice_type == "out_invoice":
                         if rec.supplier_invoice_type:
                             if rec.supplier_invoice_type == "in_invoice":
-                                rec.base_profit = base_net_price - \
-                                    rec.purchase_base_price
+                                rec.base_profit = (
+                                    base_net_price - rec.purchase_base_price
+                                )
                             else:
                                 rec.base_profit = 0
                 elif rec.supplier_invoice_type:
@@ -571,54 +563,51 @@ class ProfitLossReportWizard(models.TransientModel):
                 else:
                     rec.base_profit = base_net_price - rec.purchase_base_price
                 if rec.purchase_base_price:
-                    rec.base_profit_percent = \
+                    rec.base_profit_percent = (
                         rec.base_profit / rec.purchase_base_price * 100
+                    )
                 else:
                     rec.base_profit_percent = 999.99
 
             # FIXME below 'if' block may be deprecated as necessary
             # Identify the state of the transaction
-            if rec.purchase_invoice_id and rec.purchase_invoice_id.state == \
-                    'paid':
-                rec.supplier_payment_state = 'done'
+            if rec.purchase_invoice_id and rec.purchase_invoice_id.state == "paid":
+                rec.supplier_payment_state = "done"
             else:
-                rec.supplier_payment_state = 'to_pay'
-            if rec.out_move_id and rec.out_move_id.state == 'done' and \
-                    rec.invoice_id:
-                if rec.invoice_id.state == 'paid':
-                    rec.sale_state = 'done'
+                rec.supplier_payment_state = "to_pay"
+            if rec.out_move_id and rec.out_move_id.state == "done" and rec.invoice_id:
+                if rec.invoice_id.state == "paid":
+                    rec.sale_state = "done"
                 elif rec.invoice_id.residual and rec.sudo().customer_payment_ids:
-                    rec.sale_state = 'balance'
+                    rec.sale_state = "balance"
                 else:
-                    rec.sale_state = 'open'
-            if rec.customer_invoice_type and rec.customer_invoice_type == \
-                    "out_refund":
-                rec.state = 'out_refund'
-            elif rec.customer_invoice_type and rec.customer_invoice_type == \
-                    "in_refund":
-                rec.state = 'in_refund'
-            elif rec.supplier_invoice_type and rec.supplier_invoice_type == \
-                    "in_refund":
-                rec.state = 'in_refund'
-            elif rec.purchase_invoice_id and rec.purchase_invoice_id.state == \
-                    'paid' and rec.invoice_id and rec.invoice_id.state == \
-                    'paid':
-                rec.state = 'sale_purch_done'
-            elif rec.purchase_invoice_id and rec.purchase_invoice_id.state \
-                    == 'paid':
-                rec.state = 'purch_done'
-            elif rec.invoice_id and rec.invoice_id.state == 'paid':
-                rec.state = 'sale_done'
+                    rec.sale_state = "open"
+            if rec.customer_invoice_type and rec.customer_invoice_type == "out_refund":
+                rec.state = "out_refund"
+            elif rec.customer_invoice_type and rec.customer_invoice_type == "in_refund":
+                rec.state = "in_refund"
+            elif rec.supplier_invoice_type and rec.supplier_invoice_type == "in_refund":
+                rec.state = "in_refund"
+            elif (
+                rec.purchase_invoice_id
+                and rec.purchase_invoice_id.state == "paid"
+                and rec.invoice_id
+                and rec.invoice_id.state == "paid"
+            ):
+                rec.state = "sale_purch_done"
+            elif rec.purchase_invoice_id and rec.purchase_invoice_id.state == "paid":
+                rec.state = "purch_done"
+            elif rec.invoice_id and rec.invoice_id.state == "paid":
+                rec.state = "sale_done"
 
     def _get_utc_date(self, date_tz):
         tz = pytz.timezone(self.env.user.tz) or pytz.utc
         date_string = datetime.strftime(date_tz, DEFAULT_SERVER_DATE_FORMAT)
-        date_local = tz.localize(
-            fields.Datetime.from_string(date_string), is_dst=None)
+        date_local = tz.localize(fields.Datetime.from_string(date_string), is_dst=None)
         return date_local.astimezone(pytz.utc).strftime("%Y-%m-%d %H:%M:%S")
 
     def _get_payment_information(self, payment_ids, net_price, invoice_id):
-        payment_reference = ', '.join(payment_ids.mapped('communication'))
+        payment_reference = ", ".join(payment_ids.mapped("communication"))
         payment_currency_rate = False
         sale_base_price = False
         if len(payment_ids) == 1:
@@ -634,18 +623,15 @@ class ProfitLossReportWizard(models.TransientModel):
             if self[filter]:
                 if type(self[filter]) == str:
                     value = self[filter].strip()
-                    filters.append("(%s NOT ILIKE '%%%s%%' OR %s IS NULL)" % (
-                        filter,
-                        value,
-                        filter
-                    ))
+                    filters.append(
+                        "(%s NOT ILIKE '%%%s%%' OR %s IS NULL)"
+                        % (filter, value, filter)
+                    )
                 else:
                     value = ",".join([str(id) for id in self[filter].ids])
-                    filters.append("(%s NOT IN (%s) OR %s IS NULL)" % (
-                        filter,
-                        value,
-                        filter
-                    ))
+                    filters.append(
+                        "({} NOT IN ({}) OR {} IS NULL)".format(filter, value, filter)
+                    )
         if filters:
             filter_sql = "DELETE FROM profit_loss_report WHERE %s" % (
                 " OR ".join(filters)
@@ -656,15 +642,16 @@ class ProfitLossReportWizard(models.TransientModel):
     def _update_supplier_info(self):
         self.ensure_one()
         ctx = dict(self._context)
-        ctx['company_id'] = self.env.user.company_id.id
-        recs = self.env['profit.loss.report'].search([
-            ('in_move_quant_owner_id', '!=', False),
-            ('purchase_invoice_line_id', '=', False),
-            ('purchase_order_id', '=', False)
-        ])
+        ctx["company_id"] = self.env.user.company_id.id
+        recs = self.env["profit.loss.report"].search(
+            [
+                ("in_move_quant_owner_id", "!=", False),
+                ("purchase_invoice_line_id", "=", False),
+                ("purchase_order_id", "=", False),
+            ]
+        )
         for rec in recs:
-            if rec.in_move_quant_owner_id != \
-                    self.env.user.company_id.partner_id:
+            if rec.in_move_quant_owner_id != self.env.user.company_id.partner_id:
                 rec.supplier_id = rec.in_move_quant_owner_id
 
     @api.multi
@@ -678,20 +665,20 @@ class ProfitLossReportWizard(models.TransientModel):
         self._update_supplier_info()
         self._filter_records()
         self._update_records()
-        res = self.env.ref('profit_loss_report.profit_loss_report_action')
+        res = self.env.ref("profit_loss_report.profit_loss_report_action")
         return res.read()[0]
 
-    @api.onchange('product_id')
+    @api.onchange("product_id")
     def onchange_product_id(self):
         ids = []
         for product in self.product_id:
             # Update case number domain filter
-            lot_ids = self.env['stock.production.lot'].search([
-                ('product_id', '=', product.id)
-            ])
+            lot_ids = self.env["stock.production.lot"].search(
+                [("product_id", "=", product.id)]
+            )
             ids += lot_ids.ids
-        return {
-            'domain': {'lot_id': [('id', 'in', ids)]}
-        } if ids else {
-            'domain': {'lot_id': []}
-        }
+        return (
+            {"domain": {"lot_id": [("id", "in", ids)]}}
+            if ids
+            else {"domain": {"lot_id": []}}
+        )
