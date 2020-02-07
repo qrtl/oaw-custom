@@ -9,9 +9,15 @@
     "description": """
     """,
     "license": "AGPL-3",
-    "depends": ["purchase_stock", "sale_order_line_quant", "stock_picking_menu"],
+    "depends": [
+        "purchase_stock",
+        "sale_order_line_quant",
+        "stock_picking_menu",
+        "stock_move_line_quant",
+    ],
     "data": [
         "data/ir_actions.xml",
+        "security/ir.model.access.csv",
         "views/stock_move_views.xml",
         "views/stock_quant_views.xml",
     ],
