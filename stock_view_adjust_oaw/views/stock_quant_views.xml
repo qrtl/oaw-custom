@@ -14,9 +14,8 @@
                 <field name="quant_note"/>
             </xpath>
             <xpath expr="//field[@name='location_id']" position="before">
-                <field name="image_small"/>
+                <field name="image_medium" widget="image" options='{"size": [64, 64]}'/>
             </xpath>
-
         </field>
     </record>
 

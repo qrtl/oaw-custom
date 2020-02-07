@@ -11,9 +11,8 @@ class StockQuant(models.Model):
         readonly=True, string="Remark Of SO", compute="_get_ref", store=True
     )
     quant_note = fields.Text("Note")
-
-    image_small = fields.Binary(
-        "Image", related="product_id.product_tmpl_id.image_small", readonly=True
+    image_medium = fields.Binary(
+        "Image", related="product_id.product_tmpl_id.image_medium", readonly=True
     )
 
     @api.multi

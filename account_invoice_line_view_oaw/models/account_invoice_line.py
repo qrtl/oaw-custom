@@ -60,8 +60,8 @@ class AccountInvoiceLine(models.Model):
     po_id = fields.Many2one(
         "purchase.order", compute="_get_vals", store=True, readonly=True, string="PO"
     )
-    image_small = fields.Binary(
-        "Image", related="product_id.product_tmpl_id.image_small", readonly=True
+    image_medium = fields.Binary(
+        "Image", related="product_id.product_tmpl_id.image_medium", readonly=True
     )
     reviewed = fields.Boolean("Reviewed")
     payment_reference = fields.Char(

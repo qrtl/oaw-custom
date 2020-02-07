@@ -93,8 +93,8 @@ class SupplierStock(models.Model):
         compute="_compute_retail_base",
         store=True,
     )
-    image_small = fields.Binary(
-        "Image", related="product_id.product_tmpl_id.image_small", readonly=True
+    image_medium = fields.Binary(
+        "Image", related="product_id.product_tmpl_id.image_medium", readonly=True
     )
     partner_note = fields.Text(string="Partner Note")
     retail_in_currency = fields.Float(

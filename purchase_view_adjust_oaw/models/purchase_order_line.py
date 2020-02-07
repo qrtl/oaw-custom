@@ -7,8 +7,8 @@ from odoo import api, fields, models
 class PurchaseOrderLine(models.Model):
     _inherit = "purchase.order.line"
 
-    image_small = fields.Binary(
-        "Image", related="product_id.product_tmpl_id.image_small", readonly=True
+    image_medium = fields.Binary(
+        "Image", related="product_id.product_tmpl_id.image_medium", readonly=True
     )
     line_sequence = fields.Integer(string="Sequence", readonly=True)
     move_state = fields.Selection(
