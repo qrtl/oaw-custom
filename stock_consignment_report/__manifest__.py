@@ -14,9 +14,9 @@
         "abstract_report_xlsx",
     ],
     "data": [
-        "wizards/consignment_report_wizard_view.xml",
+        "reports/reports.xml",
+        "wizards/stock_consignment_report_wizard_views.xml",
         "views/stock_views.xml",
-        "data/reports.xml",
     ],
     "application": False,
     "installable": True,

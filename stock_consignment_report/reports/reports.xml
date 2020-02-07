@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="action_consignment_report_xlsx" model="ir.actions.report.xml">
-      <field name="name">Consignment Report</field>
-      <field name="model">consignment_report</field>
-      <field name="type">ir.actions.report.xml</field>
-      <field name="report_name">stock_consignment_report.consignment_report</field>
-      <field name="report_type">xlsx</field>
-      <field name="auto" eval="False"/>
-    </record>
+    <report id="action_consignment_report_xlsx" string="Consignment Report"
+            model="stock.consignment.report" report_type="xlsx"
+            file="stock_consignment_report.consignment_report" name="stock_consignment_report.consignment_report"/>
 
 </odoo>

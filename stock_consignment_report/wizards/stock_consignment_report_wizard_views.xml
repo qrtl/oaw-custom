@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="consignment_report_wizard" model="ir.ui.view">
-        <field name="name">consignment.report.wizard</field>
-        <field name="model">consignment.report.wizard</field>
+    <record id="stock_consignment_report_wizard" model="ir.ui.view">
+        <field name="name">stock.consignment.report.wizard</field>
+        <field name="model">stock.consignment.report.wizard</field>
         <field name="arch" type="xml">
             <form>
                 <group>
@@ -23,12 +23,12 @@
         </field>
     </record>
 
-    <record id="action_consignment_report_wizard" model="ir.actions.act_window">
-        <field name="name">Consignment Report</field>
-        <field name="res_model">consignment.report.wizard</field>
+    <record id="action_stock_consignment_report_wizard" model="ir.actions.act_window">
+        <field name="name">Stock Consignment Report</field>
+        <field name="res_model">stock.consignment.report.wizard</field>
         <field name="view_type">form</field>
         <field name="view_mode">form</field>
-        <field name="view_id" ref="consignment_report_wizard"/>
+        <field name="view_id" ref="stock_consignment_report_wizard"/>
         <field name="target">new</field>
     </record>
 

@@ -3,7 +3,6 @@
 
 from odoo import models, fields, api, _
 from odoo.addons.abstract_report_xlsx.reports import stock_abstract_report_xlsx
-from odoo.report import report_sxw
 
 
 class StockConsignmentReport(models.TransientModel):
@@ -15,30 +14,28 @@ class StockConsignmentReport(models.TransientModel):
     current_date = fields.Date(
         default=fields.Date.context_today
     )
-
     # Data fields, used to browse report data
     section_ids = fields.One2many(
-        comodel_name='consignment_report_section',
+        comodel_name='stock.consignment.report.section',
         inverse_name='report_id'
     )
     quant_ids = fields.One2many(
-        comodel_name='consignment_report_quant',
+        comodel_name='stock.consignment.report.quant',
         inverse_name='report_id'
     )
 
 
-class ConsignmentReportSection(models.TransientModel):
-
-    _name = 'consignment_report_section'
+class StockConsignmentReportSection(models.TransientModel):
+    _name = 'stock.consignment.report.section'
     # _order = 'name ASC'
 
     report_id = fields.Many2one(
-        comodel_name='consignment_report',
+        comodel_name='stock.consignment.report',
         ondelete='cascade',
         index=True
     )
     quant_ids = fields.One2many(
-        comodel_name='consignment_report_quant',
+        comodel_name='stock.consignment.report.quant',
         inverse_name='section_id'
     )
 
@@ -46,17 +43,16 @@ class ConsignmentReportSection(models.TransientModel):
     code = fields.Integer()
 
 
-class ConsignmentReportQuant(models.TransientModel):
-
-    _name = 'consignment_report_quant'
+class StockConsignmentReportQuant(models.TransientModel):
+    _name = 'stock.consignment.report.quant'
 
     report_id = fields.Many2one(
-        comodel_name='consignment_report',
+        comodel_name='stock.consignment.report',
         ondelete='cascade',
         index=True
     )
     section_id = fields.Many2one(
-        comodel_name='consignment_report_section',
+        comodel_name='stock.consignment.report.section',
         ondelete='cascade',
         index=True
     )
@@ -92,12 +88,12 @@ class ConsignmentReportQuant(models.TransientModel):
     outgoing_date = fields.Datetime()
 
 
-class ConsignmentReportCompute(models.TransientModel):
+class StockConsignmentReportCompute(models.TransientModel):
     """ Here, we just define methods.
     For class fields, go more top at this file.
     """
 
-    _inherit = 'consignment_report'
+    _inherit = 'stock.consignment.report'
 
     @api.multi
     def print_report(self):
@@ -117,9 +113,9 @@ class ConsignmentReportCompute(models.TransientModel):
     @api.multi
     def compute_data_for_report(self):
         self.ensure_one()
-        model = self.env['consignment_report_quant']
+        model = self.env['stock.consignment.report.quant']
         self._create_section_records()
-        sections = self.env['consignment_report_section'].search(
+        sections = self.env['stock.consignment.report.section'].search(
             [('report_id', '=', self.id)])
         for section in sections:
             self._inject_quant_values(section)
@@ -136,7 +132,7 @@ class ConsignmentReportCompute(models.TransientModel):
         self.refresh()
 
     def _create_section_records(self):
-        model = self.env['consignment_report_section']
+        model = self.env['stock.consignment.report.section']
         for i in [1, 2, 3, 4]:
             vals = {
                 'report_id': self.id,
@@ -168,7 +164,7 @@ WITH
                     account_invoice i1 ON l1.invoice_id = i1.id
                 WHERE
                     i1.type = 'in_invoice'
-                    AND l1.state = 'paid'
+                    AND i1.state = 'paid'
                 GROUP BY
                     l1.lot_id
             ) normal ON l.lot_id = normal.lot_id
@@ -181,7 +177,7 @@ WITH
                     account_invoice i2 ON l2.invoice_id = i2.id
                 WHERE
                     i2.type = 'in_refund'
-                    AND l2.state = 'paid'
+                    AND i2.state = 'paid'
                 GROUP BY
                     l2.lot_id
             ) refund ON l.lot_id = refund.lot_id
@@ -193,7 +189,7 @@ WITH
             """
         query_inject_quant += """
 INSERT INTO
-    consignment_report_quant
+    stock_consignment_report_quant
     (
     report_id,
     section_id,
@@ -219,9 +215,9 @@ SELECT
     NOW() AS create_date,
     q.id,
     q.reservation_id,
-    q.sale_id,
+    q.sale_order_id,
     p.default_code,
-    p.name_template,
+    p.name,
     l.id,
     l.name,
     c.name,
@@ -316,7 +312,7 @@ WHERE loc.usage = %s
     def _update_invoice_info(self, section_id, code):
         query_update_quant = """
 UPDATE
-    consignment_report_quant q1
+    stock_consignment_report_quant q1
 SET
     currency = inv_info.curr,
     purchase_price = inv_info.price,
@@ -440,14 +436,11 @@ WHERE
 
 class PartnerXslx(stock_abstract_report_xlsx.StockAbstractReportXslx):
 
-    def __init__(self, name, table, rml=False, parser=False, header=True,
-                 store=False):
-        super(PartnerXslx, self).__init__(
-            name, table, rml, parser, header, store)
+    def __init__(self, pool, cr):
+        super(PartnerXslx, self).__init__(pool, cr)
 
-    def create(self, cr, uid, ids, data, context=None):
-        return super(PartnerXslx, self).create(cr, SUPERUSER_ID, ids, data,
-                                               context=context)
+    def create(self, data):
+        return super(PartnerXslx, self).create(data)
 
     def _get_report_name(self):
         return _('Consignment Report')
@@ -515,10 +508,3 @@ class PartnerXslx(stock_abstract_report_xlsx.StockAbstractReportXslx):
 
             # Line break
             self.row_pos += 2
-
-
-PartnerXslx(
-    'report.stock_consignment_report.consignment_report',
-    'consignment_report',
-    parser=report_sxw.rml_parse
-)
