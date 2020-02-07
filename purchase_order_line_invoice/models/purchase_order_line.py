@@ -13,9 +13,21 @@ class PurchaseOrderLine(models.Model):
     partner_ref = fields.Char(
         related="order_id.partner_ref", string="Vendor Reference", store=True
     )
-    image_medium = fields.Binary(related="product_id.image_medium", string="image")
+    image_medium = fields.Binary(
+        related="product_id.image_medium", string="image")
     supplier_reference = fields.Char(
         string="Supplier Reference", compute="_compute_supplier_reference", store=True
+    )
+    sale_order_partner_id = fields.Many2one(
+        related="order_id.group_id.sale_id.partner_id",
+        string="Sales Order Customer",
+    )
+    sale_order_line_price_unit = fields.Float(
+        compute="_compute_sale_order_line_price_unit",
+        string="Sales Order Price",
+    )
+    sale_order_currency_id = fields.Many2one(
+        related="order_id.group_id.sale_id.currency_id",
     )
 
     @api.multi
@@ -38,6 +50,15 @@ class PurchaseOrderLine(models.Model):
     def _compute_invoiced(self):
         for line in self:
             line.invoiced = False if line.qty_invoiced < line.product_qty else True
+
+    @api.multi
+    def _compute_sale_order_line_price_unit(self):
+        for line in self:
+            if line.order_id.group_id and line.order_id.group_id.sale_id:
+                sale_order_line = line.order_id.group_id.sale_id.order_line.filtered(
+                    lambda l: l.lot_id == line.lot_id)
+                if sale_order_line:
+                    line.sale_order_line_price_unit = sale_order_line.price_unit
 
     @api.multi
     def makeInvoices(self):
@@ -90,7 +111,8 @@ class PurchaseOrderLine(models.Model):
     def _prepare_invoice_line_vals(self):
         self.ensure_one()
         account_id = (
-            self.product_id.product_tmpl_id._get_product_accounts()["stock_output"]
+            self.product_id.product_tmpl_id._get_product_accounts()[
+                "stock_output"]
             if self.order_id.is_vci
             else self.product_id.product_tmpl_id._get_product_accounts()["stock_input"]
         )
@@ -115,7 +137,8 @@ class PurchaseOrderLine(models.Model):
         purchase_obj = self.env["purchase.order"]
         account_journal_obj = self.env["account.journal"]
         invoice_obj = self.env["account.invoice"]
-        name = orders and ",".join([order.name for order in orders if order.name]) or ""
+        name = orders and ",".join(
+            [order.name for order in orders if order.name]) or ""
         supplier_reference = (
             orders
             and ",".join(

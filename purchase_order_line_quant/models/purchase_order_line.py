@@ -8,4 +8,5 @@ class PurchaseOrderLine(models.Model):
     _inherit = "purchase.order.line"
 
     quant_id = fields.Many2one("stock.quant", string="Stock Quant", copy=False)
-    lot_id = fields.Many2one(related="quant_id.lot_id", string="Case No.", store=True)
+    lot_id = fields.Many2one(related="quant_id.lot_id",
+                             string="Case No.", store=True)
