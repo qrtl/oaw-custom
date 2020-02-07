@@ -77,13 +77,11 @@ class AccountInvoiceLine(models.Model):
             if inv_ln.invoice_id.type == "out_invoice" and SO.search(
                 [("name", "=", inv_ln.invoice_id.origin)]
             ):
-                so_id = SO.search(
-                    [("name", "=", inv_ln.invoice_id.origin)])[0].id
+                so_id = SO.search([("name", "=", inv_ln.invoice_id.origin)])[0].id
             if inv_ln.invoice_id.type == "in_invoice" and PO.search(
                 [("name", "=", inv_ln.invoice_id.origin)]
             ):
-                po_id = PO.search(
-                    [("name", "=", inv_ln.invoice_id.origin)])[0].id
+                po_id = PO.search([("name", "=", inv_ln.invoice_id.origin)])[0].id
         return so_id, po_id
 
     @api.multi

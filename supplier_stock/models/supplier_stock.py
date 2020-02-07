@@ -12,8 +12,7 @@ class SupplierStock(models.Model):
     _order = "id desc"
 
     currency_name = fields.Char(related="currency_id.name")
-    last_update_date = fields.Datetime(
-        readonly=True, string="Last Update Date")
+    last_update_date = fields.Datetime(readonly=True, string="Last Update Date")
     last_update_user_id = fields.Many2one(
         "res.users", readonly=True, string="Last Update User"
     )
@@ -30,15 +29,12 @@ class SupplierStock(models.Model):
         string="Partner Location",
         required=True,
     )
-    short_loc_name = fields.Char(
-        "Location", related="partner_loc_id.short_loc")
+    short_loc_name = fields.Char("Location", related="partner_loc_id.short_loc")
     # For Partner Stock filter
     qty_up_date = fields.Datetime(string="Quantity increased", store=True)
     qty_down_date = fields.Datetime(string="Quantity decreased")
-    costprice_up_date = fields.Datetime(
-        string="Costprice increased", readonly=True)
-    costprice_down_date = fields.Datetime(
-        string="Costprice decreased", readonly=True)
+    costprice_up_date = fields.Datetime(string="Costprice increased", readonly=True)
+    costprice_down_date = fields.Datetime(string="Costprice decreased", readonly=True)
     note_updated_date = fields.Datetime(string="Partner Note updated")
     partner_qty = fields.Char(string="Evaluated Quantity", store=True)
     lowest_cost = fields.Boolean(string="Cheapest entry", store=True)
@@ -237,8 +233,7 @@ class SupplierStock(models.Model):
             if ps_products:
                 for psc in ps_products:
                     if len(ps_products) >= 2:
-                        psc.sudo().write(
-                            {"lowest_cost": False, "has_duplicates": True})
+                        psc.sudo().write({"lowest_cost": False, "has_duplicates": True})
                     else:
                         psc.sudo().write(
                             {"lowest_cost": False, "has_duplicates": False}
