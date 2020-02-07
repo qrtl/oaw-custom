@@ -26,6 +26,7 @@ class StockMove(models.Model):
         "stock.production.lot", related="quant_id.lot_id", string="Case No.", store=True
     )
     quant_owner_id = fields.Many2one(related="quant_id.owner_id", string="Quant Owner")
+    product_uom_qty = fields.Float(default=1.0)
 
     @api.onchange("currency_id")
     def _onchange_currency_id(self):
