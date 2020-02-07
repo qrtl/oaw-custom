@@ -6,10 +6,10 @@ from io import BytesIO
 import base64
 
 
-class ReportXlsxAbstract(ReportXlsxAbstract):
+class StockAbstractReportXslx(ReportXlsxAbstract):
 
     def __init__(self, pool, cr):
-        super(ReportXlsxAbstract, self).__init__(pool, cr)
+        super(StockAbstractReportXslx, self).__init__(pool, cr)
 
         # main sheet which will contains report
         self.sheet = None
