@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <kanban default_order="product_id">
                 <field name="currency_name"/>
-                <field name="image_small"/>
+                <field name="image_medium"/>
                 <field name="id"/>
                 <templates>
                     <t t-name="kanban-box">
