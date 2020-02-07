@@ -17,6 +17,15 @@ class PurchaseOrderLine(models.Model):
     supplier_reference = fields.Char(
         string="Supplier Reference", compute="_compute_supplier_reference", store=True
     )
+    sale_order_partner_id = fields.Many2one(
+        related="order_id.group_id.sale_id.partner_id", string="Sales Order Customer"
+    )
+    sale_order_line_price_unit = fields.Float(
+        compute="_compute_sale_order_line_price_unit", string="Sales Order Price"
+    )
+    sale_order_currency_id = fields.Many2one(
+        related="order_id.group_id.sale_id.currency_id"
+    )
 
     @api.multi
     @api.depends(
@@ -38,6 +47,16 @@ class PurchaseOrderLine(models.Model):
     def _compute_invoiced(self):
         for line in self:
             line.invoiced = False if line.qty_invoiced < line.product_qty else True
+
+    @api.multi
+    def _compute_sale_order_line_price_unit(self):
+        for line in self:
+            if line.order_id.group_id and line.order_id.group_id.sale_id:
+                sale_order_line = line.order_id.group_id.sale_id.order_line.filtered(
+                    lambda l: l.lot_id == line.lot_id
+                )
+                if sale_order_line:
+                    line.sale_order_line_price_unit = sale_order_line.price_unit
 
     @api.multi
     def makeInvoices(self):
