@@ -89,9 +89,14 @@ class PurchaseOrderLine(models.Model):
     @api.multi
     def _prepare_invoice_line_vals(self):
         self.ensure_one()
+        account_id = (
+            self.product_id.product_tmpl_id._get_product_accounts()["stock_output"]
+            if self.order_id.is_vci
+            else self.product_id.product_tmpl_id._get_product_accounts()["stock_input"]
+        )
         return {
             "name": self.name,
-            "account_id": self.order_id.partner_id.property_account_payable_id.id,
+            "account_id": account_id.id,
             "price_unit": self.price_unit or 0.0,
             "quantity": self.product_qty,
             "product_id": self.product_id.id or False,
