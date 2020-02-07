@@ -18,13 +18,11 @@ class StockMoveLine(models.Model):
     @api.depends("quant_id", "quant_owner_id.user_ids")
     def get_quant_owner_related_user_id(self):
         for move in self:
-            ∂∂
             quant_owner_id = False
             if move.quant_id:
                 quant_owner_id = move.quant_id[0].original_owner_id
             if quant_owner_id and quant_owner_id.sudo().user_ids:
-                move.quant_owner_related_user_id = quant_owner_id.sudo(
-                ).user_ids[0].id
+                move.quant_owner_related_user_id = quant_owner_id.sudo().user_ids[0].id
 
     @api.multi
     def get_supplier_pick_partner(self):

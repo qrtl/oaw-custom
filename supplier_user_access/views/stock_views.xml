@@ -12,4 +12,3 @@
     <menuitem id="menu_product_tempalate_supplier" name="Products" groups="supplier_user_access.group_supplier_fm" parent="stock_supplier_root" action="sale.product_template_action" sequence="15"/>
 
 </odoo>
-º
