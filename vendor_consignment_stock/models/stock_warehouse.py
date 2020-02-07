@@ -25,8 +25,7 @@ class StockWarehouse(models.Model):
                 "vendor_consignment_stock.route_warehouse0_buy_vci"
             )
         except:
-            buy_vci_route = route_model.search(
-                [("name", "like", _("Buy VCI"))])
+            buy_vci_route = route_model.search([("name", "like", _("Buy VCI"))])
         if not buy_vci_route:
             raise Warning(_("Can't find any generic Buy VCI route."))
         w_name = warehouse.name + " : " + _("Buy VCI")
@@ -57,8 +56,7 @@ class StockWarehouse(models.Model):
             if vals.get("buy_vci_to_resupply"):
                 for warehouse in self:
                     if not warehouse.buy_vci_pull_id:
-                        buy_vci_pull_vals = self._get_buy_vci_pull_rule(
-                            warehouse)
+                        buy_vci_pull_vals = self._get_buy_vci_pull_rule(warehouse)
                         buy_vci_pull = pull_model.create(buy_vci_pull_vals)
                         vals["buy_vci_pull_id"] = buy_vci_pull.id
             else:
@@ -87,8 +85,7 @@ class StockWarehouse(models.Model):
         return product_ids
 
     def _update_name_and_code(self, new_name=False, new_code=False):
-        res = super(StockWarehouse, self)._update_name_and_code(
-            new_name, new_code)
+        res = super(StockWarehouse, self)._update_name_and_code(new_name, new_code)
         for warehouse in self:
             if warehouse.buy_vci_pull_id:
                 warehouse.buy_vci_pull_id.write({"name": new_name})
