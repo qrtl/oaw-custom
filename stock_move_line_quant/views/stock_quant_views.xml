@@ -23,14 +23,19 @@
     <record model="ir.ui.view" id="view_stock_quant_tree">
         <field name="name">stock.quant.tree</field>
         <field name="model">stock.quant</field>
-        <field name="inherit_id" ref="stock.view_stock_quant_tree"/>
+        <field name="priority" eval="10"/>
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='location_id']" position="replace"/>
+            <xpath expr="//field[@name='owner_id']" position="replace"/>
             <xpath expr="//field[@name='quantity']" position="after">
                 <field name="reservation_picking_id"/>
-                <field name='cost'/>
+                <field name="location_id"/>
+                <field name="owner_id" groups="stock.group_tracking_owner"/>
+                <field name="in_date"/>
                 <field name='currency_id' string='Purch Curr'/>
                 <field name='purchase_price_unit' string='Curr Price'/>
                 <field name='exchange_rate'/>
+                <field name='cost'/>
             </xpath>
         </field>
     </record>
@@ -41,7 +46,7 @@
         <field name="type">ir.actions.act_window</field>
         <field name="view_type">form</field>
         <field name="view_id" ref="view_stock_quant_tree"/>
-        <field name="context">{'search_default_internal_loc': 1, 'search_default_stockable': 1}</field>
+        <field name="context">{'search_default_internal_loc': 1, 'search_default_positive': 1}</field>
         <field name="search_view_id" ref="stock.quant_search_view"/>
     </record>
 

@@ -12,7 +12,6 @@
     "demo": [],
     "data": [
         "security/stock_ownership_availability_rules_security.xml",
-        "views/stock_quant_views.xml",
         "views/stock_move_views.xml",
     ],
     "auto_install": False,
