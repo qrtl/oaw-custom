@@ -60,8 +60,8 @@ class AccountInvoiceLine(models.Model):
     po_id = fields.Many2one(
         "purchase.order", compute="_get_vals", store=True, readonly=True, string="PO"
     )
-    image_small = fields.Binary(
-        "Image", related="product_id.product_tmpl_id.image_small", readonly=True
+    image_medium = fields.Binary(
+        "Image", related="product_id.product_tmpl_id.image_medium", readonly=True
     )
     reviewed = fields.Boolean("Reviewed")
     payment_reference = fields.Char(
@@ -77,11 +77,13 @@ class AccountInvoiceLine(models.Model):
             if inv_ln.invoice_id.type == "out_invoice" and SO.search(
                 [("name", "=", inv_ln.invoice_id.origin)]
             ):
-                so_id = SO.search([("name", "=", inv_ln.invoice_id.origin)])[0].id
+                so_id = SO.search(
+                    [("name", "=", inv_ln.invoice_id.origin)])[0].id
             if inv_ln.invoice_id.type == "in_invoice" and PO.search(
                 [("name", "=", inv_ln.invoice_id.origin)]
             ):
-                po_id = PO.search([("name", "=", inv_ln.invoice_id.origin)])[0].id
+                po_id = PO.search(
+                    [("name", "=", inv_ln.invoice_id.origin)])[0].id
         return so_id, po_id
 
     @api.multi

@@ -66,7 +66,8 @@ class StockQuant(models.Model):
             name = quant.product_id.code or ""
             if quant.lot_id:
                 name = quant.lot_id.name
-            name += ": {} {}".format(str(quant.quantity), quant.product_id.uom_id.name)
+            name += ": {} {}".format(str(quant.quantity),
+                                     quant.product_id.uom_id.name)
             res += [(quant.id, name)]
         return res
 
@@ -76,7 +77,8 @@ class StockQuant(models.Model):
     ):
         args = args or []
         # FIXME Improve the performance by passing the limit to the _search
-        quant_ids = self.browse(self._search(args, access_rights_uid=name_get_uid))
+        quant_ids = self.browse(self._search(
+            args, access_rights_uid=name_get_uid))
         if name:
             lot_ids = self.env["stock.production.lot"]._search(
                 [("name", operator, name)], limit=limit, access_rights_uid=name_get_uid
