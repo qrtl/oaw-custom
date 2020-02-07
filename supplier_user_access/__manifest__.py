@@ -28,7 +28,7 @@
         "views/res_partner_views.xml",
         "views/sale_order_views.xml",
         "views/sale_views.xml",
-        "views/stock_move_views.xml",
+        "views/stock_move_line_views.xml",
         "views/stock_picking_views.xml",
         "views/stock_quant_views.xml",
         "views/stock_views.xml",

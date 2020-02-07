@@ -29,7 +29,7 @@
         "views/account_invoice_line_views.xml",
         "views/account_invoice_views.xml",
         "views/purchase_order_views.xml",
-        "views/stock_move_views.xml",
+        "views/stock_move_line_views.xml",
         "views/stock_picking_views.xml",
         "views/stock_quant_views.xml",
         "views/supplier_stock_views.xml",
