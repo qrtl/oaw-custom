@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="sale_margin.sale_margin_sale_order_line"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='order_line']//form//field[@name='purchase_price']" position="attributes">
-                <attribute name="groups">sale_team.group_sale_salesman</attribute>
+                <attribute name="groups">sales_team.group_sale_salesman</attribute>
             </xpath>
         </field>
     </record>
@@ -18,7 +18,7 @@
         <field name="inherit_id" ref="sale_margin.sale_margin_sale_order_line_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='order_line']//tree//field[@name='purchase_price']" position="attributes">
-                <attribute name="groups">sale_team.group_sale_salesman</attribute>
+                <attribute name="groups">sales_team.group_sale_salesman</attribute>
             </xpath>
         </field>
     </record>
@@ -29,7 +29,10 @@
         <field name="inherit_id" ref="purchase_order_line_quant.view_order_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='order_line']//tree//field[@name='purchase_order_id']" position="attributes">
-                <attribute name="groups">sale_team.group_sale_salesman_all_leads</attribute>
+                <attribute name="groups">sales_team.group_sale_salesman_all_leads</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']//tree//button[@name='action_view_purchase_open']" position="attributes">
+                <attribute name="groups">sales_team.group_sale_salesman_all_leads</attribute>
             </xpath>
         </field>
     </record>
@@ -60,10 +63,10 @@
                 <button name="print_supplier_quotation" string="Print Supplier Quotation" type="object" states="sent,progress,manual" class="oe_highlight" groups="supplier_user_access.group_supplier_fm/"/>
             </xpath>
             <xpath expr="//button[@name='print_quotation'][1]" position="attributes">
-                <attribute name="groups">sale_team.group_sale_manager</attribute>
+                <attribute name="groups">sales_team.group_sale_manager</attribute>
             </xpath>
             <xpath expr="//button[@name='print_quotation'][2]" position="attributes">
-                <attribute name="groups">sale_team.group_sale_manager</attribute>
+                <attribute name="groups">sales_team.group_sale_manager</attribute>
             </xpath>
             <xpath expr="//field[@name='date_order']" position="after">
                 <field name="create_partner_id"/>
