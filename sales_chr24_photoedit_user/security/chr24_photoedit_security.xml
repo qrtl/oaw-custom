@@ -8,6 +8,10 @@
          <record id="group_chr24_photoedit" model="res.groups">
             <field name="name">Chrono24/Edit Photo</field>
             <field name="category_id" ref="module_category_chr24_photoedit"/>
+               <field name="implied_ids"
+                   eval="[
+                   (4, ref('stock.group_stock_user')),
+                   ]"/>
         </record>
     </data>
 </openerp>
