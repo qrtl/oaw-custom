@@ -26,9 +26,11 @@
                 <field name="line_sequence"/>
                 <field name="image_medium" widget="image" options='{"size": [64, 64]}'/>
             </xpath>
+            <xpath expr="//field[@name='order_line']//tree//field[@name='name']" position="replace"/>
             <xpath expr="//field[@name='order_line']//tree//field[@name='price_subtotal']" position="after">
                 <field name="note_client_name"/>
                 <field name="note_client_price"/>
+                <field name="name" widget="section_and_note_text"/>
             </xpath>
             <xpath expr="//field[@name='is_mto']" position="after">
                 <field name="sub_consigned"/>
@@ -87,6 +89,9 @@
             <xpath expr="//field[@name='expected_date']" position="after">
                 <field name="pricelist_id"/>
             </xpath>
+            <field name="state" position="attributes">
+                <attribute name="invisible" eval="False"/>
+            </field>
         </field>
     </record>
 
