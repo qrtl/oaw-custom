@@ -68,7 +68,7 @@ class StockMoveLine(models.Model):
             ):
                 if picking.owner_id and "owner_id" not in vals:
                     vals["owner_id"] = picking.owner_id.id
-        if "lot_id" in vals:
+        if "lot_id" in vals and vals["lot_id"]:
             vals["quant_id"] = (
                 self.env["stock.production.lot"].browse(vals["lot_id"]).quant_ids[0].id
             )
