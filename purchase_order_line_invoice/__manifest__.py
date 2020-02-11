@@ -20,6 +20,5 @@ Add a view for invoicable purchase order line to create invoice.
         "data/ir_actions.xml",
         "views/account_invoice_views.xml",
         "views/purchase_order_line_views.xml",
-        "views/purchase_order_views.xml",
     ],
 }

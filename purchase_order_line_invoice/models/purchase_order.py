@@ -7,4 +7,4 @@ from odoo import api, fields, models
 class PurchaseOrder(models.Model):
     _inherit = "purchase.order"
 
-    supplier_reference = fields.Char(string="Supplier Reference")
+    partner_ref = fields.Char(string="Vendor Bill Reference")
