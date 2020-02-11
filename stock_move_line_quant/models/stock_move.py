@@ -49,8 +49,8 @@ class StockMove(models.Model):
         )
         return res
 
-    def _action_confirm(self):
-        res = super(StockMove, self)._action_confirm()
+    def _action_confirm(self, merge=True, merge_into=False):
+        res = super(StockMove, self)._action_confirm(merge=merge, merge_into=merge_into)
         for move in self:
             # Create stock.move.line for delivery if quant is specified
             if move.quant_id and not move.move_line_ids:
@@ -69,9 +69,4 @@ class StockMove(models.Model):
                 }
                 self.env["stock.move.line"].create(values)
                 move.quant_id.sudo().update({"reserved_quantity": 1})
-        return res
-
-    def _action_assign(self):
-        res = super(StockMove, self)._action_assign()
-
         return res
