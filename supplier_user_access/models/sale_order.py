@@ -44,12 +44,6 @@ class SaleOrder(models.Model):
 
     @api.model
     def create(self, vals):
-        if (
-            "create_partner_id" not in vals
-            or "create_partner_id" in vals
-            and not vals["create_partner_id"]
-        ):
-            vals["create_partner_id"] = self.env.user.partner_id.id
         res = super(SaleOrder, self).create(vals)
         # For quotation adjust: set new order_ref field
         if "name" in vals and "partner_id" in vals:
