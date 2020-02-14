@@ -122,7 +122,5 @@ class StockMoveLine(models.Model):
         # Update the reservation_id of the stock quant
         for move_line in self:
             if move_line.lot_id:
-                move_line.lot_id.quant_ids.sudo().update(
-                    {"reservation_id": False, "reserved_quantity": 0}
-                )
+                move_line.lot_id.quant_ids.sudo().update({"reservation_id": False})
         return super(StockMoveLine, self).unlink()
