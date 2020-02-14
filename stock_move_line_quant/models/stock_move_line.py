@@ -55,6 +55,10 @@ class StockMoveLine(models.Model):
                         "exchange_rate": move_line.exchange_rate,
                     }
                 )
+            if move_line.lot_id:
+                move_line.lot_id.quant_ids.quant_id.sudo().update(
+                    {"reservation_id": False, "reserved_quantity": 0}
+                )
         return res
 
     @api.model
@@ -74,8 +78,8 @@ class StockMoveLine(models.Model):
             )
         res = super(StockMoveLine, self).create(vals)
         # Update the reservation_id of the stock quant
-        if res.quant_id and res.move_id:
-            res.quant_id.sudo().update({"reservation_id": res.move_id.id})
+        if res.lot_id and res.move_id:
+            res.lot_id.quant_ids.sudo().update({"reservation_id": res.move_id.id})
         return res
 
     @api.multi
@@ -83,10 +87,12 @@ class StockMoveLine(models.Model):
         # Update the reservation_id of the stock quant
         if "quant_id" in vals:
             for move_line in self:
-                move_line.quant_id.sudo().update({"reservation_id": False})
-                self.env["stock.quant"].sudo().browse(vals["quant_id"]).update(
-                    {"reservation_id": move_line.move_id.id}
+                move_line.lot_id.quant_ids.sudo().update(
+                    {"reservation_id": False, "reserved_quantity": 0}
                 )
+                self.env["stock.quant"].sudo().browse(
+                    vals["quant_id"]
+                ).lot_id.quant_ids.update({"reservation_id": move_line.move_id.id})
         res = super(StockMoveLine, self).write(vals)
         for move_line in self:
             if move_line.move_id.purchase_line_id:
@@ -115,6 +121,8 @@ class StockMoveLine(models.Model):
     def unlink(self):
         # Update the reservation_id of the stock quant
         for move_line in self:
-            if move_line.quant_id:
-                move_line.quant_id.sudo().update({"reservation_id": False})
+            if move_line.lot_id:
+                move_line.lot_id.quant_ids.sudo().update(
+                    {"reservation_id": False, "reserved_quantity": 0}
+                )
         return super(StockMoveLine, self).unlink()
