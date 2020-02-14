@@ -31,8 +31,7 @@ class StockMoveLine(models.Model):
         related="move_id.picking_type_id.code", string="Type of Operation", store=True
     )
     quant_id = fields.Many2one("stock.quant", string="Stock Quant")
-    quant_owner_id = fields.Many2one(
-        related="quant_id.owner_id", string="Quant Owner")
+    quant_owner_id = fields.Many2one(related="quant_id.owner_id", string="Quant Owner")
 
     @api.onchange("quant_id")
     def _onchange_quant_id(self):
@@ -57,10 +56,9 @@ class StockMoveLine(models.Model):
                     }
                 )
             if move_line.lot_id:
-                move_line.lot_id.quant_ids.quant_id.sudo().update({
-                    "reservation_id": False,
-                    "reserved_quantity": 0
-                })
+                move_line.lot_id.quant_ids.quant_id.sudo().update(
+                    {"reservation_id": False, "reserved_quantity": 0}
+                )
         return res
 
     @api.model
@@ -76,14 +74,12 @@ class StockMoveLine(models.Model):
                     vals["owner_id"] = picking.owner_id.id
         if "lot_id" in vals and vals["lot_id"]:
             vals["quant_id"] = (
-                self.env["stock.production.lot"].browse(
-                    vals["lot_id"]).quant_ids[0].id
+                self.env["stock.production.lot"].browse(vals["lot_id"]).quant_ids[0].id
             )
         res = super(StockMoveLine, self).create(vals)
         # Update the reservation_id of the stock quant
         if res.lot_id and res.move_id:
-            res.lot_id.quant_ids.sudo().update(
-                {"reservation_id": res.move_id.id})
+            res.lot_id.quant_ids.sudo().update({"reservation_id": res.move_id.id})
         return res
 
     @api.multi
@@ -91,13 +87,12 @@ class StockMoveLine(models.Model):
         # Update the reservation_id of the stock quant
         if "quant_id" in vals:
             for move_line in self:
-                move_line.lot_id.quant_ids.sudo().update({
-                    "reservation_id": False,
-                    "reserved_quantity": 0
-                })
-                self.env["stock.quant"].sudo().browse(vals["quant_id"]).lot_id.quant_ids.update({
-                    "reservation_id": move_line.move_id.id,
-                })
+                move_line.lot_id.quant_ids.sudo().update(
+                    {"reservation_id": False, "reserved_quantity": 0}
+                )
+                self.env["stock.quant"].sudo().browse(
+                    vals["quant_id"]
+                ).lot_id.quant_ids.update({"reservation_id": move_line.move_id.id})
         res = super(StockMoveLine, self).write(vals)
         for move_line in self:
             if move_line.move_id.purchase_line_id:
@@ -127,8 +122,7 @@ class StockMoveLine(models.Model):
         # Update the reservation_id of the stock quant
         for move_line in self:
             if move_line.lot_id:
-                move_line.lot_id.quant_ids.sudo().update({
-                    "reservation_id": False,
-                    "reserved_quantity": 0
-                })
+                move_line.lot_id.quant_ids.sudo().update(
+                    {"reservation_id": False, "reserved_quantity": 0}
+                )
         return super(StockMoveLine, self).unlink()

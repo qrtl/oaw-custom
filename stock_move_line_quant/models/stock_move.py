@@ -25,8 +25,7 @@ class StockMove(models.Model):
     lot_id = fields.Many2one(
         "stock.production.lot", related="quant_id.lot_id", string="Case No.", store=True
     )
-    quant_owner_id = fields.Many2one(
-        related="quant_id.owner_id", string="Quant Owner")
+    quant_owner_id = fields.Many2one(related="quant_id.owner_id", string="Quant Owner")
     product_uom_qty = fields.Float(default=1.0)
 
     @api.onchange("currency_id")
@@ -51,8 +50,7 @@ class StockMove(models.Model):
         return res
 
     def _action_confirm(self, merge=True, merge_into=False):
-        res = super(StockMove, self)._action_confirm(
-            merge=merge, merge_into=merge_into)
+        res = super(StockMove, self)._action_confirm(merge=merge, merge_into=merge_into)
         for move in self:
             # Create stock.move.line for delivery if quant is specified
             if move.quant_id and not move.move_line_ids:

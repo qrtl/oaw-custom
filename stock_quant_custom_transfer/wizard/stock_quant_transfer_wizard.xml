@@ -10,7 +10,7 @@
                 <group>
                     <group>
                         <field name="picking_type_id"/>
-                        <field name="location_dest_id"/>  
+                        <field name="location_dest_id"/>
                     </group>
                 </group>
             <footer>
