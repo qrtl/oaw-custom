@@ -56,7 +56,7 @@ class StockMoveLine(models.Model):
                     }
                 )
             if move_line.lot_id:
-                move_line.lot_id.quant_ids.quant_id.sudo().update(
+                move_line.lot_id.quant_ids.sudo().update(
                     {"reservation_id": False, "reserved_quantity": 0}
                 )
         return res

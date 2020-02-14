@@ -12,7 +12,7 @@ class QuantTransferWizard(models.TransientModel):
         "stock.location",
         string="Destination Location",
         required=True,
-        domain=[("usage", "in", ("internal"))],
+        domain=[("usage", "in", ["internal"])],
     )
     picking_type_id = fields.Many2one(
         "stock.picking.type", string="Operation Type", required=True
@@ -106,8 +106,7 @@ class QuantTransferWizard(models.TransientModel):
             error_msg = ""
             for stock_move in stock_move_line_list.mapped("move_id"):
                 error_msg += "\n{}: {}".format(
-                    stock_move.reference,
-                    stock_move.product_id.display_name,
+                    stock_move.reference, stock_move.product_id.display_name
                 )
             raise UserError(
                 _(
