@@ -12,14 +12,17 @@ class QuantTransferWizard(models.TransientModel):
         "stock.location",
         string="Destination Location",
         required=True,
-        domain=[("usage", "in", ["internal"])],
     )
     picking_type_id = fields.Many2one(
         "stock.picking.type", string="Operation Type", required=True
     )
+    sale_order_id = fields.Many2one(
+        "sale.order", string="Related Sales Order"
+    )
 
     @api.onchange("picking_type_id")
     def onchange_picking_type(self):
+        location_domain = [("usage", "=", ("internal"))]
         if self.picking_type_id:
             if self.picking_type_id.default_location_dest_id:
                 self.location_dest_id = self.picking_type_id.default_location_dest_id.id
@@ -27,6 +30,11 @@ class QuantTransferWizard(models.TransientModel):
                 self.location_dest_id = self.env[
                     "stock.warehouse"
                 ]._get_partner_locations()[0]
+            if self.picking_type_id.code == "outgoing":
+                location_domain = [("usage", "=", ("customer", "supplier"))]
+        return {
+            'domain': {'location_dest_id': location_domain}
+        }
 
     @api.multi
     def action_stock_quant_transfer(self):
@@ -42,7 +50,8 @@ class QuantTransferWizard(models.TransientModel):
         #  if selected quants are from different location then raise to
         #  avoid confusion of taking source location for picking
         if any(q.location_id != source_location for q in quant_ids):
-            raise UserError(_("Please select quants that are in the same " "Location."))
+            raise UserError(
+                _("Please select quants that are in the same " "Location."))
 
         if source_location == self.location_dest_id:
             raise UserError(_("Please select different location to transfer."))
@@ -73,6 +82,8 @@ class QuantTransferWizard(models.TransientModel):
                 "quant_id": quant.id,
                 "lot_id": quant.lot_id.id,
             }
+            if self.sale_order_id:
+                line_vals["group_id"] = self.sale_order_id.procurement_group_id and self.sale_order_id.procurement_group_id.id or False
             new_move = stock_move_obj.new(line_vals)
             new_move.onchange_product_id()
             move_dict = stock_move_obj._convert_to_write(
@@ -84,7 +95,7 @@ class QuantTransferWizard(models.TransientModel):
         picking_id = stock_picking_obj.create(picking_vals)
 
         for move in picking_id.move_lines:
-            move._action_confirm()
+            move._action_confirm(merge=False)
             move._recompute_state()
 
         action = self.env.ref("stock.action_picking_tree_all")

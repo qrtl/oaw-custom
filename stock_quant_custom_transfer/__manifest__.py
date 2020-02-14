@@ -11,7 +11,7 @@
     "description": """
 Create internal transfer for selected stock quant(s).
     """,
-    "depends": ["stock_move_line_quant"],
+    "depends": ["sale_stock", "stock_move_line_quant"],
     "data": ["wizard/stock_quant_transfer_wizard.xml"],
     "installable": True,
     "application": False,

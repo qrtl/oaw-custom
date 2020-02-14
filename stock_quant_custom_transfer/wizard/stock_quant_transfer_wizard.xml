@@ -9,6 +9,7 @@
                 <p class="oe_gray">Create internal transfer for selected quants.</p>
                 <group>
                     <group>
+                        <field name="sale_order_id"/>
                         <field name="picking_type_id"/>
                         <field name="location_dest_id"/>
                     </group>
