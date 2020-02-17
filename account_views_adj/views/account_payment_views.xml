@@ -22,6 +22,20 @@
         <field name="model">account.payment</field>
         <field name="inherit_id" ref="account.view_account_payment_invoice_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//sheet/group" position="before">
+                <field name="invoice_type" invisible="1"/>
+                <group>
+                    <div class="alert alert-info" role="alert" attrs="{'invisible': [('invoice_type', 'not in', ('out_refund', 'in_refund'))]}">
+                        Attention: You are registering a Credit Note payment, please double check before register.
+                    </div>
+                </group>
+            </xpath>
+            <xpath expr="//field[@name='amount']" position="after">
+                <field name="inverse_amount" required="1" attrs="{'invisible': [('invoice_type', 'not in', ('out_refund', 'in_refund'))]}"/>
+            </xpath>
+            <xpath expr="//field[@name='amount']" position="attributes">
+                <attribute name="attrs">{'invisible': [('invoice_type', 'in', ('out_refund', 'in_refund'))]}</attribute>
+            </xpath>
             <xpath expr="//field[@name='payment_date']" position="after">
                 <field name="payment_info"/>
             </xpath>
