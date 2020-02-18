@@ -7,7 +7,7 @@ from odoo import api, fields, models
 class ProductProduct(models.Model):
     _inherit = "product.product"
 
-   # object action for chr24photo users to enter from tree view to their custom form view
+    # object action for chr24photo users to enter from tree view to their custom form view
     @api.multi
     def action_view_product_open(self):
         view_id = self.env.ref("sales_chr24_photoedit_user.chono24_view_form").id

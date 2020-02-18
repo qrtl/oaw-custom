@@ -13,13 +13,14 @@
     ],
     "summary": """Adds chrono24  fields to PLV. Adds a new tree views to Sales to manage chrono24""",
     "description": """
-        Function of the Chrono24 Updated flag: This flag gets activated when product is to be pusblished onto Chrono24 or when changes 
+        Function of the Chrono24 Updated flag: This flag gets activated when product is to be pusblished onto Chrono24 or when changes
         to certain fields in the master PLU view are done
     """,
-    "data": ["data/ir_actions.xml",
+    "data": [
+        "data/ir_actions.xml",
         "views/product_product_views.xml",
-             "views/product_template_views.xml",
-     ],
+        "views/product_template_views.xml",
+    ],
     "qweb": [],
     "installable": True,
 }
