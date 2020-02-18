@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    
+
          <report
             id="action_report_chr123_saleorder"
             string="Chrono123 LTD"

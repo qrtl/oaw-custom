@@ -10,7 +10,7 @@
             name="quotation_report_adjust.report_tw_saleorder"
             print_report_name="(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or 'Order - %s' % (object.name)"
         />
-        
+
           <template id="custom_header_tw">
                  <div class="header">
 
