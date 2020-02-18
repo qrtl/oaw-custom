@@ -1,4 +1,5 @@
 <odoo>
+
     <!-- Separat view for sales manager     -->
     <record id="chono24_view_tree" model="ir.ui.view">
         <field name="name">chono24.view.tree</field>

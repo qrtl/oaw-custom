@@ -1,4 +1,5 @@
 <odoo>
+
     <!--Tree View for sale_chr24_photoedit     -->
     <record id="chono24_view_tree" model="ir.ui.view">
         <field name="name">chono24.view.tree</field>

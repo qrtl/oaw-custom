@@ -1,12 +1,12 @@
-# Copyright 2020  Timeware Limited
+# Copyright 2020  Quartile Limited, Timeware Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 {
     "name": "Sale group for Chrono24 and Products",
-    "category": "Security",
-    "version": "12.0.0.1",
+    "category": "Sales",
+    "version": "12.0.1.0.0.",
     "author": "Timeware limited",
     "website": "",
-    "depends": ["product", "sale_chrono24"],
+    "depends": ["sale_chrono24"],
     "summary": """A group for managing Chrono24 information and managing photos of products""",
     "description": """
     The group gets access to views and are allowed write fields of:
@@ -18,6 +18,5 @@
         "views/product_product.xml",
         "security/ir.model.access.csv",
     ],
-    "qweb": [],
     "installable": True,
 }

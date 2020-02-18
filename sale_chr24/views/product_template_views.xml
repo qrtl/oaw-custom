@@ -10,7 +10,6 @@
             </xpath>
         </field>
     </record>
-
     <record id="product_search_form_view" model="ir.ui.view">
         <field name="name">product.template.search</field>
         <field name="model">product.template</field>
