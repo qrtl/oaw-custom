@@ -19,10 +19,7 @@ class SaleOrder(models.Model):
         store=True,
     )
     order_status = fields.Selection(
-        [
-            ("done", "Done"),
-            ("open", "Open"),
-        ],
+        [("done", "Done"), ("open", "Open")],
         string="Order Status",
         compute="_compute_order_status",
         store=True,
@@ -53,5 +50,15 @@ class SaleOrder(models.Model):
     def _compute_order_status(self):
         for order in self:
             order.order_status = "open"
-            if order.delivery_status == "delivered" and order.invoice_status == "invoiced" and all([invoice.state in ('paid', 'cancel') for invoice in order.mapped("invoice_ids")]) or order.state == "done":
+            if (
+                order.delivery_status == "delivered"
+                and order.invoice_status == "invoiced"
+                and all(
+                    [
+                        invoice.state in ("paid", "cancel")
+                        for invoice in order.mapped("invoice_ids")
+                    ]
+                )
+                or order.state == "done"
+            ):
                 order.order_status = "done"
