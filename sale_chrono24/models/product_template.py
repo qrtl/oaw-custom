@@ -16,6 +16,31 @@ class ProductTemplate(models.Model):
     chrono24_price = fields.Float(string="Chrono24 Price", store=True)
 
     @api.multi
+    def updated_chrono24_date(self, pt, vals):
+        if "qty_local_stock" in vals and "qty_reserved" in vals:
+            if vals["qty_local_stock"] - vals["qty_reserved"] >= 0:
+                return True
+        elif "qty_local_stock" in vals:
+            if vals["qty_local_stock"] - pt.qty_reserved >= 0:
+                return True
+        elif "qty_reserved" in vals:
+            if pt.qty_local_stock - vals["qty_reserved"] >= 0:
+                return True
+        elif "list_price" in vals:
+            if pt.list_price != vals["list_price"]:
+                return True
+        elif "stock_cost" in vals:
+            if pt.stock_cost != vals["stock_cost"]:
+                return True
+        elif "net_price" in vals:
+            if pt.net_price != vals["net_price"]:
+                return True
+        elif "chrono24_price" in vals:
+            if pt.chrono24_price != vals["chrono24_price"]:
+                return True
+        return False
+
+    @api.multi
     def write(self, vals):
         for pt in self:
             if pt.chrono:
@@ -36,28 +61,3 @@ class ProductTemplate(models.Model):
                     pt.updated_date_chrono24 = fields.Datetime.now()
                     pt.chrono24_updated = True
         return super(ProductTemplate, self).write(vals)
-
-        @api.multi
-        def updated_chrono24_date(self, pt, vals):
-            if "qty_local_stock" in vals and "qty_reserved" in vals:
-                if vals["qty_local_stock"] - vals["qty_reserved"] >= 0:
-                    return True
-            elif "qty_local_stock" in vals:
-                if vals["qty_local_stock"] - pt.qty_reserved >= 0:
-                    return True
-            elif "qty_reserved" in vals:
-                if pt.qty_local_stock - vals["qty_reserved"] >= 0:
-                    return True
-            elif "list_price" in vals:
-                if pt.list_price != vals["list_price"]:
-                    return True
-            elif "stock_cost" in vals:
-                if pt.stock_cost != vals["stock_cost"]:
-                    return True
-            elif "net_price" in vals:
-                if pt.net_price != vals["net_price"]:
-                    return True
-            elif "chrono24_price" in vals:
-                if pt.chrono24_price != vals["chrono24_price"]:
-                    return True
-            return False

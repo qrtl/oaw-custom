@@ -18,7 +18,7 @@
     """,
     "data": ["data/ir_actions.xml",
         "views/product_product_views.xml",
-             "views/product_template.xml",
+             "views/product_template_views.xml",
      ],
     "qweb": [],
     "installable": True,
