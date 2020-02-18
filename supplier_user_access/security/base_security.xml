@@ -23,6 +23,9 @@
         <field name="perm_write" eval="True"/>
     </record>
 
+    <!-- Supplier has access on partner (able to select a partner in quotation) when     -->
+    <!-- the partner is one of the supplier user contacts    -->
+    <!-- the partner is referencing the supplier user as related partner   -->
     <record model="ir.rule" id="res_partner_supplier_rule">
         <field name="name">res_partner: stock supplier: Access on res.partner</field>
         <field name="model_id" ref="base.model_res_partner"/>
@@ -34,7 +37,7 @@
         <field name="perm_write" eval="False"/>
     </record>
 
-    <!--IMportant rule for supplier fm to see all the products of all his quants.-->
+    <!--Important rule for supplier fm to see all the products of all his quants.-->
     <record model="ir.rule" id="stock_quant_supplier_rule">
         <field name="name">quants: stock supplier: Access on his products and quants</field>
         <field name="model_id" ref="stock.model_stock_quant"/>
@@ -59,17 +62,18 @@
         <field name="perm_write" eval="False"/>
     </record>
 
+  <!-- Supplier has access on own quotation when the supplier_id is the supplier user -->
     <record model="ir.rule" id="res_partner_supplier_sale_rule">
         <field name="name">sale_order: stock supplier: Access on own quotation; but no delete(no unlink)</field>
         <field name="model_id" ref="sale.model_sale_order"/>
-        <field name="domain_force">[('create_partner_id', 'child_of', user.commercial_partner_id.id)]</field>
+        <field name="domain_force">[('supplier_id', 'child_of', user.commercial_partner_id.id)]</field>
         <field name="groups" eval="[(4, ref('group_supplier'))]"/>
         <field name="perm_read" eval="True"/>
         <field name="perm_create" eval="True"/>
         <field name="perm_unlink" eval="False"/>
         <field name="perm_write" eval="True"/>
     </record>
-
+    <!-- Supplier has access on own quotation when the follower of the order contains the supplier user-->
     <record model="ir.rule" id="res_partner_supplier_sale_line_rule">
         <field name="name">sale_order: stock supplier: Access on own quotation; but no delete(no unlink)</field>
         <field name="model_id" ref="sale.model_sale_order_line"/>
