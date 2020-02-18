@@ -21,27 +21,6 @@ class SaleOrder(models.Model):
             "supplier_user_access.report_sale_supplier_fm"
         ).report_action(self)
 
-    @api.multi
-    def write(self, vals):
-        res = super(SaleOrder, self).write(vals)
-        for so in self:
-            if self.env.user.has_group("supplier_user_access.group_supplier"):
-                server_actions = (
-                    self.env["base.action.rule"]
-                    .sudo()
-                    .search(
-                        [
-                            ("model", "=", "sale.order"),
-                            ("kind", "in", ("on_write", "on_create_or_write")),
-                            ("active", "=", True),
-                        ],
-                        order="sequence",
-                    )
-                )
-                for action in server_actions:
-                    action.sudo()._process(action, [so.id])
-        return res
-
     @api.model
     def create(self, vals):
         res = super(SaleOrder, self).create(vals)
@@ -52,21 +31,6 @@ class SaleOrder(models.Model):
             fragments_order_ref = vals["name"].split("-")
             sub_order_ref = fragments_order_ref[-1]
             res.order_ref_fm_report = sub_order_ref
-        if self.env.user.has_group("supplier_user_access.group_supplier"):
-            server_actions = (
-                self.env["base.action.rule"]
-                .sudo()
-                .search(
-                    [
-                        ("model", "=", "sale.order"),
-                        ("kind", "in", ("on_create", "on_create_or_write")),
-                        ("active", "=", True),
-                    ],
-                    order="sequence",
-                )
-            )
-            for action in server_actions:
-                action.sudo()._process(action, [res.id])
         return res
 
     def action_supplier_view_delivery(self):
