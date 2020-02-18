@@ -35,10 +35,6 @@ class ProductTemplate(models.Model):
                 if vals["chrono"]:
                     pt.updated_date_chrono24 = fields.Datetime.now()
                     pt.chrono24_updated = True
-                else:
-                    pt.updated_date_chrono24 = fields.Datetime.now()
-                    pt.chrono24_updated = True
-
         return super(ProductTemplate, self).write(vals)
 
         @api.multi
