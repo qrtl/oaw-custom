@@ -18,7 +18,17 @@ class SaleOrder(models.Model):
         compute="_compute_delivery_status",
         store=True,
     )
+    order_status = fields.Selection(
+        [
+            ("done", "Done"),
+            ("open", "Open"),
+        ],
+        string="Order Status",
+        compute="_compute_order_status",
+        store=True,
+    )
 
+    @api.multi
     @api.depends("state", "order_line.qty_delivered")
     def _compute_delivery_status(self):
         for order in self:
@@ -37,3 +47,11 @@ class SaleOrder(models.Model):
                         delivered_qty = True
                 if delivered_qty:
                     order.delivery_status = "delivered" if all_delivered else "partial"
+
+    @api.multi
+    @api.depends("delivery_status", "invoice_status", "invoice_ids.state", "state")
+    def _compute_order_status(self):
+        for order in self:
+            order.order_status = "open"
+            if order.delivery_status == "delivered" and order.invoice_status == "invoiced" and all([invoice.state in ('paid', 'cancel') for invoice in order.mapped("invoice_ids")]) or order.state == "done":
+                order.order_status = "done"

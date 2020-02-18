@@ -5,6 +5,12 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_done']" position="attributes">
+                <attribute name="string">Mark as Done</attribute>
+            </xpath>
+            <xpath expr="//field[@name='state']" position="attributes">
+                <attribute name="statusbar_visible">draft,sent,sale,done</attribute>
+            </xpath>
             <xpath expr="//field[@name='order_line']//tree//control" position="replace">
                 <control>
                     <create string="Add a product"/>
@@ -89,9 +95,6 @@
             <xpath expr="//field[@name='expected_date']" position="after">
                 <field name="pricelist_id"/>
             </xpath>
-            <field name="state" position="attributes">
-                <attribute name="invisible" eval="False"/>
-            </field>
         </field>
     </record>
 
