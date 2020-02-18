@@ -60,8 +60,6 @@
               sequence="2"
               groups=""/>
 
-
-
     <record id="chono24_view_form" model="ir.ui.view">
         <field name="name">product.template.common.form</field>
         <field name="model">product.product</field>
@@ -89,7 +87,7 @@
                                 <label for="sale_ok"/>
                             </div>
                             <div>
-                                <field name="purchase_ok"  readonly="True"/>
+                                <field name="purchase_ok" readonly="True"/>
                                 <label for="purchase_ok"/>
                             </div>
                         </div>
@@ -157,5 +155,4 @@
             </form>
         </field>
     </record>
-
 </odoo>

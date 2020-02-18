@@ -20,4 +20,4 @@ class ProductProduct(models.Model):
             "type": "ir.actions.act_window",
             "res_id": self.id,
             "target": "current",
-        }
+      }
