@@ -68,9 +68,6 @@
             <xpath expr="//button[@name='print_quotation'][2]" position="attributes">
                 <attribute name="groups">sales_team.group_sale_manager</attribute>
             </xpath>
-            <xpath expr="//field[@name='date_order']" position="after">
-                <field name="create_partner_id"/>
-            </xpath>
         </field>
     </record>
 
