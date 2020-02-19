@@ -3,10 +3,10 @@
 {
     "name": "Sale group for Chrono24 and Products",
     "category": "Sales",
-    "version": "12.0.1.0.0.",
+    "version": "12.0.1.0.0",
     "author": "Timeware limited",
     "website": "",
-    "depends": ["sale_chrono24"],
+    "depends": ["sale_chr24"],
     "summary": """A group for managing Chrono24 information and managing photos of products""",
     "description": """
     The group gets access to views and are allowed write fields of:
