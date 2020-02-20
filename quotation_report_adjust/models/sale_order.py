@@ -7,7 +7,7 @@ from odoo import api, fields, models
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    order_ref_report = fields.Char(string="Code", store=True)
+    order_ref_report = fields.Char(string="Code on PDF", store=True)
 
     quot_report_note = fields.Text("Notes")
 
