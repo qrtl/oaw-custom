@@ -8,11 +8,7 @@
     "website": "https://www.quartile.co",
     "author": "Quartile Limited",
     "license": "AGPL-3",
-    "depends": [
-        "sale_order_line_quant",
-        "stock_reverse_owner",
-        "abstract_report_xlsx",
-    ],
+    "depends": ["sale_order_line_quant", "stock_reverse_owner", "abstract_report_xlsx"],
     "data": [
         "reports/reports.xml",
         "wizards/stock_consignment_report_wizard_views.xml",

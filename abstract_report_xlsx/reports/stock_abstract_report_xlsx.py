@@ -212,7 +212,6 @@ class StockAbstractReportXslx(models.AbstractModel):
             # <<< added by QTL
             value = getattr(line_object, column['field'])
             cell_type = column.get('type', 'string')
-            print(cell_type)
             if cell_type == 'string':
                 self.sheet.write_string(  # QTL
                     self.row_pos, col_pos, str(value) or '', self.format_wrap
