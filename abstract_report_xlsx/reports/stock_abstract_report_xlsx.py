@@ -1,15 +1,18 @@
 # Copyright 2019 Quartile Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from odoo.addons.report_xlsx.report.report_xlsx import ReportXlsxAbstract
 from io import BytesIO
 import base64
 
+from odoo import models
 
-class ReportXlsxAbstract(ReportXlsxAbstract):
+
+class StockAbstractReportXslx(models.AbstractModel):
+    _inherit = 'report.report_xlsx.abstract'
+    _name = 'report.stock_abstract_report_xlsx'
 
     def __init__(self, pool, cr):
-        super(ReportXlsxAbstract, self).__init__(pool, cr)
+        super(StockAbstractReportXslx, self).__init__(pool, cr)
 
         # main sheet which will contains report
         self.sheet = None
@@ -211,7 +214,7 @@ class ReportXlsxAbstract(ReportXlsxAbstract):
             cell_type = column.get('type', 'string')
             if cell_type == 'string':
                 self.sheet.write_string(  # QTL
-                    self.row_pos, col_pos, value or '', self.format_wrap
+                    self.row_pos, col_pos, str(value) or '', self.format_wrap
                 )
             elif cell_type == 'amount':
                 self.sheet.write_number(
