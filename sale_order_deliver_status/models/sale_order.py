@@ -63,4 +63,6 @@ class SaleOrder(models.Model):
             ):
                 order.order_status = "done"
                 if order.state != "done":
-                    order.action_done()
+                    order.update({
+                        'state': 'done'
+                    })
