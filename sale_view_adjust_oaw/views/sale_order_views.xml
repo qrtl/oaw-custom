@@ -90,6 +90,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='name']" position="after">
                 <field name="open_issue"/>
+                <field name="checked"/>
                 <field name="client_order_ref" string="Remark"/>
             </xpath>
             <xpath expr="//field[@name='expected_date']" position="after">

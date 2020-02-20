@@ -8,10 +8,12 @@ class SaleOrder(models.Model):
     _inherit = "sale.order"
 
     sub_consigned = fields.Boolean("Sub Consigned")
-    # For communication with warehouse group
+    # For communication with warehouse group in Quotation List View
     prepare = fields.Boolean("To Be Checked")
-    # Field for communication with Delivery Group
+    # Field for communication with Delivery Group in Quotation List View
     open_issue = fields.Boolean("Open Issue")
+    # Field for communication with Delivery Group in Sales List View
+    checked = fields.Boolean("Checked")
 
     @api.multi
     def write(self, vals):
