@@ -2,13 +2,13 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import models, fields, api, _
-from odoo.addons.abstract_report_xlsx.reports import stock_abstract_report_xlsx
 
 
 class StockConsignmentReport(models.TransientModel):
     _name = 'stock.consignment.report'
 
     # Filters fields, used for data computation
+    company_id = fields.Many2one(comodel_name='res.company')
     filter_partner_id = fields.Many2one(comodel_name='res.partner')
     threshold_date = fields.Date()
     current_date = fields.Date(
@@ -99,9 +99,12 @@ class StockConsignmentReportCompute(models.TransientModel):
     def print_report(self):
         self.ensure_one()
         self.compute_data_for_report()
-        report_name = 'stock_consignment_report.consignment_report'
-        return self.env['report'].get_action(records=self,
-                                             report_name=report_name)
+        datas = {
+            'ids': self.env.context.get('active_ids', []),
+            'model': 'stock.consignment.report',
+            'form': self.read()[0]
+        }
+        return self.env.ref('stock_consignment_report.stock_consignment_report_xlsx').report_action(self, data=datas)
 
     def _prepare_report_xlsx(self):
         self.ensure_one()
@@ -217,7 +220,7 @@ SELECT
     q.reservation_id,
     q.sale_order_id,
     p.default_code,
-    p.name,
+    pt.name,
     l.id,
     l.name,
     c.name,
@@ -229,6 +232,8 @@ FROM
     stock_quant q
 INNER JOIN
     product_product p ON q.product_id = p.id
+INNER JOIN
+    product_template pt ON pt.id = p.product_tmpl_id
 INNER JOIN
     stock_production_lot l ON q.lot_id = l.id
 INNER JOIN
@@ -250,11 +255,11 @@ LEFT JOIN
     paid_lot pl ON q.lot_id = pl.lot_id
             """
         query_inject_quant += """
-WHERE loc.usage = %s
-        """
-        if section.code != 4:
-            query_inject_quant += """
-    AND q.original_owner_id = %s
+WHERE 
+    q.quantity > 0
+    AND loc.usage = %s
+    AND loc.return_location = %s
+    AND q.owner_id = %s
             """
         if section.code in [1, 3]:
             query_inject_quant += """
@@ -286,6 +291,7 @@ WHERE loc.usage = %s
                 self.env.uid,
                 status_desc[section.code],
                 loc_usage[section.code],
+                'f',
                 section.report_id.filter_partner_id.id,
                 section.report_id.threshold_date
             )
@@ -296,6 +302,8 @@ WHERE loc.usage = %s
                 self.env.uid,
                 '',
                 loc_usage[section.code],
+                't',
+                section.report_id.filter_partner_id.id,
                 section.report_id.filter_partner_id.id
             )
         else:
@@ -305,6 +313,7 @@ WHERE loc.usage = %s
                 self.env.uid,
                 status_desc[section.code],
                 loc_usage[section.code],
+                'f',
                 section.report_id.filter_partner_id.id
             )
         self.env.cr.execute(query_inject_quant, query_inject_quant_params)
@@ -325,12 +334,12 @@ FROM (
         q2.section_id,
         inv.lot_id
     FROM
-        consignment_report_quant q2
+        stock_consignment_report_quant q2
     INNER JOIN (
         SELECT DISTINCT ON (l.lot_id)
             c.name AS currency,
             l.price_unit,
-            i.supplier_invoice_number AS supp_invoice,
+            i.reference AS supp_invoice,
             l.lot_id
         FROM
             account_invoice_line l
@@ -377,13 +386,13 @@ WHERE
                 elif section.code == 3:
                     domain.append(('usage', '=', 'supplier'))
                 elif section.code == 4:
-                    domain.append(('is_repair_location', '=', True))
+                    domain.append(('return_location', '=', True))
                     domain.append(('partner_id', '=',
                                    section.report_id.filter_partner_id.id))
                 locs = self.env['stock.location'].search(domain)
-                move = self.env['stock.move'].search([
-                    ('quant_lot_id', '=', quant.lot_id.id),
-                    ('picking_type_code', '=', 'outgoing'),
+                move = self.env['stock.move.line'].search([
+                    ('lot_id', '=', quant.lot_id.id),
+                    ('code', '=', 'outgoing'),
                     ('location_dest_id', 'in', [loc.id for loc in locs]),
                     ('state', '=', 'done'),
                 ], order='date asc', limit=1)
@@ -413,7 +422,7 @@ WHERE
         quants = model.search([('section_id', '=', section_id)])
         for quant in quants:
             find_duplicate = model.search([
-                ('section_id', 'in', range(section_id - 3, section_id)),
+                ('section_id', 'in', [*range(section_id - 3, section_id)]),
                 ('lot_id', '=', quant.lot_id.id)
             ])
             if find_duplicate:
@@ -421,12 +430,12 @@ WHERE
 
     def _update_remark(self, model, section_id, usage):
         quants = model.search([('section_id', '=', section_id)])
-        move_obj = self.env['stock.move']
+        move_obj = self.env['stock.move.line']
         loc_ids = self.env['stock.location'].search([
             ('usage', '=', usage)]).ids
         for quant in quants:
             move = move_obj.search([
-                ('quant_lot_id', '=', quant.lot_id.id),
+                ('lot_id', '=', quant.lot_id.id),
                 ('location_dest_id', 'in', loc_ids),
                 ('state', '=', 'done'),
             ], order='date desc', limit=1)
@@ -434,7 +443,9 @@ WHERE
                 quant.write({'remark': move.picking_id.note})
 
 
-class PartnerXslx(stock_abstract_report_xlsx.StockAbstractReportXslx):
+class PartnerXslx(models.AbstractModel):
+    _name = 'report.stock_consignment_report.stock_consignment_report'
+    _inherit = 'report.stock_abstract_report_xlsx'
 
     def __init__(self, pool, cr):
         super(PartnerXslx, self).__init__(pool, cr)
@@ -442,8 +453,9 @@ class PartnerXslx(stock_abstract_report_xlsx.StockAbstractReportXslx):
     def create(self, data):
         return super(PartnerXslx, self).create(data)
 
-    def _get_report_name(self):
-        return _('Consignment Report')
+    def _get_report_name(self, report):
+        report_name = _('Consignment Report')
+        return self._get_report_complete_name(report, report_name)
 
     def _get_report_columns(self, report):
         return {
@@ -494,10 +506,11 @@ class PartnerXslx(stock_abstract_report_xlsx.StockAbstractReportXslx):
                 self.write_array_header()
             # adjust array header
             elif section.code == 2:
-                adj_col = {
-                    9: _('Current Date'),
-                }
-                self.write_array_header(adj_col)
+                self.columns[9] = {'header': _('Current Date'), 'field': 'outgoing_date',
+                                   'width': 20}
+                self.write_array_header()
+                self.columns[9] = {'header': _('Outgoing Date'), 'field': 'outgoing_date',
+                                   'width': 20}
 
             sorted_quants = sorted(
                 section.quant_ids,
