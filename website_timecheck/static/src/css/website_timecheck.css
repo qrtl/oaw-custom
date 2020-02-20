@@ -74,7 +74,56 @@
     width: 100px !important;
   }
 }
-/* fix position of the page content for tablap device */
-/* .container {
-    margin-left: inherit;
-} */
+/* fix position of the dropdown user menu */
+.dropdown-menu-right {
+    right: unset !important;
+}
+/* Button Background Color */
+.btn-primary, .btn-secondary {
+    background-color: #105656;
+    border-color: #105656;
+}
+/* Button Hover Background Color */
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+    background-color: #024846;
+}
+/* Hyperlink Text Color */
+a {
+    color: #105656;
+}
+/* Hyperlink Hover Text Color */
+a:hover, a:focus {
+    color: #024846;
+}
+/* Button Hover Color */
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .show > .btn-primary.dropdown-toggle {
+    background-color: #024846;
+    border-color: #024846;
+}
+/* Button Hover Color */
+.btn-secondary:hover, .btn-secondary:focus, .btn-secondary:active, .btn-secondary.active, .show > .btn-secondary.dropdown-toggle {
+    background-color: #024846;
+    border-color: #024846;
+}
+/* Cart Number Box Color */
+.label-primary {
+    background-color: #105656;
+}
+/* Active Page Number Box Color */
+.page-item.active .page-link {
+    background-color: #105656;
+    border-color: #105656;
+}
+/* Hover Page Number Color */
+.pagination > li > a:hover, .pagination > li > span:hover, .pagination > li > a:focus, .pagination > li > span:focus {
+    color: #024846;
+}
+/* Page Number Color */
+.pagination > li > a, .pagination > li > span {
+    color: #105656;
+}
+/* Checkout Button Color */
+.btn-default {
+    color: #105656;
+}
+ß

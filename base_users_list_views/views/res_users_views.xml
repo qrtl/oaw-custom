@@ -1,4 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
+    <record id="view_users_form" model="ir.ui.view">
+        <field name="name">res.users.form</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button string="Assign Supplier Access" type="object" name="action_assign_supplier"/>
+            </xpath>
+        </field>
+    </record>
+
     <record id="view_timecheck_users_tree" model="ir.ui.view">
         <field name="name">view.timecheck.users.tree</field>
         <field name="model">res.users</field>
@@ -6,9 +19,9 @@
             <tree string="Timecheck Users" editable="top">
                 <field name="commercial_partner_id" string="Company" />
                 <field name="partner_id" options="{'no_create_edit': True,'no_open':True}"/>
-<!--                 <field name="timecheck_group"/> -->
-<!--                 <field name="is_timecheck_light"/> -->
-<!--                 <field name="is_timecheck_light_date"/> -->
+                <field name="timecheck_group"/>
+                <field name="is_timecheck_light"/>
+                <field name="is_timecheck_light_date"/>
                 <button name="action_view_user_open" type="object" icon="fa-sign-in" string="Open its User Form"/>
                 <field name="login"/>
                 <field name="new_password"/>
