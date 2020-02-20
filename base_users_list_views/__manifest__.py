@@ -6,10 +6,10 @@
     "author": "Timeware Limited, Quartile Limited",
     "website": "",
     "category": "",
-    "depends": ["supplier_user_access"],
+    "depends": ["supplier_user_access", "website_timecheck"],
     "description": """
 * Adds further tree views for user belonging to "Supplier" or "Timecheck"
     """,
-    "data": ["views/view_user_tree.xml"],
+    "data": ["views/res_users_views.xml"],
     "installable": True,
 }
