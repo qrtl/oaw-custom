@@ -16,10 +16,15 @@ class PurchaseOrder(models.Model):
     )
 
     @api.multi
-    @api.depends('invoice_ids.state')
+    @api.depends("invoice_ids.state")
     def _compute_payment_status(self):
         for order in self:
             order.invoice_payment_status = "unpaid"
-            if order.invoice_ids and all([invoice.state in ("paid", "cancel") for invoice in order.mapped("invoice_ids")]):
+            if order.invoice_ids and all(
+                [
+                    invoice.state in ("paid", "cancel")
+                    for invoice in order.mapped("invoice_ids")
+                ]
+            ):
                 order.invoice_payment_status = "paid"
                 order.button_done()
