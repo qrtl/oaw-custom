@@ -27,4 +27,5 @@ class PurchaseOrder(models.Model):
                 ]
             ):
                 order.invoice_payment_status = "paid"
-                order.button_done()
+                if order.state != "done":
+                    order.button_done()
