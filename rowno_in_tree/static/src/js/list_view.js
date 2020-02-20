@@ -50,7 +50,7 @@ ListRenderer.include({
                     	else{
                     		return self._renderRow(record);
                     	}
-                    	
+
                     });
                     result.push($('<tbody>').append($records));
                 }
@@ -67,7 +67,7 @@ ListRenderer.include({
     	if (this.hasSelectors) {
     		$header.find("th.o_list_record_selector").before($('<th class="o_list_row_number_header o_list_row_count_sheliya">').html('#'));
     		var advance_search = $header.find("tr.advance_search_row")
-    		if(advance_search.length && advance_search.find('td.o_list_row_number_header').length==0){    			
+    		if(advance_search.length && advance_search.find('td.o_list_row_number_header').length==0){
     			advance_search.prepend($('<td class="o_list_row_number_header">').html('&nbsp;'));
     		}
         }
@@ -88,9 +88,9 @@ ListRenderer.include({
 	    	}
     	}
     	return $row;
-    	
+
     },
-    
-}); 
+
+});
 
 });
