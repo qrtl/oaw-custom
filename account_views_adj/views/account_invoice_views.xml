@@ -20,7 +20,7 @@
                             <field name="amount_currency"/>
                             <field name="currency_id"/>
                         </tree>
-                    </field>    
+                    </field>
                 </page>
             </xpath>
         </field>
@@ -45,7 +45,7 @@
                             <field name="amount_currency"/>
                             <field name="currency_id"/>
                         </tree>
-                    </field>    
+                    </field>
                 </page>
             </xpath>
         </field>

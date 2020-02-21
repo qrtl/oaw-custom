@@ -28,6 +28,4 @@ class PurchaseOrder(models.Model):
             ):
                 order.invoice_payment_status = "paid"
                 if order.state != "done":
-                    order.update({
-                        'state': 'done'
-                    })
+                    order.update({"state": "done"})
