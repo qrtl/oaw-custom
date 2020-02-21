@@ -30,6 +30,8 @@
                 <field name="date" readonly="1"/>
                 <field name="date_expected" invisible="1" readonly="1"/>
                 <field name="state" readonly="1"/>
+                <field name="write_date"/>
+                <field name="write_uid"/>
             </tree>
         </field>
     </record>
