@@ -13,8 +13,7 @@ class PurchaseOrderLine(models.Model):
     partner_ref = fields.Char(
         string="Vendor Bill Reference", store=True, compute="_compute_partner_ref"
     )
-    image_medium = fields.Binary(
-        related="product_id.image_medium", string="image")
+    image_medium = fields.Binary(related="product_id.image_medium", string="image")
     sale_order_partner_id = fields.Many2one(
         related="order_id.group_id.sale_id.partner_id", string="Sales Order Customer"
     )
@@ -110,8 +109,7 @@ class PurchaseOrderLine(models.Model):
     def _prepare_invoice_line_vals(self):
         self.ensure_one()
         account_id = (
-            self.product_id.product_tmpl_id._get_product_accounts()[
-                "stock_output"]
+            self.product_id.product_tmpl_id._get_product_accounts()["stock_output"]
             if self.order_id.is_vci
             else self.product_id.product_tmpl_id._get_product_accounts()["stock_input"]
         )
@@ -136,8 +134,7 @@ class PurchaseOrderLine(models.Model):
         purchase_obj = self.env["purchase.order"]
         account_journal_obj = self.env["account.journal"]
         invoice_obj = self.env["account.invoice"]
-        name = orders and ",".join(
-            [order.name for order in orders if order.name]) or ""
+        name = orders and ",".join([order.name for order in orders if order.name]) or ""
         reference = (
             orders
             and ",".join([order.partner_ref for order in orders if order.partner_ref])
@@ -172,8 +169,19 @@ class PurchaseOrderLine(models.Model):
     @api.multi
     def _compute_propose_margin(self):
         for line in self:
-            sale_base_price = line.sale_order_currency_id.compute(
-                line.sale_order_line_price_unit, self.env.user.company_id.currency_id) if line.sale_order_currency_id != self.env.user.company_id.currency_id else line.sale_order_line_price_unit
-            purchase_base_price = line.currency_id.compute(
-                line.price_unit, self.env.user.company_id.currency_id) if line.currency_id != self.env.user.company_id.currency_id else line.price_unit
+            sale_base_price = (
+                line.sale_order_currency_id.compute(
+                    line.sale_order_line_price_unit,
+                    self.env.user.company_id.currency_id,
+                )
+                if line.sale_order_currency_id != self.env.user.company_id.currency_id
+                else line.sale_order_line_price_unit
+            )
+            purchase_base_price = (
+                line.currency_id.compute(
+                    line.price_unit, self.env.user.company_id.currency_id
+                )
+                if line.currency_id != self.env.user.company_id.currency_id
+                else line.price_unit
+            )
             line.propose_margin = sale_base_price - purchase_base_price
