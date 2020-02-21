@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
     <record id="view_account_payment_tree" model="ir.ui.view">
         <field name="name">view.customer.payment.tree</field>
         <field name="model">account.payment</field>
@@ -53,4 +54,5 @@
             </xpath>
         </field>
     </record>
+
 </odoo>
