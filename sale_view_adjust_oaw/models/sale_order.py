@@ -14,6 +14,7 @@ class SaleOrder(models.Model):
     open_issue = fields.Boolean("Open Issue")
     # Field for communication with Delivery Group in Sales List View
     checked = fields.Boolean("Checked")
+    state = fields.Selection(selection_add=[('done', 'Done')])
 
     @api.multi
     def write(self, vals):
