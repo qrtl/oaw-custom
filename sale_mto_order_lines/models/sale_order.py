@@ -8,9 +8,6 @@ from odoo.exceptions import UserError
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    supplier_id = fields.Many2one(
-        comodel_name="res.partner", string="Sales Supplier", store=True
-    )
     supplier_code = fields.Char("Code", related="supplier_id.ref", store=True)
     is_shipment = fields.Boolean("Shipment")
 
@@ -25,7 +22,8 @@ class SaleOrder(models.Model):
             if not user.has_group("supplier_user_access.group_supplier"):
                 if "supplier_id" in vals:
                     if not vals["supplier_id"]:
-                        raise UserError("For MTO a Sales Supplier has to be selected!")
+                        raise UserError(
+                            "For MTO a Sales Supplier has to be selected!")
         res = super(SaleOrder, self).create(vals)
         self.sudo().message_subscribe([self.supplier_id])
         return res
@@ -45,5 +43,4 @@ class SaleOrder(models.Model):
                             raise UserError(
                                 "For MTO a Sales Supplier has to be selected!"
                             )
-        res = super(SaleOrder, self).write(vals)
-        return res
+        return super(SaleOrder, self).write(vals)
