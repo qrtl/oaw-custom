@@ -106,7 +106,7 @@ a:hover, a:focus {
     border-color: #024846;
 }
 /* Cart Number Box Color */
-.label-primary {
+.badge-primary {
     background-color: #105656;
 }
 /* Active Page Number Box Color */
@@ -126,4 +126,16 @@ a:hover, a:focus {
 .btn-default {
     color: #105656;
 }
-ß
+.visible-xs-inline {
+    display: none;
+}
+@media (max-width: 767px) {
+    .hidden-xs {
+        display: none !important;
+    }
+}
+@media (max-width: 767px) {
+    .visible-xs-inline {
+        display: inline !important;
+    }
+}
