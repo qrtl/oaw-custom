@@ -118,8 +118,8 @@
 
     <menuitem id="menu_base_reporting" name="Reporting" groups="sales_team.group_sale_salesman" sequence="50"/>
 
-    <menuitem id="profit_loss_report_menu" name="Profit &amp; Loss Report" parent="menu_base_reporting" sequence="10"/>
+    <menuitem id="profit_loss_report_menu" name="Profit &amp; Loss Report" groups="account.group_account_invoice" parent="menu_base_reporting" sequence="10"/>
 
-    <menuitem id="menu_profit_loss_report" action="profit_loss_report_action" parent="profit_loss_report_menu" sequence="5"/>
+    <menuitem id="menu_profit_loss_report" action="profit_loss_report_action" groups="account.group_account_invoice" parent="profit_loss_report_menu" sequence="5"/>
 
 </odoo>

@@ -214,7 +214,8 @@ class StockAbstractReportXslx(models.AbstractModel):
             cell_type = column.get('type', 'string')
             if cell_type == 'string':
                 self.sheet.write_string(  # QTL
-                    self.row_pos, col_pos, str(value) or '', self.format_wrap
+                    self.row_pos, col_pos, value and str(
+                        value) or '', self.format_wrap
                 )
             elif cell_type == 'amount':
                 self.sheet.write_number(
