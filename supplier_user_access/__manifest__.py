@@ -9,6 +9,7 @@
     "depends": [
         "purchase_order_line_quant",
         "supplier_stock",
+        "stock_consignment_report",
         "stock_view_adjust_oaw",
         "sale_order_line_quant",
         "website",
@@ -39,6 +40,7 @@
         "reports/sale_order_reports.xml",
         "reports/stock_picking_reports.xml",
         "reports/supplier_reports.xml",
+        "wizards/stock_consignment_report_wizard_views.xml",
     ],
     "qweb": ["static/src/xml/base.xml"],
     "installable": True,
