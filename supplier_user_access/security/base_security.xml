@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo>
+<odoo noupdate="0">
 
     <record model="ir.rule" id="supplier_stock_supplier_rule">
         <field name="name">partner_stock: stock supplier: Access on own stock</field>
@@ -37,6 +37,9 @@
         <field name="perm_write" eval="False"/>
     </record>
 
+    <!-- Disable standard record rule that allows internal users are granted read access on non-private contacts   -->
+    <delete id="base.res_partner_rule_private_employee" model="ir.rule"/>
+
     <!--Important rule for supplier fm to see all the products of all his quants.-->
     <record model="ir.rule" id="stock_quant_supplier_rule">
         <field name="name">quants: stock supplier: Access on his products and quants</field>
@@ -62,17 +65,18 @@
         <field name="perm_write" eval="False"/>
     </record>
 
-  <!-- Supplier has access on own quotation when the supplier_id is the supplier user -->
+    <!-- Supplier has access on own quotation when the supplier_id is the supplier user -->
     <record model="ir.rule" id="res_partner_supplier_sale_rule">
         <field name="name">sale_order: stock supplier: Access on own quotation; but no delete(no unlink)</field>
         <field name="model_id" ref="sale.model_sale_order"/>
-        <field name="domain_force">[('supplier_id', 'child_of', user.commercial_partner_id.id)]</field>
+        <field name="domain_force">[('supplier_id', 'child_of', [user.commercial_partner_id.id])]</field>
         <field name="groups" eval="[(4, ref('group_supplier'))]"/>
         <field name="perm_read" eval="True"/>
         <field name="perm_create" eval="True"/>
         <field name="perm_unlink" eval="False"/>
         <field name="perm_write" eval="True"/>
     </record>
+
     <!-- Supplier has access on own quotation when the follower of the order contains the supplier user-->
     <record model="ir.rule" id="res_partner_supplier_sale_line_rule">
         <field name="name">sale_order: stock supplier: Access on own quotation; but no delete(no unlink)</field>

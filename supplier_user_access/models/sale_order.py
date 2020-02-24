@@ -8,10 +8,8 @@ class SaleOrder(models.Model):
     _inherit = "sale.order"
 
     order_ref_fm_report = fields.Char(string="Order Reference", readonly=True)
-    create_partner_id = fields.Many2one(
-        "res.partner",
-        string="Sales Order Owner",
-        groups="sales_team.group_sale_manager",
+    supplier_id = fields.Many2one(
+        "res.partner", string="Sales Supplier"
     )
 
     @api.multi
@@ -43,9 +41,11 @@ class SaleOrder(models.Model):
 
         # choose the view_mode accordingly
         if len(picking_ids) > 1:
-            result.domain = "[('id','in',[" + ",".join(map(str, picking_ids)) + "])]"
+            result.domain = "[('id','in',[" + \
+                ",".join(map(str, picking_ids)) + "])]"
         else:
-            form_view = self.env.ref("supplier_user_access.view_supplier_picking_form")
+            form_view = self.env.ref(
+                "supplier_user_access.view_supplier_picking_form")
             result.views = [(form_view and form_view[1] or False, "form")]
             result.res_id = picking_ids and picking_ids[0] or False
 
