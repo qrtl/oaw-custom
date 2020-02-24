@@ -4,36 +4,82 @@
     <template id="assets_frontend" inherit_id="website.assets_frontend" name="Shop">
         <xpath expr="." position="inside">
             <link rel='stylesheet' href='/website_timecheck/static/src/css/website_timecheck.css'/>
+            <link rel='stylesheet' href="/website_timecheck/static/src/css/bootstrap.css"/>
         </xpath>
     </template>
 
     <template id="products_categories" inherit_id="website_sale.products_categories" name="Product Categories">
-        <xpath expr="//li" position="replace">
-            <li class="nav-item">
-                <a href="/shop/all_products" t-attf-class="nav-link#{'' if request.session.new_arrival or request.session.special_offer else ' active' }">All Products</a>
-            </li>
-            <li class="nav-item">
-                <a href="/shop/new_arrival" t-attf-class="nav-link#{'' if not request.session.new_arrival else ' active' }">New Arrival</a>
-            </li>
-            <li class="nav-item">
-                <a href="/shop/special_offer" t-attf-class="nav-link#{'' if not request.session.special_offer else ' active' }">Special Offer</a>
-            </li>
-            <br/>
-            <br/>
-            <li class="nav-item">
-                <a href="/shop/all_stock" t-attf-class="nav-link#{'' if request.session.hk_stock or request.session.oversea_stock else ' active' }">All Locations</a>
-            </li>
-            <li class="nav-item">
-                <a href="/shop/hk_stock" t-attf-class="nav-link#{'' if not request.session.hk_stock else ' active' }">HK Stock</a>
-            </li>
-            <li class="nav-item">
-                <a href="/shop/oversea_stock" t-attf-class="nav-link#{'' if not request.session.oversea_stock else ' active' }">Oversea Stock</a>
-            </li>
-            <br/>
-            <br/>
-            <li class="nav-item">
-                <a t-att-href="keep('/shop',category=0)" t-attf-class="nav-link#{'' if category else ' active' }">All Categories</a>
-            </li>
+        <xpath expr="//ul[@class='nav nav-pills flex-column mt16']" position="replace">
+            <ul class="nav nav-pills flex-column mt16 hidden-xs">
+                <li class="nav-item">
+                    <a href="/shop/all_products" t-attf-class="nav-link#{'' if request.session.new_arrival or request.session.special_offer else ' active' }">All Products</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/shop/new_arrival" t-attf-class="nav-link#{'' if not request.session.new_arrival else ' active' }">New Arrival</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/shop/special_offer" t-attf-class="nav-link#{'' if not request.session.special_offer else ' active' }">Special Offer</a>
+                </li>
+                <br/>
+                <br/>
+                <li class="nav-item">
+                    <a href="/shop/all_stock" t-attf-class="nav-link#{'' if request.session.hk_stock or request.session.oversea_stock else ' active' }">All Locations</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/shop/hk_stock" t-attf-class="nav-link#{'' if not request.session.hk_stock else ' active' }">HK Stock</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/shop/oversea_stock" t-attf-class="nav-link#{'' if not request.session.oversea_stock else ' active' }">Oversea Stock</a>
+                </li>
+                <br/>
+                <br/>
+                <li class="nav-item">
+                    <a t-att-href="keep('/shop',category=0)" t-attf-class="nav-link#{'' if category else ' active' }">All Categories</a>
+                </li>
+                <t t-foreach="categories" t-as="c">
+                    <t t-call="website_sale.categories_recursive" />
+                </t>
+            </ul>
+            <div class="navbar navbar-default navbar-static-top visible-xs-inline" style="z-index: 900;">
+                <div class="navbar-header navbar_header">
+                    <a role="button" href="#" class="dropdown-toggle btn btn-secondary" data-toggle="collapse" data-target=".navbar-cate-collapse"/>
+                </div>
+                <div class="collapse navbar-collapse navbar-cate-collapse navbar_collapse">
+                    <ul class="nav nav-pills flex-column mt16">
+                        <li class="nav-item">
+                            <a href="/shop/all_products" t-attf-class="nav-link#{'' if request.session.new_arrival or request.session.special_offer else ' active' }">All Products</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/shop/new_arrival" t-attf-class="nav-link#{'' if not request.session.new_arrival else ' active' }">New Arrival</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/shop/special_offer" t-attf-class="nav-link#{'' if not request.session.special_offer else ' active' }">Special Offer</a>
+                        </li>
+                        <br/>
+                        <br/>
+                        <li class="nav-item">
+                            <a href="/shop/all_stock" t-attf-class="nav-link#{'' if request.session.hk_stock or request.session.oversea_stock else ' active' }">All Locations</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/shop/hk_stock" t-attf-class="nav-link#{'' if not request.session.hk_stock else ' active' }">HK Stock</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/shop/oversea_stock" t-attf-class="nav-link#{'' if not request.session.oversea_stock else ' active' }">Oversea Stock</a>
+                        </li>
+                        <br/>
+                        <br/>
+                        <li class="nav-item">
+                            <a t-att-href="keep('/shop',category=0)" t-attf-class="nav-link#{'' if category else ' active' }">All Categories</a>
+                        </li>
+                        <t t-foreach="categories" t-as="c">
+                            <t t-call="website_sale.categories_recursive"/>
+                        </t>
+                    </ul>
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="//div[@id='products_grid_before']" position="attributes">
+            <attribute name="class">col-md-3</attribute>
         </xpath>
     </template>
 
@@ -357,6 +403,17 @@
         </xpath>
         <xpath expr="//li[@class='nav-item dropdown']" position="attributes">
             <attribute name="class">hidden-xs</attribute>
+        </xpath>
+        <xpath expr="//li[@class='hidden-xs']" position="after">
+            <li class="visible-xs-inline" t-ignore="true" t-if="not user_id._is_public()">
+                <a href="#" class="nav-link">
+                    <b>
+                        <span t-esc="user_id.name[:23] + '...' if user_id.name and len(user_id.name) &gt; 25 else user_id.name"/>
+                    </b>
+                </a>
+                <a href="/my" class="nav-link">My Account</a>
+                <a id="o_logout" class="nav-link" t-attf-href="/web/session/logout?redirect=/">Logout</a>
+            </li>
         </xpath>
     </template>
 

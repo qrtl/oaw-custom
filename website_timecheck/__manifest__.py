@@ -20,6 +20,7 @@
         "security/website_sale_security.xml",
         "views/product_product_views.xml",
         "views/res_users_views.xml",
+        "views/sale_order_views.xml",
         "views/templates.xml",
     ],
     "installable": True,
