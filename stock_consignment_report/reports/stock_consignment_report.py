@@ -379,10 +379,10 @@ WHERE
             if quant.reservation_id:
                 quant.write(
                     {"remark": quant.reservation_id.sudo().name_get()[0][1]})
-            elif quant.sale_order_id:
-                remark = quant.sale_order_id.sudo().name
-                if quant.sale_order_id.sudo().client_order_ref:
-                    remark += " - " + quant.sale_order_id.sudo().client_order_ref
+            elif quant.sale_id:
+                remark = quant.sale_id.sudo().name
+                if quant.sale_id.sudo().client_order_ref:
+                    remark += " - " + quant.sale_id.sudo().client_order_ref
                 quant.write({"remark": remark})
 
     def _delete_supplier_loc_quant(self, model, section_id):
