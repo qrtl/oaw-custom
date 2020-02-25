@@ -10,7 +10,8 @@ class ProductProduct(models.Model):
     # object action for chr24photo users to enter from tree view to their custom form view
     @api.multi
     def action_view_product_open(self):
-        view_id = self.env.ref("sales_chr24_photoedit_user.chono24_view_form").id
+        view_id = self.env.ref("sale_chr24_photoedit_user.chrono24_view_form").id
+        print(view_id)
         return {
             "name": "Product",
             "view_mode": "form",
