@@ -22,8 +22,7 @@ class SaleOrder(models.Model):
             if not user.has_group("supplier_user_access.group_supplier"):
                 if "supplier_id" in vals:
                     if not vals["supplier_id"]:
-                        raise UserError(
-                            "For MTO a Sales Supplier has to be selected!")
+                        raise UserError("For MTO a Sales Supplier has to be selected!")
         res = super(SaleOrder, self).create(vals)
         return res
 
@@ -42,5 +41,5 @@ class SaleOrder(models.Model):
                             raise UserError(
                                 "For MTO a Sales Supplier has to be selected!"
                             )
-        res = super(SaleOrder, self).write(vals)     
+        res = super(SaleOrder, self).write(vals)
         return res
