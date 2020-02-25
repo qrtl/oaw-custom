@@ -43,6 +43,7 @@
   }
   #products_grid .oe_product.oe_grid {
     height: fit-content;
+    height: -moz-fit-content;
   }
   /* Restrict the width of product information */
   .product_info {
@@ -68,6 +69,7 @@
   }
   #products_grid .oe_product.oe_grid {
     height: fit-content;
+    height: -moz-fit-content;
   }
   /* Restrict the width of product information */
   .product_info {
