@@ -252,8 +252,7 @@ WHERE
     AND loc.partner_id = %s
             """
         status_desc = {1: "Sold & NOT Paid", 2: "In Stock", 3: "Returned"}
-        loc_usage = {1: "customer", 2: "internal",
-                     3: "supplier", 4: "internal"}
+        loc_usage = {1: "customer", 2: "internal", 3: "supplier", 4: "internal"}
         if section.code in [1, 3]:
             query_inject_quant_params = (
                 self.id,
@@ -377,8 +376,7 @@ WHERE
         quants = model.search([("section_id", "=", section_id)])
         for quant in quants:
             if quant.reservation_id:
-                quant.write(
-                    {"remark": quant.reservation_id.sudo().name_get()[0][1]})
+                quant.write({"remark": quant.reservation_id.sudo().name_get()[0][1]})
             elif quant.sale_id:
                 remark = quant.sale_id.sudo().name
                 if quant.sale_id.sudo().client_order_ref:
@@ -400,8 +398,7 @@ WHERE
     def _update_remark(self, model, section_id, usage):
         quants = model.search([("section_id", "=", section_id)])
         move_obj = self.env["stock.move.line"]
-        loc_ids = self.env["stock.location"].search(
-            [("usage", "=", usage)]).ids
+        loc_ids = self.env["stock.location"].search([("usage", "=", usage)]).ids
         for quant in quants:
             move = move_obj.search(
                 [
