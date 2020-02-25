@@ -11,7 +11,6 @@ class ProductProduct(models.Model):
     @api.multi
     def action_view_product_open(self):
         view_id = self.env.ref("sale_chr24_photoedit_user.chrono24_view_form").id
-        print(view_id)
         return {
             "name": "Product",
             "view_mode": "form",
