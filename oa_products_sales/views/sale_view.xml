@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!--Customizing fields to be displayed in order line list-->
+        <record id="sale_order_line_tree_z2" model="ir.ui.view">
+            <field name="name">sale.order.line.tree.z2</field>
+            <field name="model">sale.order.line</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="order_partner_id" string="Customer"/>
+                    <field name="price_subtotal" sum="Total"/>
+                    <field name="subtotal_hkd" sum="Total HKD"/>
+                    <field name="order_id"/>
+                    <field name="name"/>
+                    <field name="qty_delivered"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+         <record id="sale_order_line_tree_search" model="ir.ui.view">
+            <field name="name">sale.order.line.tree.search</field>
+            <field name="model">sale.order.line</field>
+            <field name="arch" type="xml">
+                <search string="Search Sales Order">
+
+
+                        <field name="order_id"/>
+<!--                        <field name="name"/>-->
+
+<!--                    <group expand="0" string="Group By">-->
+<!--                        <filter name="group_by_customer" string="Customer" domain="[]" context="{'group_by':'order_partner_id'}"/>-->
+<!--                    </group>-->
+                </search>
+            </field>
+         </record>
+
+
+    </data>
+</openerp>

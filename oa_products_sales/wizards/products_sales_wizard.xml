@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="products_sales_wizard" model="ir.ui.view">
+            <field name="name">products.sales.wizard</field>
+            <field name="model">products.sales.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <p class="oe_grey">
+                        This action will calculate initial values for subtotal_hkd, total and average
+                    </p>
+                    <footer>
+                        <!-- String=run enables the wizard! -->
+                        <button name="action_products_sales_initialise_btn"
+                                type="object"
+                                string="Run"
+                                class="oe_highlight"/>
+                        or
+                        <button special="cancel"
+                                string="Cancel"
+                                class="btn-secondary"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+    <!-- view_mode: Wizards view mode -->
+    <!-- multi: enables the button on list views -->
+        <act_window
+                    id="action_products_sales_initialise"
+                    name="Initializse Values"
+                    res_model="products.sales.wizard"
+                    src_model="product.template"
+                    view_mode="form"
+                    target="new"
+                    multi="True"
+                    />
+
+    </data>
+</openerp>
+
