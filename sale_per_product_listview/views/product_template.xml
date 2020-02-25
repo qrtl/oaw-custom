@@ -1,25 +1,22 @@
-<?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
 
-         <record id="products_sales_tree_view" model="ir.ui.view">
+        <record id="products_sales_tree_view" model="ir.ui.view">
             <field name="name">products.sales.tree.view</field>
             <field name="model">product.template</field>
-<!--            <field name="priority" eval="15"/>-->
+            <!--            <field name="priority" eval="15"/>-->
             <field name="arch" type="xml">
                 <tree string="Products Sales"  default_order="id desc">
-                    <field name="id" readonly="1" invisible="1"/>
-<!--                    <field name="image_small" string="Image" widget="image" height="64px"/>-->
-                    <button name="action_view_sales_ext" type="object" icon="fa-sign-in" string="Open Sales"/>
-                    <field name="default_code" string="Code"/>
-                    <field name="name" string="Product Ref"/>
-<!--                    <field name="qty_local_stock" string="HK Stock"/>-->
-                    <field name="average" string="Average Price"/>
-                    <field name="total" string="Total"/>
+                <field name="id" readonly="1" invisible="1"/>
+                <!--                    <field name="image_small" string="Image" widget="image" height="64px"/>-->
+                <button name="action_view_sales_ext" type="object" icon="fa-sign-in" string="Open Sales"/>
+                <field name="default_code" string="Code"/>
+                <field name="name" string="Product Ref"/>
+                <!--                    <field name="qty_local_stock" string="HK Stock"/>-->
+                <field name="average" string="Average Price"/>
+                <field name="total" string="Total"/>
                 </tree>
             </field>
-         </record>
-
+        </record>
         <record id="product_template_products_sales_search_view" model="ir.ui.view">
             <field name="name">Product</field>
             <field name="model">product.template</field>
@@ -30,7 +27,6 @@
                 </search>
             </field>
         </record>
-
         <record id="action_products_view" model="ir.actions.act_window">
             <field name="name">Products total sales</field>
             <field name="res_model">product.template</field>
