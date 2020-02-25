@@ -25,7 +25,6 @@ class SaleOrder(models.Model):
                         raise UserError(
                             "For MTO a Sales Supplier has to be selected!")
         res = super(SaleOrder, self).create(vals)
-        self.sudo().message_subscribe([self.supplier_id])
         return res
 
     @api.multi
@@ -43,4 +42,5 @@ class SaleOrder(models.Model):
                             raise UserError(
                                 "For MTO a Sales Supplier has to be selected!"
                             )
-        return super(SaleOrder, self).write(vals)
+        res = super(SaleOrder, self).write(vals)     
+        return res
