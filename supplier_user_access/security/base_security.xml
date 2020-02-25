@@ -4,7 +4,7 @@
     <record model="ir.rule" id="supplier_stock_supplier_rule">
         <field name="name">partner_stock: stock supplier: Access on own stock</field>
         <field name="model_id" ref="supplier_stock.model_supplier_stock"/>
-        <field name="domain_force">[('partner_id', 'child_of', user.commercial_partner_id.id)]</field>
+        <field name="domain_force">[('partner_id', 'child_of', [user.commercial_partner_id.id])]</field>
         <field name="groups" eval="[(4, ref('group_supplier'))]"/>
         <field name="perm_read" eval="True"/>
         <field name="perm_create" eval="True"/>
@@ -15,7 +15,7 @@
     <record model="ir.rule" id="supplier_location_supplier_rule">
         <field name="name">supplier_location: stock supplier: Access on own location</field>
         <field name="model_id" ref="supplier_stock.model_supplier_location"/>
-        <field name="domain_force">[('owner_id', 'child_of', user.commercial_partner_id.id)]</field>
+        <field name="domain_force">[('owner_id', 'child_of', [user.commercial_partner_id.id])]</field>
         <field name="groups" eval="[(4, ref('group_supplier'))]"/>
         <field name="perm_read" eval="True"/>
         <field name="perm_create" eval="True"/>
@@ -29,7 +29,7 @@
     <record model="ir.rule" id="res_partner_supplier_rule">
         <field name="name">res_partner: stock supplier: Access on res.partner</field>
         <field name="model_id" ref="base.model_res_partner"/>
-        <field name="domain_force">['|',('id', 'child_of', user.commercial_partner_id.id), ('related_partner', '=', user.partner_id.id)]</field>
+        <field name="domain_force">['|',('id', 'child_of', [user.commercial_partner_id.id]), ('related_partner', '=', user.partner_id.id)]</field>
         <field name="groups" eval="[(4, ref('group_supplier'))]"/>
         <field name="perm_read" eval="True"/>
         <field name="perm_create" eval="False"/>
@@ -69,7 +69,7 @@
     <record model="ir.rule" id="res_partner_supplier_sale_rule">
         <field name="name">sale_order: stock supplier: Access on own quotation; but no delete(no unlink)</field>
         <field name="model_id" ref="sale.model_sale_order"/>
-        <field name="domain_force">[('supplier_id', 'child_of', user.commercial_partner_id.id),('partner_id.related_partner','child_of',[user.commercial_partner_id.id])]</field>
+        <field name="domain_force">[('supplier_id', 'child_of', [user.commercial_partner_id.id]),('partner_id.related_partner','child_of',[user.commercial_partner_id.id])]</field>
         <field name="groups" eval="[(4, ref('group_supplier'))]"/>
         <field name="perm_read" eval="True"/>
         <field name="perm_create" eval="True"/>
@@ -81,7 +81,7 @@
     <record model="ir.rule" id="res_partner_supplier_sale_line_rule">
         <field name="name">sale_order: stock supplier: Access on own quotation; but no delete(no unlink)</field>
         <field name="model_id" ref="sale.model_sale_order_line"/>
-        <field name="domain_force">[('order_id.user_id','!=',False),('order_id.supplier_id', 'child_of',user.commercial_partner_id.id),('order_id.partner_id.related_partner','child_of',[user.commercial_partner_id.id])]</field>
+        <field name="domain_force">[('order_id.user_id','!=',False),('order_id.supplier_id', 'child_of',[user.commercial_partner_id.id]),('order_id.partner_id.related_partner','child_of',[user.commercial_partner_id.id])]</field>
         <field name="groups" eval="[(4, ref('group_supplier'))]"/>
         <field name="perm_read" eval="True"/>
         <field name="perm_create" eval="True"/>
