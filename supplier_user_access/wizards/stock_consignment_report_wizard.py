@@ -9,6 +9,6 @@ class StockConsignmentReportWizard(models.TransientModel):
 
     def _prepare_report_xlsx(self):
         data = super(StockConsignmentReportWizard, self)._prepare_report_xlsx()
-        if self.env.user.has_group('supplier_user_access.group_supplier'):
-            data['filter_partner_id'] = self.env.user.partner_id.id
+        if self.env.user.has_group("supplier_user_access.group_supplier"):
+            data["filter_partner_id"] = self.env.user.partner_id.id
         return data

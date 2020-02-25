@@ -4,7 +4,7 @@
         <field name="name">mto.tree.external</field>
         <field name="model">sale.order.line</field>
         <field name="arch" type="xml">
-            <tree string="Order Lines" editable="top" default_order="order_id asc">
+            <tree string="Order Lines" default_order="order_id asc">
                 <field name="order_id" readonly="1"/>
                 <field name="state" invisible="1"/>
                 <field name="is_mto" readonly="1"/>
