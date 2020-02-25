@@ -178,7 +178,7 @@
                 <input name="product_id" t-att-value="product_variant_id" type="hidden"/>
                 <t t-if="product_variant_id">
                     <a groups="website_timecheck.group_timecheck_basic" href="#" role="button" class="btn btn-secondary btn-sm a-submit" aria-label="Shopping cart" title="Shopping cart">
-                        <span class="fa fa-shopping-cart" />
+                        <span class="fa fa-shopping-cart"/> Checkout
                     </a>
                 </t>
             </div>
