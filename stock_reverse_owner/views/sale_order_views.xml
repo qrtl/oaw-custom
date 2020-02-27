@@ -9,6 +9,7 @@
             <xpath expr="//field[@name='order_line']//form//field[@name='quant_id']" position="replace">
                 <field name="quant_id" options="{'no_quick_create':True, 'no_create_edit':True}" domain="[('product_id','=',product_id),
                                 ('reservation_id', '=', False),
+                                ('sale_order_id', '=', False),
                                 ('quantity','>', 0.0),
                                 ('actual_qty','>', 0.0),
                                 ('repair', '=', False),
@@ -17,6 +18,7 @@
             <xpath expr="//field[@name='order_line']//tree//field[@name='quant_id']" position="replace">
                 <field name="quant_id" options="{'no_quick_create':True, 'no_create_edit':True}" domain="[('product_id','=',product_id),
                                 ('reservation_id', '=', False),
+                                ('sale_order_id', '=', False),
                                 ('quantity','>', 0.0),
                                 ('actual_qty','>', 0.0),
                                 ('repair', '=', False),

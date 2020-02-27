@@ -16,6 +16,7 @@
                 <field name="quant_id"
                        options="{'no_quick_create':True, 'no_create_edit':True}"
                        domain="[('product_id','=',product_id),
+                                ('sale_order_id', '=', False),
                                 ('reservation_id', '=', False),
                                 ('quantity','>', 0.0),
                                 ('actual_qty','>', 0.0),
@@ -33,6 +34,7 @@
                 <field name="quant_id"
                        options="{'no_quick_create':True, 'no_create_edit':True}"
                        domain="[('product_id','=',product_id),
+                                ('sale_order_id', '=', False),
                                 ('reservation_id', '=', False),
                                 ('quantity','>', 0.0),
                                 ('actual_qty','>', 0.0),
