@@ -76,13 +76,13 @@
         <template id="report_sino_saleorder_document">
             <t t-call="quotation_report_adjust.report_ext_layout_sino">
                 <!--Customer Address, Date and Code-->
-                <div class="article o_report_layout_standard" name="customer_adress">                
-                    <div class="col-xs-4" >
+                <div name="customer_adress">                
+                    <div>
                         <p t-field="doc.partner_invoice_id.name"/>
                         <p t-field="doc.partner_invoice_id.street"/>
                         <p t-field="doc.partner_invoice_id.street2"/>                        
                     </div>                        
-                    <div class="col-xs-4" style="text-align:right">
+                    <div style="text-align:right">
                         <strong>Create Date:</strong><span t-field="doc.create_date" t-options='{"format": "yyyy-MM-dd"}'/><br />
                         <strong>Code:</strong> <span t-field="doc.order_ref_report"/><br />
                     </div>
@@ -218,9 +218,8 @@
                     <div>
                         <p t-field="doc.quot_report_note" />
                     </div>
-                    <div style="page-break-inside: avoid">
+                    <div >
                             <div>
-                            <br /> <br />
                             </div >
                             <table class="table-bordered" style="width:100%">
                               <tr style="font-size:10px">
