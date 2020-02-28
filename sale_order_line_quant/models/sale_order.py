@@ -23,8 +23,7 @@ class SaleOrder(models.Model):
                             "move exists for the quant)."
                         )
                     )
-                order_line.quant_id.sudo().update(
-                    {"sale_order_id": sale_order.id})
+                order_line.quant_id.sudo().update({"sale_order_id": sale_order.id})
         return super(SaleOrder, self).action_confirm()
 
     @api.constrains("order_line")
