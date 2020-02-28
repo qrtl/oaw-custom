@@ -65,20 +65,20 @@ class product_template_ext(models.Model):
                 pt.average = pt.total / pt.counts
         return
 
-    # object action for chrono update button in sale order form view
     @api.multi
     def action_view_sol_open(self):
-        view_id = self.env.ref("base.view_users_form").id
+        view_id = self.env.ref('sale_per_product_listview.sale_order_lines_tree').id
+        print(view_id)
         return {
-            "name": "Supplier Users",
-            "view_mode": "form",
-            "view_type": "form",
-            "res_model": "product_product",
-            "view_id": view_id,
-            "type": "ir.actions.act_window",
-            "res_id": self.id,
-            "target": "current",
-            "domain": "[('product_id','in', self.product_variant_ids.ids),('state','=','sale')]"
+            'name': 'Sales Orders',
+            'view_mode': 'tree',
+            'view_type': 'tree',
+            'res_model': 'sale.order.line',
+            'view_id': view_id,
+            'type': 'ir.actions.act_window',
+            'res_id': self.id,
+            'target': 'current',
+            
         }
 
 

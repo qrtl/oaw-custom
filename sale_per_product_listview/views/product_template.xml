@@ -7,11 +7,11 @@
             <field name="arch" type="xml">
                 <tree string="Products Sales"  default_order="id desc">
                 <field name="id" readonly="1" invisible="1"/>
-                <!--                    <field name="image_small" string="Image" widget="image" height="64px"/>-->
-                <button name="action_view_sales_ext" type="object" icon="fa-sign-in" string="Open Sales"/>
+                <field name="image_medium" string="Image" widget="image" options='{"size": [64, 64]}'/>
+                <button name="action_view_sol_open" type="object" icon="fa-sign-in" string="Open Sales"/>
                 <field name="default_code" string="Code"/>
                 <field name="name" string="Product Ref"/>
-                <!--                    <field name="qty_local_stock" string="HK Stock"/>-->
+                <field name="qty_local_stock" string="HK Stock"/>
                 <field name="average" string="Average Price"/>
                 <field name="total" string="Total"/>
                 </tree>
@@ -31,16 +31,16 @@
             </record>
 
         <record id="action_products_view" model="ir.actions.act_window">
-            <field name="name">Products total sales</field>
+            <field name="name">Products Total Sales</field>
             <field name="res_model">product.template</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="products_sales_tree_view"/>
-            <field name="search_view_id" ref="sale.products_sales_tree_view"/>
+            <field name="search_view_id" ref="product_products_sales_search_view"/>
             <field name="limit">80</field>
         </record>
 
          <menuitem id="products_sales"
-                    parent="sale.product_menu_catalog"
+                    parent="sale.menu_sale_report"
                     action="action_products_view"
                     sequence="2"
                     groups=""/>
