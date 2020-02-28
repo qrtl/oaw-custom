@@ -60,4 +60,16 @@
         </field>
     </record>
 
+    <record id="sale_margin_sale_order" model="ir.ui.view">
+        <field name="name">sale.order.margin.view.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale_margin.sale_margin_sale_order"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='margin']" position="attributes">
+                <attribute name="widget">monetary</attribute>
+                <attribute name="options">{'currency_field': 'company_id.currency_id'}</attribute>
+            </xpath>
+        </field>
+    </record>
+
 </odoo>
