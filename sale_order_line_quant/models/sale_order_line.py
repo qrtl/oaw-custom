@@ -9,9 +9,12 @@ class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
     quant_id = fields.Many2one("stock.quant", string="Stock Quant", copy=False)
-    lot_id = fields.Many2one(related="quant_id.lot_id", string="Case No.", store=True)
-    stock_owner_id = fields.Many2one(related="quant_id.owner_id", string="Stock Owner")
-    is_mto = fields.Boolean(related="order_id.is_mto", store=True, string="Is MTO?")
+    lot_id = fields.Many2one(related="quant_id.lot_id",
+                             string="Case No.", store=True)
+    stock_owner_id = fields.Many2one(
+        related="quant_id.owner_id", string="Stock Owner")
+    is_mto = fields.Boolean(related="order_id.is_mto",
+                            store=True, string="Is MTO?")
     quant_price_unit = fields.Float(related="lot_id.price_unit", string="Cost")
 
     @api.onchange("quant_id")
@@ -30,7 +33,8 @@ class SaleOrderLine(models.Model):
 
     @api.multi
     def _prepare_procurement_values(self, group_id=False):
-        values = super(SaleOrderLine, self)._prepare_procurement_values(group_id)
+        values = super(
+            SaleOrderLine, self)._prepare_procurement_values(group_id)
         self.ensure_one()
         values.update({"quant_id": self.quant_id.id, "lot_id": self.lot_id.id})
         return values
@@ -94,11 +98,11 @@ class SaleOrderLine(models.Model):
             currency = line.order_id.pricelist_id.currency_id
             price = (
                 currency.compute(
-                    line.quant_price_unit, self.env.user.company_id.currency_id
+                    line.price_subtotal, self.env.user.company_id.currency_id
                 )
                 if currency != self.env.user.company_id.currency_id
-                else line.quant_price_unit
+                else line.price_subtotal
             )
             line.margin = self.env.user.company_id.currency_id.round(
-                line.price_subtotal - (price * line.product_uom_qty)
+                price - (line.quant_price_unit * line.product_uom_qty)
             )
