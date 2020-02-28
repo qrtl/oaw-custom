@@ -87,3 +87,18 @@ class SaleOrderLine(models.Model):
                 "sale_order_id": False
             })
         return res
+
+    @api.depends('product_id', 'quant_price_unit', 'product_uom_qty', 'price_unit', 'price_subtotal')
+    def _product_margin(self):
+        for line in self:
+            currency = line.order_id.pricelist_id.currency_id
+            price = (
+                currency.compute(
+                    line.quant_price_unit,
+                    self.env.user.company_id.currency_id,
+                )
+                if currency != self.env.user.company_id.currency_id
+                else line.quant_price_unit
+            )
+            line.margin = self.env.user.company_id.currency_id.round(
+                line.price_subtotal - (price * line.product_uom_qty))
