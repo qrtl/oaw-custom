@@ -17,22 +17,25 @@
                 </tree>
             </field>
         </record>
-        <record id="product_template_products_sales_search_view" model="ir.ui.view">
-            <field name="name">Product</field>
-            <field name="model">product.template</field>
-            <field name="arch" type="xml">
-                <search string="Product">
+       
+         <record id="product_products_sales_search_view" model="ir.ui.view">
+                <field name="name">product.products.sales.search.view</field>
+                <field name="model">product.template</field>
+                <field name="inherit_id" ref="product.product_template_search_view"/>
+                <field name="arch" type="xml">
+                <xpath expr="//field[@name='categ_id']" position="before">
                     <field name="name" string="Product Ref"/>
                     <field name="default_code" string="Code"/>
-                </search>
-            </field>
-        </record>
+                </xpath>
+                </field>
+            </record>
+
         <record id="action_products_view" model="ir.actions.act_window">
             <field name="name">Products total sales</field>
             <field name="res_model">product.template</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="products_sales_tree_view"/>
-<!--            <field name="domain">[('total', '>', 0)]</field>-->
+            <field name="search_view_id" ref="sale.products_sales_tree_view"/>
             <field name="limit">80</field>
         </record>
 
@@ -43,13 +46,12 @@
                     groups=""/>
 
 <!--         Window action related to the inline button function-->
-        <record id="report_all_channels_sales_action" model="ir.actions.act_window">
-            <field name="name">Sales</field>
+        <!-- <record id="open_sol_of_product" model="ir.actions.act_window">
+            <field name="name">Open Sale Order Lines Of Product</field>
             <field name="res_model">sale.order.line</field>
             <field name="view_mode">tree</field>
-            <field name="view_id" ref="oa_products_sales.sale_order_line_tree_z2"/>
-            <field name="search_view_id" ref="oa_products_sales.sale_order_line_tree_search"/>
+            <field name="view_id" ref="sale_per_product_listview.action_view_sol_open"/>
+            <field name="search_view_id" ref="sale_per_product_listview.sale_order_line_tree_search"/>
             <field name="context">{}</field>
-        </record>
-    </data>
+        </record> -->
 </odoo>

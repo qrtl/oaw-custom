@@ -1,5 +1,9 @@
+# Copyright 2020  Quartile Limited, Timeware Limited
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+
 from odoo import api, fields, models
 import odoo.addons.decimal_precision as dp
+
 
 class product_template_ext(models.Model):
     _inherit = 'product.template'
@@ -35,12 +39,8 @@ class product_template_ext(models.Model):
         sol_object = self.env['sale.order.line']
         for pt in pts:
             domain = [
-                #('product_id.product_tmpl_id', '=', pt.id),
                 ('product_id', '=', pt.product_variant_ids.ids),
-                # ('state', '=', 'done'), when sales order is automatically delivered
                 ('state', '=', 'sale'),
-
-
             ]
             sols = sol_object.search(domain)
             sols_len = len(sols)
@@ -65,20 +65,34 @@ class product_template_ext(models.Model):
                 pt.average = pt.total / pt.counts
         return
 
-    # Classical implementation of inline-button
+    # object action for chrono update button in sale order form view
     @api.multi
-    def action_view_sales_ext(self):
-        action = self.env.ref('oa_products_sales.report_all_channels_sales_action').read()[0]
-        print(self.product_variant_ids.ids)
-        # Regarding domain: Self is product template!
-        # Left part is field of model the action bases on, i.e. sale.order.line!
-        action['domain'] = [('product_id','in', self.product_variant_ids.ids),('state','=','sale')]
-        #Domain in use when Sales Order is automatically locked
-        #action['domain'] = [('product_id', 'in', self.product_variant_ids.ids), ('state', '=', 'done')]
+    def action_view_sol_open(self):
+        view_id = self.env.ref("base.view_users_form").id
+        return {
+            "name": "Supplier Users",
+            "view_mode": "form",
+            "view_type": "form",
+            "res_model": "product_product",
+            "view_id": view_id,
+            "type": "ir.actions.act_window",
+            "res_id": self.id,
+            "target": "current",
+            "domain": "[('product_id','in', self.product_variant_ids.ids),('state','=','sale')]"
+        }
 
 
-
-        return action
+    # # Classical implementation of inline-button
+    # @api.multi
+    # def action_view_sales_ext(self):
+    #     action = self.env.ref('oa_products_sales.report_all_channels_sales_action').read()[0]
+    #     print(self.product_variant_ids.ids)
+    #     # Regarding domain: Self is product template!
+    #     # Left part is field of model the action bases on, i.e. sale.order.line!
+    #     action['domain'] = [('product_id','in', self.product_variant_ids.ids),('state','=','sale')]
+    #     #Domain in use when Sales Order is automatically locked
+    #     #action['domain'] = [('product_id', 'in', self.product_variant_ids.ids), ('state', '=', 'done')]
+    #     return action
 
     # Better implemtation, but momentarily not allowing setting the search_view_id of custom search view.
     # @api.multi

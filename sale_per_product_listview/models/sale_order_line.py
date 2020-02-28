@@ -1,20 +1,12 @@
-# -*- coding: utf-8 -*-
+# Copyright 2020  Quartile Limited, Timeware Limited
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+
 from odoo import models, fields, api
 import odoo.addons.decimal_precision as dp
 
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
-
-    product_description = fields.Char(
-        string = 'Product Name',
-        related = 'product_id.name'
-    )
-
-    order_partner_name = fields.Char(
-        string='Product Name',
-        related='order_id.partner_id.name'
-    )
 
     subtotal_hkd = fields.Float(
         string="Subtotal in HKD",

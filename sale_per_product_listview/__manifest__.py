@@ -6,7 +6,7 @@
       Shows sales for each product. """,
     'description': """
         For each product a tree view that lists all sale order lines and total amount this product has generated.
-        Completed Sale Order Lines will be considered only - from the moment the quotation was confirmed (Todo: when is write() triggered)
+        Completed Sale Order Lines will be considered only - from the moment the quotation is turned into SO
         Refunded Sales Orders will not be considered.
         The tree view is per default grouped by customer.  
     """,
@@ -18,7 +18,7 @@
                  "sale",
     ],
     'data': [
-        'views/sale_view.xml',
+        'views/sale_order_line_tree.xml',
         'views/product_template.xml',
         "wizards/products_sales_wizard.xml",
     ],
