@@ -8,8 +8,7 @@ class SaleOrder(models.Model):
     _inherit = "sale.order"
 
     order_ref_report = fields.Char(string="Code on PDF", store=True)
-
-    quot_report_note = fields.Text("Notes")
+    quot_report_note = fields.Text("Notes on PDF")
 
     @api.model
     def create(self, vals):

@@ -8,6 +8,9 @@
             <xpath expr="//field[@name='origin']" position="after">
                 <field name="order_ref_report"/>
             </xpath>
+            <xpath expr="//field[@name='note']" position="before">
+                <field name="quot_report_note"/>
+            </xpath>
         </field>
     </record>
 </odoo>
