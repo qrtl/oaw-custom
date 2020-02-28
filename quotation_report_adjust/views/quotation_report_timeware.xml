@@ -68,12 +68,12 @@
         <template id="report_tw_saleorder_document">
             <t t-call="quotation_report_adjust.report_ext_layout_tw">
                 <!--Customer Address, Date and Code-->
-                <div name="customer_adress">                
+                <div name="customer_adress">
                     <div>
                         <p t-field="doc.partner_invoice_id.name"/>
                         <p t-field="doc.partner_invoice_id.street"/>
-                        <p t-field="doc.partner_invoice_id.street2"/>                        
-                    </div>                        
+                        <p t-field="doc.partner_invoice_id.street2"/>
+                    </div>
                     <div style="text-align:right">
                         <strong>Create Date:</strong><span t-field="doc.create_date" t-options='{"format": "yyyy-MM-dd"}'/><br />
                         <strong>Code:</strong> <span t-field="doc.order_ref_report"/><br />
