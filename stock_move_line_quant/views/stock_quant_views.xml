@@ -36,6 +36,8 @@
                 <field name='purchase_price_unit' string='Curr Price'/>
                 <field name='exchange_rate'/>
                 <field name='cost'/>
+                <field name="write_date"/>
+                <field name="write_uid"/>
             </xpath>
         </field>
     </record>
