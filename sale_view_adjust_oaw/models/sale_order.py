@@ -9,7 +9,7 @@ class SaleOrder(models.Model):
 
     sub_consigned = fields.Boolean("Sub Consigned")
     # For communication with warehouse group in Quotation List View
-    prepare = fields.Boolean("To Be Checked")
+    prepare = fields.Boolean("Prepare")
     # Field for communication with Delivery Group in Quotation List View
     open_issue = fields.Boolean("Open Issue")
     # Field for communication with Delivery Group in Sales List View
@@ -36,3 +36,18 @@ class SaleOrder(models.Model):
         for order_line in order_lines:
             order_line.line_sequence = sequence
             sequence += 1
+
+    @api.multi
+    def action_open_order(self):
+        view_id = self.env.ref("sale.view_order_form").id
+        context = {}
+        return {
+            "name": "Sales Order",
+            "view_mode": "form",
+            "view_type": "form",
+            "res_model": "sale.order",
+            "view_id": view_id,
+            "type": "ir.actions.act_window",
+            "res_id": self.id,
+            "context": context,
+        }
