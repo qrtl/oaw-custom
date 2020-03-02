@@ -17,7 +17,7 @@ class SaleOrder(models.Model):
             if date and sol.order_id.currency_id != self.env.user.company_id.currency_id:
                 rate = Rate.search([
                     ('currency_id', '=', sol.order_id.currency_id.id),
-                    ('date', '<=', date),
+                    ('name', '<=', date),
                 ], order='name desc', limit=1).rate or 1.0
             sol.subtotal_hkd = sol.price_subtotal / rate
             sol.product_id.product_tmpl_id.total += sol.subtotal_hkd
