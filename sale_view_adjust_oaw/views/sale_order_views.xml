@@ -57,6 +57,7 @@
             <xpath expr="//page[@name='other_information']" position="attributes">
                 <attribute name="invisible">True</attribute>
             </xpath>
+            
         </field>
     </record>
 
@@ -80,6 +81,7 @@
                 <field name="invoice_status" states="sale,done" invisible="1"/>
                 <field groups="base.group_no_one" name="origin"/>
             </xpath>
+            
         </field>
     </record>
 
@@ -88,13 +90,21 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_tree"/>
         <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+               <attribute name="editable">top</attribute>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="after">
+                <button name="action_open_order" type="object" icon="fa-dedent" string="Open its Sales Order"/>
+            </xpath>
             <xpath expr="//field[@name='name']" position="after">
                 <field name="open_issue"/>
-                <field name="checked"/>
                 <field name="client_order_ref" string="Remark"/>
             </xpath>
             <xpath expr="//field[@name='expected_date']" position="after">
                 <field name="pricelist_id"/>
+            </xpath>
+            <xpath expr="//field[@name='amount_total']" position="after">
+                <field name="checked"/>
             </xpath>
         </field>
     </record>
