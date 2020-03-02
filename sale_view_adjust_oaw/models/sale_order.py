@@ -37,18 +37,17 @@ class SaleOrder(models.Model):
             order_line.line_sequence = sequence
             sequence += 1
 
-
     @api.multi
     def action_open_order(self):
-        view_id = self.env.ref('sale.view_order_form').id
+        view_id = self.env.ref("sale.view_order_form").id
         context = {}
         return {
-            'name':'Sales Order',
-            'view_mode':'form',
-            'view_type': 'form',
-            'res_model':'sale.order',
-            'view_id':view_id,
-            'type':'ir.actions.act_window',
-            'res_id':self.id,
-            'context':context,
+            "name": "Sales Order",
+            "view_mode": "form",
+            "view_type": "form",
+            "res_model": "sale.order",
+            "view_id": view_id,
+            "type": "ir.actions.act_window",
+            "res_id": self.id,
+            "context": context,
         }

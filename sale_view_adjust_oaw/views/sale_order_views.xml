@@ -57,7 +57,7 @@
             <xpath expr="//page[@name='other_information']" position="attributes">
                 <attribute name="invisible">True</attribute>
             </xpath>
-            
+
         </field>
     </record>
 
@@ -81,7 +81,7 @@
                 <field name="invoice_status" states="sale,done" invisible="1"/>
                 <field groups="base.group_no_one" name="origin"/>
             </xpath>
-            
+
         </field>
     </record>
 
