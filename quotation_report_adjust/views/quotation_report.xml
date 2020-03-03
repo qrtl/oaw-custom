@@ -12,7 +12,7 @@
           <template id="custom_header">
                 <div class="header">
                     <div class="row">
-                       
+
                         <div class="col-9 text-right" style="margin-top:22px;" t-field="company.report_header" name="moto"/>
                     </div>
                     <div t-if="company.logo or company.report_header" class="row zero_min_height">
@@ -168,18 +168,18 @@
                         <div id="total" class="row" name="total">
                             <div t-attf-class="#{'col-4' if report_type != 'html' else 'col-sm-7 col-md-5'} ml-auto">
                                 <table class="table table-sm">
-                                   
+
                                     <t t-foreach="doc.amount_by_group" t-as="amount_by_group">
                                         <tr style="">
                                             <t t-if="amount_by_group[3] == 1 and doc.amount_untaxed == amount_by_group[2]">
-                                                
+
                                                 <td class="text-right o_price_total">
                                                     <span t-esc="amount_by_group[1]"
                                                         t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
                                                 </td>
                                             </t>
                                             <t t-else ="">
-                                                
+
                                                 <td class="text-right o_price_total">
                                                     <span t-esc="amount_by_group[1]"
                                                         t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
