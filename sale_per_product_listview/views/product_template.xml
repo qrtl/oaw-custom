@@ -45,13 +45,4 @@
                     sequence="2"
                     groups=""/>
 
-<!--         Window action related to the inline button function-->
-        <!-- <record id="open_sol_of_product" model="ir.actions.act_window">
-            <field name="name">Open Sale Order Lines Of Product</field>
-            <field name="res_model">sale.order.line</field>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="sale_per_product_listview.action_view_sol_open"/>
-            <field name="search_view_id" ref="sale_per_product_listview.sale_order_line_tree_search"/>
-            <field name="context">{}</field>
-        </record> -->
 </odoo>
