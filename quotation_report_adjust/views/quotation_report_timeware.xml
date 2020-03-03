@@ -56,11 +56,10 @@
             </t>
             <div class="article">
                   <t t-call="quotation_report_adjust.custom_header_tw"/>
-                 <br/>
+                   <br/>
                 <br/>
                 <br/>
                 <t t-raw="0"/>
-
                 <t t-call="quotation_report_adjust.custom_footer_tw"/>
             </div>
         </template>
@@ -168,28 +167,18 @@
                         <div id="total" class="row" name="total">
                             <div t-attf-class="#{'col-4' if report_type != 'html' else 'col-sm-7 col-md-5'} ml-auto">
                                 <table class="table table-sm">
-                                    <tr class="border-black o_subtotal" style="">
-                                        <td><strong>Subtotal</strong></td>
-                                        <td class="text-right">
-                                            <span t-field="doc.amount_untaxed"/>
-                                        </td>
-                                    </tr>
+
                                     <t t-foreach="doc.amount_by_group" t-as="amount_by_group">
                                         <tr style="">
                                             <t t-if="amount_by_group[3] == 1 and doc.amount_untaxed == amount_by_group[2]">
-                                                <td>
-                                                    <span t-esc="amount_by_group[0]"/>
-                                                    <span>&amp;nbsp;<span>on</span>&amp;nbsp;<t t-esc="amount_by_group[2]" t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/></span>
-                                                </td>
+
                                                 <td class="text-right o_price_total">
                                                     <span t-esc="amount_by_group[1]"
                                                         t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
                                                 </td>
                                             </t>
                                             <t t-else ="">
-                                                <td>
-                                                    <span t-esc="amount_by_group[0]"/>
-                                                </td>
+
                                                 <td class="text-right o_price_total">
                                                     <span t-esc="amount_by_group[1]"
                                                         t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
