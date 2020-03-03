@@ -1,7 +1,7 @@
 <odoo>
          <report
             id="action_report_chr123_saleorder"
-            string="Chrono123 LTD"
+            string="Chrono123 Limited"
             model="sale.order"
             report_type="qweb-pdf"
             file="quotation_report_adjust.report_chr123_saleorder"
@@ -12,9 +12,7 @@
           <template id="custom_header">
                 <div class="header">
                     <div class="row">
-                        <div class="col-3 mb4">
-                            <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" style="max-height: 45px;" alt="Logo"/>
-                        </div>
+                       
                         <div class="col-9 text-right" style="margin-top:22px;" t-field="company.report_header" name="moto"/>
                     </div>
                     <div t-if="company.logo or company.report_header" class="row zero_min_height">
@@ -61,7 +59,6 @@
                  <br/>
                 <br/>
                 <br/>
-
                 <t t-raw="0"/>
 
                 <t t-call="quotation_report_adjust.custom_footer"/>
@@ -171,28 +168,18 @@
                         <div id="total" class="row" name="total">
                             <div t-attf-class="#{'col-4' if report_type != 'html' else 'col-sm-7 col-md-5'} ml-auto">
                                 <table class="table table-sm">
-                                    <tr class="border-black o_subtotal" style="">
-                                        <td><strong>Subtotal</strong></td>
-                                        <td class="text-right">
-                                            <span t-field="doc.amount_untaxed"/>
-                                        </td>
-                                    </tr>
+                                   
                                     <t t-foreach="doc.amount_by_group" t-as="amount_by_group">
                                         <tr style="">
                                             <t t-if="amount_by_group[3] == 1 and doc.amount_untaxed == amount_by_group[2]">
-                                                <td>
-                                                    <span t-esc="amount_by_group[0]"/>
-                                                    <span>&amp;nbsp;<span>on</span>&amp;nbsp;<t t-esc="amount_by_group[2]" t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/></span>
-                                                </td>
+                                                
                                                 <td class="text-right o_price_total">
                                                     <span t-esc="amount_by_group[1]"
                                                         t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
                                                 </td>
                                             </t>
                                             <t t-else ="">
-                                                <td>
-                                                    <span t-esc="amount_by_group[0]"/>
-                                                </td>
+                                                
                                                 <td class="text-right o_price_total">
                                                     <span t-esc="amount_by_group[1]"
                                                         t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
