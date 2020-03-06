@@ -77,11 +77,14 @@
                 <field name="client_order_ref" string="Remark"/>
             </xpath>
             <xpath expr="//field[@name='expected_date']" position="after">
+                <field name="website_id" invisible="1"/>
                 <field name="pricelist_id"/>
                 <field name="invoice_status" states="sale,done" invisible="1"/>
                 <field groups="base.group_no_one" name="origin"/>
             </xpath>
-
+            <xpath expr="//tree" position="attributes">
+                <attribute name="decoration-info">website_id!=False</attribute>
+            </xpath>
         </field>
     </record>
 
