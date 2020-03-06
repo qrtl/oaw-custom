@@ -20,7 +20,8 @@ exclude: |
   sec_disable_xmlrpc/|
   web_listview_sticky_header/|
   website_no_crawler/|
-  dbfilter_from_header/
+  dbfilter_from_header/|
+  sale_automatic_workflow/
 default_language_version:
   python: python3
 repos:
