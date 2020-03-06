@@ -10,3 +10,15 @@ class Website(models.Model):
     about_us = fields.Text(string="About Us")
     contact_description = fields.Text(string="Contact Information")
     empty_page_message = fields.Text(string="Empty Shop Display Message")
+    whatsapp_link = fields.Char(
+        string='Whatsapp Link',
+    )
+    whatsapp_qr_image = fields.Binary(
+        string='Whatsapp QR Code',
+    )
+    wechat_link = fields.Char(
+        string='Wechat Link',
+    )
+    wechat_qr_image = fields.Binary(
+        string='Wechat QR Code',
+    )
