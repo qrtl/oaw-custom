@@ -14,8 +14,7 @@ class ProductTemplate(models.Model):
     in_special_offer_limit = fields.Boolean(
         string="Special Offer Limit", compute="_get_in_special_offer_limit"
     )
-    is_new_arrival = fields.Boolean(
-        string="New Arrival", compute="_get_is_new_arrival")
+    is_new_arrival = fields.Boolean(string="New Arrival", compute="_get_is_new_arrival")
     website_product_seq_date = fields.Datetime(
         string="Product Sequence Date",
         compute="_compute_website_product_seq_date",
@@ -56,8 +55,7 @@ class ProductTemplate(models.Model):
             or "qty_reserved" in vals
         ):
             for product in self:
-                qty_local_stock = vals.get(
-                    "qty_local_stock", product.qty_local_stock)
+                qty_local_stock = vals.get("qty_local_stock", product.qty_local_stock)
                 qty_overseas = vals.get("qty_overseas", product.qty_overseas)
                 qty_reserved = vals.get("qty_reserved", product.qty_reserved)
                 if (
@@ -65,8 +63,7 @@ class ProductTemplate(models.Model):
                     or product.qty_local_stock < qty_local_stock
                     and qty_local_stock > qty_reserved
                 ):
-                    product.sudo().write(
-                        {"stock_new_arrival": fields.Datetime.now()})
+                    product.sudo().write({"stock_new_arrival": fields.Datetime.now()})
                 elif qty_local_stock == qty_reserved:
                     product.sudo().write({"stock_new_arrival": False})
         if "sale_hkd_ac_so" in vals and vals["sale_hkd_ac_so"]:

@@ -41,9 +41,6 @@
                 </t>
             </ul>
             <div class="navbar navbar-default navbar-static-top visible-xs-inline" style="z-index: 900;">
-                <div class="navbar-header navbar_header">
-                    <a role="button" href="#" class="dropdown-toggle btn btn-secondary" data-toggle="collapse" data-target=".navbar-cate-collapse"/>
-                </div>
                 <div class="collapse navbar-collapse navbar-cate-collapse navbar_collapse">
                     <ul class="nav nav-pills flex-column mt16">
                         <li class="nav-item">
@@ -80,6 +77,14 @@
         </xpath>
         <xpath expr="//div[@id='products_grid_before']" position="attributes">
             <attribute name="class">col-md-3</attribute>
+        </xpath>
+    </template>
+
+    <template id="products" inherit_id="website_sale.products" name="Products">
+        <xpath expr="//t[@t-call='website_sale.search']" position="after">
+            <div class="dropdown ml-2 visible-xs-inline">
+                <a role="button" href="#" class="btn btn-secondary" data-toggle="collapse" data-target=".navbar-cate-collapse">Filter <i class="dropdown-toggle"/></a>
+            </div>
         </xpath>
     </template>
 
@@ -352,13 +357,6 @@
                 </div>
             </form>
         </xpath>
-        <!-- <xpath expr="//div[@class='col-12']" position="attributes">
-            <attribute name="style">display: none;</attribute>
-        </xpath> -->
-        <!-- <xpath expr="//div[@class='col-12 col-xl-8 oe_cart']" position="attributes">
-            <attribute name="class">oe_cart</attribute>
-        </xpath> -->
-
     </template>
 
     <template id="total" name="total" inherit_id="website_sale.total">
