@@ -20,6 +20,22 @@
                         <label class="col-lg-3 o_light_label" string="Empty Shop Display Message" for="empty_page_message"/>
                         <field name="empty_page_message" widget="html"/>
                     </div>
+                    <div class="row">
+                        <label class="col-lg-3 o_light_label" string="Whatsapp Link" for="whatsapp_link"/>
+                        <field name="whatsapp_link"/>
+                    </div>
+                    <div class="row">
+                        <label class="col-lg-3 o_light_label" string="Whatsapp QR Code" for="whatsapp_qr_image"/>
+                        <field name="whatsapp_qr_image" widget="image"/>
+                    </div>
+                    <div class="row">
+                        <label class="col-lg-3 o_light_label" string="Wechat Link" for="wechat_link"/>
+                        <field name="wechat_link"/>
+                    </div>
+                    <div class="row">
+                        <label class="col-lg-3 o_light_label" string="Wechat QR Code" for="wechat_qr_image"/>
+                        <field name="wechat_qr_image"  widget="image"/>
+                    </div>
                 </div>
             </xpath>
         </field>

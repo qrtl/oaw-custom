@@ -76,4 +76,24 @@
         </xpath>
     </template>
 
+    <template id="layout_logo_show" inherit_id="website.layout_logo_show" name="Show Logo">
+        <xpath expr="//header//a[hasclass('navbar-brand')]" position="replace">
+            <div>
+                 <a href="/" class="navbar-brand logo">
+                    <img style="height: 80px; width: 80px; max-height: 80px;" t-att-src="website.image_url(res_company, 'logo', '100x100')"/>
+                </a>
+                <t t-if="website.whatsapp_link and website.whatsapp_qr_image">
+                    <a t-att-href="website.whatsapp_link" class="navbar-brand logo">
+                        <img style="height: 80px; width: 80px; max-height: 80px;" t-att-src="website.image_url(website, 'whatsapp_qr_image', '100x100')"/>
+                    </a>
+                </t>
+                <t t-if="website.wechat_link and website.wechat_qr_image">
+                    <a t-att-href="website.wechat_link" class="navbar-brand logo">
+                        <img style="height: 80px; width: 80px; max-height: 80px;" t-att-src="website.image_url(website, 'wechat_qr_image', '100x100')"/>
+                    </a>
+                </t>
+            </div>
+        </xpath>
+    </template>
+
 </odoo>
