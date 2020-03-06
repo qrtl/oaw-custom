@@ -36,7 +36,7 @@
                             <li t-if="company.phone" class="list-inline-item">Phone: <span t-field="company.phone"/></li>
                             <li><span> All our products are exclusively sold in the Hong Kong S.A.R. only</span></li>
                         </ul>
-     
+
                         <div t-if="report_type == 'pdf'" class="text-muted">
                             Page: <span class="page"/> / <span class="topage"/>
                         </div>
