@@ -109,6 +109,11 @@ msgid "Desire Picking Date (Delivery：Monday to Friday 15:00-18:00)"
 msgstr "取貨時間： 週一到週五下午15:00-18:00"
 
 #. module: website_timecheck
+#: model_terms:ir.ui.view,arch_db:website_timecheck.products
+msgid "Filter <i class=\"dropdown-toggle\"/>"
+msgstr "篩選 <i class=\"dropdown-toggle\"/>"
+
+#. module: website_timecheck
 #: model:ir.model.fields,field_description:website_timecheck.field_res_users__timecheck_group
 msgid "Groups"
 msgstr "群組"
