@@ -83,7 +83,7 @@
                         <p t-field="doc.partner_invoice_id.street2"/>
                     </div>
                     <div style="text-align:right">
-                        <strong>Create Date:</strong><span t-field="doc.create_date" t-options='{"format": "yyyy-MM-dd"}'/><br />
+                        <strong>Date:</strong><span t-field="doc.create_date" t-options='{"format": "yyyy-MM-dd"}'/><br />
                         <strong>Code:</strong> <span t-field="doc.order_ref_report"/><br />
                     </div>
                 </div>
