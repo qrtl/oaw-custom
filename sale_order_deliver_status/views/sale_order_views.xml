@@ -10,6 +10,9 @@
                 <field name="delivery_status"/>
                 <field name="order_status"/>
             </field>
+            <xpath expr="//tree" position="attributes">
+                <attribute name="decoration-info">order_status == 'open'</attribute>
+            </xpath>
         </field>
     </record>
 
