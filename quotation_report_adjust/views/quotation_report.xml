@@ -36,9 +36,6 @@
                             <li t-if="company.phone" class="list-inline-item">Phone: <span t-field="company.phone"/></li>
                             <li><span> All our products are exclusively sold in the Hong Kong S.A.R. only</span></li>
                         </ul>
-                        <div name="financial_infos">
-                            <span t-field="company.report_footer"/>
-                        </div>
 
                         <div t-if="report_type == 'pdf'" class="text-muted">
                             Page: <span class="page"/> / <span class="topage"/>
@@ -75,7 +72,7 @@
                         <p t-field="doc.partner_invoice_id.street2"/>
                     </div>
                     <div style="text-align:right">
-                        <strong>Create Date:</strong><span t-field="doc.create_date" t-options='{"format": "yyyy-MM-dd"}'/><br />
+                        <strong>Date:</strong><span t-field="doc.create_date" t-options='{"format": "yyyy-MM-dd"}'/><br />
                         <strong>Code:</strong> <span t-field="doc.order_ref_report"/><br />
                     </div>
                 </div>
