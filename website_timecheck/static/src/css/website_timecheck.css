@@ -141,3 +141,10 @@ a:hover, a:focus {
         display: inline !important;
     }
 }
+/* Add padding to the search area */
+.products_pager > div {
+    padding: 5px;
+}
+.products_pager > form {
+    padding: 5px;
+}
