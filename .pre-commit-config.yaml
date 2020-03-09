@@ -21,7 +21,9 @@ exclude: |
   web_listview_sticky_header/|
   website_no_crawler/|
   dbfilter_from_header/|
-  sale_automatic_workflow/
+  sale_automatic_workflow/|
+  web_export_view/|
+  auditlog/
 default_language_version:
   python: python3
 repos:
