@@ -10,6 +10,10 @@
     "description": """
 * Adds a menu item 'Product List Price Update' to facilitate list price update
     """,
-    "data": ["views/product_product_views.xml", "views/supplier_stock_views.xml"],
+    "data": [
+        "data/ir_actions.xml",
+        "views/product_product_views.xml",
+        "views/supplier_stock_views.xml",       
+    ],
     "installable": True,
 }
