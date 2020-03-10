@@ -27,12 +27,9 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='partner_note']" position="after">
                 <field name="chrono24_price" string="Chrono 24 Price"/>
-                <field name="chrono24_updated"/>
-                <field name="chrono"/>
-                <field name="chronoNote"/>
-            </xpath>
-            <xpath expr="//field[@name='discount']" position="after">
-                <field name="chrono24_price"/>
+                <field name="chrono24_updated" string="UD C"/>
+                <field name="chrono" string="Act 24"/>
+                <field name="chronoNote" string="Note 24"/>
             </xpath>
         </field>
     </record>

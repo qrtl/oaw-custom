@@ -15,3 +15,11 @@ class ProductProduct(models.Model):
             self.costprice_up = False
             self.costprice_down = False
             self.note_updated = False
+
+    @api.multi
+    def _check_offer_checked(self):
+        for pp in self:
+            if not pp.product_tmpl_id.partner_offer_checked:
+                pp.product_tmpl_id.partner_offer_checked = True
+            elif pp.product_tmpl_id.partner_offer_checked:
+                pp.product_tmpl_id.partner_offer_checked = False
