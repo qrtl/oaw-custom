@@ -26,16 +26,16 @@
             <kanban>
                 <field name="type"/>
                 <field name="id"/>
-                <field name="image_medium"/>
+                <field name="image"/>
                 <field name="default_code"/>
                 <field name="overseas_stock"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click">
-                            <div class="o_kanban_image" style="width: 200px; height: 200px;">
-                                <img style="width: 200px; height: 200px;" t-att-src="kanban_image('product.template', 'image_medium', record.id.raw_value)" alt="Product"/>
+                            <div class="o_kanban_image" style="width: 150px; height: 150px;">
+                                <img style="width: 150px; height: 150px;" t-att-src="kanban_image('product.template', 'image', record.id.raw_value)" alt="Product"/>
                             </div>
-                            <div class="oe_kanban_details">
+                            <div class="oe_kanban_details" style="padding-left: 155px;">
                                 <h4>
                                     <span t-if="record.default_code.raw_value">
                                         [<field name="default_code"/>]
@@ -99,17 +99,17 @@
             <kanban>
                 <field name="type"/>
                 <field name="id"/>
-                <field name="image_medium"/>
+                <field name="image"/>
                 <field name="default_code"/>
                 <field name="overseas_stock"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click">
-                            <div class="o_kanban_image" style="width: 200px; height: 200px;">
-                                <img style="width: 200px; height: 200px;" t-att-src="kanban_image('product.template', 'image_medium', record.id.raw_value)"
+                            <div class="o_kanban_image" style="width: 150px; height: 150px;">
+                                <img style="width: 150px; height: 150px;" t-att-src="kanban_image('product.template', 'image', record.id.raw_value)"
                                      alt="Product"/>
                             </div>
-                            <div class="oe_kanban_details">
+                            <div class="oe_kanban_details" style="padding-left: 155px;">
                                 <h4>
                                     <span t-if="record.default_code.raw_value">
                                         [<field name="default_code"/>]
@@ -177,17 +177,17 @@
                 <field name="type"/>
                 <field name="sale_hkd_aa_so"/>
                 <field name="id"/>
-                <field name="image_medium"/>
+                <field name="image"/>
                 <field name="default_code"/>
                 <field name="overseas_stock"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click">
-                            <div class="o_kanban_image" style="width: 200px; height: 200px;">
-                                <img style="width: 200px; height: 200px;" t-att-src="kanban_image('product.template', 'image_medium', record.id.raw_value)"
+                            <div class="o_kanban_image" style="width: 150px; height: 150px;">
+                                <img style="width: 150px; height: 150px;" t-att-src="kanban_image('product.template', 'image', record.id.raw_value)"
                                      alt="Product"/>
                             </div>
-                            <div class="oe_kanban_details">
+                            <div class="oe_kanban_details" style="padding-left: 155px;">
                                 <h4>
                                     <span t-if="record.default_code.raw_value">
                                         [<field name="default_code"/>]
@@ -296,18 +296,18 @@
             <kanban>
                 <field name="type"/>
                 <field name="id"/>
-                <field name="image_medium"/>
+                <field name="image"/>
                 <field name="sale_hkd_aa_so"/>
                 <field name="default_code"/>
                 <field name="overseas_stock"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click">
-                            <div class="o_kanban_image" style="width: 200px; height: 200px;">
-                                <img style="width: 200px; height: 200px;" t-att-src="kanban_image('product.template', 'image_medium', record.id.raw_value)"
+                            <div class="o_kanban_image" style="width: 150px; height: 150px;">
+                                <img style="width: 150px; height: 150px;" t-att-src="kanban_image('product.template', 'image', record.id.raw_value)"
                                      alt="Product"/>
                             </div>
-                            <div class="oe_kanban_details">
+                            <div class="oe_kanban_details" style="padding-left: 155px;">
                                 <h4>
                                     <span t-if="record.default_code.raw_value">
                                         [<field name="default_code"/>]
@@ -415,18 +415,18 @@
             <kanban>
                 <field name="type"/>
                 <field name="id"/>
-                <field name="image_medium"/>
+                <field name="image"/>
                 <field name="sale_hkd_aa_so"/>
                 <field name="default_code"/>
                 <field name="overseas_stock"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click">
-                            <div class="o_kanban_image" style="width: 200px; height: 200px;">
-                                <img style="width: 200px; height: 200px;" t-att-src="kanban_image('product.template', 'image_medium', record.id.raw_value)"
+                            <div class="o_kanban_image" style="width: 150px; height: 150px;">
+                                <img style="width: 150px; height: 150px;" t-att-src="kanban_image('product.template', 'image', record.id.raw_value)"
                                      alt="Product"/>
                             </div>
-                            <div class="oe_kanban_details">
+                            <div class="oe_kanban_details" style="padding-left: 155px;">
                                 <h4>
                                     <span t-if="record.default_code.raw_value">
                                         [<field name="default_code"/>]
@@ -495,18 +495,18 @@
             <kanban>
                 <field name="type"/>
                 <field name="id"/>
-                <field name="image_medium"/>
+                <field name="image"/>
                 <field name="sale_hkd_aa_so"/>
                 <field name="default_code"/>
                 <field name="overseas_stock"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click">
-                            <div class="o_kanban_image" style="width: 200px; height: 200px;">
-                                <img style="width: 200px; height: 200px;" t-att-src="kanban_image('product.template', 'image_medium', record.id.raw_value)"
+                            <div class="o_kanban_image" style="width: 150px; height: 150px;">
+                                <img style="width: 150px; height: 150px;" t-att-src="kanban_image('product.template', 'image', record.id.raw_value)"
                                      alt="Product"/>
                             </div>
-                            <div class="oe_kanban_details">
+                            <div class="oe_kanban_details" style="padding-left: 155px;">
                                 <h4>
                                     <span t-if="record.default_code.raw_value">
                                         [<field name="default_code"/>]
@@ -579,18 +579,18 @@
             <kanban>
                 <field name="type"/>
                 <field name="id"/>
-                <field name="image_medium"/>
+                <field name="image"/>
                 <field name="sale_hkd_ac_so"/>
                 <field name="default_code"/>
                 <field name="overseas_stock"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click">
-                            <div class="o_kanban_image" style="width: 200px; height: 200px;">
-                                <img style="width: 200px; height: 200px;" t-att-src="kanban_image('product.template', 'image_medium', record.id.raw_value)"
+                            <div class="o_kanban_image" style="width: 150px; height: 150px;">
+                                <img style="width: 150px; height: 150px;" t-att-src="kanban_image('product.template', 'image', record.id.raw_value)"
                                      alt="Product"/>
                             </div>
-                            <div class="oe_kanban_details">
+                            <div class="oe_kanban_details" style="padding-left: 155px;">
                                 <h4>
                                     <span t-if="record.default_code.raw_value">
                                         [<field name="default_code"/>]
@@ -664,18 +664,18 @@
             <kanban>
                 <field name="type"/>
                 <field name="id"/>
-                <field name="image_medium"/>
+                <field name="image"/>
                 <field name="sale_hkd_ac_so"/>
                 <field name="default_code"/>
                 <field name="overseas_stock"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click">
-                            <div class="o_kanban_image" style="width: 200px; height: 200px;">
-                                <img style="width: 200px; height: 200px;" t-att-src="kanban_image('product.template', 'image_medium', record.id.raw_value)"
+                            <div class="o_kanban_image" style="width: 150px; height: 150px;">
+                                <img style="width: 150px; height: 150px;" t-att-src="kanban_image('product.template', 'image', record.id.raw_value)"
                                      alt="Product"/>
                             </div>
-                            <div class="oe_kanban_details">
+                            <div class="oe_kanban_details" style="padding-left: 155px;">
                                 <h4>
                                     <span t-if="record.default_code.raw_value">
                                         [<field name="default_code"/>]
@@ -753,17 +753,17 @@
             <kanban>
                 <field name="type"/>
                 <field name="id"/>
-                <field name="image_medium"/>
+                <field name="image"/>
                 <field name="default_code"/>
                 <field name="overseas_stock"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click">
-                            <div class="o_kanban_image" style="width: 200px; height: 200px;">
-                                <img style="width: 200px; height: 200px;" t-att-src="kanban_image('product.template', 'image_medium', record.id.raw_value)"
+                            <div class="o_kanban_image" style="width: 150px; height: 150px;">
+                                <img style="width: 150px; height: 150px;" t-att-src="kanban_image('product.template', 'image', record.id.raw_value)"
                                      alt="Product"/>
                             </div>
-                            <div class="oe_kanban_details">
+                            <div class="oe_kanban_details" style="padding-left: 155px;">
                                 <h4>
                                     <span t-if="record.default_code.raw_value">
                                         [<field name="default_code"/>]
@@ -818,17 +818,17 @@
             <kanban>
                 <field name="type"/>
                 <field name="id"/>
-                <field name="image_medium"/>
+                <field name="image"/>
                 <field name="default_code"/>
                 <field name="overseas_stock"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click">
-                            <div class="o_kanban_image" style="width: 200px; height: 200px;">
-                                <img style="width: 200px; height: 200px;" t-att-src="kanban_image('product.template', 'image_medium', record.id.raw_value)"
+                            <div class="o_kanban_image" style="width: 150px; height: 150px;">
+                                <img style="width: 150px; height: 150px;" t-att-src="kanban_image('product.template', 'image', record.id.raw_value)"
                                      alt="Product"/>
                             </div>
-                            <div class="oe_kanban_details">
+                            <div class="oe_kanban_details" style="padding-left: 155px;">
                                 <h4>
                                     <span t-if="record.default_code.raw_value">
                                         [<field name="default_code"/>]
