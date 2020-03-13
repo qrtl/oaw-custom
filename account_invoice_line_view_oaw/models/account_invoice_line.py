@@ -36,7 +36,7 @@ class AccountInvoiceLine(models.Model):
         string="Partner Ref",
     )
     reference = fields.Char(
-        related="invoice_id.reference", readonly=True, string="Invoice Ref"
+        related="invoice_id.reference", readonly=True, string="Vendor Bill Reference"
     )
     date_due = fields.Date(
         related="invoice_id.date_due", readonly=True, string="Due Date"
@@ -65,7 +65,10 @@ class AccountInvoiceLine(models.Model):
     )
     reviewed = fields.Boolean("Reviewed")
     payment_reference = fields.Char(
-        "Payment Reference", related="invoice_id.payment_ref", store=True, readonly=True
+        "Payment Reference", related="invoice_id.payment_ref", readonly=True, store=True
+    )
+    note = fields.Char(
+        "Note"
     )
 
     @api.model
@@ -77,11 +80,13 @@ class AccountInvoiceLine(models.Model):
             if inv_ln.invoice_id.type == "out_invoice" and SO.search(
                 [("name", "=", inv_ln.invoice_id.origin)]
             ):
-                so_id = SO.search([("name", "=", inv_ln.invoice_id.origin)])[0].id
+                so_id = SO.search(
+                    [("name", "=", inv_ln.invoice_id.origin)])[0].id
             if inv_ln.invoice_id.type == "in_invoice" and PO.search(
                 [("name", "=", inv_ln.invoice_id.origin)]
             ):
-                po_id = PO.search([("name", "=", inv_ln.invoice_id.origin)])[0].id
+                po_id = PO.search(
+                    [("name", "=", inv_ln.invoice_id.origin)])[0].id
         return so_id, po_id
 
     @api.multi
