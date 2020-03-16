@@ -11,6 +11,8 @@ class SaleOrderLine(models.Model):
     quant_id = fields.Many2one("stock.quant", string="Stock Quant", copy=False)
     lot_id = fields.Many2one(related="quant_id.lot_id",
                              string="Case No.", store=True)
+    tracking = fields.Selection(
+        related="product_id.tracking", string="Product Tracking")
     stock_owner_id = fields.Many2one(
         related="quant_id.owner_id", string="Stock Owner")
     is_mto = fields.Boolean(related="order_id.is_mto",
