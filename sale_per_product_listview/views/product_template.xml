@@ -16,7 +16,7 @@
                 </tree>
             </field>
         </record>
-       
+
          <record id="product_products_sales_search_view" model="ir.ui.view">
                 <field name="name">product.products.sales.search.view</field>
                 <field name="model">product.template</field>
