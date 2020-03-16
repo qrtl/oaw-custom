@@ -14,3 +14,5 @@ class SaleOrderLine(models.Model):
         readonly=True,
         store=True
     )
+    pricelist=fields.Many2one(related='order_id.pricelist_id', string="Pricelist", readonly=True)
+ 

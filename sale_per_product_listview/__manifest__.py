@@ -6,9 +6,9 @@
       Shows sales for each product. """,
     'description': """
         For each product a tree view that lists all sale order lines and total amount this product has generated.
-        Completed Sale Order Lines will be considered only - from the moment the quotation is turned into SO
+        Sale Order Lines will be considered only - from the moment the quotation is turned into SO
         Refunded Sales Orders will not be considered.
-        The tree view is per default grouped by customer.  
+
     """,
     'author': "Quartile Limited, Timeware Limited",
     'category': 'Product',

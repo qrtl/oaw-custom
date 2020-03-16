@@ -23,8 +23,8 @@ class product_template_ext(models.Model):
     )
 
     counts = fields.Integer(
-        "Qty of Sale Order Lines",
-        readonlu=True
+        "Qty of all Sale Order Lines",
+        readonly=True
     )
 
     @api.multi
@@ -68,49 +68,13 @@ class product_template_ext(models.Model):
     @api.multi
     def action_view_sol_open(self):
         view_id = self.env.ref('sale_per_product_listview.sale_order_lines_tree').id
-        print(view_id)
         return {
+            #for better record representation, set the name
             'name': self.default_code,
             'view_mode': 'tree',
             'res_model': 'sale.order.line',
             'view_id': view_id,
             'type': 'ir.actions.act_window',
             'target': 'current',
-            'domain' : [("product_id","in", self.product_variant_ids.ids)]
-            
+            'domain' : [("product_id","in", self.product_variant_ids.ids)]     
         }
-
-
-    # # Classical implementation of inline-button
-    # @api.multi
-    # def action_view_sales_ext(self):
-    #     action = self.env.ref('oa_products_sales.report_all_channels_sales_action').read()[0]
-    #     print(self.product_variant_ids.ids)
-    #     # Regarding domain: Self is product template!
-    #     # Left part is field of model the action bases on, i.e. sale.order.line!
-    #     action['domain'] = [('product_id','in', self.product_variant_ids.ids),('state','=','sale')]
-    #     #Domain in use when Sales Order is automatically locked
-    #     #action['domain'] = [('product_id', 'in', self.product_variant_ids.ids), ('state', '=', 'done')]
-    #     return action
-
-    # Better implemtation, but momentarily not allowing setting the search_view_id of custom search view.
-    # @api.multi
-    # def action_view_sales_ext(self):
-    #     view_id = self.env.ref('oa_products_sales.sale_order_line_tree_z2')
-    #     search_view_id = self.env.ref('oa_products_sales.sale_order_line_tree_search')
-    #     print(search_view_id.id)
-    #     product_ids = [str(x.id) for x in self.product_variant_ids]
-    #
-    #     # print(','.join(product_ids))
-    #     return {
-    #         'type': 'ir.actions.act_window',
-    #         'res_model': 'sale.order.line',
-    #         'name' : self.name,
-    #         # view type not necessary anymore
-    #         'view_mode': 'tree',
-    #         'view_id': view_id.id,
-    #         'context': {},
-    #         'target': 'current',
-    #         'domain': "[('product_id','in', [%s])]" % ','.join(product_ids),
-    #         'search_view_id': search_view_id.id
-    #     }

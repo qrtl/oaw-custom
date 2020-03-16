@@ -3,7 +3,6 @@
         <record id="products_sales_tree_view" model="ir.ui.view">
             <field name="name">products.sales.tree.view</field>
             <field name="model">product.template</field>
-            <!--            <field name="priority" eval="15"/>-->
             <field name="arch" type="xml">
                 <tree string="Products Sales"  default_order="id desc">
                 <field name="id" readonly="1" invisible="1"/>
@@ -11,7 +10,7 @@
                 <button name="action_view_sol_open" type="object" icon="fa-sign-in" string="Open Sales"/>
                 <field name="default_code" string="Code"/>
                 <field name="name" string="Product Ref"/>
-                <field name="qty_local_stock" string="HK Stock"/>
+                <field name="counts"/>
                 <field name="average" string="Average Price"/>
                 <field name="total" string="Total"/>
                 </tree>
@@ -44,5 +43,4 @@
                     action="action_products_view"
                     sequence="2"
                     groups=""/>
-
 </odoo>

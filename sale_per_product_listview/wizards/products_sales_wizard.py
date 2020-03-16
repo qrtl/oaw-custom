@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-# Copyright 2017 Quartile Limited
+# Copyright 2020  Quartile Limited, Timeware Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import models, fields, api
@@ -27,5 +26,3 @@ class ProductsSalesInit(models.TransientModel):
         self.ensure_one()
         self.env['product.template']._initialize_values(self.product_ids)
         return {'type': 'ir.actions.act_window_close'}
-
-

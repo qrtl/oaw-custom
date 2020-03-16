@@ -27,13 +27,11 @@
     <!-- multi: enables the button on list views -->
         <act_window
                     id="action_products_sales_initialise"
-                    name="Initializse Values"
+                    name="Initialise Sales Values"
                     res_model="products.sales.wizard"
                     src_model="product.template"
                     view_mode="form"
                     target="new"
                     multi="True"
                     />
-
 </odoo>
-
