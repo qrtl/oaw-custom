@@ -41,6 +41,5 @@
          <menuitem id="products_sales"
                     parent="sale.menu_sale_report"
                     action="action_products_view"
-                    sequence="2"
-                    groups=""/>
+                    sequence="2"/>
 </odoo>

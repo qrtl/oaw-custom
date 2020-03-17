@@ -14,7 +14,6 @@ class ProductsSalesInit(models.TransientModel):
     def default_get(self, field_names):
         defaults = super().default_get(field_names)
         product_ids = self.env.context["active_ids"]
-        print(product_ids)
         defaults["product_ids"] = product_ids
         return defaults
 

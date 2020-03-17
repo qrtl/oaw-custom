@@ -5,9 +5,8 @@ import odoo.addons.decimal_precision as dp
 from odoo import api, fields, models
 
 
-class product_template_ext(models.Model):
+class ProductTemplate(models.Model):
     _inherit = "product.template"
-    _description = "Products Sale"
 
     total = fields.Float(
         string="Total HKD", digits=dp.get_precision("Product Price"), readonly=True
@@ -17,15 +16,15 @@ class product_template_ext(models.Model):
         string="Average Price",
         digits=dp.get_precision("Product Price"),
         readonly=True,
-        compute="_calc_average",
+        compute="_compute_average",
     )
 
     counts = fields.Integer("Qty of all Sale Order Lines", readonly=True)
 
     @api.multi
-    def _calc_average(self):
+    def _compute_average(self):
         for pt in self:
-            if pt.counts != 0:
+            if pt.counts:
                 pt.average = pt.total / pt.counts
 
     # triggered by More Button
@@ -65,7 +64,6 @@ class product_template_ext(models.Model):
                         )
 
                     sol.subtotal_hkd = sol.price_subtotal / rate
-                    print(sol.subtotal_hkd)
                     # Updating pt's total
                     pt.total += sol.subtotal_hkd
 

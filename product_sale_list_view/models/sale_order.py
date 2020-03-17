@@ -35,8 +35,6 @@ class SaleOrder(models.Model):
 
     @api.multi
     def write(self, vals):
-        # 'done' check becomes valid as soon as Sales Order turn into 'done' (locked) automatically
         if "state" in vals and vals["state"] == "sale":
             self._update_prod_tmpl_amount_and_average()
-        res = super().write(vals)
-        return res
+        return super(SaleOrder, self).write(vals)
