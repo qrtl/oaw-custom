@@ -12,7 +12,7 @@
     "author": "Quartile Limited, Timeware Limited",
     "category": "Product",
     "version": "12.0.1.0.0",
-    "depends": ["product_local_oversea_stock_info"],
+    "depends": ["sale_mto_order_lines", "product_local_oversea_stock_info"],
     "data": [
         "data/ir_actions.xml",
         "views/product_template_views.xml",

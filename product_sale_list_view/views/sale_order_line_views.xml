@@ -18,4 +18,15 @@
         </field>
     </record>
 
+    <record id="mto_tree_internal_search" model="ir.ui.view">
+        <field name="name">mto.tree.internal.search</field>
+        <field name="model">sale.order.line</field>
+        <field name="inherit_id" ref="sale_mto_order_lines.mto_tree_internal_search"/>
+        <field name="arch" type="xml">
+            <filter name="product" position="after">
+                <filter string="Customer" name="customer" domain="[]" context="{'group_by':'order_partner_id'}"/>
+            </filter>
+        </field>
+    </record>
+
 </odoo>
