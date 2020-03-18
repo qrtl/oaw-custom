@@ -6,7 +6,7 @@
     "version": "12.0.1.0.0",
     "author": "Quartile Limited, Timeware Ltd",
     "website": "https://www.quartile.co",
-    "depends": ["sale", "sale_order_line_quant", "supplier_user_access"],
+    "depends": ["sale_order_line_quant", "supplier_user_access"],
     "summary": """ MTO Order List views for Internal and Supplier """,
     "description": """
     Tree views displaying to internal user all MTO.

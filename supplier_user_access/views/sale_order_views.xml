@@ -90,6 +90,7 @@
         <field name="view_id" ref="sale.view_quotation_tree"/>
         <field name="view_mode">tree,form,calendar,graph</field>
         <field name="search_view_id" ref="view_sales_order_filter_supplier"/>
+        <field name="domain">[('supplier_user_ids', 'in', [uid])]</field>
     </record>
 
 </odoo>
