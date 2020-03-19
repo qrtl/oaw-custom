@@ -13,6 +13,8 @@ class SaleOrderLine(models.Model):
         digits=dp.get_precision("Product Price"),
         readonly=True,
     )
+    pricelist_id = fields.Many2one(related='order_id.pricelist_id', string="Pricelist", readonly=True)
+    
 
     @api.multi
     def _update_product_sale_info(self):
