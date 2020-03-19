@@ -74,8 +74,10 @@ class WebsiteSale(WebsiteSale):
         Category = request.env['product.public.category']
         search_categories = False
         search_product = SupplierStock.search(domain)
-        categs = search_product.mapped('product_id').mapped(
-            'public_categ_ids').filtered(lambda c: not c.parent_id)
+        categs = SupplierStock.search([
+            ("quantity", ">", 0),
+            ("partner_id", "=", supplier.id)
+        ]).mapped('product_id').mapped('product_tmpl_id').mapped('public_categ_ids')
 
         parent_category_ids = []
         if category:
@@ -101,7 +103,7 @@ class WebsiteSale(WebsiteSale):
             attributes = ProductAttribute.browse(attributes_ids)
 
         request.session.update({
-            'supplier': True,
+            'supplier': supplier_url,
         })
 
         values = {
