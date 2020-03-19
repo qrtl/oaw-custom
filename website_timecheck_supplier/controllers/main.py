@@ -3,11 +3,12 @@
 
 import logging
 
-from werkzeug.exceptions import Forbidden, NotFound
+from werkzeug.exceptions import NotFound
 
-from odoo import _, http
+from odoo import http
 from odoo.http import request
 
+from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.website_sale.controllers.main import TableCompute, WebsiteSale
 
@@ -22,8 +23,8 @@ class WebsiteSale(WebsiteSale):
         [
             """/shop/<supplier_url>""",
             """/shop/<supplier_url>/page/<int:page>""",
-            """/shop/<supplier_url>/category/<model("product.public.category", "[('website_id', 'in', (False, current_website_id))]"):category>""",
-            """/shop/<supplier_url>/category/<model("product.public.category", "[('website_id', 'in', (False, current_website_id))]"):category>/page/<int:page>""",
+            """/shop/<supplier_url>/category/<model("product.public.category", "[('website_id', 'in', (False, current_website_id))]"):category>""",  # noqa
+            """/shop/<supplier_url>/category/<model("product.public.category", "[('website_id', 'in', (False, current_website_id))]"):category>/page/<int:page>""",  # noqa
         ],
         type="http",
         auth="public",
@@ -84,7 +85,6 @@ class WebsiteSale(WebsiteSale):
 
         SupplierStock = request.env["supplier.stock"].with_context(bin_size=True)
 
-        Category = request.env["product.public.category"]
         search_categories = False
         search_product = SupplierStock.search(domain)
         categs = (
@@ -134,9 +134,7 @@ class WebsiteSale(WebsiteSale):
         else:
             attributes = ProductAttribute.browse(attributes_ids)
 
-        request.session.update(
-            {"supplier": supplier_url,}
-        )
+        request.session.update({"supplier": supplier_url})
 
         values = {
             "supplier_url": supplier_url,
@@ -174,11 +172,6 @@ class WebsiteSale(WebsiteSale):
         ):
             raise NotFound()
 
-        product_context = dict(
-            request.env.context,
-            active_id=product.id,
-            partner=request.env.user.partner_id,
-        )
         ProductCategory = request.env["product.public.category"]
 
         if category:
@@ -213,7 +206,7 @@ class WebsiteSale(WebsiteSale):
     @http.route("/supplier/all_products", type="http", auth="public", website=True)
     def supplier_all_products(self):
         request.session.update(
-            {"supplier_new_arrival": False, "supplier_special_offer": False,}
+            {"supplier_new_arrival": False, "supplier_special_offer": False}
         )
         redirect = (
             "/shop/%s" % request.session.supplier
@@ -225,7 +218,7 @@ class WebsiteSale(WebsiteSale):
     @http.route("/supplier/special_offer", type="http", auth="public", website=True)
     def supplier_special_offer(self):
         request.session.update(
-            {"supplier_new_arrival": False, "supplier_special_offer": True,}
+            {"supplier_new_arrival": False, "supplier_special_offer": True}
         )
         redirect = (
             "/shop/%s" % request.session.supplier
@@ -237,7 +230,7 @@ class WebsiteSale(WebsiteSale):
     @http.route("/supplier/new_arrival", type="http", auth="public", website=True)
     def supplier_new_arrival(self):
         request.session.update(
-            {"supplier_new_arrival": True, "supplier_special_offer": False,}
+            {"supplier_new_arrival": True, "supplier_special_offer": False}
         )
         redirect = (
             "/shop/%s" % request.session.supplier
@@ -264,7 +257,8 @@ class WebsiteSale(WebsiteSale):
                     ("product_id.description_sale", "ilike", srch),
                     ("product_id.default_code", "ilike", srch),
                 ]
-            # Add '|' to the operator_list, as the search conditions will be joined with OR but not AND
+            # Add '|' to the operator_list, as the search conditions will be
+            # joined with OR but not AND
             condition_list_length = len(condition_list)
             while condition_list_length - 1 > 0:
                 operator_list += ["|"]
@@ -301,8 +295,8 @@ class WebsiteSale(WebsiteSale):
         [
             """/shop""",
             """/shop/page/<int:page>""",
-            """/shop/category/<model("product.public.category", "[('website_id', 'in', (False, current_website_id))]"):category>""",
-            """/shop/category/<model("product.public.category", "[('website_id', 'in', (False, current_website_id))]"):category>/page/<int:page>""",
+            """/shop/category/<model("product.public.category", "[('website_id', 'in', (False, current_website_id))]"):category>""",  # noqa
+            """/shop/category/<model("product.public.category", "[('website_id', 'in', (False, current_website_id))]"):category>/page/<int:page>""",  # noqa
         ],
         type="http",
         auth="public",
@@ -310,9 +304,7 @@ class WebsiteSale(WebsiteSale):
     )
     def shop(self, page=0, category=None, search="", ppg=False, **post):
         # Update session
-        request.session.update(
-            {"supplier": False,}
-        )
+        request.session.update({"supplier": False})
         return super(WebsiteSale, self).shop(
             page=page, category=category, search=search, ppg=ppg, **post
         )

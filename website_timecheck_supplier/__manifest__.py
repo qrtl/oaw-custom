@@ -4,9 +4,10 @@
     "name": "Website Timecheck Function For Supplier",
     "category": "Website",
     "version": "12.0.1.0.0",
+    "license": "AGPL-3",
     "author": "Quartile Limited",
     "website": "https://www.quartile.co",
-    "depends": ["website_sale_adj", "website_timecheck",],
+    "depends": ["website_sale_adj", "website_timecheck"],
     "summary": """""",
     "data": [
         "security/ir.model.access.csv",
