@@ -12,6 +12,9 @@
                         <t t-call="website_sale.search">
                             <t t-set="_classes">o_website_sale_search</t>
                         </t>
+                        <div class="dropdown ml-2 visible-xs-inline">
+                            <a role="button" href="#" class="btn btn-secondary" data-toggle="collapse" data-target=".navbar-cate-collapse">Filter <i class="dropdown-toggle"/></a>
+                        </div>
                         <t t-call="website_sale.pricelist_list">
                             <t t-set="_classes">ml-2</t>
                         </t>
