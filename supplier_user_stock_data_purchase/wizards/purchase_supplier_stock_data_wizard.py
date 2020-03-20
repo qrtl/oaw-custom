@@ -27,15 +27,16 @@ class PurchaseSupplierStockDataWizard(models.TransientModel):
         supplier_stock_data_product_id = (
             self.env["ir.config_parameter"]
             .sudo()
-            .get_param("supplier_user_stock_data_purchase.supplier_stock_data_product_id")
+            .get_param(
+                "supplier_user_stock_data_purchase.supplier_stock_data_product_id"
+            )
         )
         website_team_id = (
             self.env["ir.config_parameter"]
             .sudo()
             .get_param("website_sale.salesteam_id")
         )
-        total_price = sum(purchase_categories.mapped(
-            "stock_data_purchase_price"))
+        total_price = sum(purchase_categories.mapped("stock_data_purchase_price"))
         order_vals = {
             "partner_id": self.supplier_id.id,
             "company_id": self.env.user.company_id.id,
@@ -85,8 +86,7 @@ class PurchaseSupplierStockDataWizard(models.TransientModel):
             [("supplier_access", "=", True)]
         )
         product_category_ids = list(
-            set(all_product_categories.ids) -
-            set(self.purchased_category_ids.ids)
+            set(all_product_categories.ids) - set(self.purchased_category_ids.ids)
         )
         return {
             "domain": {"product_category_ids": [("id", "in", product_category_ids)]}

@@ -20,8 +20,7 @@ class StockDataPurchaseHistory(models.Model):
     def generate_purchased_stock_data(self):
         self.ensure_one()
         if not self.payment_confirm:
-            raise UserError(
-                _("You can only generate stock data from paid history"))
+            raise UserError(_("You can only generate stock data from paid history"))
         # Remove all old records
         self.env["supplier.stock"].search(
             [
@@ -45,7 +44,9 @@ class StockDataPurchaseHistory(models.Model):
         stock_data_supplier_location_id = (
             self.env["ir.config_parameter"]
             .sudo()
-            .get_param("supplier_user_stock_data_purchase.stock_data_supplier_location_id")
+            .get_param(
+                "supplier_user_stock_data_purchase.stock_data_supplier_location_id"
+            )
         )
         for product in products:
             supplier_stock_vals = {
