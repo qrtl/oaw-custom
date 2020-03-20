@@ -26,7 +26,8 @@ class SaleOrder(models.Model):
                 if "supplier_id" in vals:
                     if not vals["supplier_id"]:
                         raise UserError(
-                            "For MTO a Sales Supplier has to be selected!")
+                            _("For MTO a Sales Supplier has to be selected!")
+                        )
         return super(SaleOrder, self).create(vals)
 
     @api.multi
@@ -43,6 +44,6 @@ class SaleOrder(models.Model):
                     if "supplier_id" in vals:
                         if not vals["supplier_id"]:
                             raise UserError(
-                                "For MTO a Sales Supplier has to be selected!"
+                                _("For MTO a Sales Supplier has to be selected!")
                             )
         return super(SaleOrder, self).write(vals)
