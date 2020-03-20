@@ -5,7 +5,6 @@ from odoo.addons.website_sale.controllers.main import WebsiteSale
 
 
 class WebsiteSale(WebsiteSale):
-
     def _get_supplier_stock_search_order(self, post):
         return "readonly_record"
 

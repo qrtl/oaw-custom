@@ -8,7 +8,7 @@ class SaleOrder(models.Model):
     _inherit = "sale.order"
 
     stock_data_purchase_history_id = fields.One2many(
-        'stock.data.purchase.history',
-        'sale_order_id',
-        string='Stock Data Purchase Record',
+        "stock.data.purchase.history",
+        "sale_order_id",
+        string="Stock Data Purchase Record",
     )

@@ -7,5 +7,4 @@ from odoo import fields, models
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
-    category_name = fields.Char(
-        string="Brand", related="categ_id.name", store=True)
+    category_name = fields.Char(string="Brand", related="categ_id.name", store=True)

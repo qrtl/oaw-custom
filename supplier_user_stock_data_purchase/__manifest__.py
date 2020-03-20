@@ -1,13 +1,17 @@
 # Copyright 2020 Quartile Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 {
-    "name": "Partner Stock Offer",
+    "name": "Partner Stock Data Purchase",
     "category": "Stock",
     "version": "12.0.1.0.0",
     "license": "AGPL-3",
     "author": "Quartile Limited",
     "website": "https://www.quartile.co",
-    "depends": ["supplier_user_access", "quotation_report_adjust", "website_timecheck_supplier"],
+    "depends": [
+        "supplier_user_access",
+        "quotation_report_adjust",
+        "website_timecheck_supplier",
+    ],
     "summary": """""",
     "data": [
         "data/ir_actions.xml",

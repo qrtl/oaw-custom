@@ -9,8 +9,8 @@ class PaymentTransaction(models.Model):
 
     @api.multi
     def write(self, vals):
-        if 'state' in vals and vals['state'] == 'done':
-            self.mapped('sale_order_ids').mapped('stock_data_purchase_history_id').sudo().update({
-                'payment_confirm': True
-            })
+        if "state" in vals and vals["state"] == "done":
+            self.mapped("sale_order_ids").mapped(
+                "stock_data_purchase_history_id"
+            ).sudo().update({"payment_confirm": True})
         return super(PaymentTransaction, self).write(vals)
