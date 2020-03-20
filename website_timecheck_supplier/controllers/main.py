@@ -3,14 +3,12 @@
 
 import logging
 
-from werkzeug.exceptions import NotFound
-
 from odoo import http
-from odoo.http import request
-
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.website_sale.controllers.main import TableCompute, WebsiteSale
+from odoo.http import request
+from werkzeug.exceptions import NotFound
 
 _logger = logging.getLogger(__name__)
 
@@ -43,8 +41,10 @@ class WebsiteSale(WebsiteSale):
             supplier = supplier[0]
 
         if category:
-            category = request.env["product.public.category"].search(
-                [("id", "=", int(category))], limit=1
+            category = (
+                request.env["product.public.category"]
+                .sudo()
+                .search([("id", "=", int(category))], limit=1)
             )
             if not category or not category.can_access_from_current_website():
                 raise NotFound()
@@ -86,11 +86,10 @@ class WebsiteSale(WebsiteSale):
         SupplierStock = request.env["supplier.stock"].with_context(bin_size=True)
 
         search_categories = False
-        search_product = SupplierStock.search(domain)
+        search_product = SupplierStock.sudo().search(domain)
         categs = (
-            SupplierStock.search(
-                [("quantity", ">", 0), ("partner_id", "=", supplier.id)]
-            )
+            SupplierStock.sudo()
+            .search(self._get_supplier_stock_domain(int(supplier)))
             .mapped("product_id")
             .mapped("product_tmpl_id")
             .mapped("public_categ_ids")
@@ -109,7 +108,7 @@ class WebsiteSale(WebsiteSale):
         pager = request.website.pager(
             url=url, total=product_count, page=page, step=ppg, scope=7, url_args=post
         )
-        products = SupplierStock.search(
+        products = SupplierStock.sudo().search(
             domain,
             limit=ppg,
             offset=pager["offset"],
@@ -125,7 +124,8 @@ class WebsiteSale(WebsiteSale):
                     (
                         "attribute_line_ids.product_tmpl_id",
                         "in",
-                        search_product.mapped("product_id")
+                        search_product.sudo()
+                        .mapped("product_id")
                         .mapped("product_tmpl_id")
                         .ids,
                     ),
@@ -167,6 +167,7 @@ class WebsiteSale(WebsiteSale):
     def supplier_product(self, supplier_url, product, category="", search="", **kwargs):
         if (
             not product.mapped("product_id")
+            .sudo()
             .mapped("product_tmpl_id")
             .can_access_from_current_website()
         ):
@@ -188,7 +189,7 @@ class WebsiteSale(WebsiteSale):
             attrib=attrib_list,
         )
 
-        categs = ProductCategory.search([("parent_id", "=", False)])
+        categs = ProductCategory.sudo().search([("parent_id", "=", False)])
 
         values = {
             "supplier_url": supplier_url,
@@ -242,10 +243,13 @@ class WebsiteSale(WebsiteSale):
     def _get_supplier_stock_search_order(self, post):
         return ""
 
+    def _get_supplier_stock_domain(self, supplier):
+        return [("partner_id", "=", supplier)]
+
     def _get_supplier_stock_search_domain(
         self, search, supplier, category, attrib_values
     ):
-        domain = [("quantity", ">", 0), ("partner_id", "=", supplier)]
+        domain = self._get_supplier_stock_domain(supplier)
 
         if search:
             condition_list = []
