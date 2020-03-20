@@ -43,7 +43,7 @@ class WebsiteSale(WebsiteSale):
             supplier = supplier[0]
 
         if category:
-            category = request.env["product.public.category"].search(
+            category = request.env["product.public.category"].sudo().search(
                 [("id", "=", int(category))], limit=1
             )
             if not category or not category.can_access_from_current_website():
@@ -59,7 +59,8 @@ class WebsiteSale(WebsiteSale):
             ppg = PPG
 
         attrib_list = request.httprequest.args.getlist("attrib")
-        attrib_values = [[int(x) for x in v.split("-")] for v in attrib_list if v]
+        attrib_values = [[int(x) for x in v.split("-")]
+                         for v in attrib_list if v]
         attributes_ids = {v[0] for v in attrib_values}
         attrib_set = {v[1] for v in attrib_values}
 
@@ -75,7 +76,8 @@ class WebsiteSale(WebsiteSale):
             order=post.get("order"),
         )
 
-        request.context = dict(request.context, partner=request.env.user.partner_id)
+        request.context = dict(
+            request.context, partner=request.env.user.partner_id)
 
         url = "/shop/%s" % supplier_url
         if search:
@@ -83,13 +85,14 @@ class WebsiteSale(WebsiteSale):
         if attrib_list:
             post["attrib"] = attrib_list
 
-        SupplierStock = request.env["supplier.stock"].with_context(bin_size=True)
+        SupplierStock = request.env["supplier.stock"].with_context(
+            bin_size=True)
 
         search_categories = False
-        search_product = SupplierStock.search(domain)
+        search_product = SupplierStock.sudo().search(domain)
         categs = (
-            SupplierStock.search(
-                [("quantity", ">", 0), ("partner_id", "=", supplier.id)]
+            SupplierStock.sudo().search(
+                self._get_supplier_stock_domain(int(supplier))
             )
             .mapped("product_id")
             .mapped("product_tmpl_id")
@@ -109,7 +112,7 @@ class WebsiteSale(WebsiteSale):
         pager = request.website.pager(
             url=url, total=product_count, page=page, step=ppg, scope=7, url_args=post
         )
-        products = SupplierStock.search(
+        products = SupplierStock.sudo().search(
             domain,
             limit=ppg,
             offset=pager["offset"],
@@ -125,7 +128,7 @@ class WebsiteSale(WebsiteSale):
                     (
                         "attribute_line_ids.product_tmpl_id",
                         "in",
-                        search_product.mapped("product_id")
+                        search_product.sudo().mapped("product_id")
                         .mapped("product_tmpl_id")
                         .ids,
                     ),
@@ -167,7 +170,7 @@ class WebsiteSale(WebsiteSale):
     def supplier_product(self, supplier_url, product, category="", search="", **kwargs):
         if (
             not product.mapped("product_id")
-            .mapped("product_tmpl_id")
+            .sudo().mapped("product_tmpl_id")
             .can_access_from_current_website()
         ):
             raise NotFound()
@@ -178,7 +181,8 @@ class WebsiteSale(WebsiteSale):
             category = ProductCategory.browse(int(category)).exists()
 
         attrib_list = request.httprequest.args.getlist("attrib")
-        attrib_values = [[int(x) for x in v.split("-")] for v in attrib_list if v]
+        attrib_values = [[int(x) for x in v.split("-")]
+                         for v in attrib_list if v]
         attrib_set = {v[1] for v in attrib_values}
 
         keep = QueryURL(
@@ -188,7 +192,7 @@ class WebsiteSale(WebsiteSale):
             attrib=attrib_list,
         )
 
-        categs = ProductCategory.search([("parent_id", "=", False)])
+        categs = ProductCategory.sudo().search([("parent_id", "=", False)])
 
         values = {
             "supplier_url": supplier_url,
@@ -242,10 +246,13 @@ class WebsiteSale(WebsiteSale):
     def _get_supplier_stock_search_order(self, post):
         return ""
 
+    def _get_supplier_stock_domain(self, supplier):
+        return [("partner_id", "=", supplier)]
+
     def _get_supplier_stock_search_domain(
         self, search, supplier, category, attrib_values
     ):
-        domain = [("quantity", ">", 0), ("partner_id", "=", supplier)]
+        domain = self._get_supplier_stock_domain(supplier)
 
         if search:
             condition_list = []
@@ -266,7 +273,8 @@ class WebsiteSale(WebsiteSale):
             domain += operator_list + condition_list
 
         if category:
-            domain += [("product_id.public_categ_ids", "child_of", int(category))]
+            domain += [("product_id.public_categ_ids",
+                        "child_of", int(category))]
 
         if attrib_values:
             attrib = None
