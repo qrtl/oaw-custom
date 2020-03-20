@@ -57,7 +57,9 @@
                                     >All Categories</a>
                                 </li>
                                 <t t-foreach="categories" t-as="c">
-                                    <t t-call="website_timecheck_supplier.supplier_categories_recursive" />
+                                    <t
+                                        t-call="website_timecheck_supplier.supplier_categories_recursive"
+                                    />
                                 </t>
                             </ul>
                             <div
@@ -467,16 +469,20 @@
             </div>
         </xpath>
     </template>
-
     <template id="supplier_categories_recursive" name="Category list">
         <li class="nav-item">
-            <a t-att-href="keep('/shop/%s/category/' % supplier_url + slug(c), category=0)" t-attf-class="nav-link#{' active' if c.id == int(category or 0) else ''}">
-                <span t-field="c.name"/>
+            <a
+                t-att-href="keep('/shop/%s/category/' % supplier_url + slug(c), category=0)"
+                t-attf-class="nav-link#{' active' if c.id == int(category or 0) else ''}"
+            >
+                <span t-field="c.name" />
             </a>
             <ul t-if="c.child_id" class="nav nav-pills flex-column nav-hierarchy">
                 <t t-foreach="c.child_id" t-as="c">
                     <t t-if="not search or c.id in search_categories_ids">
-                        <t t-call="website_timecheck_supplier.supplier_categories_recursive" />
+                        <t
+                            t-call="website_timecheck_supplier.supplier_categories_recursive"
+                        />
                     </t>
                 </t>
             </ul>

@@ -3,14 +3,12 @@
 
 import logging
 
-from werkzeug.exceptions import NotFound
-
 from odoo import http
-from odoo.http import request
-
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.website_sale.controllers.main import TableCompute, WebsiteSale
+from odoo.http import request
+from werkzeug.exceptions import NotFound
 
 _logger = logging.getLogger(__name__)
 
@@ -43,8 +41,10 @@ class WebsiteSale(WebsiteSale):
             supplier = supplier[0]
 
         if category:
-            category = request.env["product.public.category"].sudo().search(
-                [("id", "=", int(category))], limit=1
+            category = (
+                request.env["product.public.category"]
+                .sudo()
+                .search([("id", "=", int(category))], limit=1)
             )
             if not category or not category.can_access_from_current_website():
                 raise NotFound()
@@ -59,8 +59,7 @@ class WebsiteSale(WebsiteSale):
             ppg = PPG
 
         attrib_list = request.httprequest.args.getlist("attrib")
-        attrib_values = [[int(x) for x in v.split("-")]
-                         for v in attrib_list if v]
+        attrib_values = [[int(x) for x in v.split("-")] for v in attrib_list if v]
         attributes_ids = {v[0] for v in attrib_values}
         attrib_set = {v[1] for v in attrib_values}
 
@@ -76,8 +75,7 @@ class WebsiteSale(WebsiteSale):
             order=post.get("order"),
         )
 
-        request.context = dict(
-            request.context, partner=request.env.user.partner_id)
+        request.context = dict(request.context, partner=request.env.user.partner_id)
 
         url = "/shop/%s" % supplier_url
         if search:
@@ -85,15 +83,13 @@ class WebsiteSale(WebsiteSale):
         if attrib_list:
             post["attrib"] = attrib_list
 
-        SupplierStock = request.env["supplier.stock"].with_context(
-            bin_size=True)
+        SupplierStock = request.env["supplier.stock"].with_context(bin_size=True)
 
         search_categories = False
         search_product = SupplierStock.sudo().search(domain)
         categs = (
-            SupplierStock.sudo().search(
-                self._get_supplier_stock_domain(int(supplier))
-            )
+            SupplierStock.sudo()
+            .search(self._get_supplier_stock_domain(int(supplier)))
             .mapped("product_id")
             .mapped("product_tmpl_id")
             .mapped("public_categ_ids")
@@ -128,7 +124,8 @@ class WebsiteSale(WebsiteSale):
                     (
                         "attribute_line_ids.product_tmpl_id",
                         "in",
-                        search_product.sudo().mapped("product_id")
+                        search_product.sudo()
+                        .mapped("product_id")
                         .mapped("product_tmpl_id")
                         .ids,
                     ),
@@ -170,7 +167,8 @@ class WebsiteSale(WebsiteSale):
     def supplier_product(self, supplier_url, product, category="", search="", **kwargs):
         if (
             not product.mapped("product_id")
-            .sudo().mapped("product_tmpl_id")
+            .sudo()
+            .mapped("product_tmpl_id")
             .can_access_from_current_website()
         ):
             raise NotFound()
@@ -181,8 +179,7 @@ class WebsiteSale(WebsiteSale):
             category = ProductCategory.browse(int(category)).exists()
 
         attrib_list = request.httprequest.args.getlist("attrib")
-        attrib_values = [[int(x) for x in v.split("-")]
-                         for v in attrib_list if v]
+        attrib_values = [[int(x) for x in v.split("-")] for v in attrib_list if v]
         attrib_set = {v[1] for v in attrib_values}
 
         keep = QueryURL(
@@ -273,8 +270,7 @@ class WebsiteSale(WebsiteSale):
             domain += operator_list + condition_list
 
         if category:
-            domain += [("product_id.public_categ_ids",
-                        "child_of", int(category))]
+            domain += [("product_id.public_categ_ids", "child_of", int(category))]
 
         if attrib_values:
             attrib = None
