@@ -4,8 +4,6 @@
     "name": "Check Availability button confirms VCI RFQ",
     "version": "12.0.1.0.0",
     "category": "Stock",
-    "description": """
-    """,
     "author": "Quartile Limited",
     "website": "https://www.quartile.co",
     "license": "AGPL-3",

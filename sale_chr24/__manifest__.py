@@ -4,13 +4,13 @@
     "name": "Adds chrono24 management to Sales ",
     "category": "Products",
     "version": "12.0.1.0.0",
+    "license": "AGPL-3",
     "author": "Quartile Limited, Timeware Limited.",
     "website": "",
     "depends": ["product_local_oversea_stock_info", "product_listprice_list_view"],
-    "summary": """Adds chrono24  fields to PLV. Adds a new tree views to Sales to manage chrono24""",
-    "description": """
-        Function of the Chrono24 Updated flag: This flag gets activated when product is to be pusblished onto Chrono24 or when changes
-        to certain fields in the master PLU view are done
+    "summary": """
+    Adds chrono24  fields to PLV. Adds a new tree views to Sales to
+    manage chrono24
     """,
     "data": [
         "data/ir_actions.xml",

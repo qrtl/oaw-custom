@@ -5,10 +5,6 @@
     "version": "12.0.1.0.0",
     "category": "Account",
     "summary": "Add paid date and currency to account invoice",
-    "description": """
-This module will add a date to account invoice that capture the date that the
-invoice is fully paid.
-    """,
     "author": "Quartile Limited",
     "website": "http://www.quartile.co",
     "license": "AGPL-3",

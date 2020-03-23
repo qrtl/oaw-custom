@@ -1,4 +1,4 @@
-odoo.define("rowno_in_tree.ListNumber", function(require) {
+odoo.define("rowno_in_tree.ListNumber", function (require) {
     "use strict";
 
     var core = require("web.core");
@@ -6,30 +6,30 @@ odoo.define("rowno_in_tree.ListNumber", function(require) {
     var _t = core._t;
 
     ListRenderer.include({
-        _getNumberOfCols: function() {
+        _getNumberOfCols: function () {
             var columns = this._super();
             columns += 1;
             return columns;
         },
-        _renderFooter: function(isGrouped) {
+        _renderFooter: function (isGrouped) {
             var $footer = this._super(isGrouped);
             $footer.find("tr").prepend($("<td>"));
             return $footer;
         },
-        _renderGroupRow: function(group, groupLevel) {
+        _renderGroupRow: function (group, groupLevel) {
             var $row = this._super(group, groupLevel);
             if (this.mode !== "edit" || this.hasSelectors) {
                 $row.find("th.o_group_name").after($("<td>"));
             }
             return $row;
         },
-        _renderGroups: function(data, groupLevel) {
+        _renderGroups: function (data, groupLevel) {
             var self = this;
             var _self = this;
             groupLevel = groupLevel || 0;
             var result = [];
             var $tbody = $("<tbody>");
-            _.each(data, function(group) {
+            _.each(data, function (group) {
                 if (!$tbody) {
                     $tbody = $("<tbody>");
                 }
@@ -44,7 +44,7 @@ odoo.define("rowno_in_tree.ListNumber", function(require) {
                         );
                     } else {
                         // The opened group contains records
-                        var $records = _.map(group.data, function(record, index) {
+                        var $records = _.map(group.data, function (record, index) {
                             // Nilesh
                             if (_self.mode !== "edit" || _self.hasSelectors) {
                                 return self
@@ -55,8 +55,7 @@ odoo.define("rowno_in_tree.ListNumber", function(require) {
                                         )
                                     ); // .prepend($('<td>'));
                             }
-                                return self._renderRow(record);
-
+                            return self._renderRow(record);
                         });
                         result.push($("<tbody>").append($records));
                     }
@@ -68,7 +67,7 @@ odoo.define("rowno_in_tree.ListNumber", function(require) {
             }
             return result;
         },
-        _renderHeader: function(isGrouped) {
+        _renderHeader: function (isGrouped) {
             var $header = this._super(isGrouped);
             if (this.hasSelectors) {
                 $header
@@ -88,21 +87,21 @@ odoo.define("rowno_in_tree.ListNumber", function(require) {
                     );
                 }
             } else if (this.mode !== "edit") {
-                    $header
-                        .find("tr")
-                        .prepend(
-                            $(
-                                "<th class='o_list_row_number_header o_list_row_count_sheliya'>"
-                            ).html("#")
-                        );
-                }
+                $header
+                    .find("tr")
+                    .prepend(
+                        $(
+                            "<th class='o_list_row_number_header o_list_row_count_sheliya'>"
+                        ).html("#")
+                    );
+            }
             // $header.find("tr").prepend($('<th>').html('#'));
             return $header;
         },
-        _renderRow: function(record) {
+        _renderRow: function (record) {
             var $row = this._super(record);
             if (this.mode !== "edit" && this.state.groupedBy.length == 0) {
-                var index = this.state.data.findIndex(function(e) {
+                var index = this.state.data.findIndex(function (e) {
                     return record.id === e.id;
                 });
                 if (index !== -1) {

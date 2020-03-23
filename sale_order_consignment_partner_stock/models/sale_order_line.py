@@ -3,7 +3,7 @@
 
 import logging
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
@@ -32,8 +32,10 @@ class SaleOrderLine(models.Model):
             )
             if not supplier_location:
                 raise UserError(
-                    "Unable to create partner stock records since there is not supplier location related to %s"
-                    % order_line.order_id.partner_id.commercial_partner_id.name
+                    _(
+                        "Unable to create partner stock records since there is not supplier location related to %s"  # noqa
+                        % order_line.order_id.partner_id.commercial_partner_id.name
+                    )
                 )
             vals = {
                 "partner_id": order_line.order_id.partner_id.commercial_partner_id.id,

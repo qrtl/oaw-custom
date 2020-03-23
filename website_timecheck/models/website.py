@@ -3,7 +3,7 @@
 
 import datetime
 
-from odoo import api, fields, models
+from odoo import models
 from odoo.http import request
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 

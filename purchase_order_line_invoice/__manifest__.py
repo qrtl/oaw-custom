@@ -5,6 +5,7 @@
     "category": "Purchase",
     "summary": """""",
     "version": "12.0.1.0.0",
+    "license": "AGPL-3",
     "author": "Quartile Limited",
     "website": "https://www.quartile.co",
     "depends": [
@@ -13,9 +14,6 @@
         "purchase_order_line_quant",
         "vendor_consignment_stock",
     ],
-    "description": """
-Add a view for invoicable purchase order line to create invoice.
-    """,
     "data": [
         "data/ir_actions.xml",
         "views/account_invoice_views.xml",

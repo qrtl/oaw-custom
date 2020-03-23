@@ -6,7 +6,6 @@ odoo.define("base_company_logo_visibility.ShowCompanyLogo", function(require) {
 
     var ShowCompanyLogo = Widget.extend({
         start: function() {
-            var self = this;
             this.getSession()
                 .user_has_group("base_company_logo_visibility.group_company_logo")
                 .then(function(has_group) {

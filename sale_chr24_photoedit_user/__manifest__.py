@@ -4,14 +4,12 @@
     "name": "Sale group for Chrono24 and Products",
     "category": "Sales",
     "version": "12.0.1.0.0",
+    "license": "AGPL-3",
     "author": "Quartile Limited, Timeware Limited",
     "website": "",
     "depends": ["sale_chr24"],
-    "summary": """A group for managing Chrono24 information and managing photos of products""",
-    "description": """
-    The group gets access to views and are allowed write fields of:
-     - write access on product.template (Photo), image \
-     - Write access on product.product (Chrono24), chrono24updated,chrono24price \
+    "summary": """
+    A group for managing Chrono24 information and managing photos of products.
     """,
     "data": [
         "security/chr24_photoedit_security.xml",

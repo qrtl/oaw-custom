@@ -1,7 +1,7 @@
 # Copyright 2019 Quartile Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class SaleOrder(models.Model):
@@ -28,7 +28,6 @@ class SaleOrder(models.Model):
         res = super(SaleOrder, self).create(vals)
         # For quotation adjust: set new order_ref field
         if "name" in vals and "partner_id" in vals:
-            name = vals["name"]
             # Get the reference number number
             fragments_order_ref = vals["name"].split("-")
             sub_order_ref = fragments_order_ref[-1]

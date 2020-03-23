@@ -4,12 +4,11 @@
     "name": "Supplier Stock",
     "category": "Stock",
     "version": "12.0.1.0.0",
+    "license": "AGPL-3",
     "author": "Quartile Limited, Timeware Limited",
     "website": "https://www.quartile.co",
     "depends": ["purchase", "mail", "stock"],
     "summary": """""",
-    "description": """
-    """,
     "data": [
         "security/ir.model.access.csv",
         "data/ir_cron.xml",

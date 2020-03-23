@@ -59,11 +59,8 @@ class SaleOrderLine(models.Model):
             for order_line in self:
                 order_line.quant_id.sudo().update({"sale_order_id": False})
                 if vals["quant_id"]:
-                    quant = (
-                        self.env["stock.quant"]
-                        .browse(vals["quant_id"])
-                        .sudo()
-                        .update({"sale_order_id": order_line.order_id.id})
+                    self.env["stock.quant"].browse(vals["quant_id"]).sudo().update(
+                        {"sale_order_id": order_line.order_id.id}
                     )
         return super(SaleOrderLine, self).write(vals)
 

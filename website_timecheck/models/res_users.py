@@ -18,7 +18,7 @@ class ResUsers(models.Model):
     )
 
     def get_security_group_field_name(self, group_category_xml_id):
-        for app, kind, gs in self.env["res.groups"].get_groups_by_application():
+        for app, _kind, gs in self.env["res.groups"].get_groups_by_application():
             module_category = self.env.ref(group_category_xml_id)
             if app == module_category:
                 return "sel_groups_" + "_".join(map(str, map(int, gs)))

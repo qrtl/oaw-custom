@@ -3,7 +3,7 @@
 
 from odoo import _, api, fields, models
 from odoo.addons import decimal_precision as dp
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError
 
 
 class StockMoveLine(models.Model):

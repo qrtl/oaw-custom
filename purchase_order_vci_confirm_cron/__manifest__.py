@@ -7,9 +7,6 @@
     "author": "Quartile Limited",
     "website": "https://www.quartile.co",
     "depends": ["vendor_consignment_stock"],
-    "description": """
-Purchase Order Confirm by Cron Job
-    """,
     "license": "AGPL-3",
     "summary": "",
     "data": ["data/ir_cron_data.xml"],

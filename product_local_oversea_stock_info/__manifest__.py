@@ -3,12 +3,11 @@
 {
     "name": "Product Local and Overseas Quantity",
     "version": "12.0.1.0.0",
+    "license": "AGPL-3",
     "author": "Quartile Limited",
     "website": "https://www.quartile.co",
     "category": "Product",
     "depends": ["product", "sale_stock", "supplier_stock"],
-    "description": """
-    """,
     "data": ["data/ir_actions.xml", "views/product_template_views.xml"],
     "installable": True,
 }

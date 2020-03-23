@@ -5,11 +5,9 @@
     "category": "Purchase",
     "summary": """""",
     "version": "12.0.1.0.0",
+    "license": "AGPL-3",
     "author": "Quartile Limited",
     "website": "https://www.quartile.co",
     "depends": ["purchase_view_adjust_oaw"],
-    "description": """
-Adds a button in RFQ to split order lines so that each line has 1 for quantity.
-    """,
     "data": ["views/purchase_order_views.xml"],
 }

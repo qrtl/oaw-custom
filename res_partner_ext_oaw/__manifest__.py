@@ -4,12 +4,11 @@
     "name": "Extension for partner",
     "category": "CRM",
     "version": "12.0.1.0.0",
+    "license": "AGPL-3",
     "author": "Quartile Limited",
     "website": "https://www.quartile.co",
     "depends": ["base"],
     "summary": """""",
-    "description": """
-    """,
     "data": [],
     "installable": True,
 }

@@ -8,8 +8,6 @@
     "author": "Quartile Limited",
     "depends": ["account"],
     "license": "AGPL-3",
-    "description": """
-    """,
     "summary": "",
     "data": ["views/account_invoice_views.xml"],
     "installable": True,

@@ -19,7 +19,6 @@ class StockMoveLine(models.Model):
     def get_quant_owner_related_user_id(self):
         for move in self:
             quant_owner_id = False
-            print(move.quant_id)
             if move.quant_id:
                 quant_owner_id = move.quant_id[0].owner_id
             if quant_owner_id and quant_owner_id.sudo().user_ids:

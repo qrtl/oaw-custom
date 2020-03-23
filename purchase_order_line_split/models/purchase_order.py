@@ -19,7 +19,7 @@ class PurchaseOrder(models.Model):
                     "serial",
                     "lot",
                 ):
-                    for qty in range(1, int(order_line.product_qty)):
+                    for _qty in range(1, int(order_line.product_qty)):
                         order_line.copy(
                             default={"product_qty": 1.0, "order_id": order.id}
                         )

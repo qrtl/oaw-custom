@@ -7,8 +7,6 @@
     "category": "Sales",
     "author": "Quartile Limited",
     "website": "https://www.quartile.co",
-    "description": """
-    """,
     "license": "AGPL-3",
     "depends": ["sale_order_line_quant", "sale_view_adjust_oaw"],
     "data": ["views/supplier_stock_views.xml"],

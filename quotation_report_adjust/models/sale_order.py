@@ -15,7 +15,6 @@ class SaleOrder(models.Model):
         res = super(SaleOrder, self).create(vals)
         # For quotation adjust: set new order_ref field
         if "name" in vals and "partner_id" in vals:
-            name = vals["name"]
             # Get the reference number number
             fragments_order_ref = vals["name"].split("-")
             sub_order_ref = fragments_order_ref[-1]
@@ -24,7 +23,7 @@ class SaleOrder(models.Model):
             partner_id = self.env["res.partner"].search(domain)
             partner_ref = partner_id.ref
             # New reference
-            if partner_ref == False:
+            if not partner_ref:
                 partner_ref = partner_id.name
             res.order_ref_report = sub_order_ref + " " + partner_ref
         return res

@@ -10,8 +10,8 @@ class WebsiteSale(WebsiteSale):
         [
             """/shop""",
             """/shop/page/<int:page>""",
-            """/shop/category/<model("product.public.category", "[('website_id', 'in', (False, current_website_id))]"):category>""",
-            """/shop/category/<model("product.public.category", "[('website_id', 'in', (False, current_website_id))]"):category>/page/<int:page>""",
+            """/shop/category/<model("product.public.category", "[('website_id', 'in', (False, current_website_id))]"):category>""",  # noqa
+            """/shop/category/<model("product.public.category", "[('website_id', 'in', (False, current_website_id))]"):category>/page/<int:page>""",  # noqa
         ],
         type="http",
         auth="user",

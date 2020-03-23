@@ -4,13 +4,11 @@
     "name": "Split Sales Order Lines",
     "category": "Sale",
     "version": "12.0.1.0.0",
+    "license": "AGPL-3",
     "author": "Quartile Limited",
     "website": "https://www.quartile.co",
     "depends": ["sale_view_adjust_oaw"],
     "summary": "",
-    "description": """
-Provide a button to split the sale order lines into qty 1.
-    """,
     "data": ["views/sale_order_views.xml"],
     "installable": True,
 }

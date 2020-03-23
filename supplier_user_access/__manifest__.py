@@ -4,6 +4,7 @@
     "name": "Supplier Access",
     "category": "Security",
     "version": "12.0.1.0.0",
+    "license": "AGPL-3",
     "author": "Quartile Limited",
     "website": "https://www.quartile.co",
     "depends": [
@@ -15,8 +16,6 @@
         "website",
     ],
     "summary": """""",
-    "description": """
-    """,
     "data": [
         "security/supplier_security.xml",
         "security/base_security.xml",

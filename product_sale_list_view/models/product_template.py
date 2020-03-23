@@ -27,16 +27,12 @@ class ProductTemplate(models.Model):
     @api.multi
     def _update_sale_info(self):
         self.update({"total": 0, "counts": 0})
-        order_lines = (
-            self.env["sale.order.line"]
-            .search(
-                [
-                    ("product_id", "in", self.mapped("product_variant_ids").ids),
-                    ("state", "in", ("sale", "done")),
-                ]
-            )
-            ._update_product_sale_info()
-        )
+        self.env["sale.order.line"].search(
+            [
+                ("product_id", "in", self.mapped("product_variant_ids").ids),
+                ("state", "in", ("sale", "done")),
+            ]
+        )._update_product_sale_info()
 
     @api.multi
     def action_open_order_line(self):

@@ -23,7 +23,8 @@ exclude: |
   dbfilter_from_header/|
   sale_automatic_workflow/|
   web_export_view/|
-  auditlog/
+  auditlog/|
+  rowno_in_tree/
 default_language_version:
   python: python3
 repos:

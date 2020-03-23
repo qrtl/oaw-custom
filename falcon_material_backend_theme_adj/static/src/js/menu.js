@@ -1,10 +1,7 @@
 odoo.define("web.backend_falcon_theme", function(require) {
     "use strict";
 
-    var core = require("web.core");
-    var session = require("web.session");
     var Menu = require("web.Menu");
-    var web_client = require("web.web_client");
     var ajax = require("web.ajax");
     $(document).ready(function() {
         $(".o_sub_menu").prepend(
@@ -12,8 +9,10 @@ odoo.define("web.backend_falcon_theme", function(require) {
         );
 
         $(".o_sub_menu span.si-icons").click(function(e) {
-            e.preventDefault(); // Prevent the default action
-            e.stopPropagation(); // Stop the click from bubbling
+            // Prevent the default action
+            e.preventDefault();
+            // Stop the click from bubbling
+            e.stopPropagation();
             $("body").toggleClass("oe_leftbar_open");
         });
         setTimeout(function() {
@@ -40,7 +39,7 @@ odoo.define("web.backend_falcon_theme", function(require) {
                 this.$menu_sections[primary_menu_id].appendTo(
                     $("div.o_sub_menu > .o_sub_menu_content > ul.oe_secondary_menu")
                 );
-                if ($("ul.oe_secondary_menu").has("li").length == 0) {
+                if ($("ul.oe_secondary_menu").has("li").length === 0) {
                     $(".o_sub_menu").addClass("o_hidden");
                 } else {
                     $(".o_sub_menu").removeClass("o_hidden");
@@ -58,7 +57,8 @@ odoo.define("web.backend_falcon_theme", function(require) {
             var $more = this.$("#menu_more");
             var $systray = this.$el.parents().find(".oe_systray");
 
-            $more.children("li").insertBefore($more_container); // Pull all the items out of the more menu
+            // Pull all the items out of the more menu
+            $more.children("li").insertBefore($more_container);
 
             // 'all_outside' beahavior should display all the items, so hide the more menu and exit
             if (behavior === "all_outside") {
@@ -88,9 +88,11 @@ odoo.define("web.backend_falcon_theme", function(require) {
                     });
 
                 if ($(this).width() >= remaining_space) {
-                    return false; // The current item will be appended in more_container
+                    // The current item will be appended in more_container
+                    return false;
                 }
-                $(this).show(); // Show the current item in menu bar
+                // Show the current item in menu bar
+                $(this).show();
             });
             $more.append($toplevel_items.filter(":hidden").show());
             $more_container.toggle(Boolean($more.children().length));

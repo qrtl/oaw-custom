@@ -4,7 +4,6 @@
 from datetime import datetime
 
 import pytz
-from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 
