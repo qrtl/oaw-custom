@@ -35,9 +35,9 @@ class StockMove(models.Model):
                                         last_stock_quant[0].purchase_price_unit
                                         != stock_move_line.purchase_price_unit
                                     ):
-                                        stock_move_line.product_id.product_tmpl_id.sudo().write(
+                                        stock_move_line.product_id.product_tmpl_id.sudo().write(  # noqa
                                             {
-                                                "currency_price_change_date": fields.Datetime.now(),
+                                                "currency_price_change_date": fields.Datetime.now(),  # noqa
                                                 "partner_offer_checked": False,
                                             }
                                         )

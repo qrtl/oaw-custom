@@ -4,12 +4,11 @@
     "name": "Company logo visibility",
     "category": "Security",
     "version": "12.0.1.0.0",
+    "license": "AGPL-3",
     "author": "Quartile Limited",
     "website": "https://www.quartile.co",
     "depends": ["falcon_material_backend_theme"],
     "summary": """""",
-    "description": """
-    """,
     "data": [
         "security/res_groups.xml",
         "views/base_company_logo_visibility_templates.xml",

@@ -6,14 +6,8 @@
     "category": "Stock",
     "author": "Quartile Limited, Timeware Limited",
     "website": "https://www.quartile.co",
-    "description": """
-    """,
     "license": "AGPL-3",
-    "depends": [
-        "stock",
-    ],
-    "data": [
-        "views/stock_quant_views.xml",
-    ],
-    "installable" : True,
+    "depends": ["stock"],
+    "data": ["views/stock_quant_views.xml"],
+    "installable": True,
 }

@@ -3,13 +3,10 @@
 {
     "name": "Restrict Action Access",
     "version": "12.0.1.0.0",
+    "license": "AGPL-3",
     "author": "Quartile Limited",
     "website": "https://www.quartile.co",
     "category": "Security",
-    "description": """
-Restrict action access base on the group settings of the action.
-    """,
-    "website": "https://www.quartile.co",
     "depends": ["web"],
     "installable": True,
 }

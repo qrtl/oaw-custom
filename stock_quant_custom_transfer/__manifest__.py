@@ -8,9 +8,6 @@
     "category": "Warehouse",
     "license": "AGPL-3",
     "summary": """Create custom transfer from quant""",
-    "description": """
-Create internal transfer for selected stock quant(s).
-    """,
     "depends": ["sale_stock", "stock_move_line_quant"],
     "data": ["wizard/stock_quant_transfer_wizard.xml"],
     "installable": True,

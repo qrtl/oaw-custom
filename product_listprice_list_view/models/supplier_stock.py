@@ -43,12 +43,14 @@ class SupplierStock(models.Model):
     def write(self, vals):
         for ps in self:
             ps.update_product_template(vals)
-            # Purchase Price/Currency Price change -> Supplier Stocks 'currency_price_change_date' gets updated
+            # Purchase Price/Currency Price change -> Supplier Stocks
+            # 'currency_price_change_date' gets updated
             if "price_unit" in vals:
                 vals["currency_price_change_date"] = fields.Datetime.now()
         return super(SupplierStock, self).write(vals)
 
-    # 1.) set date in product template if the template used for partner stock creation hasnt been used before
+    # 1.) set date in product template if the template used for partner stock
+    #     creation hasnt been used before
     # 2.) duplicate entry with different purchase price impacting PLU filter
     # 3.) duplicate entry with same price, might be from different supplier
     @api.model

@@ -18,8 +18,11 @@ class SaleOrderLine(models.Model):
     def _update_product_sale_info(self):
         for order_line in self:
             rate = 1.0
-            if order_line.order_id.date_order and \
-                    order_line.order_id.currency_id != self.env.user.company_id.currency_id:
+            if (
+                order_line.order_id.date_order
+                and order_line.order_id.currency_id
+                != self.env.user.company_id.currency_id
+            ):
                 rate = self.env["res.currency"]._get_conversion_rate(
                     order_line.order_id.currency_id,
                     self.env.user.company_id.currency_id,
@@ -27,7 +30,11 @@ class SaleOrderLine(models.Model):
                     order_line.order_id.date_order,
                 )
             order_line.subtotal_hkd = order_line.price_subtotal * rate
-            order_line.product_id.product_tmpl_id.update({
-                "total": order_line.product_id.product_tmpl_id.total + order_line.subtotal_hkd,
-                "counts": order_line.product_id.product_tmpl_id.counts + order_line.product_uom_qty,
-            })
+            order_line.product_id.product_tmpl_id.update(
+                {
+                    "total": order_line.product_id.product_tmpl_id.total
+                    + order_line.subtotal_hkd,
+                    "counts": order_line.product_id.product_tmpl_id.counts
+                    + order_line.product_uom_qty,
+                }
+            )

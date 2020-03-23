@@ -1,7 +1,7 @@
 # Copyright 2019 Quartile Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from odoo import _, api, fields, models
+from odoo import _, api, models
 from odoo.exceptions import UserError
 
 
@@ -34,9 +34,9 @@ class StockRule(models.Model):
         # <<< QTL Edit
         # We use the owner of the stock as the supplier
         # suppliers = product_id.seller_ids\
-        #     .filtered(lambda r: (not r.company_id or r.company_id == values['company_id']) and (not r.product_id or r.product_id == product_id) and r.name.active)
+        #     .filtered(lambda r: (not r.company_id or r.company_id == values['company_id']) and (not r.product_id or r.product_id == product_id) and r.name.active) # noqa
         # if not suppliers:
-        #     msg = _('There is no vendor associated to the product %s. Please define a vendor for this product.') % (
+        #     msg = _('There is no vendor associated to the product %s. Please define a vendor for this product.') % ( # noqa
         #         product_id.display_name,)
         #     raise UserError(msg)
         # supplier = self._make_po_select_supplier(values, suppliers)
@@ -81,10 +81,10 @@ class StockRule(models.Model):
         # Create Line
         # po_line = False
         # for line in po.order_line:
-        #     if line.product_id == product_id and line.product_uom == product_id.uom_po_id:
-        #         if line._merge_in_existing_line(product_id, product_qty, product_uom, location_id, name, origin, values):
+        #     if line.product_id == product_id and line.product_uom == product_id.uom_po_id: # noqa
+        #         if line._merge_in_existing_line(product_id, product_qty, product_uom, location_id, name, origin, values): # noqa
         #             vals = self._update_purchase_order_line(
-        #                 product_id, product_qty, product_uom, values, line, partner)
+        #                 product_id, product_qty, product_uom, values, line, partner) # noqa
         #             po_line = line.write(vals)
         #             break
         # if not po_line:

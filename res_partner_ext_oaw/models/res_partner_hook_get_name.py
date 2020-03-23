@@ -1,15 +1,16 @@
 # Copyright 2019 Quartile Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import fields, models
+from odoo import models
 from odoo.addons.base.models.res_partner import Partner
 
 
 # Monkey Patching
 # Overwrite the original _get_name
-# i.e. https://github.com/odoo/odoo/blob/12.0/odoo/addons/base/models/res_partner.py#L679-L703
+# i.e. https://github.com/odoo/odoo/blob/12.0/odoo/addons/base/models/res_partner.py#L679-L703 # noqa
 def _get_name(self):
-    """ Utility method to allow name_get to be overrided without re-browse the partner """
+    """ Utility method to allow name_get to be overrided without re-browse the
+    partner """
     partner = self
     name = partner.name or ""
     if partner.ref:

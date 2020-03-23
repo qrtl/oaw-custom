@@ -4,6 +4,7 @@
 import datetime
 
 from odoo import api, fields, models
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 
 class ProductTemplate(models.Model):

@@ -19,7 +19,7 @@ class SaleOrder(models.Model):
                     order_line.product_uom_qty > 1.0
                     and order_line.product_id.tracking in ("serial", "lot")
                 ):
-                    for qty in range(1, int(order_line.product_uom_qty)):
+                    for _qty in range(1, int(order_line.product_uom_qty)):
                         order_line.copy(
                             default={"product_uom_qty": 1.0, "order_id": order.id}
                         )

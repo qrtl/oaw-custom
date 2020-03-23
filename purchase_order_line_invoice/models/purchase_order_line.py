@@ -66,7 +66,6 @@ class PurchaseOrderLine(models.Model):
         if record_ids:
             res = False
             invoices = {}
-            purchase_obj = self.env["purchase.order"]
             purchase_line_obj = self.env["purchase.order.line"]
             invoice_line_obj = self.env["account.invoice.line"]
 
@@ -131,7 +130,6 @@ class PurchaseOrderLine(models.Model):
             @param orders : The set of orders to add in the invoice
             @param lines : The list of line's id
         """
-        purchase_obj = self.env["purchase.order"]
         account_journal_obj = self.env["account.journal"]
         invoice_obj = self.env["account.invoice"]
         name = orders and ",".join([order.name for order in orders if order.name]) or ""

@@ -8,10 +8,6 @@
     "author": "Quartile Limited",
     "license": "AGPL-3",
     "depends": ["stock_account", "sale_order_line_quant"],
-    "description": """
-        Improves process of return shipment by adding return category in
-        reverse transfer wizard.
-    """,
     "data": [
         "data/stock_location_data.xml",
         "views/sale_order_views.xml",

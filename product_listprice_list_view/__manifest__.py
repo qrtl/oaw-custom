@@ -3,13 +3,11 @@
 {
     "name": "Product List Price Update List View",
     "version": "12.0.1.0.1",
+    "license": "AGPL-3",
     "author": "Quartile Limited",
     "website": "https://www.quartile.co",
     "category": "Product",
     "depends": ["product_local_oversea_stock_info", "product_offer_kanban_views"],
-    "description": """
-* Adds a menu item 'Product List Price Update' to facilitate list price update
-    """,
     "data": [
         "data/ir_actions.xml",
         "views/product_product_views.xml",

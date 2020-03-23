@@ -8,9 +8,6 @@
     "website": "https://www.quartile.co",
     "author": "Quartile Limited",
     "license": "AGPL-3",
-    "description": """
-* Adjust purchase related views.
-    """,
     "application": False,
     "installable": True,
     "depends": ["purchase"],

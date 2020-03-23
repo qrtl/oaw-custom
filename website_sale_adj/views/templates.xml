@@ -1,17 +1,23 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-
     <template id="layout_footer_copyright" inherit_id="website.layout_footer_copyright">
-        <xpath expr="//div[@class='col-lg-6 text-muted text-center text-md-left']" position="replace">
+        <xpath
+            expr="//div[@class='col-lg-6 text-muted text-center text-md-left']"
+            position="replace"
+        >
             <div class="col-lg-6 text-muted text-center text-md-left">
-                <t t-call="website.language_selector"/>
+                <t t-call="website.language_selector" />
             </div>
         </xpath>
     </template>
-
     <template id="website.footer_custom" inherit_id="website.layout" name="Footer">
         <xpath expr="//div[@id='footer']" position="replace">
-            <div id="footer" class="oe_structure oe_structure_solo" t-ignore="true" t-if="not no_footer">
+            <div
+                id="footer"
+                class="oe_structure oe_structure_solo"
+                t-ignore="true"
+                t-if="not no_footer"
+            >
                 <section class="s_text_block pt16 pb8">
                     <div class="container">
                         <div class="row">
@@ -22,7 +28,7 @@
                                 </ul> -->
                                 <ul class="list-unstyled" id="about_us">
                                     <li>
-                                        <div t-raw="website.about_us"/>
+                                        <div t-raw="website.about_us" />
                                     </li>
                                 </ul>
                             </div>
@@ -44,7 +50,7 @@
                                 </p> -->
                                 <ul class="list-unstyled" id="contact_description">
                                     <li>
-                                        <div t-raw="website.contact_description"/>
+                                        <div t-raw="website.contact_description" />
                                     </li>
                                 </ul>
                             </div>
@@ -69,31 +75,41 @@
             </div>
         </xpath>
     </template>
-
     <template id="products" inherit_id="website_sale.products" name="Products">
         <xpath expr="//t[@t-if='not bins']" position="inside">
-            <div class="alert alert-info" t-raw="website.empty_page_message"/>
+            <div class="alert alert-info" t-raw="website.empty_page_message" />
         </xpath>
     </template>
-
-    <template id="layout_logo_show" inherit_id="website.layout_logo_show" name="Show Logo">
+    <template
+        id="layout_logo_show"
+        inherit_id="website.layout_logo_show"
+        name="Show Logo"
+    >
         <xpath expr="//header//a[hasclass('navbar-brand')]" position="replace">
             <div>
-                 <a href="/" class="navbar-brand logo">
-                    <img style="height: 80px; width: 80px; max-height: 80px;" t-att-src="website.image_url(res_company, 'logo', '100x100')"/>
+                <a href="/" class="navbar-brand logo">
+                    <img
+                        style="height: 80px; width: 80px; max-height: 80px;"
+                        t-att-src="website.image_url(res_company, 'logo', '100x100')"
+                    />
                 </a>
                 <t t-if="website.whatsapp_link and website.whatsapp_qr_image">
                     <a t-att-href="website.whatsapp_link" class="navbar-brand logo">
-                        <img style="height: 80px; width: 80px; max-height: 80px;" t-att-src="website.image_url(website, 'whatsapp_qr_image', '100x100')"/>
+                        <img
+                            style="height: 80px; width: 80px; max-height: 80px;"
+                            t-att-src="website.image_url(website, 'whatsapp_qr_image', '100x100')"
+                        />
                     </a>
                 </t>
                 <t t-if="website.wechat_link and website.wechat_qr_image">
                     <a t-att-href="website.wechat_link" class="navbar-brand logo">
-                        <img style="height: 80px; width: 80px; max-height: 80px;" t-att-src="website.image_url(website, 'wechat_qr_image', '100x100')"/>
+                        <img
+                            style="height: 80px; width: 80px; max-height: 80px;"
+                            t-att-src="website.image_url(website, 'wechat_qr_image', '100x100')"
+                        />
                     </a>
                 </t>
             </div>
         </xpath>
     </template>
-
 </odoo>

@@ -1,7 +1,7 @@
 # Copyright 2019 Quartile Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class SaleOrder(models.Model):
@@ -28,7 +28,6 @@ class SaleOrder(models.Model):
         res = super(SaleOrder, self).create(vals)
         # For quotation adjust: set new order_ref field
         if "name" in vals and "partner_id" in vals:
-            name = vals["name"]
             # Get the reference number number
             fragments_order_ref = vals["name"].split("-")
             sub_order_ref = fragments_order_ref[-1]
@@ -45,11 +44,9 @@ class SaleOrder(models.Model):
 
         # choose the view_mode accordingly
         if len(picking_ids) > 1:
-            result.domain = "[('id','in',[" + \
-                ",".join(map(str, picking_ids)) + "])]"
+            result.domain = "[('id','in',[" + ",".join(map(str, picking_ids)) + "])]"
         else:
-            form_view = self.env.ref(
-                "supplier_user_access.view_supplier_picking_form")
+            form_view = self.env.ref("supplier_user_access.view_supplier_picking_form")
             result.views = [(form_view and form_view[1] or False, "form")]
             result.res_id = picking_ids and picking_ids[0] or False
 
@@ -60,7 +57,12 @@ class SaleOrder(models.Model):
     def _compute_supplier_user_ids(self):
         for order in self:
             if order.partner_id.related_partner:
-                order.supplier_user_ids = self.env["res.users"].search([
-                    ('commercial_partner_id', '=',
-                     order.partner_id.related_partner.commercial_partner_id.id)
-                ])
+                order.supplier_user_ids = self.env["res.users"].search(
+                    [
+                        (
+                            "commercial_partner_id",
+                            "=",
+                            order.partner_id.related_partner.commercial_partner_id.id,
+                        )
+                    ]
+                )

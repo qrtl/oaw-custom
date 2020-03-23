@@ -3,6 +3,7 @@
 {
     "name": "Profit and Loss Report",
     "version": "12.0.1.0.0",
+    "license": "AGPL-3",
     "author": "Quartile Limited",
     "website": "https://www.quartile.co",
     "category": "Report",
@@ -12,8 +13,6 @@
         "sale_order_line_quant",
         "purchase_order_line_quant",
     ],
-    "description": """
-    """,
     "data": [
         "security/ir.model.access.csv",
         "views/profit_loss_report_views.xml",

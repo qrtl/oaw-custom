@@ -8,6 +8,5 @@ class ResCurrencyRate(models.Model):
     _inherit = "res.currency.rate"
 
     _sql_constraints = [
-        ('unique_name_per_day', 'Check(1=1)',
-         'Remove currency rate constraint.'),
+        ("unique_name_per_day", "Check(1=1)", "Remove currency rate constraint."),
     ]

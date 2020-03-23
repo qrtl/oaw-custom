@@ -24,7 +24,7 @@ class StockWarehouse(models.Model):
             buy_vci_route = self.env.ref(
                 "vendor_consignment_stock.route_warehouse0_buy_vci"
             )
-        except:
+        except Exception:
             buy_vci_route = route_model.search([("name", "like", _("Buy VCI"))])
         if not buy_vci_route:
             raise Warning(_("Can't find any generic Buy VCI route."))

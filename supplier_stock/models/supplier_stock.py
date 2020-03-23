@@ -138,7 +138,6 @@ class SupplierStock(models.Model):
         if not self.prod_cat_selection:
             self.product_id = False
 
-    @api.one
     @api.depends("price_unit", "quantity", "currency_id")
     def _compute_price(self):
         self.price_subtotal = self.price_unit * self.quantity

@@ -6,8 +6,6 @@
     "category": "Stock",
     "author": "Quartile Limited",
     "website": "https://www.quartile.co",
-    "description": """
-    """,
     "license": "AGPL-3",
     "depends": [
         "purchase_stock",

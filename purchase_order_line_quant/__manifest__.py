@@ -5,14 +5,10 @@
     "category": "Purchase",
     "summary": """""",
     "version": "12.0.1.0.0",
+    "license": "AGPL-3",
     "author": "Quartile Limited",
     "website": "https://www.quartile.co",
     "depends": ["sale_order_line_quant", "sale_view_adjust_oaw"],
-    "description": """
-- Add Quant to purchase order line.
-- Overwrite _run_buy logic to create purhcase order based on supplier and
-purchase currency.
-    """,
     "data": [
         "views/purchase_order_views.xml",
         "views/sale_order_views.xml",

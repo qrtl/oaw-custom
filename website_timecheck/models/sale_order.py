@@ -1,7 +1,7 @@
 # Copyright 2020 Quartile Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from odoo import api, fields, models
+from odoo import fields, models
 
 
 class SaleOrder(models.Model):
@@ -41,9 +41,8 @@ class SaleOrder(models.Model):
             if product.sale_hkd_ac_so:
                 order_line.price_unit = product.sale_hkd_ac_so
             else:
-                if order_line.order_id.partner_id.user_ids and order_line.order_id.partner_id.user_ids[
-                    0
-                ].has_group(
+                partner_id = order_line.order_id.partner_id
+                if partner_id.user_ids and partner_id.user_ids[0].has_group(
                     "website_timecheck.group_timecheck_light"
                 ):
                     order_line.price_unit = product.sale_hkd_ac

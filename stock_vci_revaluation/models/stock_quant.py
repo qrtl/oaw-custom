@@ -8,7 +8,7 @@ class StockQuant(models.Model):
     _inherit = "stock.quant"
 
     @api.model
-    def revaluate_vci_stock(self, quant_ids=[]):
+    def revaluate_vci_stock(self, quant_ids=None):
         domain = [
             ("owner_id", "!=", self.env.user.company_id.partner_id.id),
             ("usage", "=", "internal"),

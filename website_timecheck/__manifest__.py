@@ -4,6 +4,7 @@
     "name": "Website Timecheck Function",
     "category": "Website",
     "version": "12.0.1.0.0",
+    "license": "AGPL-3",
     "author": "Quartile Limited",
     "website": "https://www.quartile.co",
     "depends": [
@@ -12,8 +13,6 @@
         "website_sale_adj",
     ],
     "summary": """""",
-    "description": """
-    """,
     "data": [
         "data/ir_actions.xml",
         "security/timecheck_security.xml",

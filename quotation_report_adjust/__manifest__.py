@@ -4,20 +4,12 @@
     "name": "quotation_reoprt_adjust",
     "summary": """
         Timeware specific reports""",
-    "description": """
-        Creates quotation, invoice, move reports for
-        - Chrono123
-        - Timeware
-        - Sino
-        Adds report relevant fields and logic:
-        - partner note
-        - Code (Quoation name and Customer Name
-    """,
     "author": "Timeware Limited",
     "website": "http://www.yourcompany.com",
     "category": "Reports",
-    "version": "12.0.0.1",
-    "depends": ["base", "sale"],
+    "version": "12.0.1.0.0",
+    "license": "AGPL-3",
+    "depends": ["sale"],
     "data": [
         "views/quotation_report.xml",
         "views/quotation_report_timeware.xml",

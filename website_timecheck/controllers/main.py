@@ -1,8 +1,7 @@
 # Copyright 2020 Quartile Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-import werkzeug.utils
-from odoo import _, http
+from odoo import http
 from odoo.addons.website.controllers.main import Website
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo.http import request
@@ -130,8 +129,8 @@ class WebsiteSale(WebsiteSale):
         [
             """/shop""",
             """/shop/page/<int:page>""",
-            """/shop/category/<model("product.public.category", "[('website_id', 'in', (False, current_website_id))]"):category>""",
-            """/shop/category/<model("product.public.category", "[('website_id', 'in', (False, current_website_id))]"):category>/page/<int:page>""",
+            """/shop/category/<model("product.public.category", "[('website_id', 'in', (False, current_website_id))]"):category>""",  # noqa
+            """/shop/category/<model("product.public.category", "[('website_id', 'in', (False, current_website_id))]"):category>/page/<int:page>""",  # noqa
         ],
         type="http",
         auth="public",
@@ -192,7 +191,7 @@ class WebsiteSale(WebsiteSale):
         # Overwrite by QTL
         # OrderBy will be parsed in orm and so no direct sql injection
         # id is added to be sure that order is a unique sort key
-        # return 'website_published desc,%s , id desc' % post.get('order', 'website_sequence desc')
+        # return 'website_published desc,%s , id desc' % post.get('order', 'website_sequence desc') # noqa
         return (
             "website_published desc, partner_offer_checked desc,"
             "website_product_seq_date desc, id desc"
@@ -207,7 +206,7 @@ class WebsiteSale(WebsiteSale):
         #         domain += [
         #             '|', '|', '|', ('name', 'ilike',
         #                             srch), ('description', 'ilike', srch),
-        #             ('description_sale', 'ilike', srch), ('product_variant_ids.default_code', 'ilike', srch)]
+        #             ('description_sale', 'ilike', srch), ('product_variant_ids.default_code', 'ilike', srch)] # noqa
         if search:
             condition_list = []
             operator_list = []
@@ -218,7 +217,8 @@ class WebsiteSale(WebsiteSale):
                     ("description_sale", "ilike", srch),
                     ("product_variant_ids.default_code", "ilike", srch),
                 ]
-            # Add '|' to the operator_list, as the search conditions will be joined with OR but not AND
+            # Add '|' to the operator_list, as the search conditions will be
+            # joined with OR but not AND
             condition_list_length = len(condition_list)
             while condition_list_length - 1 > 0:
                 operator_list += ["|"]
@@ -254,7 +254,7 @@ class Website(Website):
         # << QTL Set the homepage as the shop page
         return request.redirect("/shop")
         # homepage = request.website.homepage_id
-        # if homepage and (homepage.sudo().is_visible or request.env.user.has_group('base.group_user')) and homepage.url != '/':
+        # if homepage and (homepage.sudo().is_visible or request.env.user.has_group('base.group_user')) and homepage.url != '/': # noqa
         #     return request.env['ir.http'].reroute(homepage.url)
 
         # website_page = request.env['ir.http']._serve_page()
@@ -262,9 +262,9 @@ class Website(Website):
         #     return website_page
         # else:
         #     top_menu = request.website.menu_id
-        #     first_menu = top_menu and top_menu.child_id and top_menu.child_id.filtered(
+        #     first_menu = top_menu and top_menu.child_id and top_menu.child_id.filtered( # noqa
         #         lambda menu: menu.is_visible)
-        #     if first_menu and first_menu[0].url not in ('/', '', '#') and (not (first_menu[0].url.startswith(('/?', '/#', ' ')))):
+        #     if first_menu and first_menu[0].url not in ('/', '', '#') and (not (first_menu[0].url.startswith(('/?', '/#', ' ')))): # noqa
         #         return request.redirect(first_menu[0].url)
 
         # raise request.not_found()

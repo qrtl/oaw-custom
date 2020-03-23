@@ -5,12 +5,10 @@
     "author": "Quartile Limited, Timeware Limted",
     "summary": "",
     "version": "12.0.1.0.0",
+    "license": "AGPL-3",
     "website": "https://www.ehanse.de",
     "category": "Accounting",
     "depends": ["sale", "account"],
-    "description": """
-- Adjust account payment views.
-    """,
     "data": [
         "views/account_invoice_views.xml",
         "views/account_move_views.xml",

@@ -9,7 +9,7 @@ class ProductTemplate(models.Model):
     _inherit = "product.template"
 
     def action_open_quants(self):
-        result = super(Product, self).action_open_quants()
+        result = super(ProductTemplate, self).action_open_quants()
         result["context"] = {
             "search_default_locationgroup": 1,
             "search_default_ownergroup": 1,
