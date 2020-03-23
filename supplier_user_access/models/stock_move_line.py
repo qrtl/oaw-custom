@@ -23,8 +23,7 @@ class StockMoveLine(models.Model):
             if move.quant_id:
                 quant_owner_id = move.quant_id[0].owner_id
             if quant_owner_id and quant_owner_id.sudo().user_ids:
-                move.quant_owner_related_user_id = quant_owner_id.sudo(
-                ).user_ids[0].id
+                move.quant_owner_related_user_id = quant_owner_id.sudo().user_ids[0].id
 
     @api.multi
     def get_supplier_pick_partner(self):

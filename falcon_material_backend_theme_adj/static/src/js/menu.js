@@ -1,29 +1,31 @@
-odoo.define('web.backend_falcon_theme', function (require) {
+odoo.define("web.backend_falcon_theme", function(require) {
     "use strict";
 
-    var core = require('web.core');
-    var session = require('web.session');
-    var Menu = require('web.Menu');
-    var web_client = require('web.web_client');
-    var ajax = require('web.ajax');
-    $(document).ready(function () {
-        $('.o_sub_menu').prepend("<span class='si-icons'><span></span><span class='s2'></span><span></span></spn>");
+    var core = require("web.core");
+    var session = require("web.session");
+    var Menu = require("web.Menu");
+    var web_client = require("web.web_client");
+    var ajax = require("web.ajax");
+    $(document).ready(function() {
+        $(".o_sub_menu").prepend(
+            "<span class='si-icons'><span></span><span class='s2'></span><span></span></spn>"
+        );
 
-        $('.o_sub_menu span.si-icons').click(
-            function (e) {
-                e.preventDefault(); // prevent the default action
-                e.stopPropagation(); // stop the click from bubbling
-                $('body').toggleClass('oe_leftbar_open');
-            });
-        setTimeout(function () {
-            ajax.jsonRpc('/get_apps/menu', 'call', {}).then(function (res) {
-                // console.log('res',res);
-                $('.o_main_navbar').find('ul.o_menu_sections').append(res);
+        $(".o_sub_menu span.si-icons").click(function(e) {
+            e.preventDefault(); // Prevent the default action
+            e.stopPropagation(); // Stop the click from bubbling
+            $("body").toggleClass("oe_leftbar_open");
+        });
+        setTimeout(function() {
+            ajax.jsonRpc("/get_apps/menu", "call", {}).then(function(res) {
+                // Console.log('res',res);
+                $(".o_main_navbar")
+                    .find("ul.o_menu_sections")
+                    .append(res);
             });
         }, 400);
-
     });
-    // dom.initAutoMoreMenu(this.$section_placeholder, {
+    // Dom.initAutoMoreMenu(this.$section_placeholder, {
     //     console.log('self.$el.width()',self.$el.width());
     //     maxWidth: function () {
     //         return self.$el.width() - (self.$menu_apps.outerWidth(true) + self.$menu_brand_placeholder.outerWidth(true) + self.systray_menu.$el.outerWidth(true));
@@ -32,57 +34,66 @@ odoo.define('web.backend_falcon_theme', function (require) {
     // });
 
     return Menu.include({
-        change_menu_section: function (primary_menu_id) {
+        change_menu_section: function(primary_menu_id) {
             var res = this._super.apply(this, arguments);
             if (this.$menu_sections[primary_menu_id]) {
-                this.$menu_sections[primary_menu_id].appendTo($('div.o_sub_menu > .o_sub_menu_content > ul.oe_secondary_menu'));
+                this.$menu_sections[primary_menu_id].appendTo(
+                    $("div.o_sub_menu > .o_sub_menu_content > ul.oe_secondary_menu")
+                );
                 if ($("ul.oe_secondary_menu").has("li").length == 0) {
-                    $(".o_sub_menu").addClass('o_hidden');
-                }
-                else {
-                    $(".o_sub_menu").removeClass('o_hidden');
+                    $(".o_sub_menu").addClass("o_hidden");
+                } else {
+                    $(".o_sub_menu").removeClass("o_hidden");
                 }
             }
             // <<< QTL EDIT
             // Display all sub-menus
-            $(".o_sub_menu .dropdown-menu").show()
+            $(".o_sub_menu .dropdown-menu").show();
             // >>> QTL EDIT
-            return res
+            return res;
         },
-        reflow: function (behavior) {
+        reflow: function(behavior) {
             var self = this;
-            var $more_container = this.$('#menu_more_container').hide();
-            var $more = this.$('#menu_more');
-            var $systray = this.$el.parents().find('.oe_systray');
+            var $more_container = this.$("#menu_more_container").hide();
+            var $more = this.$("#menu_more");
+            var $systray = this.$el.parents().find(".oe_systray");
 
-            $more.children('li').insertBefore($more_container);  // Pull all the items out of the more menu
+            $more.children("li").insertBefore($more_container); // Pull all the items out of the more menu
 
             // 'all_outside' beahavior should display all the items, so hide the more menu and exit
-            if (behavior === 'all_outside') {
+            if (behavior === "all_outside") {
                 // Show list of menu items
                 self.$el.show();
-                this.$el.find('li').show();
+                this.$el.find("li").show();
                 $more_container.hide();
                 return;
             }
 
             // Hide all menu items
-            var $toplevel_items = this.$el.find('li').not($more_container).not($systray.find('li')).hide();
+            var $toplevel_items = this.$el
+                .find("li")
+                .not($more_container)
+                .not($systray.find("li"))
+                .hide();
             // Show list of menu items (which is empty for now since all menu items are hidden)
             self.$el.show();
-            $toplevel_items.each(function () {
-                var remaining_space = self.$el.parent().width() - $more_container.outerWidth();
-                self.$el.parent().children(':visible').each(function () {
-                    remaining_space -= $(this).outerWidth();
-                });
+            $toplevel_items.each(function() {
+                var remaining_space =
+                    self.$el.parent().width() - $more_container.outerWidth();
+                self.$el
+                    .parent()
+                    .children(":visible")
+                    .each(function() {
+                        remaining_space -= $(this).outerWidth();
+                    });
 
                 if ($(this).width() >= remaining_space) {
-                    return false; // the current item will be appended in more_container
+                    return false; // The current item will be appended in more_container
                 }
-                $(this).show(); // show the current item in menu bar
+                $(this).show(); // Show the current item in menu bar
             });
-            $more.append($toplevel_items.filter(':hidden').show());
-            $more_container.toggle(!!$more.children().length);
+            $more.append($toplevel_items.filter(":hidden").show());
+            $more_container.toggle(Boolean($more.children().length));
             // Hide toplevel item if there is only one
             var $toplevel = self.$el.children("li:visible");
             if ($toplevel.length === 1) {

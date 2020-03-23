@@ -534,7 +534,11 @@ class ProfitLossReportWizard(models.TransientModel):
                 rec.sudo().supplier_payment_ids.mapped("communication")
             )
             if rec.invoice_id.state == "paid":
-                rec.customer_payment_reference, rec.customer_payment_currency_rate, rec.sale_base_price = self._get_payment_information(
+                (
+                    rec.customer_payment_reference,
+                    rec.customer_payment_currency_rate,
+                    rec.sale_base_price,
+                ) = self._get_payment_information(
                     rec.sudo().customer_payment_ids, rec.net_price, rec.invoice_id
                 )
                 if rec.sale_base_price:

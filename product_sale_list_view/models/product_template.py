@@ -27,15 +27,20 @@ class ProductTemplate(models.Model):
     @api.multi
     def _update_sale_info(self):
         self.update({"total": 0, "counts": 0})
-        order_lines = self.env["sale.order.line"].search([
-            ("product_id", "in", self.mapped("product_variant_ids").ids),
-            ("state", "in", ("sale", "done")),
-        ])._update_product_sale_info()
+        order_lines = (
+            self.env["sale.order.line"]
+            .search(
+                [
+                    ("product_id", "in", self.mapped("product_variant_ids").ids),
+                    ("state", "in", ("sale", "done")),
+                ]
+            )
+            ._update_product_sale_info()
+        )
 
     @api.multi
     def action_open_order_line(self):
-        view_id = self.env.ref(
-            "product_sale_list_view.sale_order_line_tree_view").id
+        view_id = self.env.ref("product_sale_list_view.sale_order_line_tree_view").id
         return {
             # for better record representation, set the name
             "name": self.default_code,
@@ -46,6 +51,6 @@ class ProductTemplate(models.Model):
             "target": "current",
             "domain": [
                 ("product_id", "in", self.product_variant_ids.ids),
-                ("state", "in", ("sale", "done"))
+                ("state", "in", ("sale", "done")),
             ],
         }
