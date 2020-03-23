@@ -1,4 +1,4 @@
-# Copyright 2019 Quartile Limted, Timeware Limited
+# Copyright 2020 Quartile Limted, Timeware Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 {
     "name": "Supplier Stock Adjust",
