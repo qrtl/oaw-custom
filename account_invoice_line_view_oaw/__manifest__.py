@@ -5,14 +5,6 @@
     "version": "12.0.1.0.0",
     "category": "Account",
     "summary": "Adds Invoice Line menu item",
-    "description": """
-Main Features
-==================================================
-* Add menu item Invoice Lines
-* Captures exchange rates as of the invoice dates and shows the base currency\
- amounts in the output.
-
-    """,
     "author": "Quartile Limited",
     "website": "http://www.quartile.co",
     "license": "AGPL-3",

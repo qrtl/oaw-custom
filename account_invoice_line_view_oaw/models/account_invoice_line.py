@@ -4,7 +4,7 @@
 from datetime import datetime
 
 import odoo.addons.decimal_precision as dp
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class AccountInvoiceLine(models.Model):
@@ -47,18 +47,26 @@ class AccountInvoiceLine(models.Model):
     partner_ref = fields.Char(
         "Supplier Reference", related="po_id.partner_ref", readonly=True
     )
-    rate = fields.Float(compute="_get_base_amt", readonly=True, string="Rate")
+    rate = fields.Float(compute="_compute_base_amt", readonly=True, string="Rate")
     base_amt = fields.Float(
-        compute="_get_base_amt",
+        compute="_compute_base_amt",
         digits_compute=dp.get_precision("Account"),
         readonly=True,
         string="Base Amount",
     )
     so_id = fields.Many2one(
-        "sale.order", compute="_get_vals", store=True, readonly=True, string="SO"
+        "sale.order",
+        compute="_compute_so_po_id",
+        store=True,
+        readonly=True,
+        string="SO",
     )
     po_id = fields.Many2one(
-        "purchase.order", compute="_get_vals", store=True, readonly=True, string="PO"
+        "purchase.order",
+        compute="_compute_so_po_id",
+        store=True,
+        readonly=True,
+        string="PO",
     )
     image_medium = fields.Binary(
         "Image", related="product_id.product_tmpl_id.image_medium", readonly=True
@@ -78,24 +86,21 @@ class AccountInvoiceLine(models.Model):
             if inv_ln.invoice_id.type == "out_invoice" and SO.search(
                 [("name", "=", inv_ln.invoice_id.origin)]
             ):
-                so_id = SO.search(
-                    [("name", "=", inv_ln.invoice_id.origin)])[0].id
+                so_id = SO.search([("name", "=", inv_ln.invoice_id.origin)])[0].id
             if inv_ln.invoice_id.type == "in_invoice" and PO.search(
                 [("name", "=", inv_ln.invoice_id.origin)]
             ):
-                po_id = PO.search(
-                    [("name", "=", inv_ln.invoice_id.origin)])[0].id
+                po_id = PO.search([("name", "=", inv_ln.invoice_id.origin)])[0].id
         return so_id, po_id
 
     @api.multi
     @api.depends("invoice_id.state", "invoice_id.origin")
-    def _get_vals(self):
+    def _compute_so_po_id(self):
         for inv_ln in self:
             inv_ln.so_id, inv_ln.po_id = self._get_org_vals(inv_ln)
 
     @api.multi
-    def _get_base_amt(self):
-        Rate = self.env["res.currency.rate"]
+    def _compute_base_amt(self):
         for inv_ln in self:
             curr_amt = inv_ln.price_subtotal
             # set rate 1.0 if the transaction currency is the same as the base currency
@@ -106,6 +111,10 @@ class AccountInvoiceLine(models.Model):
                     "date", datetime.today().strftime("%Y-%m-%d")
                 )
                 rate = self.env["res.currency"]._get_conversion_rate(
-                    inv_ln.currency_id, inv_ln.company_id.currency_id, inv_ln.company_id, invoice_date)
+                    inv_ln.currency_id,
+                    inv_ln.company_id.currency_id,
+                    inv_ln.company_id,
+                    invoice_date,
+                )
             inv_ln.rate = 1 / rate
             inv_ln.base_amt = curr_amt * rate

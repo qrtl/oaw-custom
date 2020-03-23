@@ -32,7 +32,6 @@
                 />
                 <field name="lot_id" readonly="1" />
                 <field name="name" invisible="1" />
-                <field name="reference" invisible="1" />
                 <field name="so_id" />
                 <field name="po_id" />
                 <field name="date_invoice" />
