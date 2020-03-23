@@ -1,4 +1,4 @@
-# Copyright 2019 chrono123 & Quartile Limited
+#Copyright 2019 chrono123 & Quartile Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from odoo import api, fields, models
@@ -18,8 +18,13 @@ class ProductProduct(models.Model):
 
     @api.multi
     def _check_offer_checked(self):
+        not_invers = False
         for pp in self:
+            if pp.product_tmpl_id.partner_offer_checked:
+                continue
             if not pp.product_tmpl_id.partner_offer_checked:
+                not_invers = True
                 pp.product_tmpl_id.partner_offer_checked = True
-            elif pp.product_tmpl_id.partner_offer_checked:
-                pp.product_tmpl_id.partner_offer_checked = False
+        if not not_invers:
+            for pp in self:
+               pp.product_tmpl_id.partner_offer_checked = False
