@@ -18,8 +18,9 @@ class ProductProduct(models.Model):
 
     @api.multi
     def _check_offer_checked(self):
-        for pp in self:
-            if not pp.product_tmpl_id.partner_offer_checked:
-                pp.product_tmpl_id.partner_offer_checked = True
-            elif pp.product_tmpl_id.partner_offer_checked:
-                pp.product_tmpl_id.partner_offer_checked = False
+        if all([product.product_tmpl_id.partner_offer_checked for product in self]):
+            self.mapped("product_tmpl_id").update({"partner_offer_checked": False})
+        else:
+            self.filtered(
+                lambda product: not product.product_tmpl_id.partner_offer_checked
+            ).mapped("product_tmpl_id").update({"partner_offer_checked": True})
