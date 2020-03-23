@@ -1,7 +1,6 @@
 # Copyright 2019 Quartile Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-import odoo.addons.decimal_precision as dp
 from odoo import api, fields, models
 
 
@@ -9,12 +8,12 @@ class AccountInvoice(models.Model):
     _inherit = "account.invoice"
 
     payment_ref = fields.Char(
-        string="Payment Reference", compute="_get_payment_reference", store=True
+        string="Payment Reference", compute="_compute_payment_reference", store=True
     )
 
     @api.multi
     @api.depends("payment_ids")
-    def _get_payment_reference(self):
+    def _compute_payment_reference(self):
         for invoice in self:
             payment_ref = []
             for line in invoice.payment_ids:

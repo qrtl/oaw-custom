@@ -5,17 +5,7 @@
     "summary": """
         Redefines product representation in various views.
     """,
-    "description": """
-      Field adjusted
-        in RFQ \n
-        in 'Supplier Invoice', \n
-        in 'Stock Moves Ext' behind Product name field, \n
-        in 'Invoice Lines' behind Product name field, \n
-        in 'Quants' behind Product name field, \n
-        in 'Receipts' and 'Internal Transfer' form views, behind Product name \n
-        in 'Transfer' pop-up \n
-        in 'Profit & Loss Report' behind Reference field \n
-    """,
+    "license": "AGPL-3",
     "author": "Timeware Limited",
     "category": "Products",
     "version": "12.0.1.0.0",
