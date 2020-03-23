@@ -67,9 +67,7 @@ class AccountInvoiceLine(models.Model):
     payment_reference = fields.Char(
         "Payment Reference", related="invoice_id.payment_ref", readonly=True, store=True
     )
-    note = fields.Char(
-        "Note"
-    )
+    note = fields.Char("Note")
 
     @api.model
     def _get_org_vals(self, inv_ln):
@@ -97,7 +95,6 @@ class AccountInvoiceLine(models.Model):
 
     @api.multi
     def _get_base_amt(self):
-        Invoice = self.env["account.invoice"]
         Rate = self.env["res.currency.rate"]
         for inv_ln in self:
             curr_amt = inv_ln.price_subtotal
@@ -105,21 +102,10 @@ class AccountInvoiceLine(models.Model):
             if inv_ln.currency_id == inv_ln.company_id.currency_id:
                 rate = 1.0
             else:
-                invoice_date = Invoice.browse([inv_ln.invoice_id.id])[
-                    0
-                ].date_invoice or inv_ln.env.context.get(
+                invoice_date = inv_ln.date_invoice or inv_ln.env.context.get(
                     "date", datetime.today().strftime("%Y-%m-%d")
                 )
-                rate = (
-                    Rate.search(
-                        [
-                            ("currency_id", "=", inv_ln.currency_id.id),
-                            ("name", "<=", invoice_date),
-                        ],
-                        order="name desc",
-                        limit=1,
-                    ).rate
-                    or 1.0
-                )
-            inv_ln.rate = rate
-            inv_ln.base_amt = curr_amt / rate
+                rate = self.env["res.currency"]._get_conversion_rate(
+                    inv_ln.currency_id, inv_ln.company_id.currency_id, inv_ln.company_id, invoice_date)
+            inv_ln.rate = 1 / rate
+            inv_ln.base_amt = curr_amt * rate
