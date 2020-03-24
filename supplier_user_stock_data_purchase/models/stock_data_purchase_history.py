@@ -1,8 +1,7 @@
 # Copyright 2020 Quartile Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from odoo import _, api, fields, models
-from odoo.exceptions import UserError
+from odoo import api, fields, models
 
 
 class StockDataPurchaseHistory(models.Model):
@@ -19,9 +18,7 @@ class StockDataPurchaseHistory(models.Model):
 
     @api.multi
     def request_generate_stock_data(self):
-        self.sudo().update({
-            "data_generation_pending": True,
-        })
+        self.sudo().update({"data_generation_pending": True})
 
     @api.multi
     def generate_purchased_stock_data(self):
@@ -66,18 +63,24 @@ class StockDataPurchaseHistory(models.Model):
                     "price_unit": product.list_price,
                 }
                 self.env["supplier.stock"].sudo().create(supplier_stock_vals)
-            history.update({
-                'data_generation_pending': False
-            })
+            history.update({"data_generation_pending": False})
 
     def update_purchase_partner_stock_data(self):
-        data_generation_pending_history = self.search(
-            [('data_generation_pending', '=', True), ('payment_confirm', '=', True)]).generate_purchased_stock_data()
-        updated_products = self.env['product.template'].search(
-            [('update_partner_stock', '=', True)])
+        self.search(
+            [("data_generation_pending", "=", True), ("payment_confirm", "=", True)]
+        ).generate_purchased_stock_data()
+        updated_products = self.env["product.template"].search(
+            [("update_partner_stock", "=", True)]
+        )
         for product in updated_products:
             self.env["supplier.stock"].search(
-                [('readonly_record', '=', True), ('product_id.product_tmpl_id', '=', product.id)]).update({
+                [
+                    ("readonly_record", "=", True),
+                    ("product_id.product_tmpl_id", "=", product.id),
+                ]
+            ).update(
+                {
                     "retail_in_currency": product.list_price,
                     "price_unit": product.list_price,
-                })
+                }
+            )

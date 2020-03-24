@@ -36,8 +36,7 @@ class PurchaseSupplierStockDataWizard(models.TransientModel):
             .sudo()
             .get_param("website_sale.salesteam_id")
         )
-        total_price = sum(purchase_categories.mapped(
-            "stock_data_purchase_price"))
+        total_price = sum(purchase_categories.mapped("stock_data_purchase_price"))
         order_vals = {
             "partner_id": self.supplier_id.id,
             "company_id": self.env.user.company_id.id,
@@ -83,12 +82,11 @@ class PurchaseSupplierStockDataWizard(models.TransientModel):
             )
         if self.supplier_id:
             self._compute_purchased_category_ids()
-        all_product_categories = self.supplier_id.product_category_ids or self.env["product.category"].search(
-            [("supplier_access", "=", True)]
-        )
+        all_product_categories = self.supplier_id.product_category_ids or self.env[
+            "product.category"
+        ].search([("supplier_access", "=", True)])
         product_category_ids = list(
-            set(all_product_categories.ids) -
-            set(self.purchased_category_ids.ids)
+            set(all_product_categories.ids) - set(self.purchased_category_ids.ids)
         )
         return {
             "domain": {"product_category_ids": [("id", "in", product_category_ids)]}
