@@ -15,6 +15,7 @@
     "summary": """""",
     "data": [
         "data/ir_actions.xml",
+        "data/ir_cron_data.xml",
         "security/ir.model.access.csv",
         "security/security.xml",
         "views/product_category_views.xml",

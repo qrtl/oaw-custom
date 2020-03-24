@@ -15,49 +15,69 @@ class StockDataPurchaseHistory(models.Model):
     sale_order_id = fields.Many2one("sale.order", string="Sales Order",)
     purchase_date = fields.Datetime(string="Purchased Date",)
     payment_confirm = fields.Boolean(string="Payment Confirm",)
+    data_generation_pending = fields.Boolean(string="Data Generation Pending",)
+
+    @api.multi
+    def request_generate_stock_data(self):
+        self.sudo().update({
+            "data_generation_pending": True,
+        })
 
     @api.multi
     def generate_purchased_stock_data(self):
-        self.ensure_one()
-        if not self.payment_confirm:
-            raise UserError(_("You can only generate stock data from paid history"))
-        # Remove all old records
-        self.env["supplier.stock"].search(
-            [
-                ("prod_cat_selection", "in", self.product_category_ids.ids),
-                ("readonly_record", "=", True),
-                ("partner_id", "=", self.supplier_id.id),
-            ]
-        ).unlink()
-
-        # Generate purchased stock data
-        products = (
-            self.env["product.product"]
-            .sudo()
-            .search(
+        for history in self:
+            # Remove all old records
+            self.env["supplier.stock"].search(
                 [
-                    ("categ_id", "in", self.product_category_ids.ids),
-                    ("type", "=", "product"),
+                    ("prod_cat_selection", "in", history.product_category_ids.ids),
+                    ("readonly_record", "=", True),
+                    ("partner_id", "=", history.supplier_id.id),
                 ]
+            ).unlink()
+
+            # Generate purchased stock data
+            products = (
+                self.env["product.product"]
+                .sudo()
+                .search(
+                    [
+                        ("categ_id", "in", history.product_category_ids.ids),
+                        ("type", "=", "product"),
+                    ]
+                )
             )
-        )
-        stock_data_supplier_location_id = (
-            self.env["ir.config_parameter"]
-            .sudo()
-            .get_param(
-                "supplier_user_stock_data_purchase.stock_data_supplier_location_id"
+            stock_data_supplier_location_id = (
+                self.env["ir.config_parameter"]
+                .sudo()
+                .get_param(
+                    "supplier_user_stock_data_purchase.stock_data_supplier_location_id"
+                )
             )
-        )
-        for product in products:
-            supplier_stock_vals = {
-                "readonly_record": True,
-                "partner_id": self.supplier_id.id,
-                "product_id": product.id,
-                "prod_cat_selection": product.categ_id.id,
-                "partner_loc_id": int(stock_data_supplier_location_id),
-                "quantity": 0,
-                "currency_id": self.env.user.company_id.currency_id.id,
-                "retail_in_currency": product.list_price,
-                "price_unit": product.list_price,
-            }
-            self.env["supplier.stock"].sudo().create(supplier_stock_vals)
+            for product in products:
+                supplier_stock_vals = {
+                    "readonly_record": True,
+                    "partner_id": history.supplier_id.id,
+                    "product_id": product.id,
+                    "prod_cat_selection": product.categ_id.id,
+                    "partner_loc_id": int(stock_data_supplier_location_id),
+                    "quantity": 0,
+                    "currency_id": self.env.user.company_id.currency_id.id,
+                    "retail_in_currency": product.list_price,
+                    "price_unit": product.list_price,
+                }
+                self.env["supplier.stock"].sudo().create(supplier_stock_vals)
+            history.update({
+                'data_generation_pending': False
+            })
+
+    def update_purchase_partner_stock_data(self):
+        data_generation_pending_history = self.search(
+            [('data_generation_pending', '=', True), ('payment_confirm', '=', True)]).generate_purchased_stock_data()
+        updated_products = self.env['product.template'].search(
+            [('update_partner_stock', '=', True)])
+        for product in updated_products:
+            self.env["supplier.stock"].search(
+                [('readonly_record', '=', True), ('product_id.product_tmpl_id', '=', product.id)]).update({
+                    "retail_in_currency": product.list_price,
+                    "price_unit": product.list_price,
+                })

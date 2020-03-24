@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <record id="action_purchased_stock_data" model="ir.actions.act_window">
-        <field name="name">Purchased Stock Data</field>
+        <field name="name">My Purchased Stock Data</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">supplier.stock</field>
         <field name="view_mode">tree</field>
@@ -18,7 +18,7 @@
     </record>
     <menuitem
         id="menu_action_purchased_stock_data"
-        name="Purchased Stock Data"
+        name="My Purchased Stock Data"
         action="action_purchased_stock_data"
         parent="menu_supplier_stock_offer"
         sequence="2"
