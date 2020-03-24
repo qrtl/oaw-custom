@@ -82,9 +82,9 @@ class PurchaseSupplierStockDataWizard(models.TransientModel):
             )
         if self.supplier_id:
             self._compute_purchased_category_ids()
-        all_product_categories = self.env["product.category"].search(
-            [("supplier_access", "=", True)]
-        )
+        all_product_categories = self.supplier_id.product_category_ids or self.env[
+            "product.category"
+        ].search([("supplier_access", "=", True)])
         product_category_ids = list(
             set(all_product_categories.ids) - set(self.purchased_category_ids.ids)
         )

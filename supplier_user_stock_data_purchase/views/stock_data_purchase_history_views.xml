@@ -11,10 +11,13 @@
                 <field name="product_category_ids" widget="many2many_tags" />
                 <field name="purchase_date" />
                 <field name="payment_confirm" />
+                <field name="data_generation_pending" />
                 <button
-                    name="generate_purchased_stock_data"
-                    string="Generate Stock Data"
+                    name="request_generate_stock_data"
+                    string="Request Regenerate Stock Data"
+                    class="oe_highlight"
                     type="object"
+                    attrs="{'invisible': ['|', ('data_generation_pending', '=', True), ('payment_confirm', '=', False)]}"
                 />
             </tree>
         </field>
