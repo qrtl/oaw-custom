@@ -2,19 +2,20 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from odoo import api, fields, models
+from odoo.addons import decimal_precision as dp
 
 
 class AccountInvoice(models.Model):
     _inherit = "account.invoice"
 
     paid_date = fields.Date(
-        readonly=True, store=True, compute="get_paid_date_info", string="Paid Date"
+        store=True, compute="get_paid_date_info", string="Paid Date"
     )
     paid_date_currency_rate = fields.Float(
-        readonly=True,
         store=True,
         compute="get_paid_date_info",
         string="Paid Date Currency Rate",
+        digits=(12, 6),
     )
 
     @api.multi
@@ -36,22 +37,11 @@ class AccountInvoice(models.Model):
                     ):
                         rate = 1.0
                     else:
-                        rate = (
-                            account_invoice.env["res.currency.rate"]
-                            .search(
-                                [
-                                    (
-                                        "currency_id",
-                                        "=",
-                                        account_invoice.currency_id.id,
-                                    ),
-                                    ("name", "<=", paid_date),
-                                ],
-                                order="name desc",
-                                limit=1,
-                            )
-                            .rate
-                            or 1.0
+                        rate = self.env["res.currency"]._get_conversion_rate(
+                            account_invoice.currency_id,
+                            account_invoice.company_id.currency_id,
+                            account_invoice.company_id,
+                            paid_date,
                         )
-                    account_invoice.paid_date_currency_rate = rate
+                    account_invoice.paid_date_currency_rate = 1 / rate
         return
