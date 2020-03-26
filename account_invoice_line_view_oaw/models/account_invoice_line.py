@@ -83,11 +83,11 @@ class AccountInvoiceLine(models.Model):
                 invoice_date = inv_ln.date_invoice or inv_ln.env.context.get(
                     "date", datetime.today().strftime("%Y-%m-%d")
                 )
-                rate = 1 / self.env["res.currency"]._get_conversion_rate(
+                rate = self.env["res.currency"]._get_conversion_rate(
                     inv_ln.currency_id,
                     inv_ln.company_id.currency_id,
                     inv_ln.company_id,
                     invoice_date,
                 )
-            inv_ln.rate = rate
+            inv_ln.rate = 1 / rate
             inv_ln.base_amt = curr_amt * rate
