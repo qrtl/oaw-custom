@@ -85,6 +85,7 @@ class ProfitLossReportWizard(models.TransientModel):
                 WHERE
                     sl.usage = 'customer' AND
                     sml.state = 'done' AND
+                    sq.quantity > 0 AND
                     sm.company_id = %s
                 ORDER BY
                     sq.lot_id,
@@ -107,6 +108,7 @@ class ProfitLossReportWizard(models.TransientModel):
                 WHERE
                     sl.usage = 'supplier' AND
                     sml.state = 'done' AND
+                    sq.quantity > 0 AND
                     sm.company_id = %s
                 ORDER BY
                     sq.lot_id,
@@ -286,6 +288,7 @@ class ProfitLossReportWizard(models.TransientModel):
                 WHERE
                     sl.usage = 'customer' AND
                     sml.state = 'done' AND
+                    sq.quantity > 0 AND
                     sm.company_id = %s
                 ORDER BY
                     sq.lot_id,
@@ -308,6 +311,7 @@ class ProfitLossReportWizard(models.TransientModel):
                 WHERE
                     sl.usage = 'supplier' AND
                     sml.state = 'done' AND
+                    sq.quantity > 0 AND
                     sm.company_id = %s
                 ORDER BY
                     sq.lot_id,
@@ -604,7 +608,7 @@ class ProfitLossReportWizard(models.TransientModel):
                 rec.state = "sale_done"
 
     def _get_utc_date(self, date_tz):
-        tz = pytz.timezone(self.env.user.tz) or pytz.utc
+        tz = self.env.user.tz and pytz.timezone(self.env.user.tz) or pytz.utc
         date_string = datetime.strftime(date_tz, DEFAULT_SERVER_DATE_FORMAT)
         date_local = tz.localize(fields.Datetime.from_string(date_string), is_dst=None)
         return date_local.astimezone(pytz.utc).strftime("%Y-%m-%d %H:%M:%S")
