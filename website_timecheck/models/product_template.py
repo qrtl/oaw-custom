@@ -13,9 +13,11 @@ class ProductTemplate(models.Model):
     stock_new_arrival = fields.Datetime(string="New Arrival")
     special_offer_limit = fields.Datetime(string="Special Offer Limit")
     in_special_offer_limit = fields.Boolean(
-        string="Special Offer Limit", compute="_get_in_special_offer_limit"
+        string="Special Offer Limit", compute="_compute_in_special_offer_limit"
     )
-    is_new_arrival = fields.Boolean(string="New Arrival", compute="_get_is_new_arrival")
+    is_new_arrival = fields.Boolean(
+        string="New Arrival", compute="_compute_is_new_arrival"
+    )
     website_product_seq_date = fields.Datetime(
         string="Product Sequence Date",
         compute="_compute_website_product_seq_date",
@@ -23,7 +25,7 @@ class ProductTemplate(models.Model):
     )
 
     @api.multi
-    def _get_in_special_offer_limit(self):
+    def _compute_in_special_offer_limit(self):
         for product in self:
             if self.env.user.has_group("website_timecheck.group_timecheck_light"):
                 product.in_special_offer_limit = False
@@ -37,7 +39,7 @@ class ProductTemplate(models.Model):
                 )
 
     @api.multi
-    def _get_is_new_arrival(self):
+    def _compute_is_new_arrival(self):
         for product in self:
             now = (datetime.datetime.now() + datetime.timedelta(days=-7)).strftime(
                 DEFAULT_SERVER_DATETIME_FORMAT
