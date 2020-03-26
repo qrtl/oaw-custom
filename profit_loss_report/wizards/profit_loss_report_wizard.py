@@ -626,18 +626,20 @@ class ProfitLossReportWizard(models.TransientModel):
 
     def _filter_records(self):
         filters = []
-        for filter in report_filters:
-            if self[filter]:
-                if type(self[filter]) == str:
-                    value = self[filter].strip()
+        for report_filter in report_filters:
+            if self[report_filter]:
+                if type(self[report_filter]) == str:
+                    value = self[report_filter].strip()
                     filters.append(
                         "(%s NOT ILIKE '%%%s%%' OR %s IS NULL)"
-                        % (filter, value, filter)
+                        % (report_filter, value, report_filter)
                     )
                 else:
-                    value = ",".join([str(id) for id in self[filter].ids])
+                    value = ",".join([str(id) for id in self[report_filter].ids])
                     filters.append(
-                        "({} NOT IN ({}) OR {} IS NULL)".format(filter, value, filter)
+                        "({} NOT IN ({}) OR {} IS NULL)".format(
+                            report_filter, value, report_filter
+                        )
                     )
         if filters:
             filter_sql = "DELETE FROM profit_loss_report WHERE %s" % (
