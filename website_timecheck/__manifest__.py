@@ -8,6 +8,7 @@
     "author": "Quartile Limited",
     "website": "https://www.quartile.co",
     "depends": [
+        "sale_view_adjust_oaw",
         "supplier_user_access",
         "product_listprice_list_view",
         "website_sale_adj",
