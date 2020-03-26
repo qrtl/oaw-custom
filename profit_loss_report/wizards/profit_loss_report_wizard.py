@@ -85,6 +85,7 @@ class ProfitLossReportWizard(models.TransientModel):
                 WHERE
                     sl.usage = 'customer' AND
                     sml.state = 'done' AND
+                    sq.quantity > 0 AND
                     sm.company_id = %s
                 ORDER BY
                     sq.lot_id,
@@ -107,6 +108,7 @@ class ProfitLossReportWizard(models.TransientModel):
                 WHERE
                     sl.usage = 'supplier' AND
                     sml.state = 'done' AND
+                    sq.quantity > 0 AND
                     sm.company_id = %s
                 ORDER BY
                     sq.lot_id,
@@ -286,6 +288,7 @@ class ProfitLossReportWizard(models.TransientModel):
                 WHERE
                     sl.usage = 'customer' AND
                     sml.state = 'done' AND
+                    sq.quantity > 0 AND
                     sm.company_id = %s
                 ORDER BY
                     sq.lot_id,
@@ -308,6 +311,7 @@ class ProfitLossReportWizard(models.TransientModel):
                 WHERE
                     sl.usage = 'supplier' AND
                     sml.state = 'done' AND
+                    sq.quantity > 0 AND
                     sm.company_id = %s
                 ORDER BY
                     sq.lot_id,
@@ -604,7 +608,7 @@ class ProfitLossReportWizard(models.TransientModel):
                 rec.state = "sale_done"
 
     def _get_utc_date(self, date_tz):
-        tz = pytz.timezone(self.env.user.tz) or pytz.utc
+        tz = self.env.user.tz and pytz.timezone(self.env.user.tz) or pytz.utc
         date_string = datetime.strftime(date_tz, DEFAULT_SERVER_DATE_FORMAT)
         date_local = tz.localize(fields.Datetime.from_string(date_string), is_dst=None)
         return date_local.astimezone(pytz.utc).strftime("%Y-%m-%d %H:%M:%S")
@@ -622,18 +626,20 @@ class ProfitLossReportWizard(models.TransientModel):
 
     def _filter_records(self):
         filters = []
-        for filter in report_filters:
-            if self[filter]:
-                if type(self[filter]) == str:
-                    value = self[filter].strip()
+        for report_filter in report_filters:
+            if self[report_filter]:
+                if type(self[report_filter]) == str:
+                    value = self[report_filter].strip()
                     filters.append(
                         "(%s NOT ILIKE '%%%s%%' OR %s IS NULL)"
-                        % (filter, value, filter)
+                        % (report_filter, value, report_filter)
                     )
                 else:
-                    value = ",".join([str(id) for id in self[filter].ids])
+                    value = ",".join([str(id) for id in self[report_filter].ids])
                     filters.append(
-                        "({} NOT IN ({}) OR {} IS NULL)".format(filter, value, filter)
+                        "({} NOT IN ({}) OR {} IS NULL)".format(
+                            report_filter, value, report_filter
+                        )
                     )
         if filters:
             filter_sql = "DELETE FROM profit_loss_report WHERE %s" % (

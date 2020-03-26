@@ -34,7 +34,7 @@ class ProfitLossReport(models.TransientModel):
     discount = fields.Float(
         string="Discount (%)",
         digits=dp.get_precision("Discount"),
-        compute="_get_discount",
+        compute="_compute_discount",
         readonly=True,
     )
     net_price = fields.Float(
@@ -162,7 +162,7 @@ class ProfitLossReport(models.TransientModel):
     )
 
     @api.multi
-    def _get_discount(self):
+    def _compute_discount(self):
         for rec in self:
             if not rec.list_price or not rec.net_price:
                 rec.discount = 0.0
