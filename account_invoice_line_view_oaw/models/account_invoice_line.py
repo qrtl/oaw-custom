@@ -11,69 +11,40 @@ class AccountInvoiceLine(models.Model):
     _inherit = "account.invoice.line"
 
     user_id = fields.Many2one(
-        "res.users",
-        related="invoice_id.user_id",
-        store=True,
-        readonly=True,
-        string="Salesperson",
+        "res.users", related="invoice_id.user_id", store=True, string="Salesperson",
     )
-    number = fields.Char(
-        related="invoice_id.number", store=True, readonly=True, string="Number"
-    )
-    state = fields.Selection(
-        related="invoice_id.state", store=True, readonly=True, string="Status"
-    )
+    number = fields.Char(related="invoice_id.number", store=True, string="Number")
+    state = fields.Selection(related="invoice_id.state", store=True, string="Status")
     date_invoice = fields.Date(
-        related="invoice_id.date_invoice",
-        store=True,
-        readonly=True,
-        string="Invoice Date",
+        related="invoice_id.date_invoice", store=True, string="Invoice Date",
     )
     ref = fields.Char(
-        related="invoice_id.partner_id.ref",
-        store=True,
-        readonly=True,
-        string="Partner Ref",
+        related="invoice_id.partner_id.ref", store=True, string="Partner Ref",
     )
     reference = fields.Char(
-        related="invoice_id.reference", readonly=True, string="Vendor Bill Reference"
+        related="invoice_id.reference", string="Vendor Bill Reference"
     )
-    date_due = fields.Date(
-        related="invoice_id.date_due", readonly=True, string="Due Date"
-    )
-    currency_id = fields.Many2one(
-        related="invoice_id.currency_id", readonly=True, string="Currency"
-    )
-    partner_ref = fields.Char(
-        "Supplier Reference", related="po_id.partner_ref", readonly=True
-    )
-    rate = fields.Float(compute="_compute_base_amt", readonly=True, string="Rate")
+    date_due = fields.Date(related="invoice_id.date_due", string="Due Date")
+    currency_id = fields.Many2one(related="invoice_id.currency_id", string="Currency")
+    partner_ref = fields.Char("Supplier Reference", related="po_id.partner_ref",)
+    rate = fields.Float(compute="_compute_base_amt", string="Rate", digits=(12, 6))
     base_amt = fields.Float(
         compute="_compute_base_amt",
         digits_compute=dp.get_precision("Account"),
-        readonly=True,
         string="Base Amount",
     )
     so_id = fields.Many2one(
-        "sale.order",
-        compute="_compute_so_po_id",
-        store=True,
-        readonly=True,
-        string="SO",
+        "sale.order", compute="_compute_so_po_id", store=True, string="SO",
     )
     po_id = fields.Many2one(
-        "purchase.order",
-        compute="_compute_so_po_id",
-        store=True,
-        readonly=True,
-        string="PO",
+        "purchase.order", compute="_compute_so_po_id", store=True, string="PO",
     )
     image_medium = fields.Binary(
-        "Image", related="product_id.product_tmpl_id.image_medium", readonly=True
+        "Image", related="product_id.product_tmpl_id.image_medium",
     )
     reviewed = fields.Boolean("Reviewed")
     payment_reference = fields.Char(
-        "Payment Reference", related="invoice_id.payment_ref", readonly=True, store=True
+        "Payment Reference", related="invoice_id.payment_ref", store=True
     )
     note = fields.Char("Note")
 
@@ -106,15 +77,17 @@ class AccountInvoiceLine(models.Model):
             # set rate 1.0 if the transaction currency is the same as the base currency
             if inv_ln.currency_id == inv_ln.company_id.currency_id:
                 rate = 1.0
+            elif inv_ln.invoice_id.paid_date_currency_rate:
+                rate = inv_ln.invoice_id.paid_date_currency_rate
             else:
                 invoice_date = inv_ln.date_invoice or inv_ln.env.context.get(
                     "date", datetime.today().strftime("%Y-%m-%d")
                 )
-                rate = self.env["res.currency"]._get_conversion_rate(
+                rate = 1 / self.env["res.currency"]._get_conversion_rate(
                     inv_ln.currency_id,
                     inv_ln.company_id.currency_id,
                     inv_ln.company_id,
                     invoice_date,
                 )
-            inv_ln.rate = 1 / rate
-            inv_ln.base_amt = curr_amt * rate
+            inv_ln.rate = rate
+            inv_ln.base_amt = curr_amt * (1 / rate)

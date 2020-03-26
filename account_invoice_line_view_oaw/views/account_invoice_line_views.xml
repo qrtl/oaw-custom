@@ -49,7 +49,7 @@
                 <field name="discount" readonly="1" />
                 <field name="invoice_line_tax_ids" readonly="1" invisible='1' />
                 <field name="price_subtotal" readonly="1" />
-                <field name="currency_id" />
+                <field name="currency_id" invisible="1" />
                 <field name="rate" />
                 <field name="base_amt" />
                 <field name="state" />
