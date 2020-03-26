@@ -2,25 +2,24 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from odoo import api, fields, models
-from odoo.addons import decimal_precision as dp
 
 
 class AccountInvoice(models.Model):
     _inherit = "account.invoice"
 
     paid_date = fields.Date(
-        store=True, compute="get_paid_date_info", string="Paid Date"
+        store=True, compute="_compute_paid_date_info", string="Paid Date"
     )
     paid_date_currency_rate = fields.Float(
         store=True,
-        compute="get_paid_date_info",
+        compute="_compute_paid_date_info",
         string="Paid Date Currency Rate",
         digits=(12, 6),
     )
 
     @api.multi
     @api.depends("state")
-    def get_paid_date_info(self):
+    def _compute_paid_date_info(self):
         for account_invoice in self:
             if account_invoice.state == "paid":
                 paid_date = False

@@ -8,7 +8,12 @@
     "author": "Quartile Limited",
     "website": "http://www.quartile.co",
     "license": "AGPL-3",
-    "depends": ["account", "sale_order_line_quant", "account_invoice_line_quant", "account_invoice_paid_date_currency"],
+    "depends": [
+        "account",
+        "sale_order_line_quant",
+        "account_invoice_line_quant",
+        "account_invoice_paid_date_currency",
+    ],
     "data": ["views/account_invoice_line_views.xml"],
     "application": False,
 }
