@@ -79,6 +79,10 @@
             <xpath expr="//page[@name='other_information']" position="attributes">
                 <attribute name="invisible">True</attribute>
             </xpath>
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="team_id" />
+                <field name="require_payment" />
+            </xpath>
         </field>
     </record>
     <record id="sale_management.sale_order_form_quote" model="ir.ui.view">

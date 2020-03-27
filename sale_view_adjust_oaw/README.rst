@@ -19,6 +19,11 @@ Sales View Adjust OAW
 
 |badge1| |badge2| |badge3| 
 
+This module does the following:
+
+* Adjusts the presentation of sales order views.
+* Add action to update the line sequence of the order lines.
+* Add customize fields to sales order.
 
 **Table of contents**
 
