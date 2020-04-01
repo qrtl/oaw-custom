@@ -1,5 +1,5 @@
 # Copyright 2019 Quartile Limited
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 
 from odoo import api, models
 
@@ -35,7 +35,7 @@ class SupplierStock(models.Model):
                     }
                 )
         if "partner_loc_id" in vals or "product_id" in vals or "quantity" in vals:
-            product.product_tmpl_id.sudo()._get_stock_location()
+            product.product_tmpl_id.sudo()._compute_stock_location_info()
         return res
 
     @api.multi
@@ -45,7 +45,7 @@ class SupplierStock(models.Model):
             self._update_prod_tmpl_qty()
         if "partner_loc_id" in vals or "product_id" in vals or "quantity" in vals:
             for ss in self:
-                ss.product_id.product_tmpl_id.sudo()._get_stock_location()
+                ss.product_id.product_tmpl_id.sudo()._compute_stock_location_info()
         return res
 
     @api.multi
@@ -69,5 +69,5 @@ class SupplierStock(models.Model):
                 )
         res = super(SupplierStock, self).unlink()
         for product in products:
-            product.sudo()._get_stock_location()
+            product.sudo()._compute_stock_location_info()
         return res

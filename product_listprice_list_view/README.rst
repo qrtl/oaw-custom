@@ -10,13 +10,17 @@ Product List Price Update List View
 .. |badge1| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
     :alt: Beta
-.. |badge2| image:: https://img.shields.io/badge/github-qrtl%2Fawo--custom-lightgray.png?logo=github
+.. |badge2| image:: https://img.shields.io/badge/licence-LGPL--3-blue.png
+    :target: http://www.gnu.org/licenses/lgpl-3.0-standalone.html
+    :alt: License: LGPL-3
+.. |badge3| image:: https://img.shields.io/badge/github-qrtl%2Fawo--custom-lightgray.png?logo=github
     :target: https://github.com/qrtl/awo-custom/tree/12.0/product_listprice_list_view
     :alt: qrtl/awo-custom
 
-|badge1| |badge2| 
+|badge1| |badge2| |badge3| 
 
-Adds a menu item 'Product List Price Update' to facilitate list price update
+This modules does the following:
+* Adds a menu item 'Product List Price Update' to facilitate list price update
 
 **Table of contents**
 

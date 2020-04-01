@@ -1,5 +1,5 @@
 # Copyright 2019-2020 Quartile Limited
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 
 import odoo.addons.decimal_precision as dp
 from odoo import api, fields, models
@@ -15,7 +15,10 @@ class StockQuant(models.Model):
         store=True,
     )
     actual_qty = fields.Float(
-        compute="_get_actual_qty", string="Actual Quantity", readonly=True, store=True
+        compute="_compute_actual_qty",
+        string="Actual Quantity",
+        readonly=True,
+        store=True,
     )
     currency_id = fields.Many2one(
         related="lot_id.currency_id",
@@ -55,7 +58,7 @@ class StockQuant(models.Model):
 
     @api.multi
     @api.depends("reserved_quantity", "quantity")
-    def _get_actual_qty(self):
+    def _compute_actual_qty(self):
         for quant in self:
             quant.actual_qty = quant.quantity - quant.reserved_quantity
 
