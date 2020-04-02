@@ -1,5 +1,5 @@
 # Copyright 2019 chrono123 & Quartile Limited
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 
 from odoo import api, fields, models
 
@@ -21,7 +21,7 @@ class ProductTemplate(models.Model):
     list_price_change_date = fields.Datetime(
         string="Retail HKD Change Date",
         store=True,
-        compute="update_list_price_change_date",
+        compute="_compute_list_price_change_date",
     )
     # Trigger: stock_quant.create(), supplier_stock.create()
     new_entry_date = fields.Datetime(string="New Entry")
@@ -43,7 +43,7 @@ class ProductTemplate(models.Model):
 
     @api.multi
     @api.depends("list_price")
-    def update_list_price_change_date(self):
+    def _compute_list_price_change_date(self):
         for pt in self:
             pt.list_price_change_date = fields.Datetime.now()
 

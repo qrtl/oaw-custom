@@ -48,4 +48,7 @@ class StockMove(models.Model):
     def write(self, vals):
         res = super(StockMove, self).write(vals)
         self._update_prod_tmpl_qty_local_stock()
+        self.mapped("product_id").mapped(
+            "product_tmpl_id"
+        ).sudo()._compute_stock_location_info()
         return res

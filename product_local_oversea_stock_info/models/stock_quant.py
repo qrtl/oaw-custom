@@ -1,5 +1,5 @@
 # Copyright 2019 Quartile Limited
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 
 from odoo import api, fields, models
 
@@ -27,10 +27,14 @@ class StockQuant(models.Model):
             rsvd_qty = 0.0
             for prod in prod_tmpl.product_variant_ids:
                 quants = self.search(
-                    [("product_id", "=", prod.id), ("usage", "=", "internal")]
+                    [
+                        ("product_id", "=", prod.id),
+                        ("sale_order_id", "!=", False),
+                        ("usage", "=", "internal"),
+                    ]
                 )
-                for q in quants:
-                    rsvd_qty += q.reserved_quantity
+                if quants:
+                    rsvd_qty += sum(quants.mapped("quantity"))
             if prod_tmpl.qty_reserved != int(rsvd_qty):
                 prod_tmpl.qty_reserved = int(rsvd_qty)
         return
@@ -39,17 +43,22 @@ class StockQuant(models.Model):
     def write(self, vals):
         res = super(StockQuant, self).write(vals)
         self._update_prod_tmpl_reserved_qty()
-        if "location_id" in vals or "product_id" in vals or "usage" in vals:
+        if (
+            "location_id" in vals
+            or "product_id" in vals
+            or "usage" in vals
+            or "quantity" in vals
+        ):
             for sq in self:
-                sq.product_id.product_tmpl_id.sudo()._get_stock_location()
+                sq.product_id.product_tmpl_id.sudo()._compute_stock_location_info()
         return res
 
     @api.model
     def create(self, vals):
         res = super(StockQuant, self).create(vals)
-        self._update_product_last_in_date()
-        if "location_id" in vals or "product_id" in vals or "usage" in vals:
-            res.product_id.product_tmpl_id.sudo()._get_stock_location()
+        if res.usage == "internal":
+            res._update_product_last_in_date()
+        res.product_id.product_tmpl_id.sudo()._compute_stock_location_info()
         return res
 
     @api.multi
@@ -59,5 +68,5 @@ class StockQuant(models.Model):
             products.append(sq.product_id.product_tmpl_id)
         res = super(StockQuant, self).unlink()
         for product in products:
-            product.sudo()._get_stock_location()
+            product.sudo()._compute_stock_location_info()
         return res

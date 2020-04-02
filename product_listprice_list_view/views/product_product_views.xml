@@ -122,6 +122,7 @@
                 />
                 <field name="qty_local_stock" widget="integer" string="HK S Qty" />
                 <field name="qty_overseas" string="OS Qty" />
+                <field name="qty_total" string="Total Qty" widget="integer" />
                 <field name="last_in_date" string="Qnts Inc Day" widget="date" />
                 <field
                     name="partner_stock_last_modified"
