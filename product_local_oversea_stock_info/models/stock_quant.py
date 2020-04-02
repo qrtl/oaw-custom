@@ -33,8 +33,8 @@ class StockQuant(models.Model):
                         ("usage", "=", "internal"),
                     ]
                 )
-                for q in quants:
-                    rsvd_qty += q.quantity
+                if quants:
+                    rsvd_qty += sum(quants.mapped("quantity"))
             if prod_tmpl.qty_reserved != int(rsvd_qty):
                 prod_tmpl.qty_reserved = int(rsvd_qty)
         return
