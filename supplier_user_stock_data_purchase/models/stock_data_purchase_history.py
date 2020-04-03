@@ -1,7 +1,14 @@
 # Copyright 2020 Quartile Limited
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 
 from odoo import api, fields, models
+
+local_supplier_location_param = (
+    "supplier_user_stock_data_purchase.stock_data_local_supplier_location_id"
+)
+oversea_supplier_location_param = (
+    "supplier_user_stock_data_purchase.stock_data_oversea_supplier_location_id"
+)
 
 
 class StockDataPurchaseHistory(models.Model):
@@ -39,16 +46,20 @@ class StockDataPurchaseHistory(models.Model):
                 .search(
                     [
                         ("categ_id", "in", history.product_category_ids.ids),
+                        ("product_tmpl_id.qty_total", ">", 0),
                         ("type", "=", "product"),
                     ]
                 )
             )
-            stock_data_supplier_location_id = (
+            stock_data_local_supplier_location_id = (
                 self.env["ir.config_parameter"]
                 .sudo()
-                .get_param(
-                    "supplier_user_stock_data_purchase.stock_data_supplier_location_id"
-                )
+                .get_param(local_supplier_location_param)
+            )
+            stock_data_oversea_supplier_location_id = (
+                self.env["ir.config_parameter"]
+                .sudo()
+                .get_param(oversea_supplier_location_param)
             )
             for product in products:
                 supplier_stock_vals = {
@@ -56,11 +67,16 @@ class StockDataPurchaseHistory(models.Model):
                     "partner_id": history.supplier_id.id,
                     "product_id": product.id,
                     "prod_cat_selection": product.categ_id.id,
-                    "partner_loc_id": int(stock_data_supplier_location_id),
+                    "partner_loc_id": int(stock_data_local_supplier_location_id)
+                    if product.product_tmpl_id.qty_local_stock
+                    else int(stock_data_oversea_supplier_location_id),
                     "quantity": 0,
+                    "website_quantity": str(int(product.product_tmpl_id.qty_total))
+                    if product.product_tmpl_id.qty_total < 3
+                    else "3",
                     "currency_id": self.env.user.company_id.currency_id.id,
-                    "retail_in_currency": product.list_price,
-                    "price_unit": product.list_price,
+                    "retail_in_currency": product.product_tmpl_id.net_price,
+                    "price_unit": product.product_tmpl_id.net_price,
                 }
                 self.env["supplier.stock"].sudo().create(supplier_stock_vals)
             history.update({"data_generation_pending": False})
@@ -72,15 +88,34 @@ class StockDataPurchaseHistory(models.Model):
         updated_products = self.env["product.template"].search(
             [("update_partner_stock", "=", True)]
         )
+        stock_data_local_supplier_location_id = (
+            self.env["ir.config_parameter"]
+            .sudo()
+            .get_param(local_supplier_location_param)
+        )
+        stock_data_oversea_supplier_location_id = (
+            self.env["ir.config_parameter"]
+            .sudo()
+            .get_param(oversea_supplier_location_param)
+        )
         for product in updated_products:
-            self.env["supplier.stock"].search(
+            supplier_stock_records = self.env["supplier.stock"].search(
                 [
                     ("readonly_record", "=", True),
                     ("product_id.product_tmpl_id", "=", product.id),
                 ]
-            ).update(
-                {
-                    "retail_in_currency": product.list_price,
-                    "price_unit": product.list_price,
-                }
             )
+            if product.qty_total:
+                supplier_stock_records.update(
+                    {
+                        "partner_loc_id": int(stock_data_local_supplier_location_id)
+                        if product.qty_local_stock
+                        else int(stock_data_oversea_supplier_location_id),
+                        "website_quantity": str(int(product.qty_total))
+                        if product.qty_total < 3
+                        else "3",
+                    }
+                )
+            else:
+                supplier_stock_records.unlink()
+        updated_products.update({"update_partner_stock": False})

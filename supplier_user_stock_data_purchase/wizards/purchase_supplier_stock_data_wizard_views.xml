@@ -51,6 +51,6 @@
         name="Purchase Brands"
         action="action_purchase_supplier_stock_data_wizard"
         parent="menu_supplier_stock_offer"
-        sequence="3"
+        sequence="2"
     />
 </odoo>

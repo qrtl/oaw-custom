@@ -13,9 +13,13 @@
                 <div class="content-group">
                     <field name="supplier_stock_data_product_id" />
                 </div>
-                <label for="stock_data_supplier_location_id" />
+                <label for="stock_data_local_supplier_location_id" />
                 <div class="content-group">
-                    <field name="stock_data_supplier_location_id" />
+                    <field name="stock_data_local_supplier_location_id" />
+                </div>
+                <label for="stock_data_oversea_supplier_location_id" />
+                <div class="content-group">
+                    <field name="stock_data_oversea_supplier_location_id" />
                 </div>
             </label>
         </field>
