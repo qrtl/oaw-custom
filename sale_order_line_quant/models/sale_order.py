@@ -1,5 +1,5 @@
 # Copyright 2019 Quartile Limited
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
@@ -10,7 +10,7 @@ class SaleOrder(models.Model):
 
     is_mto = fields.Boolean(string="Make to Order")
     # For Search
-    lot_id = fields.Many2one(related="order_line.lot_id", string="Lot")
+    lot_id = fields.Many2one(related="order_line.lot_id", string="Case No.")
 
     @api.multi
     def action_confirm(self):

@@ -1,1 +1,2 @@
-Modification on sales order line by adding quant and serial number selection.
+This modules does the following:
+* Add quant information to sales order line.
