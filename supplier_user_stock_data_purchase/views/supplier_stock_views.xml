@@ -3,6 +3,7 @@
     <record id="view_stock_data_tree" model="ir.ui.view">
         <field name="name">view.stock.data.tree</field>
         <field name="model">supplier.stock</field>
+        <field eval="100" name="priority" />
         <field name="arch" type="xml">
             <tree string="My Purchased Stock Data" delete="0" create="0" editable="top">
                 <field
