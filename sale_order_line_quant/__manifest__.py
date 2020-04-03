@@ -3,7 +3,7 @@
 {
     "name": "Quant/Serial Number on Sales",
     "category": "Sale",
-    "version": "12.0.1.0.0",
+    "version": "12.0.1.0.1",
     "license": "LGPL-3",
     "author": "Quartile Limited",
     "website": "https://www.quartile.co",
