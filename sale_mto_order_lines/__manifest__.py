@@ -7,11 +7,15 @@
     "license": "AGPL-3",
     "author": "Quartile Limited, Timeware Ltd",
     "website": "https://www.quartile.co",
+<<<<<<< HEAD
     "depends": [
         "sale_order_line_quant",
         "supplier_user_access",
         "sale_view_adjust_oaw",
     ],
+=======
+    "depends": ["sale_order_line_quant", "supplier_user_access", "sale_view_adjust_oaw"],
+>>>>>>> [TASK] Supplier's Order Overview and Quotation List View
     "summary": """ MTO Order List views for Internal and Supplier """,
     "data": ["views/sale_order_views.xml"],
     "installable": True,

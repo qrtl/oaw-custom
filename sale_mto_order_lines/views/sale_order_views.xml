@@ -1,18 +1,34 @@
 <odoo>
 
     <!-- Supplier Access Quotation tree view -->
+<<<<<<< HEAD
+=======
+
+>>>>>>> [TASK] Supplier's Order Overview and Quotation List View
     <record id="view_quotation_tree" model="ir.ui.view">
         <field name="name">view.quotation.tree</field>
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_quotation_tree" />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='name']" position="after">
+<<<<<<< HEAD
                 <field name="is_mto" />
                 <field name="sub_consigned" />
                 <field name="prepare" />
             </xpath>
             <xpath expr="//field[@name='expected_date']" position="after">
                 <field name="pricelist_id" />
+=======
+                <field name="is_mto"/>
+                <field name="sub_consigned"/>
+                <field name="prepare"/>
+
+            </xpath>
+            <xpath expr="//field[@name='expected_date']" position="after">
+
+                <field name="pricelist_id"/>
+
+>>>>>>> [TASK] Supplier's Order Overview and Quotation List View
             </xpath>
         </field>
     </record>
@@ -25,6 +41,7 @@
         <field name="view_type">form</field>
         <field name="view_id" ref="view_quotation_tree" />
         <field name="view_mode">tree,form,calendar,graph</field>
+<<<<<<< HEAD
         <field
             name="search_view_id"
             ref="supplier_user_access.view_sales_order_filter_supplier"
@@ -39,6 +56,12 @@
         action="action_sales_orders_supplier"
         sequence="15"
     />
+=======
+        <field name="search_view_id" ref="supplier_user_access.view_sales_order_filter_supplier" />
+        <field name="domain">[('supplier_user_ids', 'in', [uid])]</field>
+    </record>
+    <menuitem id="menu_sale_order_supplier" name="Quotations" groups="supplier_user_access.group_supplier_fm" parent="supplier_user_access.menu_sales_supplier_external" action="action_sales_orders_supplier" sequence="15" />
+>>>>>>> [TASK] Supplier's Order Overview and Quotation List View
 
     <!-- Supplier Access order line tree view -->
     <record id="mto_tree_external" model="ir.ui.view">
@@ -51,13 +74,9 @@
                 <field name="is_mto" readonly="1" />
                 <field name="product_id" readonly="1" />
                 <field name="prod_code" readonly="1" />
-                <field
-                    name="image_medium"
-                    string="Image"
-                    widget="image"
-                    options='{"size": [64, 64]}'
+                <field name="image_medium" string="Image" widget="image" options='{"size": [64, 64]}'
                 />
-                <field name="order_price_list" readonly="1" />
+<field name="order_price_list" readonly="1" />
                 <field name="product_uom_qty" string="Qty" readonly="1" />
                 <field name="order_date" readonly="1" />
                 <field name="supplier_note" />
@@ -71,40 +90,16 @@
         <field name="model">sale.order.line</field>
         <field name="arch" type="xml">
             <search string="Search Sales Order">
-                <filter
-                    name="to_invoice"
-                    string="To Invoice"
-                    domain="[('invoiced','&lt;&gt;', 1),('state','=','done')]"
-                    help="Sales Order Lines ready to be invoiced"
-                />
+                <filter name="to_invoice" string="To Invoice" domain="[('invoiced','&lt;&gt;', 1),('state','=','done')]" help="Sales Order Lines ready to be invoiced" />
                 <separator />
-                <filter
-                    string="Confirmed"
-                    domain="[('state', 'in', ['confirmed', 'done'])]"
-                    name="confirmed"
-                />
+                <filter string="Confirmed" domain="[('state', 'in', ['confirmed', 'done'])]" name="confirmed" />
                 <separator />
                 <field name="order_id" />
                 <field name="product_id" />
                 <group expand="0" string="Group By">
-                    <filter
-                        name="by_product"
-                        string="Product"
-                        domain="[]"
-                        context="{'group_by':'product_id'}"
-                    />
-                    <filter
-                        name="by_quot_number"
-                        string="Order"
-                        domain="[]"
-                        context="{'group_by':'order_id'}"
-                    />
-                    <filter
-                        name="by_status"
-                        string="Status"
-                        domain="[]"
-                        context="{'group_by':'state'}"
-                    />
+                    <filter name="by_product" string="Product" domain="[]" context="{'group_by':'product_id'}" />
+                    <filter name="by_quot_number" string="Order" domain="[]" context="{'group_by':'order_id'}" />
+                    <filter name="by_status" string="Status" domain="[]" context="{'group_by':'state'}" />
                 </group>
             </search>
         </field>
@@ -116,18 +111,10 @@
         <field name="view_mode">tree</field>
         <field name="view_id" ref="mto_tree_external" />
         <field name="search_view_id" ref="mto_tree_external_search" />
-        <field
-            name="domain"
-        >[('is_mto','=',True),('order_id.is_shipment','=',False),('order_id.state','in',('draft','sent')), ('order_id.supplier_user_ids', 'not in', [uid])]</field>
+        <field name="domain">[('is_mto','=',True),('order_id.is_shipment','=',False),('order_id.state','in',('draft','sent')), ('order_id.supplier_user_ids', 'not in', [uid])]</field>
         <field name="limit">80</field>
     </record>
-    <menuitem
-        id="menu_mto_tree_external"
-        parent="supplier_user_access.menu_sales_supplier_external"
-        action="action_mto_tree_external"
-        sequence="2"
-        groups="supplier_user_access.group_supplier"
-    />
+    <menuitem id="menu_mto_tree_external" parent="supplier_user_access.menu_sales_supplier_external" action="action_mto_tree_external" sequence="2" groups="supplier_user_access.group_supplier" />
     <!-- Internal tree view -->
     <record id="mto_tree_internal" model="ir.ui.view">
         <field name="name">sale.order.line.tree.z3</field>
@@ -139,13 +126,9 @@
                 <field name="is_mto" readonly="1" />
                 <field name="prod_code" readonly="1" />
                 <field name="prod_ref" readonly="1" />
-                <field
-                    name="image_medium"
-                    string="Image"
-                    widget="image"
-                    options='{"size": [64, 64]}'
+                <field name="image_medium" string="Image" widget="image" options='{"size": [64, 64]}'
                 />
-                <field name="order_partner_id" readonly="1" />
+<field name="order_partner_id" readonly="1" />
                 <field name="order_price_list" readonly="1" />
                 <field name="product_uom_qty" string="Qty" readonly="1" />
                 <field name="price_unit" string="Retail" readonly="1" />
@@ -166,11 +149,7 @@
         <field name="inherit_id" ref="sale_order_line_quant.view_order_form" />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='partner_id']" position="after">
-                <field
-                    name="supplier_id"
-                    groups="sales_team.group_sale_manager"
-                    options="{'no_quick_create':True,'no_create_edit':True}"
-                />
+                <field name="supplier_id" groups="sales_team.group_sale_manager" options="{'no_quick_create':True,'no_create_edit':True}" />
             </xpath>
             <xpath expr="//field[@name='is_mto']" position="after">
                 <field name="is_shipment" groups="sales_team.group_sale_manager" />
@@ -183,49 +162,19 @@
         <field name="model">sale.order.line</field>
         <field name="arch" type="xml">
             <search string="Search Sales Order">
-                <filter
-                    string="To Invoice"
-                    name="to_invoice"
-                    domain="[('qty_to_invoice','!=', 0)]"
-                    help="Sales Order Lines ready to be invoiced"
-                />
+                <filter string="To Invoice" name="to_invoice" domain="[('qty_to_invoice','!=', 0)]" help="Sales Order Lines ready to be invoiced" />
                 <separator />
-                <filter
-                    string="My Sales Order Lines"
-                    name="my_sales_order_lines"
-                    domain="[('salesman_id','=',uid)]"
-                    help="Sales Order Lines related to a Sales Order of mine"
-                />
+                <filter string="My Sales Order Lines" name="my_sales_order_lines" domain="[('salesman_id','=',uid)]" help="Sales Order Lines related to a Sales Order of mine" />
                 <field name="order_id" />
                 <field string="Supplier" name="supplier_code" />
                 <field name="order_partner_id" operator="child_of" />
                 <field name="product_id" />
                 <field name="salesman_id" />
                 <group expand="0" string="Group By">
-                    <filter
-                        string="Product"
-                        name="product"
-                        domain="[]"
-                        context="{'group_by':'product_id'}"
-                    />
-                    <filter
-                        string="Supplier"
-                        name="by_supplier"
-                        domain="[]"
-                        context="{'group_by':'supplier_code'}"
-                    />
-                    <filter
-                        string="Order"
-                        name="order"
-                        domain="[]"
-                        context="{'group_by':'order_id'}"
-                    />
-                    <filter
-                        string="Salesperson"
-                        name="salesperson"
-                        domain="[]"
-                        context="{'group_by':'salesman_id'}"
-                    />
+                    <filter string="Product" name="product" domain="[]" context="{'group_by':'product_id'}" />
+                    <filter string="Supplier" name="by_supplier" domain="[]" context="{'group_by':'supplier_code'}" />
+                    <filter string="Order" name="order" domain="[]" context="{'group_by':'order_id'}" />
+                    <filter string="Salesperson" name="salesperson" domain="[]" context="{'group_by':'salesman_id'}" />
                 </group>
             </search>
         </field>
@@ -236,17 +185,9 @@
         <field name="res_model">sale.order.line</field>
         <field name="view_mode">tree</field>
         <field name="view_id" ref="mto_tree_internal" />
-        <field
-            name="domain"
-        >[('is_mto','=',True),('order_id.is_shipment','=',False),('order_id.state','in',('draft','sent'))]</field>
+        <field name="domain">[('is_mto','=',True),('order_id.is_shipment','=',False),('order_id.state','in',('draft','sent'))]</field>
         <field name="search_view_id" ref="mto_tree_internal_search" />
         <field name="limit">80</field>
     </record>
-    <menuitem
-        id="menu_mto_tree_internal"
-        parent="sale.sale_order_menu"
-        action="action_mto_tree_internal"
-        sequence="2"
-        groups="sales_team.group_sale_manager"
-    />
+    <menuitem id="menu_mto_tree_internal" parent="sale.sale_order_menu" action="action_mto_tree_internal" sequence="2" groups="sales_team.group_sale_manager" />
 </odoo>
