@@ -8,4 +8,6 @@ class StockQuant(models.Model):
     _inherit = "stock.quant"
 
     strap_product_id = fields.Many2one(string="Strap")
-    strap_product_image = fields.Binary(related="strap_product_id.image_medium", string="Strap Image")
+    strap_product_image = fields.Binary(
+        related="strap_product_id.image_medium", string="Strap Image"
+    )

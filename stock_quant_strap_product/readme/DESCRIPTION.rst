@@ -1,2 +1,2 @@
 This module does the following:
-* Add strap product and image to stock quant model. 
+* Add strap product and image to stock quant model.
