@@ -1,5 +1,5 @@
 # Copyright 2020 Quartile Limited
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
 from odoo import api, fields, models
 
@@ -10,8 +10,11 @@ class ResConfigSettings(models.TransientModel):
     supplier_stock_data_product_id = fields.Many2one(
         "product.product", "Supplier Purchase Stock Data Product"
     )
-    stock_data_supplier_location_id = fields.Many2one(
-        "supplier.location", "Supplier Location for Stock Data"
+    stock_data_local_supplier_location_id = fields.Many2one(
+        "supplier.location", "Local Supplier Location for Stock Data"
+    )
+    stock_data_oversea_supplier_location_id = fields.Many2one(
+        "supplier.location", "Oversea Supplier Location for Stock Data"
     )
 
     @api.model
@@ -26,12 +29,20 @@ class ResConfigSettings(models.TransientModel):
                 )
             )
         )
+        local_supplier_location = (
+            "supplier_user_stock_data_purchase.stock_data_local_supplier_location_id"
+        )
         res.update(
-            stock_data_supplier_location_id=int(
-                get_param(
-                    "supplier_user_stock_data_purchase.stock_data_supplier_location_id",
-                    default=False,
-                )
+            stock_data_local_supplier_location_id=int(
+                get_param(local_supplier_location, default=False,)
+            )
+        )
+        oversea_supplier_location = (
+            "supplier_user_stock_data_purchase.stock_data_oversea_supplier_location_id"
+        )
+        res.update(
+            stock_data_oversea_supplier_location_id=int(
+                get_param(oversea_supplier_location, default=False,)
             )
         )
         return res
@@ -44,6 +55,10 @@ class ResConfigSettings(models.TransientModel):
             self.supplier_stock_data_product_id.id,
         )
         set_param(
-            "supplier_user_stock_data_purchase.stock_data_supplier_location_id",
-            self.stock_data_supplier_location_id.id,
+            "supplier_user_stock_data_purchase.stock_data_local_supplier_location_id",
+            self.stock_data_local_supplier_location_id.id,
+        )
+        set_param(
+            "supplier_user_stock_data_purchase.stock_data_oversea_supplier_location_id",
+            self.stock_data_oversea_supplier_location_id.id,
         )
