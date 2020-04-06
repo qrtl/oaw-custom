@@ -10,14 +10,18 @@ Quant/Serial Number on Purchase
 .. |badge1| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
     :alt: Beta
-.. |badge2| image:: https://img.shields.io/badge/github-qrtl%2Fawo--custom-lightgray.png?logo=github
-    :target: https://github.com/qrtl/awo-custom/tree/12.0/purchase_order_line_quant
-    :alt: qrtl/awo-custom
+.. |badge2| image:: https://img.shields.io/badge/licence-LGPL--3-blue.png
+    :target: http://www.gnu.org/licenses/lgpl-3.0-standalone.html
+    :alt: License: LGPL-3
+.. |badge3| image:: https://img.shields.io/badge/github-qrtl%2Fawo--custom-lightgray.png?logo=github
+    :target: https://github.com/qrtl/oaw-custom/tree/12.0/purchase_order_line_quant
+    :alt: qrtl/oaw-custom
 
-|badge1| |badge2| 
+|badge1| |badge2| |badge3| 
 
-- Add Quant to purchase order line.
-- Overwrite _run_buy logic to create purhcase order based on supplier and purchase currency.
+This module does the following:
+* Add quant information to purchase order line.
+* Overwrite _run_buy logic to create purhcase order based on supplier and purchase currency.
 
 **Table of contents**
 
@@ -27,10 +31,10 @@ Quant/Serial Number on Purchase
 Bug Tracker
 ===========
 
-Bugs are tracked on `GitHub Issues <https://github.com/qrtl/awo-custom/issues>`_.
+Bugs are tracked on `GitHub Issues <https://github.com/qrtl/oaw-custom/issues>`_.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us smashing it by providing a detailed and welcomed
-`feedback <https://github.com/qrtl/awo-custom/issues/new?body=module:%20purchase_order_line_quant%0Aversion:%2012.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
+`feedback <https://github.com/qrtl/oaw-custom/issues/new?body=module:%20purchase_order_line_quant%0Aversion:%2012.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
 
 Do not contact contributors directly about support or help with technical issues.
 
@@ -45,6 +49,6 @@ Authors
 Maintainers
 ~~~~~~~~~~~
 
-This module is part of the `qrtl/awo-custom <https://github.com/qrtl/awo-custom/tree/12.0/purchase_order_line_quant>`_ project on GitHub.
+This module is part of the `qrtl/oaw-custom <https://github.com/qrtl/oaw-custom/tree/12.0/purchase_order_line_quant>`_ project on GitHub.
 
 You are welcome to contribute.
