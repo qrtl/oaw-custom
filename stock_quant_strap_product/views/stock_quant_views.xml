@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="stock_view_adjust_oaw.view_stock_quant_tree" />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='image_medium']" position="after">
-                <field name="strap_product_id" domain="[('name','ilike', 'strap')]" />
+                <field name="strap_product_id" domain="[('is_strap', '=', True)]" />
                 <field
                     name="strap_product_image"
                     widget="image"
