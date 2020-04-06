@@ -19,7 +19,7 @@ Quant/Serial Number on Purchase
 
 |badge1| |badge2| |badge3| 
 
-This modules does the following:
+This module does the following:
 * Add quant information to purchase order line.
 * Overwrite _run_buy logic to create purhcase order based on supplier and purchase currency.
 

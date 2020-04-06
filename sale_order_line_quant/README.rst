@@ -19,7 +19,7 @@ Quant/Serial Number on Sales
 
 |badge1| |badge2| |badge3| 
 
-This modules does the following:
+This module does the following:
 * Add quant information to sales order line.
 
 **Table of contents**
