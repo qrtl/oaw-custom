@@ -1,4 +1,4 @@
-# Copyright 2020 Quartile Limted
+# Copyright 2020 Quartile Limited
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 {
     "name": "Stock Quant Strap Product",
