@@ -3,12 +3,8 @@
 
 from odoo import api, fields, models
 
-local_supplier_location_param = (
-    "supplier_user_stock_data_purchase.stock_data_local_supplier_location_id"
-)
-oversea_supplier_location_param = (
-    "supplier_user_stock_data_purchase.stock_data_oversea_supplier_location_id"
-)
+local_supplier_location_param = "supplier_user_stock_data_purchase.local_loc_id"
+oversea_supplier_location_param = "supplier_user_stock_data_purchase.oversea_loc_id"
 
 
 class StockDataPurchaseHistory(models.Model):
@@ -51,15 +47,15 @@ class StockDataPurchaseHistory(models.Model):
                     ]
                 )
             )
-            stock_data_local_supplier_location_id = (
+            local_loc_id = (
                 self.env["ir.config_parameter"]
                 .sudo()
-                .get_param(local_supplier_location_param)
+                .get_param("supplier_user_stock_data_purchase.local_loc_id")
             )
-            stock_data_oversea_supplier_location_id = (
+            oversea_loc_id = (
                 self.env["ir.config_parameter"]
                 .sudo()
-                .get_param(oversea_supplier_location_param)
+                .get_param("supplier_user_stock_data_purchase.oversea_loc_id")
             )
             for product in products:
                 supplier_stock_vals = {
@@ -67,9 +63,9 @@ class StockDataPurchaseHistory(models.Model):
                     "partner_id": history.supplier_id.id,
                     "product_id": product.id,
                     "prod_cat_selection": product.categ_id.id,
-                    "partner_loc_id": int(stock_data_local_supplier_location_id)
+                    "partner_loc_id": int(local_loc_id)
                     if product.product_tmpl_id.qty_local_stock
-                    else int(stock_data_oversea_supplier_location_id),
+                    else int(oversea_loc_id),
                     "quantity": 0,
                     "website_quantity": str(int(product.product_tmpl_id.qty_total))
                     if product.product_tmpl_id.qty_total < 3
@@ -88,15 +84,15 @@ class StockDataPurchaseHistory(models.Model):
         updated_products = self.env["product.template"].search(
             [("update_partner_stock", "=", True)]
         )
-        stock_data_local_supplier_location_id = (
+        local_loc_id = (
             self.env["ir.config_parameter"]
             .sudo()
-            .get_param(local_supplier_location_param)
+            .get_param("supplier_user_stock_data_purchase.local_loc_id")
         )
-        stock_data_oversea_supplier_location_id = (
+        oversea_loc_id = (
             self.env["ir.config_parameter"]
             .sudo()
-            .get_param(oversea_supplier_location_param)
+            .get_param("supplier_user_stock_data_purchase.oversea_loc_id")
         )
         for product in updated_products:
             supplier_stock_records = self.env["supplier.stock"].search(
@@ -108,9 +104,9 @@ class StockDataPurchaseHistory(models.Model):
             if product.qty_total:
                 supplier_stock_records.update(
                     {
-                        "partner_loc_id": int(stock_data_local_supplier_location_id)
+                        "partner_loc_id": int(local_loc_id)
                         if product.qty_local_stock
-                        else int(stock_data_oversea_supplier_location_id),
+                        else int(oversea_loc_id),
                         "website_quantity": str(int(product.qty_total))
                         if product.qty_total < 3
                         else "3",
