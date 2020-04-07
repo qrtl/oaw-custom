@@ -65,8 +65,8 @@ class SupplierStock(models.Model):
     @api.multi
     @api.depends("cost_hkd")
     def _compute_cost_price(self):
+        currency = self.env.user.company_id.currency_id
         for supplier_stock in self:
-            currency = self.env.user.company_id.currency_id
             supplier_stock.cost_chf = currency._convert(
                 supplier_stock.cost_hkd,
                 self.env.ref("base.USD"),
