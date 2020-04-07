@@ -9,17 +9,17 @@
         />
         <field name="arch" type="xml">
             <label for="supplier_pick_partner" position="before">
-                <label for="supplier_stock_data_product_id" />
+                <label for="purchase_data_product_id" />
                 <div class="content-group">
-                    <field name="supplier_stock_data_product_id" />
+                    <field name="purchase_data_product_id" />
                 </div>
-                <label for="stock_data_local_supplier_location_id" />
+                <label for="local_loc_id" />
                 <div class="content-group">
-                    <field name="stock_data_local_supplier_location_id" />
+                    <field name="local_loc_id" />
                 </div>
-                <label for="stock_data_oversea_supplier_location_id" />
+                <label for="oversea_loc_id" />
                 <div class="content-group">
-                    <field name="stock_data_oversea_supplier_location_id" />
+                    <field name="oversea_loc_id" />
                 </div>
             </label>
         </field>

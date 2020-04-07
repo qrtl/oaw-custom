@@ -24,12 +24,10 @@ class PurchaseSupplierStockDataWizard(models.TransientModel):
 
     def action_purchase_data(self):
         purchase_categories = self.product_category_ids
-        supplier_stock_data_product_id = (
+        purchase_data_product_id = (
             self.env["ir.config_parameter"]
             .sudo()
-            .get_param(
-                "supplier_user_stock_data_purchase.supplier_stock_data_product_id"
-            )
+            .get_param("supplier_user_stock_data_purchase.purchase_data_product_id")
         )
         website_team_id = (
             self.env["ir.config_parameter"]
@@ -54,7 +52,7 @@ class PurchaseSupplierStockDataWizard(models.TransientModel):
         )
         sale_order.team_id = website_team_id
         line_vals = {
-            "product_id": int(supplier_stock_data_product_id),
+            "product_id": int(purchase_data_product_id),
             "company_id": self.env.user.company_id.id,
             "product_uom_qty": 1.0,
             "price_unit": total_price,
