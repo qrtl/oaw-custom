@@ -3,9 +3,6 @@
 
 from odoo import api, fields, models
 
-local_supplier_location_param = "supplier_user_stock_data_purchase.local_loc_id"
-oversea_supplier_location_param = "supplier_user_stock_data_purchase.oversea_loc_id"
-
 
 class StockDataPurchaseHistory(models.Model):
     _name = "stock.data.purchase.history"
