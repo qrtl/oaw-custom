@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-    <report id="action_report_tw_saleorder" string="Timeware Ltd" model="sale.order" report_type="qweb-pdf" file="quotation_report_adjust.report_tw_saleorder" name="quotation_report_adjust.report_tw_saleorder" print_report_name="(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or 'Order - %s' % (object.name)"/>
+    <report id="action_report_tw_saleorder" string="Timeware Ltd" model="sale.order" report_type="qweb-pdf" file="quotation_report_adjust.report_tw_saleorder" name="quotation_report_adjust.report_tw_saleorder" print_report_name="(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or 'Order - %s' % (object.name)" />
     <template id="custom_header_tw">
         <div class="header">
             <div class="row">
@@ -25,11 +25,12 @@
                     <li t-if="company.phone" class="list-inline-item">Phone: <span t-field="company.phone" />
                     </li>
                     <li>
-                        <span> All our products are exclusively sold in the Hong Kong S.A.R. only</span>
+                        <span
+                        > All our products are exclusively sold in the Hong Kong S.A.R. only</span>
                     </li>
                 </ul>
                 <div t-if="report_type == 'pdf'" class="text-muted">
-                            Page: <span class="page"/>/<span class="topage" />
+                            Page: <span class="page" />/ <span class="topage" />
                 </div>
             </div>
         </div>
@@ -61,14 +62,14 @@
                 </div>
                 <div style="text-align:right" class="col-6">
                     <strong>Date:</strong>
-                    <span t-field="doc.create_date" t-options='{"format": "yyyy-MM-dd"}' />
+                    <span t-field="doc.create_date" t-options='{"format": "yyyy-MM-dd"}'/>
                     <br />
                     <strong>Code:</strong>
                     <span t-field="doc.order_ref_report" />
                     <br />
-                </div>
-          </div>
-        <br />
+                 </div>
+            </div>
+            <br />
         <div class="page">
             <div class="oe_structure" />
             <h2>
@@ -142,74 +143,74 @@
                                 <td t-att-colspan="99">
                                     <strong class="mr16">Subtotal</strong>
                                     <span t-esc="current_subtotal" t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
-                             </td>
-                        </tr>
+                                </td>
+                            </tr>
                         </t>
-                       </t>
+                    </t>
                 </tbody>
-                </table>
-                <div class="clearfix">
-                    <div id="total" class="row" name="total">
-                        <div t-attf-class="#{'col-4' if report_type != 'html' else 'col-sm-7 col-md-5'} ml-auto">
-                            <table class="table table-sm">
-                                <t t-foreach="doc.amount_by_group" t-as="amount_by_group">
-                                    <tr style="">
-                                        <t t-if="amount_by_group[3] == 1 and doc.amount_untaxed == amount_by_group[2]">
-                                            <td class="text-right o_price_total">
-                                                <span t-esc="amount_by_group[1]" t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
-                                            </td>
-                                        </t>
-                                        <t t-else="">
-                                            <td class="text-right o_price_total">
-                                                <span t-esc="amount_by_group[1]" t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
-                                            </td>
-                                        </t>
-                                    </tr>
-                                </t>
-                                <tr class="border-black o_total">
-                                    <td>
-                                        <strong>Total</strong>
-                                    </td>
-                                    <td class="text-right">
-                                        <span t-field="doc.amount_total" />
-                                    </td>
+            </table>
+            <div class="clearfix">
+                <div id="total" class="row" name="total">
+                    <div t-attf-class="#{'col-4' if report_type != 'html' else 'col-sm-7 col-md-5'} ml-auto">
+                        <table class="table table-sm">
+                            <t t-foreach="doc.amount_by_group" t-as="amount_by_group">
+                                <tr style="">
+                                    <t t-if="amount_by_group[3] == 1 and doc.amount_untaxed == amount_by_group[2]">
+                                        <td class="text-right o_price_total">
+                                            <span t-esc="amount_by_group[1]" t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
+                                        </td>
+                                    </t>
+                                    <t t-else="">
+                                        <td class="text-right o_price_total">
+                                            <span t-esc="amount_by_group[1]" t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
+                                        </td>
+                                    </t>
                                 </tr>
-                            </table>
+                            </t>
+                            <tr class="border-black o_total">
+                                <td>
+                                    <strong>Total</strong>
+                                </td>
+                                <td class="text-right">
+                                    <span t-field="doc.amount_total" />
+                                </td>
+                            </tr>
+                        </table>
                         </div>
                     </div>
-                </div>
-                <div>
-                    <p t-field="doc.quot_report_note" />
-                </div>
-                <div>
-                    <div>
-                    </div>
-                    <table class="table-bordered" style="width:100%">
-                        <tr style="font-size:10px">
-                            <th colspan='2' style="text-align:center">No.</th>
-                            <th colspan='2' style="text-align:center">Payment</th>
-                            <th colspan='2' style="text-align:center">Main Item</th>
-                            <th colspan='2' style="text-align:center">Warranty</th>
-                            <th colspan='2' style="text-align:center">Manual</th>
-                            <th colspan="2" style="text-align:center">Box</th>
-                        </tr>
-                        <tr t-foreach="doc.order_line" t-as="l" style="height:32px">
-                            <td colspan='2' style="width:5%" />
-                            <td style="width:11%" />
-                            <td style="width:8%" />
-                            <td style="width:11%" />
-                            <td style="width:8%" />
-                            <td style="width:11%" />
-                            <td style="width:8%" />
-                            <td style="width:11%" />
-                            <td style="width:8%" />
-                            <td style="width:11%" />
-                            <td style="width:8%" />
-                        </tr>
-                    </table>
-                </div>
-                <div class="oe_structure" />
+        </div>
+            <div>
+                <p t-field="doc.quot_report_note" />
             </div>
+            <div>
+                <div>
+                </div>
+                <table class="table-bordered" style="width:100%">
+                    <tr style="font-size:10px">
+                        <th colspan='2' style="text-align:center">No.</th>
+                        <th colspan='2' style="text-align:center">Payment</th>
+                        <th colspan='2' style="text-align:center">Main Item</th>
+                        <th colspan='2' style="text-align:center">Warranty</th>
+                        <th colspan='2' style="text-align:center">Manual</th>
+                        <th colspan="2" style="text-align:center">Box</th>
+                    </tr>
+                    <tr t-foreach="doc.order_line" t-as="l" style="height:32px">
+                        <td colspan='2' style="width:5%" />
+                        <td style="width:11%" />
+                        <td style="width:8%" />
+                        <td style="width:11%" />
+                        <td style="width:8%" />
+                        <td style="width:11%" />
+                        <td style="width:8%" />
+                        <td style="width:11%" />
+                        <td style="width:8%" />
+                        <td style="width:11%" />
+                        <td style="width:8%" />
+                    </tr>
+                </table>
+            </div>
+            <div class="oe_structure" />
+        </div>
         </t>
     </template>
     <template id="report_tw_saleorder">
