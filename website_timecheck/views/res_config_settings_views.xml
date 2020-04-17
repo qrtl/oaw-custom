@@ -13,7 +13,7 @@
                             string="Homepage"
                             for="homepage_url"
                         />
-                        <field name="homepage_url"/>
+                        <field name="homepage_url" />
                     </div>
                 </div>
             </xpath>

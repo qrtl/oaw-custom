@@ -357,10 +357,7 @@
     <template id="product" name="Product" inherit_id="website_sale.product">
         <xpath expr="//t[@t-set='image_ids']" position="replace">
             <t t-set="image_ids" t-value="[]" />
-            <t
-                t-set="image_ids"
-                t-value="product.product_image_ids"
-            />
+            <t t-set="image_ids" t-value="product.product_image_ids" />
         </xpath>
         <xpath expr="//h1[@itemprop='name']" position="replace">
             <h4 itemprop="name" t-field="product.name">Product Name</h4>

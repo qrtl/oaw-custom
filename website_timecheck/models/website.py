@@ -3,7 +3,7 @@
 
 import datetime
 
-from odoo import models, fields
+from odoo import fields, models
 from odoo.http import request
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
@@ -11,9 +11,7 @@ from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 class Website(models.Model):
     _inherit = "website"
 
-    homepage_url = fields.Char(
-        string="Homepage",
-    )
+    homepage_url = fields.Char(string="Homepage",)
 
     def sale_product_domain(self):
         domain = super(Website, self).sale_product_domain()
