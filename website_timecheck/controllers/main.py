@@ -1,5 +1,5 @@
 # Copyright 2020 Quartile Limited
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
 from odoo import http
 from odoo.addons.website.controllers.main import Website
@@ -216,6 +216,7 @@ class WebsiteSale(WebsiteSale):
                     ("description", "ilike", srch),
                     ("description_sale", "ilike", srch),
                     ("product_variant_ids.default_code", "ilike", srch),
+                    ("public_categ_ids.name", "ilike", srch),
                 ]
             # Add '|' to the operator_list, as the search conditions will be
             # joined with OR but not AND
@@ -251,8 +252,9 @@ class WebsiteSale(WebsiteSale):
 class Website(Website):
     @http.route("/", type="http", auth="public", website=True)
     def index(self, **kw):
-        # << QTL Set the homepage as the shop page
-        return request.redirect("/shop")
+        # << QTL Set the homepage according to the settings
+        url = request.website.homepage_url or "/shop"
+        return request.redirect(url)
         # homepage = request.website.homepage_id
         # if homepage and (homepage.sudo().is_visible or request.env.user.has_group('base.group_user')) and homepage.url != '/': # noqa
         #     return request.env['ir.http'].reroute(homepage.url)
