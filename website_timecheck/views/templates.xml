@@ -304,7 +304,6 @@
                 </div>
                 <div
                     t-if="product.sale_hkd_ac_so and not product.in_special_offer_limit"
-                    groups="website_timecheck.group_timecheck_trial"
                 >
                     <span style="color: red; font-weight:bold;">Special Offer:</span>
                     <t t-if="product.sale_hkd_ac_so != 0">
@@ -342,6 +341,15 @@
                     >
                         <span class="fa fa-shopping-cart" /> Checkout
                     </a>
+                    <a
+                        groups="base.group_public"
+                        href="/web/login"
+                        class="btn btn-secondary btn-sm"
+                        aria-label="Shopping cart"
+                        title="Shopping cart"
+                    >
+                        <span class="fa fa-shopping-cart" /> Checkout
+                    </a>
                 </t>
             </div>
         </xpath>
@@ -349,11 +357,7 @@
     <template id="product" name="Product" inherit_id="website_sale.product">
         <xpath expr="//t[@t-set='image_ids']" position="replace">
             <t t-set="image_ids" t-value="[]" />
-            <t
-                t-set="image_ids"
-                t-value="product.product_image_ids"
-                groups="website_timecheck.group_timecheck_light,website.group_website_publisher"
-            />
+            <t t-set="image_ids" t-value="product.product_image_ids" />
         </xpath>
         <xpath expr="//h1[@itemprop='name']" position="replace">
             <h4 itemprop="name" t-field="product.name">Product Name</h4>
@@ -486,7 +490,6 @@
                 </div>
                 <div
                     t-if="product.sale_hkd_ac_so and not product.in_special_offer_limit"
-                    groups="website_timecheck.group_timecheck_trial"
                 >
                     <span style="color: red; font-weight:bold;">Special Offer:</span>
                     <t t-if="product.sale_hkd_ac_so != 0">
