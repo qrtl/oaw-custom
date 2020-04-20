@@ -253,7 +253,7 @@ class Website(Website):
     @http.route("/", type="http", auth="public", website=True)
     def index(self, **kw):
         # << QTL Set the homepage according to the settings
-        url = request.website.homepage_url or "/shop"
+        url = request.website.homepage_url or "/"
         return request.redirect(url)
         # homepage = request.website.homepage_id
         # if homepage and (homepage.sudo().is_visible or request.env.user.has_group('base.group_user')) and homepage.url != '/': # noqa

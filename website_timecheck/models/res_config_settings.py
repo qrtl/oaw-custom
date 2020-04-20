@@ -8,5 +8,6 @@ class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
     homepage_url = fields.Char(
-        string="Homepage", related="website_id.homepage_url", readonly=False
+        string="Homepage", related="website_id.homepage_url", readonly=False,
+        help="Defines the homepage for the website, leave it empty to be set as default ('/')",
     )
