@@ -13,6 +13,7 @@
                 <field name="date_order" />
                 <field name="pricelist_id" />
                 <field name="partner_id" />
+                <field name="client_order_ref" />
                 <field name="user_id" />
                 <field name="amount_total" />
                 <field name="state" />
