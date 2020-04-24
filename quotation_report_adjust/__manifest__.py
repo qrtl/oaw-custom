@@ -15,6 +15,7 @@
         "views/quotation_report_timeware.xml",
         "views/sale_order_form.xml",
         "views/quotation_report_sino.xml",
+        "views/res_company.xml",
     ],
     "demo": [],
 }

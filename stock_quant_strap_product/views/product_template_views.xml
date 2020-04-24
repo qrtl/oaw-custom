@@ -7,8 +7,8 @@
         <field name="arch" type="xml">
             <xpath expr="//div[@name='options']" position="inside">
                 <div>
-                    <field name="is_strap"/>
-                    <label for="is_strap"/>
+                    <field name="is_strap" />
+                    <label for="is_strap" />
                 </div>
             </xpath>
         </field>
