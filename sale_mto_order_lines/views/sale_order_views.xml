@@ -4,7 +4,7 @@
     <record id="view_quotation_tree_supplier" model="ir.ui.view">
         <field name="name">view.quotation.tree.supplier</field>
         <field name="model">sale.order</field>
-        <field name="arch" type="xml">   
+        <field name="arch" type="xml">
             <tree string="Order Lines" default_order="name desc">
                 <field name="name" />
                 <field name="sub_consigned" />
@@ -20,14 +20,20 @@
         </field>
     </record>
     <!-- Overwriting the original action in supplier_user_access-->
-     <record id="supplier_user_access.action_sales_orders_supplier" model="ir.actions.act_window">
+     <record
+        id="supplier_user_access.action_sales_orders_supplier"
+        model="ir.actions.act_window"
+    >
         <field name="name">Quotations</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">sale.order</field>
         <field name="view_type">form</field>
-        <field name="view_id" ref="view_quotation_tree_supplier"/>
+        <field name="view_id" ref="view_quotation_tree_supplier" />
         <field name="view_mode">tree,form,calendar,graph</field>
-        <field name="search_view_id" ref="supplier_user_access.view_sales_order_filter_supplier" />
+        <field
+            name="search_view_id"
+            ref="supplier_user_access.view_sales_order_filter_supplier"
+        />
         <field name="domain">[('supplier_user_ids', 'in', [uid])]</field>
     </record>
 
@@ -108,7 +114,8 @@
         <field name="view_id" ref="mto_tree_external" />
         <field name="search_view_id" ref="mto_tree_external_search" />
         <field
-            name="domain">[('is_mto','=',True),('order_id.is_shipment','=',False),('order_id.state','in',('draft','sent')), ('order_id.supplier_user_ids', 'not in', [uid])]</field>
+            name="domain"
+        >[('is_mto','=',True),('order_id.is_shipment','=',False),('order_id.state','in',('draft','sent')), ('order_id.supplier_user_ids', 'not in', [uid])]</field>
         <field name="limit">80</field>
     </record>
     <menuitem
