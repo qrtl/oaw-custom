@@ -33,6 +33,14 @@
                         t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: true}"
                     />
                 </div>
+                 <div class="col-6">
+                     <img
+                        t-if="company.logo"
+                        t-att-src="image_data_uri(company.logo)"
+                        style="max-height: 90px;"
+                        class="float-right"
+                    />
+                </div>
             </div>
         </div>
     </template>
