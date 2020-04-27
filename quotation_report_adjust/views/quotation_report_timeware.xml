@@ -3,6 +3,11 @@
     <report id="action_report_tw_saleorder" string="Timeware Ltd" model="sale.order" report_type="qweb-pdf" file="quotation_report_adjust.report_tw_saleorder" name="quotation_report_adjust.report_tw_saleorder" print_report_name="(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or 'Order - %s' % (object.name)" />
     <template id="custom_header_tw">
         <div class="header">
+            <div t-if="company.logo or company.report_header" class="row zero_min_height">
+                <div class="col-12">
+                    <div style="border-bottom: 1px solid black;" />
+                </div>
+            </div>
             <div class="row">
                 <div class="col-6" name="company_address">
                     <p>TIMEWARE Ltd</p>
@@ -11,7 +16,7 @@
                     <p>T.S.T., Hong Kong SAR</p>
                 </div>
                 <div class="col-6">
-                    <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" style="max-height: 90px;" class="float-right" />
+                    <img t-if="company.logo" t-att-src="image_data_uri(company.logo2)" style="max-height: 90px;" class="float-right" />
                 </div>
             </div>
         </div>
@@ -25,8 +30,7 @@
                     <li t-if="company.phone" class="list-inline-item">Phone: <span t-field="company.phone" />
                     </li>
                     <li>
-                        <span
-                        > All our products are exclusively sold in the Hong Kong S.A.R. only</span>
+                        <span> All our products are exclusively sold in the Hong Kong S.A.R. only</span>
                     </li>
                 </ul>
                 <div t-if="report_type == 'pdf'" class="text-muted">
@@ -178,11 +182,11 @@
                         </table>
                         </div>
                     </div>
-        </div>
-            <div>
-                <p t-field="doc.quot_report_note" />
-            </div>
-            <div>
+                    </div>
+                        <div>
+                            <p t-field="doc.quot_report_note" />
+                        </div>
+                    <div>
                 <div>
                 </div>
                 <table class="table-bordered" style="width:100%">
