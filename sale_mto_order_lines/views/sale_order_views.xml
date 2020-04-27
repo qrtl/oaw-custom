@@ -1,29 +1,35 @@
 <odoo>
 
     <!-- Supplier Access Quotation tree view -->
-    <record id="view_quotation_tree" model="ir.ui.view">
-        <field name="name">view.quotation.tree</field>
+    <record id="view_quotation_tree_supplier" model="ir.ui.view">
+        <field name="name">view.quotation.tree.supplier</field>
         <field name="model">sale.order</field>
-        <field name="inherit_id" ref="sale.view_quotation_tree" />
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='name']" position="after">
-                <field name="is_mto" />
+            <tree string="Order Lines" default_order="name desc">
+                <field name="name" />
                 <field name="sub_consigned" />
+                <field name="is_mto" />
                 <field name="prepare" />
-            </xpath>
-            <xpath expr="//field[@name='expected_date']" position="after">
+                <field name="date_order" />
                 <field name="pricelist_id" />
-            </xpath>
+                <field name="partner_id" />
+                <field name="client_order_ref" />
+                <field name="user_id" />
+                <field name="amount_total" />
+                <field name="state" />
+            </tree>
         </field>
     </record>
-
-    <!-- Overwriting definition in supplier_user_access -->
-    <record id="action_sales_orders_supplier" model="ir.actions.act_window">
+    <!-- Overwriting the original action in supplier_user_access-->
+     <record
+        id="supplier_user_access.action_sales_orders_supplier"
+        model="ir.actions.act_window"
+    >
         <field name="name">Quotations</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">sale.order</field>
         <field name="view_type">form</field>
-        <field name="view_id" ref="view_quotation_tree" />
+        <field name="view_id" ref="view_quotation_tree_supplier" />
         <field name="view_mode">tree,form,calendar,graph</field>
         <field
             name="search_view_id"
@@ -31,14 +37,6 @@
         />
         <field name="domain">[('supplier_user_ids', 'in', [uid])]</field>
     </record>
-    <menuitem
-        id="menu_sale_order_supplier"
-        name="Quotations"
-        groups="supplier_user_access.group_supplier_fm"
-        parent="supplier_user_access.menu_sales_supplier_external"
-        action="action_sales_orders_supplier"
-        sequence="15"
-    />
 
     <!-- Supplier Access order line tree view -->
     <record id="mto_tree_external" model="ir.ui.view">
