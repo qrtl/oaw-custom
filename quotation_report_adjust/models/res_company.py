@@ -7,5 +7,4 @@ from odoo import api, fields, models
 class Company(models.Model):
     _inherit = "res.company"
 
-    logo2 = fields.Binary('Another Logo',  store=True)
-    
+    logo2 = fields.Binary("Another Logo", store=True)

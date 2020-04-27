@@ -5,7 +5,7 @@
         <field name="inherit_id" ref="base.view_company_form" />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='logo']" position="after">
-                <field name="logo2" widget="image" class="oe_avatar"/>
+                <field name="logo2" widget="image" class="oe_avatar" />
             </xpath>
         </field>
     </record>
