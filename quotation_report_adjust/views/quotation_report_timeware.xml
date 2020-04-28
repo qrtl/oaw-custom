@@ -28,8 +28,8 @@
                 </div>
                 <div class="col-6">
                     <img
-                        t-if="company.logo"
-                        t-att-src="image_data_uri(company.logo2)"
+                        t-if="company.alternative_logo"
+                        t-att-src="image_data_uri(company.alternative_logo)"
                         style="max-height: 90px;"
                         class="float-right"
                     />
