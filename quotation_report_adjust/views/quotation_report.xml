@@ -18,20 +18,14 @@
                     name="moto"
                 />
             </div>
-            <div
-                t-if="company.logo or company.report_header"
-                class="row zero_min_height"
-            >
+            <div t-if="company.logo or company.report_header" class="row zero_min_height">
                 <div class="col-12">
                     <div style="border-bottom: 1px solid black;" />
                 </div>
             </div>
             <div class="row">
                 <div class="col-6" name="company_address">
-                    <div
-                        t-field="company.partner_id"
-                        t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: true}"
-                    />
+                    <div t-field="company.partner_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: true}"/>
                 </div>
                  <div class="col-6">
                      <img
@@ -48,12 +42,9 @@
         <div class="footer o_standard_footer">
             <div class="text-center" style="border-top: 1px solid black;">
                 <ul class="list-inline mb4">
-                    <li t-if="company.phone" class="list-inline-item">Phone: <span
-                            t-field="company.phone"
-                        /></li>
+                    <li t-if="company.phone" class="list-inline-item">Phone: <span t-field="company.phone"/></li>
                     <li>
-                        <span
-                        > All our products are exclusively sold in the Hong Kong S.A.R. only</span>
+                        <span> All our products are exclusively sold in the Hong Kong S.A.R. only</span>
                     </li>
                 </ul>
                 <div t-if="report_type == 'pdf'" class="text-muted">
@@ -81,13 +72,19 @@
     <template id="report_chr123_saleorder_document">
         <t t-call="quotation_report_adjust.report_ext_layout">
             <!--Customer Address, Date and Code-->
-            <div name="customer_adress">
-                <div>
-                    <p t-field="doc.partner_invoice_id.name" />
-                    <p t-field="doc.partner_invoice_id.street" />
-                    <p t-field="doc.partner_invoice_id.street2" />
+            <div name="customer_adress" class="row">
+                <div class="col-6">
+                    <span t-if="doc.partner_invoice_id.name" t-field="doc.partner_invoice_id.name" /><br/>
+                    <span t-field="doc.partner_invoice_id.street" /><br/>
+                    <span t-if="doc.partner_invoice_id.street2" t-field="doc.partner_invoice_id.street2" />
+                    <div>
+                        <span t-if="doc.partner_invoice_id.city" t-field="doc.partner_invoice_id.city" />
+                        <span t-if="doc.partner_invoice_id.state_id" t-field="doc.partner_invoice_id.state_id" />
+                        <span t-if="doc.partner_invoice_id.zip" t-field="doc.partner_invoice_id.zip" />
+                    </div>
+                    <span t-if="doc.partner_invoice_id.country_id" t-field="doc.partner_invoice_id.country_id" />
                 </div>
-                <div style="text-align:right">
+                <div style="text-align:right" class="col-6">
                     <strong>Date:</strong>
                     <span
                         t-field="doc.create_date"
@@ -97,7 +94,7 @@
                     <strong>Code:</strong>
                     <span t-field="doc.order_ref_report" />
                     <br />
-                </div>
+                 </div>
             </div>
             <br />
             <div class="page">

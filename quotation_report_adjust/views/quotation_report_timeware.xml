@@ -18,10 +18,10 @@
             </div>
             <div class="row">
                 <div class="col-6" name="company_address">
-                    <p>TIMEWARE Ltd</p>
-                    <p>RM 904 9/F Podium Plaza</p>
-                    <p>5 Hanoi Road</p>
-                    <p>T.S.T., Hong Kong SAR</p>
+                    <span>TIMEWARE Ltd</span><br/>
+                    <span>RM 904 9/F Podium Plaza</span><br/>
+                    <span>5 Hanoi Road</span><br/>
+                    <span>T.S.T., Hong Kong SAR</span><br/>
                 </div>
                 <div class="col-6">
 <<<<<<< HEAD
@@ -44,9 +44,7 @@
         <div class="footer">
             <div class="text-center" style="border-top: 1px solid black;">
                 <ul class="list-inline mb4">
-                    <li t-if="company.phone" class="list-inline-item">Phone: <span
-                            t-field="company.phone"
-                        />
+                    <li t-if="company.phone" class="list-inline-item">Phone: <span t-field="company.phone"/>
                     </li>
                     <li>
                         <span
@@ -80,9 +78,15 @@
         <!--Customer Address, Date and Code-->
             <div name="customer_adress" class="row">
                 <div class="col-6">
-                    <p t-field="doc.partner_invoice_id.name" />
-                    <p t-field="doc.partner_invoice_id.street" />
-                    <p t-field="doc.partner_invoice_id.street2" />
+                    <span t-if="doc.partner_invoice_id.name" t-field="doc.partner_invoice_id.name" /><br/>
+                    <span t-field="doc.partner_invoice_id.street" /><br/>
+                    <span t-if="doc.partner_invoice_id.street2" t-field="doc.partner_invoice_id.street2" />
+                    <div>
+                        <span t-if="doc.partner_invoice_id.city" t-field="doc.partner_invoice_id.city" />
+                        <span t-if="doc.partner_invoice_id.state_id" t-field="doc.partner_invoice_id.state_id" />
+                        <span t-if="doc.partner_invoice_id.zip" t-field="doc.partner_invoice_id.zip" />
+                    </div>
+                    <span t-if="doc.partner_invoice_id.country_id" t-field="doc.partner_invoice_id.country_id" />
                 </div>
                 <div style="text-align:right" class="col-6">
                     <strong>Date:</strong>
