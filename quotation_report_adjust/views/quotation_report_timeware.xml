@@ -8,10 +8,13 @@
         file="quotation_report_adjust.report_tw_saleorder"
         name="quotation_report_adjust.report_tw_saleorder"
         print_report_name="(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or 'Order - %s' % (object.name)"
-     />
+    />
     <template id="custom_header_tw">
         <div class="header">
-            <div t-if="company.logo or company.report_header" class="row zero_min_height">
+            <div
+                t-if="company.logo or company.report_header"
+                class="row zero_min_height"
+            >
                 <div class="col-12">
                     <div style="border-bottom: 1px solid black;" />
                 </div>
@@ -24,7 +27,12 @@
                     <p>T.S.T., Hong Kong SAR</p>
                 </div>
                 <div class="col-6">
-                    <img t-if="company.logo" t-att-src="image_data_uri(company.alternative_logo)" style="max-height: 90px;" class="float-right"/>
+                    <img
+                        t-if="company.logo"
+                        t-att-src="image_data_uri(company.alternative_logo)"
+                        style="max-height: 90px;"
+                        class="float-right"
+                    />
                 </div>
             </div>
         </div>
