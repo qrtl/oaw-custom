@@ -1,7 +1,7 @@
 # Copyright 2020 Quartile Limited
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 
-from odoo import fields, models, api
+from odoo import api, fields, models
 
 
 class ProductCondition(models.Model):
@@ -14,5 +14,7 @@ class ProductCondition(models.Model):
     def name_get(self):
         res = []
         for condition in self:
-            res.append((condition.id, "%s: %s" % (condition.name, condition.description)))
+            res.append(
+                (condition.id, "{}: {}".format(condition.name, condition.description))
+            )
         return res
