@@ -1,0 +1,194 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * supplier_stock_pre_owned_info
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 12.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-05-08 01:39+0000\n"
+"PO-Revision-Date: 2020-05-08 01:39+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: supplier_stock_pre_owned_info
+#: model:product.condition,description:supplier_stock_pre_owned_info.product_condition_new
+msgid "Brand new, without any signs of wear"
+msgstr "全新无使用痕迹"
+
+#. module: supplier_stock_pre_owned_info
+#: model:product.condition,description:supplier_stock_pre_owned_info.product_condition_incomplete
+msgid "Components missing, non-functional"
+msgstr "缺少零件，不能正常使用"
+
+#. module: supplier_stock_pre_owned_info
+#: model:ir.model.fields,field_description:supplier_stock_pre_owned_info.field_supplier_stock__product_condition_id
+msgid "Condition"
+msgstr "商品状态"
+
+#. module: supplier_stock_pre_owned_info
+#: model:ir.model.fields,field_description:supplier_stock_pre_owned_info.field_product_condition__create_uid
+#: model:ir.model.fields,field_description:supplier_stock_pre_owned_info.field_product_parts_status__create_uid
+msgid "Created by"
+msgstr "创建者"
+
+#. module: supplier_stock_pre_owned_info
+#: model:ir.model.fields,field_description:supplier_stock_pre_owned_info.field_product_condition__create_date
+#: model:ir.model.fields,field_description:supplier_stock_pre_owned_info.field_product_parts_status__create_date
+msgid "Created on"
+msgstr "创建时间"
+
+#. module: supplier_stock_pre_owned_info
+#: model:ir.model.fields,field_description:supplier_stock_pre_owned_info.field_product_condition__description
+msgid "Description"
+msgstr "描述"
+
+#. module: supplier_stock_pre_owned_info
+#: model:ir.model.fields,field_description:supplier_stock_pre_owned_info.field_product_condition__display_name
+#: model:ir.model.fields,field_description:supplier_stock_pre_owned_info.field_product_parts_status__display_name
+msgid "Display Name"
+msgstr "显示名称"
+
+#. module: supplier_stock_pre_owned_info
+#: selection:supplier.stock,warrant_status:0
+msgid "Empty Date"
+msgstr "空白保卡"
+
+#. module: supplier_stock_pre_owned_info
+#: model:product.condition,name:supplier_stock_pre_owned_info.product_condition_fair
+msgid "Fair"
+msgstr "尚可"
+
+#. module: supplier_stock_pre_owned_info
+#: selection:supplier.stock,warrant_status:0
+msgid "Fixed Date"
+msgstr "填年月"
+
+#. module: supplier_stock_pre_owned_info
+#: model:product.parts.status,name:supplier_stock_pre_owned_info.product_parts_status_full_set
+msgid "Full Set"
+msgstr "配件全套其全"
+
+#. module: supplier_stock_pre_owned_info
+#: model:product.condition,name:supplier_stock_pre_owned_info.product_condition_good
+msgid "Good"
+msgstr "好"
+
+#. module: supplier_stock_pre_owned_info
+#: model:product.condition,description:supplier_stock_pre_owned_info.product_condition_poor
+msgid "Heavy signs of wear or scrathces"
+msgstr "较糟糕的使用痕迹或刮痕"
+
+#. module: supplier_stock_pre_owned_info
+#: model:product.condition,name:supplier_stock_pre_owned_info.product_condition_incomplete
+msgid "Incomplete"
+msgstr "不完整"
+
+#. module: supplier_stock_pre_owned_info
+#: model:ir.model.fields,field_description:supplier_stock_pre_owned_info.field_product_condition____last_update
+#: model:ir.model.fields,field_description:supplier_stock_pre_owned_info.field_product_parts_status____last_update
+msgid "Last Modified on"
+msgstr "最后修改时间"
+
+#. module: supplier_stock_pre_owned_info
+#: model:ir.model.fields,field_description:supplier_stock_pre_owned_info.field_product_condition__write_uid
+#: model:ir.model.fields,field_description:supplier_stock_pre_owned_info.field_product_parts_status__write_uid
+msgid "Last Updated by"
+msgstr "最后更新人"
+
+#. module: supplier_stock_pre_owned_info
+#: model:ir.model.fields,field_description:supplier_stock_pre_owned_info.field_product_condition__write_date
+#: model:ir.model.fields,field_description:supplier_stock_pre_owned_info.field_product_parts_status__write_date
+msgid "Last Updated on"
+msgstr "最后更新时间"
+
+#. module: supplier_stock_pre_owned_info
+#: model:product.condition,description:supplier_stock_pre_owned_info.product_condition_good
+msgid "Light signs of wear of scratches"
+msgstr "轻微到可见的使用痕迹或刮痕"
+
+#. module: supplier_stock_pre_owned_info
+#: model:product.condition,description:supplier_stock_pre_owned_info.product_condition_unworn
+msgid "Mint condition, without signs of wear"
+msgstr "如新的，无使用痕迹"
+
+#. module: supplier_stock_pre_owned_info
+#: model:ir.model.fields,field_description:supplier_stock_pre_owned_info.field_product_condition__name
+#: model:ir.model.fields,field_description:supplier_stock_pre_owned_info.field_product_parts_status__name
+msgid "Name"
+msgstr "名称"
+
+#. module: supplier_stock_pre_owned_info
+#: model:product.condition,name:supplier_stock_pre_owned_info.product_condition_new
+msgid "New"
+msgstr "全新"
+
+#. module: supplier_stock_pre_owned_info
+#: model:product.condition,description:supplier_stock_pre_owned_info.product_condition_fair
+msgid "Obvious signs of wear or scratches"
+msgstr "明显可见的使用痕迹或刮痕"
+
+#. module: supplier_stock_pre_owned_info
+#: model:ir.model.fields,field_description:supplier_stock_pre_owned_info.field_supplier_stock__product_parts_status_id
+msgid "Parts"
+msgstr "配件情况"
+
+#. module: supplier_stock_pre_owned_info
+#: model:product.condition,name:supplier_stock_pre_owned_info.product_condition_poor
+msgid "Poor"
+msgstr "劣"
+
+#. module: supplier_stock_pre_owned_info
+#: model:product.condition,name:supplier_stock_pre_owned_info.product_condition_unworn
+msgid "Unworn"
+msgstr "未佩戴过"
+
+#. module: supplier_stock_pre_owned_info
+#: model:product.condition,name:supplier_stock_pre_owned_info.product_condition_very_good
+msgid "Very good"
+msgstr "非常好"
+
+#. module: supplier_stock_pre_owned_info
+#: model:ir.model.fields,field_description:supplier_stock_pre_owned_info.field_supplier_stock__warranty_date
+msgid "Warranty Date"
+msgstr "保卡时间"
+
+#. module: supplier_stock_pre_owned_info
+#: model:ir.model.fields,field_description:supplier_stock_pre_owned_info.field_supplier_stock__warrant_status
+msgid "Warrent Status"
+msgstr "保卡状态"
+
+#. module: supplier_stock_pre_owned_info
+#: model:product.parts.status,name:supplier_stock_pre_owned_info.product_parts_status_watch_only
+msgid "Watch only"
+msgstr "只有手表"
+
+#. module: supplier_stock_pre_owned_info
+#: model:product.parts.status,name:supplier_stock_pre_owned_info.product_parts_status_watch_box
+msgid "Watch with original box"
+msgstr "手表和盒子"
+
+#. module: supplier_stock_pre_owned_info
+#: model:product.parts.status,name:supplier_stock_pre_owned_info.product_parts_status_watch_warranty
+msgid "Watch with warranty"
+msgstr "手表和保卡"
+
+#. module: supplier_stock_pre_owned_info
+#: model:product.parts.status,name:supplier_stock_pre_owned_info.product_parts_status_watch_warranty_book
+msgid "Watch with warranty and instruction book"
+msgstr "手表和保卡及说明书"
+
+#. module: supplier_stock_pre_owned_info
+#: selection:supplier.stock,warrant_status:0
+msgid "Will Fill Date By Sold"
+msgstr "将填出货时的时间"
+
+#. module: supplier_stock_pre_owned_info
+#: model:product.condition,description:supplier_stock_pre_owned_info.product_condition_very_good
+msgid "Worn with little to no signs of wear"
+msgstr "戴过，几乎见不到使用痕迹"
+

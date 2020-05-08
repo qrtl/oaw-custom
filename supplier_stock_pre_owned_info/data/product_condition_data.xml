@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+    <record model="product.condition" id="product_condition_new">
+        <field name="name">New</field>
+        <field name="description">Brand new, without any signs of wear</field>
+    </record>
+    <record model="product.condition" id="product_condition_unworn">
+        <field name="name">Unworn</field>
+        <field name="description">Mint condition, without signs of wear</field>
+    </record>
+    <record model="product.condition" id="product_condition_very_good">
+        <field name="name">Very good</field>
+        <field name="description">Worn with little to no signs of wear</field>
+    </record>
+    <record model="product.condition" id="product_condition_good">
+        <field name="name">Good</field>
+        <field name="description">Light signs of wear of scratches</field>
+    </record>
+    <record model="product.condition" id="product_condition_fair">
+        <field name="name">Fair</field>
+        <field name="description">Obvious signs of wear or scratches</field>
+    </record>
+    <record model="product.condition" id="product_condition_poor">
+        <field name="name">Poor</field>
+        <field name="description">Heavy signs of wear or scrathces</field>
+    </record>
+    <record model="product.condition" id="product_condition_incomplete">
+        <field name="name">Incomplete</field>
+        <field name="description">Components missing, non-functional</field>
+    </record>
+</odoo>

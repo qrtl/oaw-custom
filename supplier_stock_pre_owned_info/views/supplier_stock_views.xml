@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_supplier_stock_tree" model="ir.ui.view">
+        <field name="name">view.supplier.stock.tree</field>
+        <field name="model">supplier.stock</field>
+        <field name="inherit_id" ref="supplier_stock.view_supplier_stock_tree" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='quantity']" position="after">
+                <field name="product_condition_id" options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
+                <field name="product_parts_status_id" options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
+                <field name="warrant_status"/>
+                <field name="warranty_date" attrs="{'required':[('warrant_status','=','fix')]}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
