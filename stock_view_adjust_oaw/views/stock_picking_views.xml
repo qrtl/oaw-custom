@@ -17,6 +17,12 @@
             >
                 <field name="image_medium" widget="image" />
             </xpath>
+            <!-- Hide the "Operations" tab when the "Detailed Operations" tab is displayed after draft state -->
+            <xpath expr="//notebook/page[2]" position="attributes">
+                <attribute
+                    name="attrs"
+                >{'invisible': [('show_operations', '=', True), ('state', '!=', 'draft')]}</attribute>
+            </xpath>
         </field>
     </record>
 </odoo>
