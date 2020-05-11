@@ -24,16 +24,12 @@
                     <span>T.S.T., Hong Kong SAR</span><br/>
                 </div>
                 <div class="col-6">
-<<<<<<< HEAD
                     <img
                         t-if="company.alternative_logo"
                         t-att-src="image_data_uri(company.alternative_logo)"
                         style="max-height: 90px;"
                         class="float-right"
                     />
-=======
-                    <img t-if="company.logo" t-att-src="image_data_uri(company.alternative_logo)" style="max-height: 90px;" class="float-right"/>
->>>>>>> Fixing the field reference in the report
                 </div>
             </div>
         </div>
