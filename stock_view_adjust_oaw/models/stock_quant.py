@@ -15,6 +15,19 @@ class StockQuant(models.Model):
         "Image", related="product_id.product_tmpl_id.image_medium", readonly=True
     )
 
+    brand = fields.Char(
+        "Brand", related="product_id.product_tmpl_id.brand", readonly=True
+    )
+
+    prod_ref = fields.Char(
+        related="product_id.product_tmpl_id.name",
+        string="Product Reference",
+        store=True,
+    )
+    prod_code = fields.Char(
+        related="product_id.product_tmpl_id.default_code", string="Code", store=True
+    )
+
     @api.multi
     @api.depends("sale_order_id.client_order_ref")
     def _get_ref(self):

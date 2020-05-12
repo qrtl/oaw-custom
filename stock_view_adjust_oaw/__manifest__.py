@@ -12,6 +12,7 @@
         "sale_order_line_quant",
         "stock_picking_menu",
         "stock_move_line_quant",
+        "product_offer_kanban_views",
     ],
     "data": [
         "data/ir_actions.xml",
