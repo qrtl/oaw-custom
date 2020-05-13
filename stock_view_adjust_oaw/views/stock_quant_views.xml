@@ -48,7 +48,7 @@
                             </div>
                             <div class="oe_kanban_details" style="padding-left: 155px;">
                                 <h4>
-                                    <span t-if="record.default_code.raw_value">[<field name="prod_code" />]
+                                    <span t-if="record.prod_code.raw_value">[<field name="prod_code" />]
                                     </span>
                                     <field name="prod_ref" />
                                 </h4>
