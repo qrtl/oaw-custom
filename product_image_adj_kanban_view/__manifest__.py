@@ -7,7 +7,7 @@
     "author": "Quartile Limited, Timeware Ltd",
     "website": "https://www.quartile.co",
     "category": "Product",
-    "depends": ["sale", "stock"],
+    "depends": ["sale", "stock", "product"],
     "data": ["views/product_template_kanban_view.xml"],
     "installable": True,
 }
