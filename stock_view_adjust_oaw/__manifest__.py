@@ -1,4 +1,4 @@
-# Copyright 2020 Quartile Limted, Timeware Limited
+# Copyright 2019-2020 Quartile Limted, Timeware Limited
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 {
     "name": "Stock View Adjust",
