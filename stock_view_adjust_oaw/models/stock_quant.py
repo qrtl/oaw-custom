@@ -1,5 +1,5 @@
 # Copyright 2019 Quartile Limted, Timeware Limited
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 
 from odoo import api, fields, models
 
@@ -14,11 +14,9 @@ class StockQuant(models.Model):
     image_medium = fields.Binary(
         "Image", related="product_id.product_tmpl_id.image_medium", readonly=True
     )
-
     brand = fields.Char(
         "Brand", related="product_id.product_tmpl_id.brand", readonly=True
     )
-
     prod_ref = fields.Char(
         related="product_id.product_tmpl_id.name",
         string="Product Reference",

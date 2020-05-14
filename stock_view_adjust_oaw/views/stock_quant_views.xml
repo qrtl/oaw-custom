@@ -8,6 +8,13 @@
             <xpath expr="//tree" position="attributes">
                 <attribute name="editable">top</attribute>
             </xpath>
+            <xpath expr="//field[@name='product_id']" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+            <xpath expr="//field[@name='product_id']" position="after">
+                <field name="prod_ref" />
+                <field name="prod_code" />
+            </xpath>
             <xpath expr="//field[@name='reservation_picking_id']" position="after">
                 <field name="sale_order_id" />
                 <field name="client_order_ref" />
@@ -23,6 +30,10 @@
         <field name="model">stock.quant</field>
         <field name="inherit_id" ref="stock.quant_search_view" />
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_id']" position="after">
+                <field name="prod_ref" />
+                <field name="prod_code" />
+            </xpath>
             <xpath expr="//field[@name='owner_id']" position="after">
                 <field name="client_order_ref" string="Remark" />
             </xpath>
@@ -76,9 +87,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,kanban</field>
         <field name="context">{'search_default_internal_loc': 1, 'search_default_positive': 1}</field>
-        
     </record>
-
     <!--Actions directing to view modes with certain search view defaults-->
     <record id="action_stock_quant_tree" model="ir.actions.act_window.view">
         <field name="view_mode">tree</field>
@@ -93,5 +102,4 @@
         <field name="act_window_id" ref="stock_move_line_quant.action_stock_quant" />
     </record>
 
-    <!-- <menuitem action="stock_move_line_quant.action_stock_quant" id="menu_stock_quant" parent="stock.menu_warehouse_report" sequence="10" /> -->
 </odoo>
