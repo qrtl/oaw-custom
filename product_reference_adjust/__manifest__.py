@@ -8,7 +8,7 @@
     "license": "AGPL-3",
     "author": "Timeware Limited",
     "category": "Products",
-    "version": "12.0.1.0.0",
+    "version": "12.0.1.1.0",
     "depends": [
         "account_invoice_line_view_oaw",
         "purchase",
@@ -21,7 +21,6 @@
         "views/purchase_order_views.xml",
         "views/stock_move_line_views.xml",
         "views/stock_picking_views.xml",
-        "views/stock_quant_views.xml",
         "views/supplier_stock_views.xml",
     ],
     "installable": True,
