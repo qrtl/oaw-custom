@@ -35,12 +35,10 @@
                 <field name="image_medium" />
                 <templates>
                     <t t-name="kanban-box">
-                        <div
-                            class="oe_kanban_global_click"  
-                        >
+                        <div class="oe_kanban_global_click">
                             <div
                                 class="o_kanban_image"
-                                 style="width: 150px; height: 150px;"
+                                style="width: 150px; height: 150px;"
                             >
                                 <img
                                     style="width: 150px; height: 150px;"
