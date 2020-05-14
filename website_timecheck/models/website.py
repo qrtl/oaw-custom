@@ -1,15 +1,21 @@
 # Copyright 2020 Quartile Limited
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
 import datetime
 
-from odoo import models
+from odoo import fields, models
 from odoo.http import request
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 
 class Website(models.Model):
     _inherit = "website"
+
+    homepage_url = fields.Char(
+        string="Homepage",
+        help="Defines the homepage for the website, leave it empty to be set "
+        "as default ('/')",
+    )
 
     def sale_product_domain(self):
         domain = super(Website, self).sale_product_domain()

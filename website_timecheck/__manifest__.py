@@ -1,10 +1,10 @@
 # Copyright 2020 Quartile Limited
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 {
     "name": "Website Timecheck Function",
     "category": "Website",
-    "version": "12.0.1.0.0",
-    "license": "AGPL-3",
+    "version": "12.0.1.2.0",
+    "license": "LGPL-3",
     "author": "Quartile Limited",
     "website": "https://www.quartile.co",
     "depends": [
@@ -19,6 +19,7 @@
         "security/timecheck_security.xml",
         "security/website_sale_security.xml",
         "views/product_product_views.xml",
+        "views/res_config_settings_views.xml",
         "views/res_users_views.xml",
         "views/sale_order_views.xml",
         "views/templates.xml",

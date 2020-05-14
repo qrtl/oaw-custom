@@ -20,6 +20,7 @@ exclude: |
   sec_disable_xmlrpc/|
   web_listview_sticky_header/|
   website_no_crawler/|
+  website_odoo_debranding/|
   dbfilter_from_header/|
   sale_automatic_workflow/|
   web_export_view/|
