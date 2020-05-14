@@ -21,7 +21,11 @@
                 <field name="quant_note" />
             </xpath>
             <xpath expr="//field[@name='lot_id']" position="after">
-                <field name="image_medium" widget="image" options='{"size": [64, 64]}'/>
+                <field
+                    name="image_medium"
+                    widget="image"
+                    options='{"size": [64, 64]}'
+                />
             </xpath>
         </field>
     </record>
@@ -54,12 +58,21 @@
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click">
-                            <div class="o_kanban_image" style="width: 150px; height: 150px;">
-                                <img style="width: 150px; height: 150px;" t-att-src="kanban_image('stock.quant', 'image_medium', record.id.raw_value)" alt="Product" />
+                            <div
+                                class="o_kanban_image"
+                                style="width: 150px; height: 150px;"
+                            >
+                                <img
+                                    style="width: 150px; height: 150px;"
+                                    t-att-src="kanban_image('stock.quant', 'image_medium', record.id.raw_value)"
+                                    alt="Product"
+                                />
                             </div>
                             <div class="oe_kanban_details" style="padding-left: 155px;">
                                 <h4>
-                                    <span t-if="record.prod_code.raw_value">[<field name="prod_code" />]
+                                    <span t-if="record.prod_code.raw_value">[<field
+                                            name="prod_code"
+                                        />]
                                     </span>
                                     <field name="prod_ref" />
                                 </h4>
@@ -86,7 +99,9 @@
         <field name="type">ir.actions.act_window</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,kanban</field>
-        <field name="context">{'search_default_internal_loc': 1, 'search_default_positive': 1}</field>
+        <field
+            name="context"
+        >{'search_default_internal_loc': 1, 'search_default_positive': 1}</field>
     </record>
     <!--Actions directing to view modes with certain search view defaults-->
     <record id="action_stock_quant_tree" model="ir.actions.act_window.view">
