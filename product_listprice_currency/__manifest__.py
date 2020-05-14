@@ -7,7 +7,7 @@
     "author": "Quartile Limited",
     "website": "https://www.quartile.co",
     "category": "Product",
-    "depends": ["sale", "stock"],
+    "depends": ["product_listprice_list_view"],
     "data": ["views/product_template_views.xml"],
     "installable": True,
 }
