@@ -19,6 +19,7 @@
                                 style="width: 150px; height: 150px;"
                             >
                                 <img
+                                style="width: 150px; height: 150px;"
                                     t-att-src="kanban_image('supplier.stock', 'image_medium', record.id.value)"
                                     alt="Product"
                                 />
