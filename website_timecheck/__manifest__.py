@@ -3,7 +3,7 @@
 {
     "name": "Website Timecheck Function",
     "category": "Website",
-    "version": "12.0.1.2.0",
+    "version": "12.0.1.3.0",
     "license": "LGPL-3",
     "author": "Quartile Limited",
     "website": "https://www.quartile.co",

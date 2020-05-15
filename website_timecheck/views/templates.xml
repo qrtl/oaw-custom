@@ -135,7 +135,7 @@
         </xpath>
     </template>
     <template id="products" inherit_id="website_sale.products" name="Products">
-        <xpath expr="//t[@t-call='website_sale.search']" position="after">
+        <xpath expr="//t[@t-call='website_sale.search']" position="before">
             <div class="dropdown ml-2 visible-xs-inline">
                 <a
                     role="button"
@@ -309,7 +309,7 @@
                     <t t-if="product.sale_hkd_ac_so != 0">
                         <span
                             t-if="product.sale_hkd_ac_so != 0"
-                            t-esc="'{:,.0f}'.format(product.sale_hkd_ac_so)"
+                            t-esc="'{:,.0f}'.format(website.company_id.currency_id._convert(product.sale_hkd_ac_so, website.currency_id, website.company_id, datetime.date.today()))"
                             style="white-space: nowrap; color: red; font-weight:bold;"
                         />
                     </t>
@@ -319,7 +319,7 @@
                             style="white-space: nowrap; color: red; font-weight:bold;"
                         >N/A</span>
                     </t>
-                    <span style="color: red; font-weight:bold;">HKD</span>
+                    <span style="color: red; font-weight:bold;" t-esc="website.currency_id.name"/>
                 </div>
                 <t
                     t-set="product_variant_id"
@@ -390,6 +390,9 @@
         </xpath>
         <xpath expr="//form" position="attributes">
             <attribute name="groups">website_timecheck.group_timecheck_light</attribute>
+        </xpath>
+        <xpath expr="//hr[@t-if='product.description_sale']" position="before">
+           <a groups="base.group_public" href="/web/login" class="btn btn-primary btn-lg mt8">Add to Cart</a>
         </xpath>
     </template>
     <template
@@ -720,6 +723,9 @@
             <attribute name="class">hidden-xs</attribute>
         </xpath>
         <xpath expr="//li[@class='hidden-xs']" position="after">
+            <li class="visible-xs-inline">
+                <t t-call="website.language_selector" />
+            </li>
             <li
                 class="visible-xs-inline"
                 t-ignore="true"
