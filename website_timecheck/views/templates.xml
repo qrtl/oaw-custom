@@ -319,7 +319,10 @@
                             style="white-space: nowrap; color: red; font-weight:bold;"
                         >N/A</span>
                     </t>
-                    <span style="color: red; font-weight:bold;" t-esc="website.currency_id.name"/>
+                    <span
+                        style="color: red; font-weight:bold;"
+                        t-esc="website.currency_id.name"
+                    />
                 </div>
                 <t
                     t-set="product_variant_id"
@@ -392,7 +395,11 @@
             <attribute name="groups">website_timecheck.group_timecheck_light</attribute>
         </xpath>
         <xpath expr="//hr[@t-if='product.description_sale']" position="before">
-           <a groups="base.group_public" href="/web/login" class="btn btn-primary btn-lg mt8">Add to Cart</a>
+           <a
+                groups="base.group_public"
+                href="/web/login"
+                class="btn btn-primary btn-lg mt8"
+            >Add to Cart</a>
         </xpath>
     </template>
     <template
