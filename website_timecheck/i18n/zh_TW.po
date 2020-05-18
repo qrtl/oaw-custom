@@ -62,6 +62,11 @@ msgid "<span>Sale HKD:</span>"
 msgstr "<span>港幣賣價:</span>"
 
 #. module: website_timecheck
+#: model_terms:ir.ui.view,arch_db:website_timecheck.product
+msgid "Add to Cart"
+msgstr "加入購物車"
+
+#. module: website_timecheck
 #: model_terms:ir.ui.view,arch_db:website_timecheck.products_categories
 msgid "All Categories"
 msgstr "所有品牌"
