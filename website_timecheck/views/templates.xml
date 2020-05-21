@@ -135,6 +135,13 @@
         </xpath>
     </template>
     <template id="products" inherit_id="website_sale.products" name="Products">
+        <xpath expr="//t[@t-call='website_sale.pricelist_list']" position="replace">
+            <div class="hidden-xs">
+                 <t t-call="website_sale.pricelist_list">
+                    <t t-set="_classes">ml-2</t>
+                </t>
+            </div>
+        </xpath>
         <xpath expr="//t[@t-call='website_sale.search']" position="before">
             <div class="dropdown ml-2 visible-xs-inline">
                 <a
@@ -358,6 +365,13 @@
         </xpath>
     </template>
     <template id="product" name="Product" inherit_id="website_sale.product">
+        <xpath expr="//t[@t-call='website_sale.pricelist_list']" position="replace">
+            <div class="hidden-xs">
+                 <t t-call="website_sale.pricelist_list">
+                    <t t-set="_classes">ml-2</t>
+                </t>
+            </div>
+        </xpath>
         <xpath expr="//t[@t-set='image_ids']" position="replace">
             <t t-set="image_ids" t-value="[]" />
             <t t-set="image_ids" t-value="product.product_image_ids" />
@@ -733,6 +747,9 @@
             <li class="visible-xs-inline">
                 <t t-call="website.language_selector" />
             </li>
+            <li class="visible-xs-inline">
+                <t t-call="website_sale.pricelist_list" />
+            </li>
             <li
                 class="visible-xs-inline"
                 t-ignore="true"
@@ -752,6 +769,16 @@
                     t-attf-href="/web/session/logout?redirect=/"
                 >Logout</a>
             </li>
+        </xpath>
+    </template>
+    <template id="pricelist_list" inherit_id="website_sale.pricelist_list" name="Pricelists Dropdown">
+        <xpath expr="//a[@role='button']" position="attributes">
+            <attribute name="class">hidden-xs dropdown-toggle btn btn-secondary</attribute>
+        </xpath>
+        <xpath expr="//a[@role='button']" position="after">
+            <a role="button" href="#" class="btn btn-sm btn-secondary dropdown-toggle visible-xs-inline" data-toggle="dropdown">
+                <t t-esc="curr_pl and curr_pl.name or ' - '" />
+            </a>
         </xpath>
     </template>
 </odoo>
