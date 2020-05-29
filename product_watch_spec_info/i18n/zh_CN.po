@@ -1,0 +1,111 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* product_watch_spec_info
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 12.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-05-29 08:43+0000\n"
+"PO-Revision-Date: 2020-05-29 08:43+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: product_watch_spec_info
+#: selection:product.template,movement:0
+msgid "Automatic"
+msgstr "自动"
+
+#. module: product_watch_spec_info
+#: model:ir.model.fields,field_description:product_watch_spec_info.field_product_product__bracelet_material
+#: model:ir.model.fields,field_description:product_watch_spec_info.field_product_template__bracelet_material
+msgid "Bracelet Material"
+msgstr "表带材质"
+
+#. module: product_watch_spec_info
+#: selection:product.template,clasp:0
+msgid "Buckle"
+msgstr "针扣"
+
+#. module: product_watch_spec_info
+#: model:ir.model.fields,field_description:product_watch_spec_info.field_product_product__case_back
+#: model:ir.model.fields,field_description:product_watch_spec_info.field_product_template__case_back
+msgid "Case Back"
+msgstr "表背"
+
+#. module: product_watch_spec_info
+#: model:ir.model.fields,field_description:product_watch_spec_info.field_product_product__case_diameter_x
+#: model:ir.model.fields,field_description:product_watch_spec_info.field_product_product__case_diameter_y
+#: model:ir.model.fields,field_description:product_watch_spec_info.field_product_template__case_diameter_x
+#: model:ir.model.fields,field_description:product_watch_spec_info.field_product_template__case_diameter_y
+msgid "Case Diameter (mm)"
+msgstr "表直径 （不算表头)"
+
+#. module: product_watch_spec_info
+#: model:ir.model.fields,field_description:product_watch_spec_info.field_product_product__case_material
+#: model:ir.model.fields,field_description:product_watch_spec_info.field_product_template__case_material
+msgid "Case Material"
+msgstr "表盘材质"
+
+#. module: product_watch_spec_info
+#: model:ir.model.fields,field_description:product_watch_spec_info.field_product_product__clasp
+#: model:ir.model.fields,field_description:product_watch_spec_info.field_product_template__clasp
+msgid "Clasp"
+msgstr "表扣"
+
+#. module: product_watch_spec_info
+#: selection:product.template,clasp:0
+msgid "Fold clasp"
+msgstr "折叠扣"
+
+#. module: product_watch_spec_info
+#: model:ir.model.fields,field_description:product_watch_spec_info.field_product_product__gender
+#: model:ir.model.fields,field_description:product_watch_spec_info.field_product_template__gender
+msgid "Gender"
+msgstr "性別"
+
+#. module: product_watch_spec_info
+#: selection:product.template,clasp:0
+msgid "Jewelry clasp"
+msgstr "珠宝扣"
+
+#. module: product_watch_spec_info
+#: selection:product.template,movement:0
+msgid "Manual winding"
+msgstr "手动"
+
+#. module: product_watch_spec_info
+#: selection:product.template,gender:0
+msgid "Men's watch/Unisex"
+msgstr "男士表/男女通用表"
+
+#. module: product_watch_spec_info
+#: model:ir.model.fields,field_description:product_watch_spec_info.field_product_product__movement
+#: model:ir.model.fields,field_description:product_watch_spec_info.field_product_template__movement
+msgid "Movement"
+msgstr "机芯"
+
+#. module: product_watch_spec_info
+#: selection:product.template,movement:0
+msgid "Quartz"
+msgstr "石英"
+
+#. module: product_watch_spec_info
+#: selection:product.template,case_back:0
+msgid "Solid"
+msgstr "实底"
+
+#. module: product_watch_spec_info
+#: selection:product.template,case_back:0
+msgid "Transparent"
+msgstr "背透"
+
+#. module: product_watch_spec_info
+#: selection:product.template,gender:0
+msgid "Women's watch"
+msgstr "女士表"
+
