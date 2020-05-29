@@ -10,9 +10,13 @@
                     <group>
                         <field name="gender" />
                         <field name="movement" />
-                        <field name="case_diameter" />
-                        <field name="case_material" />
-                        <field name="bracelet_material" />
+                        <label for="case_diameter_x"/>
+                        <div>
+                            <field name="case_diameter_x" class="oe_inline"/>x
+                            <field name="case_diameter_y" class="oe_inline"/>
+                        </div>
+                        <field name="case_material" widget="selection"/>
+                        <field name="bracelet_material" widget="selection"/>
                         <field name="clasp" />
                         <field name="case_back" />
                     </group>
