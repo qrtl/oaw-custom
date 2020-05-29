@@ -24,3 +24,17 @@ class ProductProduct(models.Model):
             self.filtered(
                 lambda product: not product.product_tmpl_id.partner_offer_checked
             ).mapped("product_tmpl_id").update({"partner_offer_checked": True})
+
+    def action_show_supplier_stock(self):
+        view_id = self.env.ref("supplier_stock.view_supplier_stock_tree").id
+        return {
+            "name": self.display_name,
+            "view_mode": "tree",
+            "res_model": "supplier.stock",
+            "view_id": view_id,
+            "type": "ir.actions.act_window",
+            "target": "current",
+            "domain": [
+                ("product_id", "=", self.id),
+            ],
+        }
