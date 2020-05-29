@@ -34,7 +34,5 @@ class ProductProduct(models.Model):
             "view_id": view_id,
             "type": "ir.actions.act_window",
             "target": "current",
-            "domain": [
-                ("product_id", "=", self.id),
-            ],
+            "domain": [("product_id", "=", self.id)],
         }

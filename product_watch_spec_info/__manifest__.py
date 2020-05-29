@@ -8,6 +8,10 @@
     "website": "https://www.quartile.co",
     "license": "LGPL-3",
     "depends": ["sale"],
-    "data": ["security/ir.model.access.csv", "views/product_material_views.xml", "views/product_template_views.xml"],
+    "data": [
+        "security/ir.model.access.csv",
+        "views/product_material_views.xml",
+        "views/product_template_views.xml",
+    ],
     "installable": True,
 }
