@@ -7,6 +7,7 @@ from odoo import api, fields, models
 
 class StockProductionLot(models.Model):
     _inherit = "stock.production.lot"
+    _order = "name ASC"
 
     currency_id = fields.Many2one(
         "res.currency", string="Purchase Currency", readonly=True
