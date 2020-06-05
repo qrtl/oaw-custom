@@ -459,7 +459,7 @@
                             <span style="white-space: nowrap;">N/A</span>
                         </t>
                     </t>
-                    <t t-else="" >
+                    <t t-else="">
                         <t t-if="product.list_price != 0">
                             <span
                                 t-esc="'{:,.0f}'.format(product.list_price)"
