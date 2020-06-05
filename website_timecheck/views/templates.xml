@@ -230,7 +230,7 @@
                 style="position: static !important; padding: unset !important;"
             >
                 <div
-                    t-if="product.qty_overseas != 0 and product.oversea_retail_currency_id != product.company_id.currency_id"
+                    t-if="product.qty_overseas != 0 or product.qty_local_supplier_stock != 0 and product.oversea_retail_currency_id != product.company_id.currency_id"
                 >
                     <span>Retail in <span
                             t-field="product.oversea_retail_currency_id.name"
@@ -248,7 +248,7 @@
                 <div>
                     <span>HKD Retail:</span>
                     <t
-                        t-if="product.qty_overseas != 0 and product.oversea_retail_currency_id == product.company_id.currency_id and product.price &gt; product.oversea_retail_price"
+                        t-if="product.qty_overseas != 0 or product.qty_local_supplier_stock != 0 and product.oversea_retail_currency_id == product.company_id.currency_id and product.list_price &gt; product.oversea_retail_price"
                     >
                         <t t-if="product.oversea_retail_price != 0">
                             <span
@@ -260,11 +260,7 @@
                             <span style="white-space: nowrap;">N/A</span>
                         </t>
                     </t>
-                    <t
-                        t-if="product.qty_overseas == 0 or
-                                product.qty_overseas != 0 and product.oversea_retail_currency_id != product.company_id.currency_id or
-                                product.qty_overseas != 0 and product.oversea_retail_currency_id == product.company_id.currency_id and product.price &lt;= product.oversea_retail_price"
-                    >
+                    <t t-else="">
                         <t t-if="product.list_price != 0">
                             <span
                                 t-esc="'{:,.0f}'.format(product.list_price)"
@@ -433,7 +429,7 @@
                 t-att-data-precision="user_id.partner_id.property_product_pricelist.currency_id.rounding"
             >
                 <div
-                    t-if="product.qty_overseas != 0 and product.oversea_retail_currency_id != product.company_id.currency_id"
+                    t-if="product.qty_overseas != 0 or product.qty_local_supplier_stock != 0 and product.oversea_retail_currency_id != product.company_id.currency_id"
                 >
                     <span>Retail in <span
                             t-field="product.oversea_retail_currency_id.name"
@@ -451,7 +447,7 @@
                 <div>
                     <span>HKD Retail:</span>
                     <t
-                        t-if="product.qty_overseas != 0 and product.oversea_retail_currency_id == product.company_id.currency_id and product.price &gt; product.oversea_retail_price"
+                        t-if="product.qty_overseas != 0 or product.qty_local_supplier_stock != 0 and product.oversea_retail_currency_id == product.company_id.currency_id and product.list_price &gt; product.oversea_retail_price"
                     >
                         <t t-if="product.oversea_retail_price != 0">
                             <span
@@ -463,11 +459,7 @@
                             <span style="white-space: nowrap;">N/A</span>
                         </t>
                     </t>
-                    <t
-                        t-if="product.qty_overseas == 0 or
-                                product.qty_overseas != 0 and product.oversea_retail_currency_id != product.company_id.currency_id or
-                                product.qty_overseas != 0 and product.oversea_retail_currency_id == product.company_id.currency_id and product.price &lt;= product.oversea_retail_price"
-                    >
+                    <t t-else="" >
                         <t t-if="product.list_price != 0">
                             <span
                                 t-esc="'{:,.0f}'.format(product.list_price)"
@@ -771,12 +763,23 @@
             </li>
         </xpath>
     </template>
-    <template id="pricelist_list" inherit_id="website_sale.pricelist_list" name="Pricelists Dropdown">
+    <template
+        id="pricelist_list"
+        inherit_id="website_sale.pricelist_list"
+        name="Pricelists Dropdown"
+    >
         <xpath expr="//a[@role='button']" position="attributes">
-            <attribute name="class">hidden-xs dropdown-toggle btn btn-secondary</attribute>
+            <attribute
+                name="class"
+            >hidden-xs dropdown-toggle btn btn-secondary</attribute>
         </xpath>
         <xpath expr="//a[@role='button']" position="after">
-            <a role="button" href="#" class="btn btn-sm btn-secondary dropdown-toggle visible-xs-inline" data-toggle="dropdown">
+            <a
+                role="button"
+                href="#"
+                class="btn btn-sm btn-secondary dropdown-toggle visible-xs-inline"
+                data-toggle="dropdown"
+            >
                 <t t-esc="curr_pl and curr_pl.name or ' - '" />
             </a>
         </xpath>
