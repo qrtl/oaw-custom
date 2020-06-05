@@ -230,7 +230,7 @@
                 style="position: static !important; padding: unset !important;"
             >
                 <div
-                    t-if="product.qty_overseas != 0 or product.qty_local_supplier_stock != 0 and product.oversea_retail_currency_id != product.company_id.currency_id"
+                    t-if="(product.qty_overseas != 0 or product.qty_local_supplier_stock != 0) and product.oversea_retail_currency_id != product.company_id.currency_id"
                 >
                     <span>Retail in <span
                             t-field="product.oversea_retail_currency_id.name"
@@ -248,7 +248,7 @@
                 <div>
                     <span>HKD Retail:</span>
                     <t
-                        t-if="product.qty_overseas != 0 or product.qty_local_supplier_stock != 0 and product.oversea_retail_currency_id == product.company_id.currency_id and product.list_price &gt; product.oversea_retail_price"
+                        t-if="(product.qty_overseas != 0 or product.qty_local_supplier_stock != 0) and product.oversea_retail_currency_id == product.company_id.currency_id and product.list_price &gt; product.oversea_retail_price"
                     >
                         <t t-if="product.oversea_retail_price != 0">
                             <span
@@ -429,7 +429,7 @@
                 t-att-data-precision="user_id.partner_id.property_product_pricelist.currency_id.rounding"
             >
                 <div
-                    t-if="product.qty_overseas != 0 or product.qty_local_supplier_stock != 0 and product.oversea_retail_currency_id != product.company_id.currency_id"
+                    t-if="(product.qty_overseas != 0 or product.qty_local_supplier_stock != 0) and product.oversea_retail_currency_id != product.company_id.currency_id"
                 >
                     <span>Retail in <span
                             t-field="product.oversea_retail_currency_id.name"
@@ -447,7 +447,7 @@
                 <div>
                     <span>HKD Retail:</span>
                     <t
-                        t-if="product.qty_overseas != 0 or product.qty_local_supplier_stock != 0 and product.oversea_retail_currency_id == product.company_id.currency_id and product.list_price &gt; product.oversea_retail_price"
+                        t-if="(product.qty_overseas != 0 or product.qty_local_supplier_stock != 0) and product.oversea_retail_currency_id == product.company_id.currency_id and product.list_price &gt; product.oversea_retail_price"
                     >
                         <t t-if="product.oversea_retail_price != 0">
                             <span
