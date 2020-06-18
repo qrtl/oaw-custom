@@ -9,6 +9,8 @@
                 <field name="currency_name" />
                 <field name="image_medium" />
                 <field name="id" />
+                <field name="product_id" />
+                <field name="product_name" />
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click">
@@ -17,14 +19,19 @@
                                 style="width: 150px; height: 150px;"
                             >
                                 <img
-                                    t-att-src="kanban_image('supplier.stock', 'image_medium', record.id.value)"
+                                style="width: 150px; height: 150px;"
+                                    t-att-src="kanban_image('supplier.stock', 'image_medium', record.id.raw_value)"
                                     alt="Product"
                                 />
                             </div>
-                            <div class="oe_kanban_details">
+                            <div class="oe_kanban_details" style="padding-left: 155px;">
                                 <h4>
                                     <a type="open">
-                                        <field name="product_id" />
+                                        <span t-if="record.product_id">[<field
+                                            name="product_id"
+                                        />]
+                                    </span>
+                                     <field name="product_name" />
                                     </a>
                                 </h4>
                                 <div name="tags" />
@@ -38,8 +45,6 @@
                                     > Retail in HKD: <field
                                             name="product_list_price"
                                         /></li>
-                                    <li>Quantity: <field name="partner_qty" /></li>
-                                    <li>Location: <field name="short_loc_name" /></li>
                                 </ul>
                             </div>
                         </div>

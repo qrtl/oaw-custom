@@ -3,7 +3,7 @@
 {
     "name": "Supplier Access",
     "category": "Security",
-    "version": "12.0.1.0.1",
+    "version": "12.0.1.0.2",
     "license": "AGPL-3",
     "author": "Quartile Limited",
     "website": "https://www.quartile.co",
