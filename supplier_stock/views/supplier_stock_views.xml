@@ -20,7 +20,7 @@
                             >
                                 <img
                                 style="width: 150px; height: 150px;"
-                                    t-att-src="kanban_image('supplier.stock', 'image_medium', record.id.value)"
+                                    t-att-src="kanban_image('supplier.stock', 'image_medium', record.id.raw_value)"
                                     alt="Product"
                                 />
                             </div>
