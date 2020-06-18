@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_product_condition_all,access_product_condition_all,model_product_condition,,1,0,0,0
+access_product_condition_user,access_product_condition_user,model_product_condition,base.group_user,1,1,1,1
+access_product_parts_status_all,access_product_parts_status_all,model_product_parts_status,,1,0,0,0
+access_product_parts_status_user,access_product_parts_status_user,model_product_parts_status,base.group_user,1,1,1,1

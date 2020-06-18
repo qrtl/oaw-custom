@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="product_template_form_view" model="ir.ui.view">
+        <field name="name">product.template.common.form</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='general_information']" position="after">
+                <page name="product_information" string="Product Information">
+                    <group>
+                        <field name="gender" />
+                        <field name="movement" />
+                        <label for="case_diameter_x" />
+                        <div>
+                            <field name="case_diameter_x" class="oe_inline" />x
+                            <field name="case_diameter_y" class="oe_inline" />
+                        </div>
+                        <field name="case_material" widget="selection" />
+                        <field name="bracelet_material" widget="selection" />
+                        <field name="clasp" />
+                        <field name="case_back" />
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
