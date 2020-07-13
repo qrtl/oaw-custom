@@ -617,7 +617,6 @@ class ProfitLossReportWizard(models.TransientModel):
         payment_reference = ", ".join(
             payment_ids.filtered(
                 lambda r: r.communication).mapped("communication"))
-        print(payment_reference)
         payment_currency_rate = False
         sale_base_price = False
         if len(payment_ids) == 1:
