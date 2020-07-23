@@ -15,24 +15,24 @@ class StockDataPurchaseHistory(models.Model):
     purchase_date = fields.Datetime(string="Purchased Date",)
     payment_confirm = fields.Boolean(string="Payment Confirm",)
     data_generation_pending = fields.Boolean(string="Data Generation Pending",)
+    expiry_date = fields.Date(string="Expiry Date")
 
     @api.multi
     def request_generate_stock_data(self):
         self.sudo().update({"data_generation_pending": True})
 
     @api.multi
-    def generate_purchased_stock_data(self):
+    def create_update_stock_data(self):
         for history in self:
-            # Remove all old records
-            self.env["supplier.stock"].search(
+            # Get all old records
+            old_records = self.env["supplier.stock"].search(
                 [
                     ("prod_cat_selection", "in", history.product_category_ids.ids),
                     ("readonly_record", "=", True),
                     ("partner_id", "=", history.supplier_id.id),
                 ]
-            ).unlink()
-
-            # Generate purchased stock data
+            )
+            # Generate/Update purchased stock data
             products = (
                 self.env["product.product"]
                 .sudo()
@@ -71,13 +71,16 @@ class StockDataPurchaseHistory(models.Model):
                     "retail_in_currency": product.product_tmpl_id.net_price,
                     "price_unit": product.product_tmpl_id.net_price,
                 }
-                self.env["supplier.stock"].sudo().create(supplier_stock_vals)
+                if old_records.filtered(lambda r: r.product_id == product):
+                    self.env["supplier.stock"].sudo().update(supplier_stock_vals)
+                else:
+                    self.env["supplier.stock"].sudo().create(supplier_stock_vals)
             history.update({"data_generation_pending": False})
 
     def update_purchase_partner_stock_data(self):
-        self.search(
-            [("data_generation_pending", "=", True), ("payment_confirm", "=", True)]
-        ).generate_purchased_stock_data()
+        history = self.search([])
+        history.check_purchase_expiry()
+        history.create_update_stock_data()
         updated_products = self.env["product.template"].search(
             [("update_partner_stock", "=", True)]
         )
@@ -98,17 +101,12 @@ class StockDataPurchaseHistory(models.Model):
                     ("product_id.product_tmpl_id", "=", product.id),
                 ]
             )
-            if product.qty_total:
-                supplier_stock_records.update(
-                    {
-                        "partner_loc_id": int(local_loc_id)
-                        if product.qty_local_stock
-                        else int(oversea_loc_id),
-                        "website_quantity": str(int(product.qty_total))
-                        if product.qty_total < 3
-                        else "3",
-                    }
-                )
-            else:
-                supplier_stock_records.unlink()
+            update_vals = {
+                "partner_loc_id": int(local_loc_id) if product.qty_local_stock else int(oversea_loc_id),
+                "website_quantity": str(int(product.qty_total)) if product.qty_total < 3 else "3",
+                "active": True,
+            }
+            if not product.qty_total:
+                update_vals["active"] = False
+            supplier_stock_records.update(update_vals)
         updated_products.update({"update_partner_stock": False})

@@ -11,6 +11,7 @@
                 <field name="product_category_ids" widget="many2many_tags" />
                 <field name="purchase_date" />
                 <field name="payment_confirm" />
+                <field name="expiry_date" />
                 <field name="data_generation_pending" />
                 <button
                     name="request_generate_stock_data"

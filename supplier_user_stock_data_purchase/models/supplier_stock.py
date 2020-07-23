@@ -10,6 +10,11 @@ class SupplierStock(models.Model):
 
     website_published = fields.Boolean("Visible in Portal / Website", copy=False,)
     readonly_record = fields.Boolean("Readonly Record", copy=False, default=False,)
+    active = fields.Boolean(
+        "Active",
+        compute="_compute_active",
+        store=True,    
+    )
     website_quantity = fields.Selection(
         [("1", "1"), ("2", "2"), ("3", ">=3")],
         string="Webiste Quantity",
@@ -35,7 +40,6 @@ class SupplierStock(models.Model):
         string="Retail RMB",
         digits=dp.get_precision("Product Price"),
     )
-
     cost_hkd = fields.Float(
         related="product_id.product_tmpl_id.net_price",
         string="My Cost in HKD",

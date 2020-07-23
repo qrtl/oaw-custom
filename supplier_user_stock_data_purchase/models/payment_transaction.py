@@ -2,6 +2,7 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 
 from odoo import api, models
+from dateutil.relativedelta import relativedelta
 
 
 class PaymentTransaction(models.Model):
@@ -12,5 +13,9 @@ class PaymentTransaction(models.Model):
         if "state" in vals and vals["state"] == "done":
             self.mapped("sale_order_ids").mapped(
                 "stock_data_purchase_history_id"
-            ).sudo().update({"payment_confirm": True, "data_generation_pending": True})
+            ).sudo().update({
+                "payment_confirm": True, 
+                "data_generation_pending": True,
+                "expiry_date": fields.Date.context_today + relativedelta(months=1)
+            })
         return super(PaymentTransaction, self).write(vals)
