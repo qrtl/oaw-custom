@@ -7,9 +7,7 @@
     "author": "Quartile Limited",
     "website": "https://www.quartile.co",
     "license": "LGPL-3",
-    "depends": [
-        "supplier_user_access"
-    ],
+    "depends": ["supplier_user_access"],
     "data": [
         "data/product_condition_data.xml",
         "data/product_parts_status_data.xml",
