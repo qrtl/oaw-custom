@@ -8,7 +8,7 @@
     "license": "AGPL-3",
     "author": "Timeware Limited",
     "category": "Products",
-    "version": "12.0.1.1.0",
+    "version": "12.0.1.1.1",
     "depends": [
         "account_invoice_line_view_oaw",
         "purchase",
