@@ -7,7 +7,7 @@ import pytz
 from odoo import api, fields, models
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 
-report_filters = ["product_id", "lot_id", "partner_id", "supplier_id", "reference"]
+report_filters = ["product_id", "categ_id", "lot_id", "partner_id", "supplier_id", "reference"]
 
 
 class ProfitLossReportWizard(models.TransientModel):
@@ -23,6 +23,7 @@ class ProfitLossReportWizard(models.TransientModel):
         required=True, string="To Date", default=fields.Date.context_today
     )
     product_id = fields.Many2many("product.product", string="Product")
+    categ_id = fields.Many2many("product.category", string="Product Category")
     lot_id = fields.Many2many("stock.production.lot", string="Case No.")
     partner_id = fields.Many2many(
         "res.partner", "profit_loss_report_partner_id_filter", string="Customer"
@@ -96,7 +97,7 @@ class ProfitLossReportWizard(models.TransientModel):
                     sml.id,
                     sq.lot_id,
                     sml.date,
-                    sq.owner_id
+                    sml.owner_id
                 FROM
                     stock_move_line sml
                 JOIN
@@ -299,7 +300,7 @@ class ProfitLossReportWizard(models.TransientModel):
                     sml.id,
                     sq.lot_id,
                     sml.date,
-                    sq.owner_id
+                    sml.owner_id
                 FROM
                     stock_move_line sml
                 JOIN
@@ -449,14 +450,6 @@ class ProfitLossReportWizard(models.TransientModel):
         ctx["company_id"] = self.env.user.company_id.id
         recs = self.env["profit.loss.report"].search([])
         for rec in recs:
-            # Get the period of the record
-            if rec.in_move_date:
-                rec.in_period_id = (
-                    self.env["account.period"]
-                    .with_context(ctx)
-                    .find(rec.in_move_date)[:1]
-                )
-
             # Define quant type
             if rec.in_move_quant_owner_id:
                 if rec.in_move_quant_owner_id == self.env.user.company_id.partner_id:
@@ -615,8 +608,8 @@ class ProfitLossReportWizard(models.TransientModel):
 
     def _get_payment_information(self, payment_ids, net_price, invoice_id):
         payment_reference = ", ".join(
-            payment_ids.filtered(
-                lambda r: r.communication).mapped("communication"))
+            payment_ids.filtered(lambda r: r.communication).mapped("communication")
+        )
         payment_currency_rate = False
         sale_base_price = False
         if len(payment_ids) == 1:
