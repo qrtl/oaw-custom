@@ -7,7 +7,14 @@ import pytz
 from odoo import api, fields, models
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 
-report_filters = ["product_id", "categ_id", "lot_id", "partner_id", "supplier_id", "reference"]
+report_filters = [
+    "product_id",
+    "categ_id",
+    "lot_id",
+    "partner_id",
+    "supplier_id",
+    "reference",
+]
 
 
 class ProfitLossReportWizard(models.TransientModel):
