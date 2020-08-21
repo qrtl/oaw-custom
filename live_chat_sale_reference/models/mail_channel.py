@@ -11,15 +11,24 @@ class MailChannel(models.Model):
 
     @api.multi
     @api.returns("mail.message", lambda value: value.id)
-    def message_post(self, message_type='notification', **kwargs):
+    def message_post(self, message_type="notification", **kwargs):
         keywords = re.findall(r"\w+", kwargs.get("body"))
-        sale_order_ids = self.env["sale.order"].search(
-            [("name", "in", keywords)])
+        sale_order_ids = self.env["sale.order"].search([("name", "in", keywords)])
         for order in sale_order_ids:
-            kwargs.update({
-                'body':
-                    kwargs.get('body').replace(
+            kwargs.update(
+                {
+                    "body": kwargs.get("body").replace(
                         order.name,
-                        str('<a href="#" data-oe-id='+ str(order.id)+ ' data-oe-model="sale.order">'+ order.name+ "</a> "))})
+                        str(
+                            '<a href="#" data-oe-id='
+                            + str(order.id)
+                            + ' data-oe-model="sale.order">'
+                            + order.name
+                            + "</a> "
+                        ),
+                    )
+                }
+            )
         return super(MailChannel, self).message_post(
-            message_type=message_type, **kwargs)
+            message_type=message_type, **kwargs
+        )
