@@ -1,3 +1,3 @@
 This modules does the following:
 
-* Add Sale order reference at chat where it has correct sale order number.
+* Add Sales order reference link at chat when the sale number is used in chat.
