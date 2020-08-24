@@ -1,3 +1,3 @@
-This modules does the following:
+This module does the following:
 
-* Add Sales order reference link at chat when the sale number is used in chat.
+* Replace sale order name to a reference link to the sales order in the internal chat.

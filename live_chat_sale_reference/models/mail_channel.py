@@ -13,8 +13,8 @@ class MailChannel(models.Model):
     @api.returns("mail.message", lambda value: value.id)
     def message_post(self, message_type="notification", **kwargs):
         keywords = re.findall(r"\w+", kwargs.get("body"))
-        sale_order_ids = self.env["sale.order"].search([("name", "in", keywords)])
-        for order in sale_order_ids:
+        sale_orders = self.env["sale.order"].search([("name", "in", keywords)])
+        for order in sale_orders:
             kwargs.update(
                 {
                     "body": kwargs.get("body").replace(
