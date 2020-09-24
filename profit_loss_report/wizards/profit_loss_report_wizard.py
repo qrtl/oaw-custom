@@ -104,7 +104,7 @@ class ProfitLossReportWizard(models.TransientModel):
                     sml.id,
                     sq.lot_id,
                     sml.date,
-                    sml.owner_id
+                    sq.owner_id
                 FROM
                     stock_move_line sml
                 JOIN
@@ -307,7 +307,7 @@ class ProfitLossReportWizard(models.TransientModel):
                     sml.id,
                     sq.lot_id,
                     sml.date,
-                    sml.owner_id
+                    sq.owner_id
                 FROM
                     stock_move_line sml
                 JOIN
@@ -457,6 +457,13 @@ class ProfitLossReportWizard(models.TransientModel):
         ctx["company_id"] = self.env.user.company_id.id
         recs = self.env["profit.loss.report"].search([])
         for rec in recs:
+            # Get the period of the record
+            if rec.in_move_date:
+                rec.in_period_id = (
+                    self.env["account.period"]
+                    .with_context(ctx)
+                    .find(rec.in_move_date)[:1]
+                )
             # Define quant type
             if rec.in_move_quant_owner_id:
                 if rec.in_move_quant_owner_id == self.env.user.company_id.partner_id:
