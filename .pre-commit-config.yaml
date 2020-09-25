@@ -25,7 +25,8 @@ exclude: |
   sale_automatic_workflow/|
   web_export_view/|
   auditlog/|
-  rowno_in_tree/
+  rowno_in_tree/|
+  web_environment_ribbon/
 default_language_version:
   python: python3
 repos:
