@@ -46,7 +46,6 @@
         action="action_profit_loss_report_wizard"
         id="menu_profit_loss_report_wizard"
         parent="profit_loss_report_menu"
-        groups="account.group_account_invoice"
         sequence="7"
     />
 </odoo>
