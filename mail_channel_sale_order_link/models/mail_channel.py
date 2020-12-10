@@ -13,20 +13,14 @@ class MailChannel(models.Model):
     @api.returns("mail.message", lambda value: value.id)
     def message_post(self, message_type="notification", **kwargs):
         # Split the message by spacing
-        keywords = re.findall(r"\w+", kwargs.get("body"))
+        keywords = re.split('\s+', kwargs.get("body"))
         sale_orders = self.env["sale.order"].search([("name", "in", keywords)])
         for order in sale_orders:
             kwargs.update(
                 {
                     "body": kwargs.get("body").replace(
                         order.name,
-                        str(
-                            '<a href="#" data-oe-id='
-                            + str(order.id)
-                            + ' data-oe-model="sale.order">'
-                            + order.name
-                            + "</a> "
-                        ),
+                        '<a href="#" data-oe-id="%s" data-oe-model="sale.order">%s</a> ' % (str(order.id), order.name)
                     )
                 }
             )
