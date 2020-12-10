@@ -12,7 +12,6 @@ class TestMailChannelSaleOrderLink(SavepointCase):
         test_partner = cls.env["res.partner"].create(
             {"name": "Test Partner", "email": "test@example.com"}
         )
-
         cls.test_channel = cls.env["mail.channel"].create(
             {
                 "name": "Test",
@@ -35,17 +34,11 @@ class TestMailChannelSaleOrderLink(SavepointCase):
         posted_message = self.test_channel.message_post(body=message)
         sale_order_01_link = (
             '<a href="#" data-oe-id="%s" data-oe-model="sale.order">%s</a>'
-            % (
-                str(self.sale_order_01.id),
-                self.sale_order_01.name,
-            )
+            % (str(self.sale_order_01.id), self.sale_order_01.name,)
         )
         sale_order_02_link = (
             '<a href="#" data-oe-id="%s" data-oe-model="sale.order">%s</a>'
-            % (
-                str(self.sale_order_02.id),
-                self.sale_order_02.name,
-            )
+            % (str(self.sale_order_02.id), self.sale_order_02.name,)
         )
         self.assertTrue(sale_order_01_link in posted_message.body)
         self.assertTrue(sale_order_02_link in posted_message.body)
