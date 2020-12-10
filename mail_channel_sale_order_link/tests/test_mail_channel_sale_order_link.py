@@ -33,7 +33,14 @@ class TestMailChannelSaleOrderLink(SavepointCase):
     def test_message_post(self):
         message = " ".join([self.sale_order_01.name, self.sale_order_02.name])
         posted_message = self.test_channel.message_post(body=message)
-        converted_message = '<a href="#" data-oe-id="%s" data-oe-model="sale.order">%s</a> <a href="#" data-oe-id="%s" data-oe-model="sale.order">%s</a>' % (
-            str(self.sale_order_01.id), self.sale_order_01.name, str(self.sale_order_02.id), self.sale_order_02.name
+        converted_message = (
+            '<a href="#" data-oe-id="%s" data-oe-model="sale.order">%s</a> '
+            '<a href="#" data-oe-id="%s" data-oe-model="sale.order">%s</a>'
+            % (
+                str(self.sale_order_01.id),
+                self.sale_order_01.name,
+                str(self.sale_order_02.id),
+                self.sale_order_02.name,
+            )
         )
         self.assertEqual(posted_message.body, converted_message)
