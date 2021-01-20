@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <report
         id="action_report_chr123_saleorder"
@@ -114,7 +115,7 @@
                 <div style="text-align:right" class="col-6">
                     <strong>Date:</strong>
                     <span
-                        t-field="doc.create_date"
+                        t-field="doc.date_order"
                         t-options='{"format": "yyyy-MM-dd"}'
                     />
                     <br />
