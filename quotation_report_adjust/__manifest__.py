@@ -6,7 +6,7 @@
     "summary": """
         Timeware specific reports""",
     "author": "Timeware Limited, Quartile Limited",
-    "website": "http://www.quartile.co",
+    "website": "https://www.quartile.co",
     "category": "Reports",
     "version": "12.0.1.0.1",
     "license": "AGPL-3",
