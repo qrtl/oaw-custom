@@ -79,7 +79,7 @@
                 <div style="text-align:right">
                     <strong>Date:</strong>
                     <span
-                        t-field="doc.create_date"
+                        t-field="doc.date_order"
                         t-options='{"format": "yyyy-MM-dd"}'
                     />
                     <br />
