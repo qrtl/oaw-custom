@@ -8,7 +8,7 @@
     "author": "Timeware Limited, Quartile Limited",
     "website": "https://www.quartile.co",
     "category": "Reports",
-    "version": "12.0.1.0.1",
+    "version": "12.0.1.0.2",
     "license": "AGPL-3",
     "depends": ["sale"],
     "data": [
