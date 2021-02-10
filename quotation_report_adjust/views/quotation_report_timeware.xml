@@ -21,10 +21,7 @@
             </div>
             <div class="row">
                 <div class="col-6" name="company_address">
-                    <span>TIMEWARE Ltd</span><br />
-                    <span>RM 904 9/F Podium Plaza</span><br />
-                    <span>5 Hanoi Road</span><br />
-                    <span>T.S.T., Hong Kong SAR</span><br />
+                    <span t-field="company.report_timeware_address"/>
                 </div>
                 <div class="col-6">
                     <img

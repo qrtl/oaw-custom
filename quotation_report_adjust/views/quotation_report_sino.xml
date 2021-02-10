@@ -22,10 +22,7 @@
         <div class="header">
             <div class="row">
                 <div class="col-6" name="company_address">
-                    <p>Sino Trading Ltd</p>
-                    <p>1022 Unit, Harbour City</p>
-                    <p>5 Canton Road</p>
-                    <p>T.S.T., Hong Kong SAR</p>
+                    <span t-field="company.report_sino_address"/>
                 </div>
             </div>
         </div>

@@ -1,14 +1,12 @@
-# Copyright 2020 Timeware Limited
-# Copyright 2021 Quartile Limited
+# Copyright 2020 Timeware Limited & Quartile Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 {
-    "name": "Custom Quotation Report",
-    "summary": """
-        Timeware specific reports""",
-    "author": "Timeware Limited, Quartile Limited",
+    "name": "Custom Quotation Reports",
+    "summary": "",
+    "author": "Quartile Limited",
     "website": "https://www.quartile.co",
     "category": "Reports",
-    "version": "12.0.1.0.2",
+    "version": "12.0.1.1.0",
     "license": "AGPL-3",
     "depends": ["sale"],
     "data": [
