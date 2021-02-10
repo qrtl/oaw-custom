@@ -22,7 +22,7 @@
         <div class="header">
             <div class="row">
                 <div class="col-6" name="company_address">
-                    <span t-field="company.report_sino_address"/>
+                    <span t-field="company.report_sino_address" />
                 </div>
             </div>
         </div>

@@ -21,7 +21,7 @@
             </div>
             <div class="row">
                 <div class="col-6" name="company_address">
-                    <span t-field="company.report_timeware_address"/>
+                    <span t-field="company.report_timeware_address" />
                 </div>
                 <div class="col-6">
                     <img
