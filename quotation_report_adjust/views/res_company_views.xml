@@ -8,6 +8,10 @@
             <xpath expr="//field[@name='logo']" position="after">
                 <field name="alternative_logo" widget="image" class="oe_avatar" />
             </xpath>
+            <xpath expr="//div[@class='o_address_format']" position="after">
+                <field name="report_sino_address" widget="xml" />
+                <field name="report_timeware_address" widget="xml" />
+            </xpath>
         </field>
     </record>
 </odoo>

@@ -1,7 +1,5 @@
-Creates quotation, invoice, move reports for
-- Chrono123
-- Timeware
-- Sino
-Adds report relevant fields and logic:
-- partner note
-- Code (Quoation name and Customer Name
+- Adds custom quotation reports
+- Adds report relevant fields and logic:
+    - Partner note
+    - Code (Quoation name and Customer Name)
+    - Report address header
