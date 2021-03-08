@@ -19,7 +19,7 @@
                                 style="width: 150px; height: 150px;"
                             >
                                 <img
-                                style="width: 150px; height: 150px;"
+                                    style="width: 150px; height: 150px;"
                                     t-att-src="kanban_image('supplier.stock', 'image_medium', record.id.raw_value)"
                                     alt="Product"
                                 />
@@ -28,8 +28,8 @@
                                 <h4>
                                     <a type="open">
                                         <span t-if="record.product_id">[<field
-                                            name="product_id"
-                                        />]
+                                                name="product_id"
+                                            />]
                                     </span>
                                      <field name="product_name" />
                                     </a>
