@@ -74,6 +74,7 @@
         <field name="model">supplier.stock</field>
         <field name="arch" type="xml">
             <kanban default_order="product_id">
+                <field name="id" />
                 <field name="currency_name" />
                 <templates>
                     <t t-name="kanban-box">
