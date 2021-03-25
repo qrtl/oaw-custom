@@ -12,4 +12,5 @@ class AccountInvoice(models.Model):
         res["quantity"] = line.product_qty - line.qty_invoiced
         if line and line.quant_id:
             res["quant_id"] = line.quant_id.id
+            res["lot_id"] = line.lot_id.id
         return res
