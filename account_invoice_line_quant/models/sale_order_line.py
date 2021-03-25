@@ -13,4 +13,6 @@ class SaleOrderLine(models.Model):
         self.ensure_one()
         if self.quant_id:
             res.update({"quant_id": self.quant_id.id})
+        if self.lot_id:
+            res.update({"lot_id": self.lot_id.id})
         return res
