@@ -78,48 +78,42 @@ class ProfitLossReportWizard(models.TransientModel):
             )
         WITH
             outgoing_moves AS (
-                SELECT DISTINCT ON (sq.lot_id)
+                SELECT DISTINCT ON (sml.lot_id)
                     sml.id,
-                    sq.lot_id,
+                    sml.lot_id,
                     sml.date
                 FROM
                     stock_move_line sml
                 JOIN
                     stock_location sl ON sml.location_dest_id = sl.id
                 JOIN
-                    stock_quant sq ON sml.quant_id = sq.id
-                JOIN
                     stock_move sm ON sm.id = sml.move_id
                 WHERE
                     sl.usage = 'customer' AND
                     sml.state = 'done' AND
-                    sq.quantity > 0 AND
                     sm.company_id = %s
                 ORDER BY
-                    sq.lot_id,
-                    sml.date desc
+                    sml.lot_id,
+                    sml.date
             ),
             incoming_moves AS (
-                SELECT DISTINCT ON (sq.lot_id)
+                SELECT DISTINCT ON (sml.lot_id)
                     sml.id,
-                    sq.lot_id,
+                    sml.lot_id,
                     sml.date,
-                    sq.owner_id
+                    sml.owner_id
                 FROM
                     stock_move_line sml
                 JOIN
                     stock_location sl ON sml.location_id = sl.id
                 JOIN
-                    stock_quant sq ON sml.quant_id = sq.id
-                JOIN
                     stock_move sm ON sm.id = sml.move_id
                 WHERE
                     sl.usage = 'supplier' AND
                     sml.state = 'done' AND
-                    sq.quantity > 0 AND
                     sm.company_id = %s
                 ORDER BY
-                    sq.lot_id,
+                    sml.lot_id,
                     sml.date
             ),
             purchase_data AS (
@@ -162,73 +156,73 @@ class ProfitLossReportWizard(models.TransientModel):
                     ail.purchase_line_id,
                     ai.date_invoice
             )
-        SELECT
-            %s AS create_uid,
-            NOW() AS create_date,
-            pp.id,
-            pc.id,
-            pc.name,
-            ail.lot_id,
-            so.date_order,
-            ai.user_id,
-            so.id,
-            ai.id,
-            pt.list_price,
-            ail.price_subtotal,
-            ai.currency_id,
-            so.partner_id,
-            rp.ref,
-            so.note,
-            om.id,
-            om.date,
-            im.id,
-            im.date,
-            im.owner_id,
-            pd.purchase_id,
-            pd.partner_id,
-            pd.ref,
-            pd.currency_id,
-            pd.price_unit,
-            pid.supplier_invoice_id,
-            pid.purchase_invoice_line_id,
-            pid.reference,
-            ai.type,
-            pid.supplier_invoice_type
-        FROM
-            account_invoice_line ail
-        JOIN
-            account_invoice ai ON ail.invoice_id = ai.id
-        JOIN
-            product_product pp ON ail.product_id = pp.id
-        JOIN
-            product_template pt ON pp.product_tmpl_id = pt.id
-        JOIN
-            product_category pc ON pt.categ_id = pc.id
-        JOIN
-            res_partner rp ON ai.partner_id = rp.id
-        LEFT JOIN
-            sale_order_line_invoice_rel soliv ON soliv.invoice_line_id = ail.id
-        LEFT JOIN
-            sale_order_line sol ON sol.id = soliv.order_line_id
-        LEFT JOIN
-            sale_order so ON so.id = sol.order_id
-        LEFT JOIN
-            outgoing_moves om ON ail.lot_id = om.lot_id
-        LEFT JOIN
-            incoming_moves im ON ail.lot_id = im.lot_id
-        LEFT JOIN
-            purchase_data pd ON ail.lot_id = pd.lot_id
-        LEFT JOIN
-            purchase_invoice_data pid ON
-                pd.purchase_line_id = pid.purchase_line_id
-        WHERE
-            ai.type in ('out_invoice', 'out_refund') AND
-            (ai.type, pid.supplier_invoice_type) NOT IN (('out_refund',
-            'in_refund')) AND
-            ai.state in ('open', 'paid') AND
-            ai.date_invoice >= %s AND
-            ai.date_invoice <= %s AND
-            ail.company_id = %s
+            SELECT
+                %s AS create_uid,
+                NOW() AS create_date,
+                pp.id,
+                pc.id,
+                pc.name,
+                ail.lot_id,
+                so.date_order,
+                ai.user_id,
+                so.id,
+                ai.id,
+                pt.list_price,
+                ail.price_subtotal,
+                ai.currency_id,
+                so.partner_id,
+                rp.ref,
+                so.note,
+                om.id,
+                om.date,
+                im.id,
+                im.date,
+                im.owner_id,
+                pd.purchase_id,
+                pd.partner_id,
+                pd.ref,
+                pd.currency_id,
+                pd.price_unit,
+                pid.supplier_invoice_id,
+                pid.purchase_invoice_line_id,
+                pid.reference,
+                ai.type,
+                pid.supplier_invoice_type
+            FROM
+                account_invoice_line ail
+            JOIN
+                account_invoice ai ON ail.invoice_id = ai.id
+            JOIN
+                product_product pp ON ail.product_id = pp.id
+            JOIN
+                product_template pt ON pp.product_tmpl_id = pt.id
+            JOIN
+                product_category pc ON pt.categ_id = pc.id
+            JOIN
+                res_partner rp ON ai.partner_id = rp.id
+            LEFT JOIN
+                sale_order_line_invoice_rel soliv ON soliv.invoice_line_id = ail.id
+            LEFT JOIN
+                sale_order_line sol ON sol.id = soliv.order_line_id
+            LEFT JOIN
+                sale_order so ON so.id = sol.order_id
+            LEFT JOIN
+                outgoing_moves om ON ail.lot_id = om.lot_id
+            LEFT JOIN
+                incoming_moves im ON ail.lot_id = im.lot_id
+            LEFT JOIN
+                purchase_data pd ON ail.lot_id = pd.lot_id
+            LEFT JOIN
+                purchase_invoice_data pid ON
+                    pd.purchase_line_id = pid.purchase_line_id
+            WHERE
+                ai.type in ('out_invoice', 'out_refund') AND
+                (ai.type, pid.supplier_invoice_type) NOT IN (('out_refund',
+                'in_refund')) AND
+                ai.state in ('open', 'paid') AND
+                ai.date_invoice >= %s AND
+                ai.date_invoice <= %s AND
+                ail.company_id = %s;
         """
         company_id = self.env.user.company_id.id
         params = (
@@ -241,6 +235,7 @@ class ProfitLossReportWizard(models.TransientModel):
             to_date,
             company_id,
         )
+        print(params)
         self.env.cr.execute(query, params)
 
     def _inject_purchase_data(self, from_date, to_date):
@@ -281,48 +276,42 @@ class ProfitLossReportWizard(models.TransientModel):
             )
         WITH
             outgoing_moves AS (
-                SELECT DISTINCT ON (sq.lot_id)
+                SELECT DISTINCT ON (sml.lot_id)
                     sml.id,
-                    sq.lot_id,
+                    sml.lot_id,
                     sml.date
                 FROM
                     stock_move_line sml
                 JOIN
                     stock_location sl ON sml.location_dest_id = sl.id
                 JOIN
-                    stock_quant sq ON sml.quant_id = sq.id
-                JOIN
                     stock_move sm ON sm.id = sml.move_id
                 WHERE
                     sl.usage = 'customer' AND
                     sml.state = 'done' AND
-                    sq.quantity > 0 AND
                     sm.company_id = %s
                 ORDER BY
-                    sq.lot_id,
+                    sml.lot_id,
                     sml.date desc
             ),
             incoming_moves AS (
-                SELECT DISTINCT ON (sq.lot_id)
+                SELECT DISTINCT ON (sml.lot_id)
                     sml.id,
-                    sq.lot_id,
+                    sml.lot_id,
                     sml.date,
-                    sq.owner_id
+                    sml.owner_id
                 FROM
                     stock_move_line sml
                 JOIN
                     stock_location sl ON sml.location_id = sl.id
                 JOIN
-                    stock_quant sq ON sml.quant_id = sq.id
-                JOIN
                     stock_move sm ON sm.id = sml.move_id
                 WHERE
                     sl.usage = 'supplier' AND
                     sml.state = 'done' AND
-                    sq.quantity > 0 AND
                     sm.company_id = %s
                 ORDER BY
-                    sq.lot_id,
+                    sml.lot_id,
                     sml.date
             ),
             purchase_invoice_data AS (
@@ -457,13 +446,6 @@ class ProfitLossReportWizard(models.TransientModel):
         ctx["company_id"] = self.env.user.company_id.id
         recs = self.env["profit.loss.report"].search([])
         for rec in recs:
-            # Get the period of the record
-            if rec.in_move_date:
-                rec.in_period_id = (
-                    self.env["account.period"]
-                    .with_context(ctx)
-                    .find(rec.in_move_date)[:1]
-                )
             # Define quant type
             if rec.in_move_quant_owner_id:
                 if rec.in_move_quant_owner_id == self.env.user.company_id.partner_id:
@@ -541,7 +523,7 @@ class ProfitLossReportWizard(models.TransientModel):
                 ]
             )
             rec.supplier_payment_ref = ", ".join(
-                rec.sudo().supplier_payment_ids.mapped("communication")
+                rec.sudo().supplier_payment_ids.mapped("payment_info")
             )
             if rec.invoice_id.state == "paid":
                 (
