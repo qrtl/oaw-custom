@@ -156,73 +156,73 @@ class ProfitLossReportWizard(models.TransientModel):
                     ail.purchase_line_id,
                     ai.date_invoice
             )
-            SELECT
-                %s AS create_uid,
-                NOW() AS create_date,
-                pp.id,
-                pc.id,
-                pc.name,
-                ail.lot_id,
-                so.date_order,
-                ai.user_id,
-                so.id,
-                ai.id,
-                pt.list_price,
-                ail.price_subtotal,
-                ai.currency_id,
-                so.partner_id,
-                rp.ref,
-                so.note,
-                om.id,
-                om.date,
-                im.id,
-                im.date,
-                im.owner_id,
-                pd.purchase_id,
-                pd.partner_id,
-                pd.ref,
-                pd.currency_id,
-                pd.price_unit,
-                pid.supplier_invoice_id,
-                pid.purchase_invoice_line_id,
-                pid.reference,
-                ai.type,
-                pid.supplier_invoice_type
-            FROM
-                account_invoice_line ail
-            JOIN
-                account_invoice ai ON ail.invoice_id = ai.id
-            JOIN
-                product_product pp ON ail.product_id = pp.id
-            JOIN
-                product_template pt ON pp.product_tmpl_id = pt.id
-            JOIN
-                product_category pc ON pt.categ_id = pc.id
-            JOIN
-                res_partner rp ON ai.partner_id = rp.id
-            LEFT JOIN
-                sale_order_line_invoice_rel soliv ON soliv.invoice_line_id = ail.id
-            LEFT JOIN
-                sale_order_line sol ON sol.id = soliv.order_line_id
-            LEFT JOIN
-                sale_order so ON so.id = sol.order_id
-            LEFT JOIN
-                outgoing_moves om ON ail.lot_id = om.lot_id
-            LEFT JOIN
-                incoming_moves im ON ail.lot_id = im.lot_id
-            LEFT JOIN
-                purchase_data pd ON ail.lot_id = pd.lot_id
-            LEFT JOIN
-                purchase_invoice_data pid ON
-                    pd.purchase_line_id = pid.purchase_line_id
-            WHERE
-                ai.type in ('out_invoice', 'out_refund') AND
-                (ai.type, pid.supplier_invoice_type) NOT IN (('out_refund',
-                'in_refund')) AND
-                ai.state in ('open', 'paid') AND
-                ai.date_invoice >= %s AND
-                ai.date_invoice <= %s AND
-                ail.company_id = %s;
+        SELECT
+            %s AS create_uid,
+            NOW() AS create_date,
+            pp.id,
+            pc.id,
+            pc.name,
+            ail.lot_id,
+            so.date_order,
+            ai.user_id,
+            so.id,
+            ai.id,
+            pt.list_price,
+            ail.price_subtotal,
+            ai.currency_id,
+            so.partner_id,
+            rp.ref,
+            so.note,
+            om.id,
+            om.date,
+            im.id,
+            im.date,
+            im.owner_id,
+            pd.purchase_id,
+            pd.partner_id,
+            pd.ref,
+            pd.currency_id,
+            pd.price_unit,
+            pid.supplier_invoice_id,
+            pid.purchase_invoice_line_id,
+            pid.reference,
+            ai.type,
+            pid.supplier_invoice_type
+        FROM
+            account_invoice_line ail
+        JOIN
+            account_invoice ai ON ail.invoice_id = ai.id
+        JOIN
+            product_product pp ON ail.product_id = pp.id
+        JOIN
+            product_template pt ON pp.product_tmpl_id = pt.id
+        JOIN
+            product_category pc ON pt.categ_id = pc.id
+        JOIN
+            res_partner rp ON ai.partner_id = rp.id
+        LEFT JOIN
+            sale_order_line_invoice_rel soliv ON soliv.invoice_line_id = ail.id
+        LEFT JOIN
+            sale_order_line sol ON sol.id = soliv.order_line_id
+        LEFT JOIN
+            sale_order so ON so.id = sol.order_id
+        LEFT JOIN
+            outgoing_moves om ON ail.lot_id = om.lot_id
+        LEFT JOIN
+            incoming_moves im ON ail.lot_id = im.lot_id
+        LEFT JOIN
+            purchase_data pd ON ail.lot_id = pd.lot_id
+        LEFT JOIN
+            purchase_invoice_data pid ON
+                pd.purchase_line_id = pid.purchase_line_id
+        WHERE
+            ai.type in ('out_invoice', 'out_refund') AND
+            (ai.type, pid.supplier_invoice_type) NOT IN (('out_refund',
+            'in_refund')) AND
+            ai.state in ('open', 'paid') AND
+            ai.date_invoice >= %s AND
+            ai.date_invoice <= %s AND
+            ail.company_id = %s;
         """
         company_id = self.env.user.company_id.id
         params = (
@@ -235,7 +235,6 @@ class ProfitLossReportWizard(models.TransientModel):
             to_date,
             company_id,
         )
-        print(params)
         self.env.cr.execute(query, params)
 
     def _inject_purchase_data(self, from_date, to_date):
