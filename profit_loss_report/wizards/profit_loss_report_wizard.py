@@ -222,7 +222,7 @@ class ProfitLossReportWizard(models.TransientModel):
             ai.state in ('open', 'paid') AND
             ai.date_invoice >= %s AND
             ai.date_invoice <= %s AND
-            ail.company_id = %s;
+            ail.company_id = %s
         """
         company_id = self.env.user.company_id.id
         params = (
