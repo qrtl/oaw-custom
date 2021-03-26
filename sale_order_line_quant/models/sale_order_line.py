@@ -106,3 +106,13 @@ class SaleOrderLine(models.Model):
             line.margin = self.env.user.company_id.currency_id.round(
                 price - (line.quant_price_unit * line.product_uom_qty)
             )
+
+    @api.multi
+    def _prepare_invoice_line(self, qty):
+        res = super(SaleOrderLine, self)._prepare_invoice_line(qty)
+        self.ensure_one()
+        if self.quant_id:
+            res.update({"quant_id": self.quant_id.id})
+        if self.lot_id:
+            res.update({"lot_id": self.lot_id.id})
+        return res

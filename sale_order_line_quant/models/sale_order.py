@@ -37,12 +37,3 @@ class SaleOrder(models.Model):
                 raise ValidationError(
                     _("You cannot select the same quant " "more than once in an SO.")
                 )
-
-    @api.multi
-    def action_cancel(self):
-        res = super(SaleOrder, self).action_cancel()
-        self.mapped('order_line').update({
-            'quant_id': False,
-            'lot_id': False,
-        })
-        return res

@@ -7,7 +7,7 @@
     "license": "LGPL-3",
     "author": "Quartile Limited",
     "website": "https://www.quartile.co",
-    "depends": ["account", "sale_order_line_quant"],
+    "depends": ["account", "stock"],
     "summary": """ Serial Number Quant on Account Invoice Lines""",
     "data": ["views/account_invoice_views.xml"],
     "installable": True,
