@@ -78,48 +78,42 @@ class ProfitLossReportWizard(models.TransientModel):
             )
         WITH
             outgoing_moves AS (
-                SELECT DISTINCT ON (sq.lot_id)
+                SELECT DISTINCT ON (sml.lot_id)
                     sml.id,
-                    sq.lot_id,
+                    sml.lot_id,
                     sml.date
                 FROM
                     stock_move_line sml
                 JOIN
                     stock_location sl ON sml.location_dest_id = sl.id
                 JOIN
-                    stock_quant sq ON sml.quant_id = sq.id
-                JOIN
                     stock_move sm ON sm.id = sml.move_id
                 WHERE
                     sl.usage = 'customer' AND
                     sml.state = 'done' AND
-                    sq.quantity > 0 AND
                     sm.company_id = %s
                 ORDER BY
-                    sq.lot_id,
-                    sml.date desc
+                    sml.lot_id,
+                    sml.date
             ),
             incoming_moves AS (
-                SELECT DISTINCT ON (sq.lot_id)
+                SELECT DISTINCT ON (sml.lot_id)
                     sml.id,
-                    sq.lot_id,
+                    sml.lot_id,
                     sml.date,
-                    sq.owner_id
+                    sml.owner_id
                 FROM
                     stock_move_line sml
                 JOIN
                     stock_location sl ON sml.location_id = sl.id
                 JOIN
-                    stock_quant sq ON sml.quant_id = sq.id
-                JOIN
                     stock_move sm ON sm.id = sml.move_id
                 WHERE
                     sl.usage = 'supplier' AND
                     sml.state = 'done' AND
-                    sq.quantity > 0 AND
                     sm.company_id = %s
                 ORDER BY
-                    sq.lot_id,
+                    sml.lot_id,
                     sml.date
             ),
             purchase_data AS (
@@ -281,48 +275,42 @@ class ProfitLossReportWizard(models.TransientModel):
             )
         WITH
             outgoing_moves AS (
-                SELECT DISTINCT ON (sq.lot_id)
+                SELECT DISTINCT ON (sml.lot_id)
                     sml.id,
-                    sq.lot_id,
+                    sml.lot_id,
                     sml.date
                 FROM
                     stock_move_line sml
                 JOIN
                     stock_location sl ON sml.location_dest_id = sl.id
                 JOIN
-                    stock_quant sq ON sml.quant_id = sq.id
-                JOIN
                     stock_move sm ON sm.id = sml.move_id
                 WHERE
                     sl.usage = 'customer' AND
                     sml.state = 'done' AND
-                    sq.quantity > 0 AND
                     sm.company_id = %s
                 ORDER BY
-                    sq.lot_id,
+                    sml.lot_id,
                     sml.date desc
             ),
             incoming_moves AS (
-                SELECT DISTINCT ON (sq.lot_id)
+                SELECT DISTINCT ON (sml.lot_id)
                     sml.id,
-                    sq.lot_id,
+                    sml.lot_id,
                     sml.date,
-                    sq.owner_id
+                    sml.owner_id
                 FROM
                     stock_move_line sml
                 JOIN
                     stock_location sl ON sml.location_id = sl.id
                 JOIN
-                    stock_quant sq ON sml.quant_id = sq.id
-                JOIN
                     stock_move sm ON sm.id = sml.move_id
                 WHERE
                     sl.usage = 'supplier' AND
                     sml.state = 'done' AND
-                    sq.quantity > 0 AND
                     sm.company_id = %s
                 ORDER BY
-                    sq.lot_id,
+                    sml.lot_id,
                     sml.date
             ),
             purchase_invoice_data AS (
@@ -457,13 +445,6 @@ class ProfitLossReportWizard(models.TransientModel):
         ctx["company_id"] = self.env.user.company_id.id
         recs = self.env["profit.loss.report"].search([])
         for rec in recs:
-            # Get the period of the record
-            if rec.in_move_date:
-                rec.in_period_id = (
-                    self.env["account.period"]
-                    .with_context(ctx)
-                    .find(rec.in_move_date)[:1]
-                )
             # Define quant type
             if rec.in_move_quant_owner_id:
                 if rec.in_move_quant_owner_id == self.env.user.company_id.partner_id:
@@ -541,7 +522,7 @@ class ProfitLossReportWizard(models.TransientModel):
                 ]
             )
             rec.supplier_payment_ref = ", ".join(
-                rec.sudo().supplier_payment_ids.mapped("communication")
+                rec.sudo().supplier_payment_ids.mapped("payment_info")
             )
             if rec.invoice_id.state == "paid":
                 (
