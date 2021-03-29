@@ -9,6 +9,14 @@ class AccountInvoice(models.Model):
 
     # Adds triggering points to account invoice operations for re-computing
     # order_status.
+    @api.model
+    def create(self, vals):
+        res = super(AccountInvoice, self).create(vals)
+        res.mapped("invoice_line_ids").mapped("sale_line_ids").mapped(
+            "order_id"
+        )._compute_order_status()
+        return res
+
     @api.multi
     def write(self, vals):
         res = super(AccountInvoice, self).write(vals)
@@ -16,4 +24,13 @@ class AccountInvoice(models.Model):
             self.mapped("invoice_line_ids").mapped("sale_line_ids").mapped(
                 "order_id"
             )._compute_order_status()
+        return res
+
+    @api.multi
+    def unlink(self):
+        orders = (
+            self.mapped("invoice_line_ids").mapped("sale_line_ids").mapped("order_id")
+        )
+        res = super(AccountInvoice, self).unlink()
+        orders._compute_order_status()
         return res

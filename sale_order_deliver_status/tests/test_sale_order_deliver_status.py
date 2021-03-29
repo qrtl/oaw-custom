@@ -42,13 +42,13 @@ class TestSaleOrderDeliverStatus(common.SavepointCase):
         for ml in picking.move_line_ids:
             ml.qty_done = ml.product_uom_qty
         picking.action_done()
-        # Create Invoice
+        # Create first invoice
         invoice_ids = self.order.action_invoice_create()
-        invoice = self.env["account.invoice"].browse(invoice_ids)
-        invoice.action_invoice_open()
+        invoice1 = self.env["account.invoice"].browse(invoice_ids)
+        invoice1.action_invoice_open()
         self.assertEqual(self.order.order_status, "open")
         # Pay Invoice
-        ctx = {"active_model": "account.invoice", "active_ids": invoice_ids}
+        ctx = {"active_model": "account.invoice", "active_ids": [invoice1.id]}
         register_payments = (
             self.env["account.register.payments"]
             .with_context(active_model="account.invoice")
@@ -63,4 +63,3 @@ class TestSaleOrderDeliverStatus(common.SavepointCase):
         )
         register_payments.create_payments()
         self.assertEqual(self.order.order_status, "done")
-        self.assertEqual(self.order.state, "done")
