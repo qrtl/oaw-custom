@@ -10,6 +10,7 @@
                 position="after"
             >
                 <field name="quant_id" string="Quant" />
+                <field name="lot_id" readonly="1" force_save="1" />
             </xpath>
         </field>
     </record>

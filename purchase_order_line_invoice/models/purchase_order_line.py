@@ -119,6 +119,7 @@ class PurchaseOrderLine(models.Model):
             "quantity": self.product_qty,
             "product_id": self.product_id.id or False,
             "quant_id": self.quant_id.id or False,
+            "lot_id": self.lot_id.id or False,
             "invoice_line_tax_ids": [(6, 0, [x.id for x in self.taxes_id])],
             "purchase_line_id": self.id,
         }
