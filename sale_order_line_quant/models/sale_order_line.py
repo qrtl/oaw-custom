@@ -9,18 +9,22 @@ class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
     quant_id = fields.Many2one("stock.quant", string="Stock Quant", copy=False)
-    lot_id = fields.Many2one(related="quant_id.lot_id", string="Case No.", store=True)
+    lot_id = fields.Many2one("stock.production.lot", string="Case No.", copy=False)
     tracking = fields.Selection(
         related="product_id.tracking", string="Product Tracking"
     )
-    stock_owner_id = fields.Many2one(related="quant_id.owner_id", string="Stock Owner")
+    stock_owner_id = fields.Many2one("res.partner", string="Stock Owner", copy=False)
     is_mto = fields.Boolean(related="order_id.is_mto", store=True, string="Is MTO?")
     quant_price_unit = fields.Float(related="lot_id.price_unit", string="Cost")
 
     @api.onchange("quant_id")
     def _onchange_quant_id(self):
+        self.stock_owner_id = False
+        self.purchase_price = 0
+        self.lot_id = False
         if self.quant_id:
             self.stock_owner_id = self.quant_id.owner_id
+            self.lot_id = self.quant_id.lot_id
             if self.quant_id.purchase_price_unit > 0:
                 self.purchase_price = self.env["res.currency"].compute(
                     self.quant_id.purchase_price_unit, self.quant_id.currency_id
@@ -102,3 +106,13 @@ class SaleOrderLine(models.Model):
             line.margin = self.env.user.company_id.currency_id.round(
                 price - (line.quant_price_unit * line.product_uom_qty)
             )
+
+    @api.multi
+    def _prepare_invoice_line(self, qty):
+        res = super(SaleOrderLine, self)._prepare_invoice_line(qty)
+        self.ensure_one()
+        if self.quant_id:
+            res.update({"quant_id": self.quant_id.id})
+        if self.lot_id:
+            res.update({"lot_id": self.lot_id.id})
+        return res

@@ -8,7 +8,7 @@
     "license": "LGPL-3",
     "author": "Quartile Limited",
     "website": "https://www.quartile.co",
-    "depends": ["sale_order_line_quant", "sale_view_adjust_oaw"],
+    "depends": ["account_invoice_line_quant", "sale_view_adjust_oaw"],
     "data": [
         "views/purchase_order_views.xml",
         "views/sale_order_views.xml",
