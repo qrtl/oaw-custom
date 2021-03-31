@@ -82,9 +82,6 @@ class ProfitLossReport(models.TransientModel):
         related="in_move_line_id.move_id", string="Incoming Move", readonly=True
     )
     in_move_date = fields.Date(string="Incoming Move Date", readonly=True)
-    in_period_id = fields.Many2one(
-        comodel_name="account.period", string="Period", readonly=True
-    )
     in_move_quant_owner_id = fields.Many2one(
         comodel_name="res.partner", string="Owner", readonly=True
     )
