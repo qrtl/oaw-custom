@@ -25,6 +25,7 @@ class StockRule(models.Model):
                 values.update(
                     {
                         "quant_id": move.quant_id.id,
+                        "lot_id": move.quant_id.lot_id.id,
                         "price_unit": move.quant_id.purchase_price_unit,
                         "currency_id": move.quant_id.currency_id.id,
                     }
@@ -104,6 +105,7 @@ class StockRule(models.Model):
             product_id, product_qty, product_uom, values, po, supplier
         )
         res["quant_id"] = values.get("quant_id", False)
+        res["lot_id"] = values.get("lot_id", False)
         res["price_unit"] = values.get("price_unit", False)
         return res
 

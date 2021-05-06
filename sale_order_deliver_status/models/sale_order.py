@@ -46,7 +46,7 @@ class SaleOrder(models.Model):
                     order.delivery_status = "delivered" if all_delivered else "partial"
 
     @api.multi
-    @api.depends("delivery_status", "invoice_status", "invoice_ids.state", "state")
+    @api.depends("delivery_status", "invoice_status", "state")
     def _compute_order_status(self):
         for order in self:
             order.order_status = "open"
