@@ -6,6 +6,12 @@
         <field name="inherit_id" ref="stock.view_picking_form" />
         <field name="arch" type="xml">
             <xpath
+                expr="//field[@name='move_line_ids_without_package']//field[@name='lot_id']"
+                position='attributes'
+            >
+                <attribute name="options"> 'create':true,'create_edit':true </attribute>
+            </xpath>
+            <xpath
                 expr="//field[@name='move_line_ids_without_package']//field[@name='lot_name']"
                 position="after"
             >
