@@ -3,7 +3,7 @@
 {
     "name": "Quant/Serial Number on Stock Move Line",
     "category": "Stock",
-    "version": "12.0.1.1.0",
+    "version": "12.0.1.1.1",
     "license": "LGPL-3",
     "author": "Quartile Limited",
     "website": "https://www.quartile.co",
