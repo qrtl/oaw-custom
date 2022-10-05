@@ -6,7 +6,7 @@
     "summary": "",
     "version": "12.0.1.0.0",
     "license": "AGPL-3",
-    "website": "https://www.ehanse.de",
+    "website": "https://www.quartile.co",
     "category": "Accounting",
     "depends": ["sale", "account"],
     "data": [

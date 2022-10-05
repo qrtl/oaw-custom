@@ -126,10 +126,10 @@ class PurchaseOrderLine(models.Model):
 
     def _make_invoice_by_partner(self, partner, orders, lines_ids):
         """
-            create a new invoice for one supplier
-            @param partner : The object partner
-            @param orders : The set of orders to add in the invoice
-            @param lines : The list of line's id
+        create a new invoice for one supplier
+        @param partner : The object partner
+        @param orders : The set of orders to add in the invoice
+        @param lines : The list of line's id
         """
         account_journal_obj = self.env["account.journal"]
         invoice_obj = self.env["account.invoice"]

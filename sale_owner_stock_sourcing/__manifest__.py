@@ -8,7 +8,7 @@
     "author": "Camptocamp," "Quartile Limited," "Odoo Community Association (OCA),",
     "license": "AGPL-3",
     "category": "Purchase Management",
-    "website": "http://www.camptocamp.com",
+    "website": "https://www.quartile.co",
     "depends": ["sale_stock", "stock_ownership_availability_rules"],
     "data": [
         "security/sale_owner_stock_sourcing_security.xml",

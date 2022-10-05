@@ -11,7 +11,7 @@
     'author': 'Francesco OpenCode Apruzzese, '
               'Tecnativa, '
               'Odoo Community Association (OCA)',
-    'website': 'https://github.com/OCA/web',
+    'website': 'https://www.quartile.co',
     'license': 'AGPL-3',
     "depends": [
         'web',

@@ -4,7 +4,7 @@
     "name": "Return Shipment Process",
     "summary": "Ownership Change Return Shipment Process",
     "version": "12.0.1.0.0",
-    "website": "https://www.quartile.co/",
+    "website": "https://www.quartile.co",
     "author": "Quartile Limited",
     "license": "AGPL-3",
     "depends": ["stock_account", "sale_order_line_quant"],

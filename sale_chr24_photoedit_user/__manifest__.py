@@ -6,7 +6,7 @@
     "version": "12.0.1.0.0",
     "license": "AGPL-3",
     "author": "Quartile Limited, Timeware Limited",
-    "website": "",
+    "website": "https://www.quartile.co",
     "depends": ["sale_chr24"],
     "summary": """
     A group for managing Chrono24 information and managing photos of products.

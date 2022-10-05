@@ -8,8 +8,15 @@ from odoo import api, fields, models
 class SupplierStock(models.Model):
     _inherit = "supplier.stock"
 
-    website_published = fields.Boolean("Visible in Portal / Website", copy=False,)
-    readonly_record = fields.Boolean("Readonly Record", copy=False, default=False,)
+    website_published = fields.Boolean(
+        "Visible in Portal / Website",
+        copy=False,
+    )
+    readonly_record = fields.Boolean(
+        "Readonly Record",
+        copy=False,
+        default=False,
+    )
     website_quantity = fields.Selection(
         [("1", "1"), ("2", "2"), ("3", ">=3")],
         string="Webiste Quantity",

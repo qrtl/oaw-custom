@@ -13,14 +13,18 @@ class PurchaseSupplierStockDataWizard(models.TransientModel):
         default=lambda self: self.env.user.partner_id.commercial_partner_id,
     )
     product_category_ids = fields.Many2many(
-        "product.category", string="Brands", required=True,
+        "product.category",
+        string="Brands",
+        required=True,
     )
     purchased_category_ids = fields.Many2many(
         "product.category",
         string="Purchased Band",
         compute="_compute_purchased_category_ids",
     )
-    total_price = fields.Float(string="Total Price (HKD)",)
+    total_price = fields.Float(
+        string="Total Price (HKD)",
+    )
 
     def action_purchase_data(self):
         purchase_categories = self.product_category_ids

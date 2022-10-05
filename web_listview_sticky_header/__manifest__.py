@@ -17,10 +17,10 @@
     """,
 
     'author': "Ksolves India Pvt. Ltd.",
-    'website': "https://www.ksolves.com/",
+    'website': "https://www.quartile.co",
     'license': 'LGPL-3',
     'category': 'Tools',
-    'version': '1.0.2',
+    'version': '12.0.1.0.2',
     'images': ['static/description/main.jpg'],
     'depends': ['base'],
 

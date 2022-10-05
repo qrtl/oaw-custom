@@ -5,7 +5,7 @@
     "version": "12.0.1.0.0",
     "category": "Account",
     "author": "Quartile Limited",
-    "website": "http://www.quartile.co",
+    "website": "https://www.quartile.co",
     "license": "AGPL-3",
     "depends": ["account"],
     "data": [],

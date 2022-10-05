@@ -5,6 +5,7 @@
     "summary": """
       Shows sales for each product. """,
     "author": "Quartile Limited, Timeware Limited",
+    "website": "https://www.quartile.co",
     "category": "Product",
     "version": "12.0.1.0.0",
     "license": "AGPL-3",

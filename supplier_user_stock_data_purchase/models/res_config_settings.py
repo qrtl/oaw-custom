@@ -32,14 +32,16 @@ class ResConfigSettings(models.TransientModel):
         res.update(
             local_loc_id=int(
                 get_param(
-                    "supplier_user_stock_data_purchase.local_loc_id", default=False,
+                    "supplier_user_stock_data_purchase.local_loc_id",
+                    default=False,
                 )
             )
         )
         res.update(
             oversea_loc_id=int(
                 get_param(
-                    "supplier_user_stock_data_purchase.oversea_loc_id", default=False,
+                    "supplier_user_stock_data_purchase.oversea_loc_id",
+                    default=False,
                 )
             )
         )
@@ -53,8 +55,10 @@ class ResConfigSettings(models.TransientModel):
             self.purchase_data_product_id.id,
         )
         set_param(
-            "supplier_user_stock_data_purchase.local_loc_id", self.local_loc_id.id,
+            "supplier_user_stock_data_purchase.local_loc_id",
+            self.local_loc_id.id,
         )
         set_param(
-            "supplier_user_stock_data_purchase.oversea_loc_id", self.oversea_loc_id.id,
+            "supplier_user_stock_data_purchase.oversea_loc_id",
+            self.oversea_loc_id.id,
         )

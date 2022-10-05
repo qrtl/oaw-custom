@@ -12,7 +12,7 @@
               "Camptocamp, "
               "Sodexis, "
               "Odoo Community Association (OCA)",
-    'website': 'https://github.com/OCA/sale-workflow',
+    'website': 'https://www.quartile.co',
     'depends': [
         'sale_stock',
         'sales_team',

@@ -1,15 +1,15 @@
 # Copyright 2019 Quartile Limited
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from io import BytesIO
 import base64
+from io import BytesIO
 
 from odoo import models
 
 
 class StockAbstractReportXslx(models.AbstractModel):
-    _inherit = 'report.report_xlsx.abstract'
-    _name = 'report.stock_abstract_report_xlsx'
+    _inherit = "report.report_xlsx.abstract"
+    _name = "report.stock_abstract_report_xlsx"
 
     def __init__(self, pool, cr):
         super(StockAbstractReportXslx, self).__init__(pool, cr)
@@ -40,7 +40,7 @@ class StockAbstractReportXslx(models.AbstractModel):
         self.format_emphasis = None  # added by QTL
 
     def get_workbook_options(self):
-        return {'constant_memory': True}
+        return {"constant_memory": True}
 
     def generate_xlsx_report(self, workbook, data, objects):
         report = objects
@@ -67,7 +67,7 @@ class StockAbstractReportXslx(models.AbstractModel):
         self._write_report_footer(report_footer)
 
     def _define_formats(self, workbook):
-        """ Add cell formats to current workbook.
+        """Add cell formats to current workbook.
         Those formats can be used on all cell.
 
         Available formats are :
@@ -85,65 +85,64 @@ class StockAbstractReportXslx(models.AbstractModel):
          * format_wrap  # added by QTL
          * format_emphasis  # added by QTL
         """
-        self.format_bold = workbook.add_format({'bold': True})
-        self.format_right = workbook.add_format({'align': 'right'})
-        self.format_left = workbook.add_format({'align': 'left'})
+        self.format_bold = workbook.add_format({"bold": True})
+        self.format_right = workbook.add_format({"align": "right"})
+        self.format_left = workbook.add_format({"align": "left"})
         self.format_right_bold_italic = workbook.add_format(
-            {'align': 'right', 'bold': True, 'italic': True}
+            {"align": "right", "bold": True, "italic": True}
         )
         self.format_header_left = workbook.add_format(
-            {'bold': True,
-             'border': True,
-             'bg_color': '#FFFFCC'})
+            {"bold": True, "border": True, "bg_color": "#FFFFCC"}
+        )
         self.format_header_left.set_text_wrap()  # added by QTL
         self.format_header_center = workbook.add_format(
-            {'bold': True,
-             'align': 'center',
-             'border': True,
-             'bg_color': '#FFFFCC'})
+            {"bold": True, "align": "center", "border": True, "bg_color": "#FFFFCC"}
+        )
         self.format_header_center.set_text_wrap()  # added by QTL
         self.format_header_right = workbook.add_format(
-            {'bold': True,
-             'align': 'right',
-             'border': True,
-             'bg_color': '#FFFFCC'})
+            {"bold": True, "align": "right", "border": True, "bg_color": "#FFFFCC"}
+        )
         self.format_header_right.set_text_wrap()  # added by QTL
         self.format_header_amount = workbook.add_format(
-            {'bold': True,
-             'border': True,
-             'bg_color': '#FFFFCC'})
-        currency_id = self.env['res.company']._get_user_currency()
-        self.format_header_amount.set_num_format(
-            '#,##0.'+'0'*currency_id.decimal_places)
-        self.format_amount = workbook.add_format()
-        self.format_amount.set_num_format('#,##0.00')
-        self.format_number = workbook.add_format()  # added by QTL
-        self.format_number.set_num_format('#,##0')  # added by QTL
-        self.format_percent = workbook.add_format()  # added by QTL
-        self.format_percent.set_num_format('#,##0.00%')  # added by QTL
-        self.format_percent_bold_italic = workbook.add_format(
-            {'bold': True, 'italic': True}
+            {"bold": True, "border": True, "bg_color": "#FFFFCC"}
         )
-        self.format_percent_bold_italic.set_num_format('#,##0.00%')
+        currency_id = self.env["res.company"]._get_user_currency()
+        self.format_header_amount.set_num_format(
+            "#,##0." + "0" * currency_id.decimal_places
+        )
+        self.format_amount = workbook.add_format()
+        self.format_amount.set_num_format("#,##0.00")
+        self.format_number = workbook.add_format()  # added by QTL
+        self.format_number.set_num_format("#,##0")  # added by QTL
+        self.format_percent = workbook.add_format()  # added by QTL
+        self.format_percent.set_num_format("#,##0.00%")  # added by QTL
+        self.format_percent_bold_italic = workbook.add_format(
+            {"bold": True, "italic": True}
+        )
+        self.format_percent_bold_italic.set_num_format("#,##0.00%")
         self.format_wrap = workbook.add_format()  # added by QTL
         self.format_wrap.set_text_wrap()  # added by QTL
-        self.format_emphasis = workbook.add_format({'bold': True})  # QTL
-        self.format_emphasis.set_font_color('red')  # QTL
+        self.format_emphasis = workbook.add_format({"bold": True})  # QTL
+        self.format_emphasis.set_font_color("red")  # QTL
 
     def _set_column_width(self):
         """Set width for all defined columns.
         Columns are defined with `_get_report_columns` method.
         """
         for position, column in self.columns.items():
-            self.sheet.set_column(position, position, column['width'])
+            self.sheet.set_column(position, position, column["width"])
 
     def _write_report_title(self, title):
         """Write report title on current line using all defined columns width.
         Columns are defined with `_get_report_columns` method.
         """
         self.sheet.merge_range(
-            self.row_pos, 0, self.row_pos, len(self.columns) - 1,
-            title, self.format_bold
+            self.row_pos,
+            0,
+            self.row_pos,
+            len(self.columns) - 1,
+            title,
+            self.format_bold,
         )
         self.row_pos += 3
 
@@ -154,8 +153,12 @@ class StockAbstractReportXslx(models.AbstractModel):
         if footer:
             self.row_pos += 1
             self.sheet.merge_range(
-                self.row_pos, 0, self.row_pos, len(self.columns) - 1,
-                footer, self.format_left
+                self.row_pos,
+                0,
+                self.row_pos,
+                len(self.columns) - 1,
+                footer,
+                self.format_left,
             )
             self.row_pos += 1
 
@@ -172,13 +175,20 @@ class StockAbstractReportXslx(models.AbstractModel):
         col_value = col_name + col_count_filter_name + 1
         for title, value in filters:
             self.sheet.merge_range(
-                self.row_pos, col_name,
-                self.row_pos, col_name + col_count_filter_name - 1,
-                title, self.format_header_left)
+                self.row_pos,
+                col_name,
+                self.row_pos,
+                col_name + col_count_filter_name - 1,
+                title,
+                self.format_header_left,
+            )
             self.sheet.merge_range(
-                self.row_pos, col_value,
-                self.row_pos, col_value + col_count_filter_value - 1,
-                value)
+                self.row_pos,
+                col_value,
+                self.row_pos,
+                col_value + col_count_filter_value - 1,
+                value,
+            )
             self.row_pos += 1
         self.row_pos += 2
 
@@ -187,8 +197,12 @@ class StockAbstractReportXslx(models.AbstractModel):
         Columns are defined with `_get_report_columns` method.
         """
         self.sheet.merge_range(
-            self.row_pos, 0, self.row_pos, len(self.columns) - 1,
-            title, self.format_bold
+            self.row_pos,
+            0,
+            self.row_pos,
+            len(self.columns) - 1,
+            title,
+            self.format_bold,
         )
         self.row_pos += 1
 
@@ -197,8 +211,9 @@ class StockAbstractReportXslx(models.AbstractModel):
         Columns are defined with `_get_report_columns` method.
         """
         for col_pos, column in self.columns.items():
-            self.sheet.write(self.row_pos, col_pos, column['header'],
-                             self.format_header_center)
+            self.sheet.write(
+                self.row_pos, col_pos, column["header"], self.format_header_center
+            )
         self.row_pos += 1
 
     def write_line(self, line_object, height=False):  # QTL
@@ -210,29 +225,28 @@ class StockAbstractReportXslx(models.AbstractModel):
             if height:
                 self.sheet.set_row(self.row_pos, height)
             # <<< added by QTL
-            value = getattr(line_object, column['field'])
-            cell_type = column.get('type', 'string')
-            if cell_type == 'string':
+            value = getattr(line_object, column["field"])
+            cell_type = column.get("type", "string")
+            if cell_type == "string":
                 self.sheet.write_string(  # QTL
-                    self.row_pos, col_pos, value and str(
-                        value) or '', self.format_wrap
+                    self.row_pos, col_pos, value and str(value) or "", self.format_wrap
                 )
-            elif cell_type == 'amount':
+            elif cell_type == "amount":
                 self.sheet.write_number(
                     self.row_pos, col_pos, float(value), self.format_amount
                 )
             # >>> added by QTL
-            elif cell_type == 'number':
+            elif cell_type == "number":
                 self.sheet.write_number(
                     self.row_pos, col_pos, value, self.format_number
                 )
-            elif cell_type == 'image':
+            elif cell_type == "image":
                 if line_object.image_small:
                     image = BytesIO(base64.b64decode(line_object.image_small))
                     self.sheet.insert_image(
-                        self.row_pos, col_pos, 'image', {'image_data': image}
+                        self.row_pos, col_pos, "image", {"image_data": image}
                     )
-            elif cell_type == 'percent':
+            elif cell_type == "percent":
                 self.sheet.write_number(
                     self.row_pos, col_pos, value, self.format_percent
                 )
@@ -244,69 +258,71 @@ class StockAbstractReportXslx(models.AbstractModel):
 
     def _get_report_complete_name(self, report, prefix):
         if report.company_id:
-            suffix = ' - %s - %s' % (
-                report.company_id.name, report.company_id.currency_id.name)
+            suffix = " - %s - %s" % (
+                report.company_id.name,
+                report.company_id.currency_id.name,
+            )
             return prefix + suffix
         return prefix
 
     def _get_report_name(self, report):
         """
-            Allow to define the report name.
-            Report name will be used as sheet name and as report title.
+        Allow to define the report name.
+        Report name will be used as sheet name and as report title.
 
-            :return: the report name
+        :return: the report name
         """
         raise NotImplementedError()
 
     def _get_report_footer(self):
         """
-            Allow to define the report footer.
-            :return: the report footer
+        Allow to define the report footer.
+        :return: the report footer
         """
         return False
 
     def _get_report_columns(self, report):
         """
-            Allow to define the report columns
-            which will be used to generate report.
+        Allow to define the report columns
+        which will be used to generate report.
 
-            :return: the report columns as dict
+        :return: the report columns as dict
 
-            :Example:
+        :Example:
 
-            {
-                0: {'header': 'Simple column',
-                    'field': 'field_name_on_my_object',
-                    'width': 11},
-                1: {'header': 'Amount column',
-                     'field': 'field_name_on_my_object',
-                     'type': 'amount',
-                     'width': 14},
-            }
+        {
+            0: {'header': 'Simple column',
+                'field': 'field_name_on_my_object',
+                'width': 11},
+            1: {'header': 'Amount column',
+                 'field': 'field_name_on_my_object',
+                 'type': 'amount',
+                 'width': 14},
+        }
         """
         raise NotImplementedError()
 
     def _get_report_filters(self, report):
         """
-            :return: the report filters as list
+        :return: the report filters as list
 
-            :Example:
+        :Example:
 
-            [
-                ['first_filter_name', 'first_filter_value'],
-                ['second_filter_name', 'second_filter_value']
-            ]
+        [
+            ['first_filter_name', 'first_filter_value'],
+            ['second_filter_name', 'second_filter_value']
+        ]
         """
         raise NotImplementedError()
 
     def _get_col_count_filter_name(self):
         """
-            :return: the columns number used for filter names.
+        :return: the columns number used for filter names.
         """
         raise NotImplementedError()
 
     def _get_col_count_filter_value(self):
         """
-            :return: the columns number used for filter values.
+        :return: the columns number used for filter values.
         """
         raise NotImplementedError()

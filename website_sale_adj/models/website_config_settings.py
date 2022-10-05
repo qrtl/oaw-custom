@@ -21,7 +21,9 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
     )
     whatsapp_link = fields.Char(
-        string="Whatsapp Link", related="website_id.whatsapp_link", readonly=False,
+        string="Whatsapp Link",
+        related="website_id.whatsapp_link",
+        readonly=False,
     )
     whatsapp_qr_image = fields.Binary(
         string="Whatsapp QR Code",
@@ -29,8 +31,12 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
     )
     wechat_link = fields.Char(
-        string="Wechat Link", related="website_id.wechat_link", readonly=False,
+        string="Wechat Link",
+        related="website_id.wechat_link",
+        readonly=False,
     )
     wechat_qr_image = fields.Binary(
-        string="Wechat QR Code", related="website_id.wechat_qr_image", readonly=False,
+        string="Wechat QR Code",
+        related="website_id.wechat_qr_image",
+        readonly=False,
     )

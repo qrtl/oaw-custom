@@ -5,7 +5,7 @@
     "summary": "Manage all kind of date range",
     "version": "12.0.1.0.0",
     "category": "Uncategorized",
-    "website": "https://github.com/oca/server-ux",
+    "website": "https://www.quartile.co",
     "author": "ACSONE SA/NV, Odoo Community Association (OCA)",
     "license": "AGPL-3",
     "installable": True,

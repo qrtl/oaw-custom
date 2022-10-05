@@ -8,7 +8,7 @@
     'category': 'Accounting & Finance',
     'summary': 'OCA Financial Reports',
     'author': "Eficent, Odoo Community Association (OCA)",
-    'website': 'https://github.com/OCA/account-financial-reporting',
+    'website': 'https://www.quartile.co',
     'license': 'AGPL-3',
     'depends': [
         'account',

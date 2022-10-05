@@ -7,14 +7,27 @@ from odoo import api, fields, models
 class StockDataPurchaseHistory(models.Model):
     _name = "stock.data.purchase.history"
 
-    supplier_id = fields.Many2one("res.partner", string="Supplier",)
-    product_category_ids = fields.Many2many(
-        "product.category", string="Purchased Brands",
+    supplier_id = fields.Many2one(
+        "res.partner",
+        string="Supplier",
     )
-    sale_order_id = fields.Many2one("sale.order", string="Sales Order",)
-    purchase_date = fields.Datetime(string="Purchased Date",)
-    payment_confirm = fields.Boolean(string="Payment Confirm",)
-    data_generation_pending = fields.Boolean(string="Data Generation Pending",)
+    product_category_ids = fields.Many2many(
+        "product.category",
+        string="Purchased Brands",
+    )
+    sale_order_id = fields.Many2one(
+        "sale.order",
+        string="Sales Order",
+    )
+    purchase_date = fields.Datetime(
+        string="Purchased Date",
+    )
+    payment_confirm = fields.Boolean(
+        string="Payment Confirm",
+    )
+    data_generation_pending = fields.Boolean(
+        string="Data Generation Pending",
+    )
 
     @api.multi
     def request_generate_stock_data(self):

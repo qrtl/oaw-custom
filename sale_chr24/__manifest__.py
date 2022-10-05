@@ -6,7 +6,7 @@
     "version": "12.0.1.0.0",
     "license": "AGPL-3",
     "author": "Quartile Limited, Timeware Limited.",
-    "website": "",
+    "website": "https://www.quartile.co",
     "depends": ["product_local_oversea_stock_info", "product_listprice_list_view"],
     "summary": """
     Adds chrono24  fields to PLV. Adds a new tree views to Sales to

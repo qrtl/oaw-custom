@@ -5,7 +5,7 @@
     "version": "12.0.1.0.0",
     "author": "Tecnativa, "
               "Odoo Community Association (OCA)",
-    "website": "https://github.com/OCA/website",
+    "website": "https://www.quartile.co",
     "license": "LGPL-3",
     "category": "Website",
     "depends": [

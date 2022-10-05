@@ -7,6 +7,7 @@
     """,
     "license": "AGPL-3",
     "author": "Timeware Limited",
+    "website": "https://www.quartile.co",
     "category": "Products",
     "version": "12.0.1.1.0",
     "depends": [

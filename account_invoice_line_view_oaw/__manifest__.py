@@ -6,7 +6,7 @@
     "category": "Account",
     "summary": "Adds Invoice Line menu item",
     "author": "Quartile Limited",
-    "website": "http://www.quartile.co",
+    "website": "https://www.quartile.co",
     "license": "AGPL-3",
     "depends": [
         "account",

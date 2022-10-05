@@ -4,7 +4,7 @@
     "name": "Account Invoice Refund Link",
     "category": "Accounting & Finance",
     "version": "12.0.1.0.0",
-    "website": "https://www.quartile.co/",
+    "website": "https://www.quartile.co",
     "author": "Quartile Limited",
     "depends": ["account"],
     "license": "AGPL-3",

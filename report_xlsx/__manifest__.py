@@ -7,7 +7,7 @@
     'author': 'ACSONE SA/NV,'
               'Creu Blanca,'
               'Odoo Community Association (OCA)',
-    'website': "https://github.com/oca/reporting-engine",
+    'website': "https://www.quartile.co",
     'category': 'Reporting',
     'version': '12.0.1.0.0',
     'license': 'AGPL-3',

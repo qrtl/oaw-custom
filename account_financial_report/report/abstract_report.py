@@ -6,12 +6,13 @@ from psycopg2.extensions import AsIs
 
 
 class AbstractReport(models.AbstractModel):
-    _name = 'account_financial_report_abstract'
-    _description = 'Abstract Report'
+    _name = "account_financial_report_abstract"
+    _description = "Abstract Report"
 
     def _transient_clean_rows_older_than(self, seconds):
-        assert self._transient, \
+        assert self._transient, (
             "Model %s is not transient, it cannot be vacuumed!" % self._name
+        )
         # Never delete rows used in last 5 minutes
         seconds = max(seconds, 300)
         query = (

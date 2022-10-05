@@ -5,7 +5,7 @@
     "version": "12.0.1.0.1",
     "license": "AGPL-3",
     "author": "Timeware Limited, Quartile Limited",
-    "website": "",
+    "website": "https://www.quartile.co",
     "category": "",
     "depends": ["supplier_user_access", "website_timecheck"],
     "data": ["views/res_users_views.xml"],

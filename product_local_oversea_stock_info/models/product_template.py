@@ -44,7 +44,9 @@ class ProductTemplate(models.Model):
         store=True,
     )
     qty_total = fields.Float(
-        string="Total Quantity", compute="_compute_qty_total", store=True,
+        string="Total Quantity",
+        compute="_compute_qty_total",
+        store=True,
     )
     stock_location = fields.Char(
         string="Stock Location", compute="_compute_stock_location_info", store=True

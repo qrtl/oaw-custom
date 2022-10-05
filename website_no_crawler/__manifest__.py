@@ -5,7 +5,7 @@
     'summary': 'Disables robots.txt for indexing by webcrawlers like Google',
     'license': 'AGPL-3',
     'version': '12.0.1.1.0',
-    'website': 'https://github.com/OCA/website',
+    'website': 'https://www.quartile.co',
     'author': "B-Informed B.V.,Odoo Community Association (OCA)",
     'category': 'Website',
     'depends': [

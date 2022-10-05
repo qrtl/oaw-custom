@@ -10,14 +10,21 @@ class SupplierStock(models.Model):
     website_size_x = fields.Integer("Size X", default=1)
     website_size_y = fields.Integer("Size Y", default=1)
     website_style_ids = fields.Many2many("product.style", string="Styles")
-    name = fields.Char(related="product_id.product_tmpl_id.name", store=True,)
+    name = fields.Char(
+        related="product_id.product_tmpl_id.name",
+        store=True,
+    )
     category_name = fields.Char(
-        related="product_id.product_tmpl_id.category_name", store=True,
+        related="product_id.product_tmpl_id.category_name",
+        store=True,
     )
     default_code = fields.Char(
-        related="product_id.product_tmpl_id.default_code", store=True,
+        related="product_id.product_tmpl_id.default_code",
+        store=True,
     )
-    image = fields.Binary(related="product_id.product_tmpl_id.image",)
+    image = fields.Binary(
+        related="product_id.product_tmpl_id.image",
+    )
     special_offer = fields.Float(string="Special Offer")
     new_arrival = fields.Boolean(string="New Arrival")
     custom_image = fields.Binary(string="Custom Image")

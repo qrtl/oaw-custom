@@ -6,7 +6,7 @@
     "summary": "Access to technical features without activating debug mode",
     "version": "12.0.1.0.0",
     "category": "Usability",
-    "website": "https://github.com/oca/server-ux",
+    "website": "https://www.quartile.co",
     "author": "Opener B.V., Odoo Community Association (OCA)",
     "data": [
         'security/res_groups.xml',

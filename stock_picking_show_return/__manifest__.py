@@ -7,7 +7,7 @@
     "author": "Tecnativa, "
               "Odoo Community Association (OCA)",
     "category": "Warehouse Management",
-    "website": "https://github.com/OCA/stock-logistics-workflow",
+    "website": "https://www.quartile.co",
     "license": "AGPL-3",
     "depends": [
         "stock",

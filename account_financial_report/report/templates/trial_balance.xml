@@ -5,7 +5,7 @@
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="o">
                 <t t-call="account_financial_report.internal_layout">
-                    <t t-call="account_financial_report.report_trial_balance_base"/>                
+                    <t t-call="account_financial_report.report_trial_balance_base"/>
                 </t>
             </t>
         </t>

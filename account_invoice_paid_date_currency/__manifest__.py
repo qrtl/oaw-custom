@@ -6,7 +6,7 @@
     "category": "Account",
     "summary": "Add paid date and currency to account invoice",
     "author": "Quartile Limited",
-    "website": "http://www.quartile.co",
+    "website": "https://www.quartile.co",
     "license": "AGPL-3",
     "depends": ["account"],
     "data": ["views/account_invoice_views.xml"],

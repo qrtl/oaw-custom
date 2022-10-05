@@ -9,8 +9,8 @@ from odoo.addons.base.models.res_partner import Partner
 # Overwrite the original _get_name
 # i.e. https://github.com/odoo/odoo/blob/12.0/odoo/addons/base/models/res_partner.py#L679-L703 # noqa
 def _get_name(self):
-    """ Utility method to allow name_get to be overrided without re-browse the
-    partner """
+    """Utility method to allow name_get to be overrided without re-browse the
+    partner"""
     partner = self
     name = partner.name or ""
     if partner.ref:

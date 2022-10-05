@@ -5,7 +5,7 @@
     'version': '12.0.1.0.0',
     'author': 'Naglis Jonaitis',
     'category': 'Security',
-    'website': 'https://naglis.me/',
+    'website': 'https://www.quartile.co',
     'license': 'AGPL-3',
     'summary': 'Disable Odoo XML-RPC endpoints',
     'depends': [

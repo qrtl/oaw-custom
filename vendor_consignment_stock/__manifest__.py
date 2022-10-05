@@ -6,6 +6,7 @@
     "summary": "Manage stock in our warehouse that is owned by a vendor",
     "version": "12.0.1.0.0",
     "author": "Camptocamp," "Quartile Limited," "Odoo Community Association (OCA),",
+    "website": "https://www.quartile.co",
     "category": "Purchase Management",
     "license": "AGPL-3",
     "depends": [

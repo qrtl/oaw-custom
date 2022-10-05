@@ -67,7 +67,7 @@ class StockConsignmentReportQuant(models.TransientModel):
 
 
 class StockConsignmentReportCompute(models.TransientModel):
-    """ Here, we just define methods.
+    """Here, we just define methods.
     For class fields, go more top at this file.
     """
 

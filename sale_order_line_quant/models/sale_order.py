@@ -41,8 +41,10 @@ class SaleOrder(models.Model):
     @api.multi
     def action_cancel(self):
         res = super(SaleOrder, self).action_cancel()
-        self.mapped('order_line').update({
-            'quant_id': False,
-            'lot_id': False,
-        })
+        self.mapped("order_line").update(
+            {
+                "quant_id": False,
+                "lot_id": False,
+            }
+        )
         return res
